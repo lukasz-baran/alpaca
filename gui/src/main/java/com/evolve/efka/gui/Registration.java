@@ -8,22 +8,97 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
 
 public class Registration extends Application {
+    private final ObservableList<PersonModel> data =
+            FXCollections.observableArrayList(
+                    new PersonModel("123", "Jacob", "Smith", "jacob.smith@example.com"),
+                    new PersonModel("124", "Isabella", "Johnson", "isabella.johnson@example.com"),
+                    new PersonModel("125", "Ethan", "Williams", "ethan.williams@example.com"),
+                    new PersonModel("126", "Emma", "Jones", "emma.jones@example.com"),
+                    new PersonModel("127", "Michael", "Brown", "michael.brown@example.com"));
+
+    public static void main(String[] args){
+        launch(args);
+    }
+
     @Override
     public void start(Stage stage) {
+        stage.setTitle("Kartoteka");
+        stage.setMaximized(true);
+
+
+        VBox vBox = new VBox();
+        Scene scene = new Scene(vBox, 400, 350);
+        scene.setFill(Color.OLDLACE);
+
+        //((VBox) scene.getRoot()).getChildren().addAll(menuBar);
+        vBox.getChildren().addAll(mainMenu(), mainTable());
+
+        stage.setScene(scene);
+
+
+//        stage.setTitle("Registration Form");
+//        stage.setScene(sceneWithGrid());
+        stage.show();
+    }
+
+
+    private MenuBar mainMenu() {
+        MenuBar menuBar = new MenuBar();
+        Menu menuFile = new Menu("Plik");
+        Menu menuEdit = new Menu("Edytuj");
+        Menu menuView = new Menu("Widok");
+        menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
+        return menuBar;
+    }
+
+    private VBox mainTable() {
+        final TableView<PersonModel> table = new TableView<>();
+        final Label label = new Label("Lista osób");
+        label.setFont(new Font("Arial", 12));
+
+        table.setEditable(true);
+
+        TableColumn<PersonModel, String> idColumn = new TableColumn<>("ID");
+        idColumn.setMinWidth(100);
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<PersonModel, String> firstNameCol = new TableColumn<>("Imię");
+        firstNameCol.setMinWidth(100);
+        firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+
+        TableColumn<PersonModel, String> lastNameCol = new TableColumn<>("Nazwisko");
+        lastNameCol.setMinWidth(100);
+        lastNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+
+        TableColumn<PersonModel, String> emailCol = new TableColumn<>("Email");
+        emailCol.setMinWidth(200);
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+
+        table.setItems(data);
+
+        table.getColumns().addAll(idColumn, firstNameCol, lastNameCol, emailCol);
+
+        final VBox vbox = new VBox();
+        vbox.setSpacing(5);
+        vbox.setPadding(new Insets(10, 0, 0, 10));
+        vbox.getChildren().addAll(label, table);
+
+        //((Group) scene.getRoot()).getChildren().addAll(vbox);
+        return vbox;
+    }
+
+
+    private Scene sceneWithGrid() {
         //Label for name
         Text nameLabel = new Text("Name");
 
@@ -141,22 +216,11 @@ public class Registration extends Application {
         educationLabel.setStyle("-fx-font: normal bold 15px 'serif' ");
         locationLabel.setStyle("-fx-font: normal bold 15px 'serif' ");
 
-        //Setting the back ground color
+        //Setting the background color
         gridPane.setStyle("-fx-background-color: BEIGE;");
 
         //Creating a scene object
-        Scene scene = new Scene(gridPane);
-
-        //Setting title to the Stage
-        stage.setTitle("Registration Form");
-
-        //Adding scene to the stage
-        stage.setScene(scene);
-
-        //Displaying the contents of the stage
-        stage.show();
+        return new Scene(gridPane);
     }
-    public static void main(String args[]){
-        launch(args);
-    }
+
 }
