@@ -127,8 +127,6 @@ public class PersonReader {
                 return first + second + third;
             }
 
-            //System.out.println(tokensLeft);
-
             if (second.startsWith("-")) {
                 return first + second;
             }

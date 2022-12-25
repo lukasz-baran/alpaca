@@ -10,28 +10,21 @@ import com.evolve.repo.NitrateStarter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import lombok.SneakyThrows;
-import org.dizitart.no2.Nitrite;
-import org.dizitart.no2.collection.Document;
-import org.dizitart.no2.collection.DocumentCursor;
-import org.dizitart.no2.collection.NitriteCollection;
-import org.dizitart.no2.repository.ObjectRepository;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static org.dizitart.no2.collection.Document.createDocument;
-
+@Slf4j
 public class AppMain {
     public static final URL FILE_BY_ALPHA = Resources.getResource("ludzie-alfabetycznie.txt");
     public static final URL DBF_FILE = Resources.getResource("Z_B_KO.DBF");
 
     @SneakyThrows
     public static void main(String[] args) {
-        //new AppMain().imports();
-        new NitrateStarter().starter();
+        new AppMain().imports();
+        //new NitrateStarter().starter();
     }
 
     @SneakyThrows
@@ -45,9 +38,9 @@ public class AppMain {
                 .performImport(DBF_FILE.getPath())
                 .getOsoby();
 
-        System.out.println("Wczytano " + people.size() + " z indeksu");
-        System.out.println("Wczytano " + grupyAlfabetyczne.getSize() + " z grup alfabetycznych");
-        System.out.println("Wczytano " + osobyDbf.size());
+        log.info("Wczytano " + people.size() + " z indeksu");
+        log.info("Wczytano " + grupyAlfabetyczne.getSize() + " z grup alfabetycznych");
+        log.info("Wczytano " + osobyDbf.size());
 
 
         ObjectMapper objectMapper = new ObjectMapper();

@@ -31,15 +31,14 @@ public class ImportPeople {
 
                 if (maybePerson.isPresent()) {
                     Person person = maybePerson.get();
-                    //System.out.println(maybePerson.get());
 
                     if (!person.isCorrect()) {
-                        System.out.println("incorrect: " + person.toString());
+                        log.warn("incorrect: {}", person);
                     }
 
                     personList.add(person);
                 } else {
-                    System.out.println("failed: " + line);
+                    log.warn("failed: {}", line);
                 }
             }
         }

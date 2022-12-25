@@ -6,6 +6,7 @@ import com.evolve.importing.group.PersonGroupReader;
 import com.evolve.importing.person.Person;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -17,11 +18,11 @@ import java.util.Scanner;
  Lista niezbędnych kuracji danych:
 
  1) nazwiska panieńskie
- [MAZUREK]
+ [FOO]
 
  2) kuracja podwójnych nazwisk
- SZELIGA -NANASZKO
- NĘDZA- GAJDA
+ FOO -BAR
+ BAR- FOO
 
  3) data śmierci
  ZM 2,02,99
@@ -36,6 +37,7 @@ import java.util.Scanner;
 
  */
 @RequiredArgsConstructor
+@Slf4j
 public class ImportAlphanumeric {
     private final File fileAlphanumeric;
 
@@ -58,7 +60,7 @@ public class ImportAlphanumeric {
                 if (groupStarter(line)) {
                     currentGroup = Grupa.groupFor(line.charAt(0))
                             .orElseThrow(() -> new RuntimeException("Cannot assign to group " + line));
-                    System.out.println("Detected group: " + currentGroup);
+                    log.warn("Detected group: {}", currentGroup);
                     continue;
                 }
 
@@ -71,7 +73,7 @@ public class ImportAlphanumeric {
 
             }
         }
-        System.out.println(grupy);
+        log.info(grupy.toString());
         grupy.validateContinuity();
         return grupy;
     }

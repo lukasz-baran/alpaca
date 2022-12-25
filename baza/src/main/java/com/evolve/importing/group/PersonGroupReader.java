@@ -3,12 +3,14 @@ package com.evolve.importing.group;
 import com.evolve.importing.person.KartotekaId;
 import com.evolve.importing.person.Person;
 import com.evolve.importing.person.PersonStatusDetails;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class PersonGroupReader {
 
     public static final Pattern ZM_REGEX = Pattern.compile("ZM\\s\\d{2}\\.\\d{2}\\.\\d{2}");
@@ -29,7 +31,7 @@ public class PersonGroupReader {
         KartotekaId kartotekaId = KartotekaId.of(numerKartoteki);
 
         if (!tokenizer.hasMoreTokens()) {
-            System.out.println("Line is not finished on: " + numerKartoteki);
+            log.info("Line is not finished on: {}", numerKartoteki);
             return Optional.empty();
         }
 
@@ -49,7 +51,7 @@ public class PersonGroupReader {
                 .statusDetails(personStatusDetails)
                 .build());
         } catch(Exception exception) {
-            System.out.println(line + " FAIL");
+            log.warn("FAILED to read {}", line);
             throw exception;
         }
     }

@@ -2,6 +2,7 @@ package com.evolve.importDbf;
 
 import com.evolve.importing.exception.ImportFailedException;
 import com.linuxense.javadbf.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,12 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class ImportDbfFile {
 
     public DbfData performImport(String filePath) {
         DBFReader reader = null;
         try {
-            //reader = new DBFReader(new FileInputStream(filePath), Charset.forName("ISO-8859-2"));
             reader = new DBFReader(new FileInputStream(filePath), Charset.forName("Cp1250"));
 
 
@@ -29,7 +30,7 @@ public class ImportDbfFile {
             Object[] rowObjects;
 
             while ((rowObjects = reader.nextRecord()) != null) {
-                System.out.println(rowObjects.length);
+                log.info("number of objects {}", rowObjects.length);
 
                 Map<String, Object> personData = new HashMap<>();
 
@@ -40,12 +41,11 @@ public class ImportDbfFile {
                     personData.put(fieldName, rowObjects[i]);
                 }
 
-                System.out.println(personData);
+                log.info("person {}", personData);
                 dbfData.addPerson(DbfPerson.of(personData));
             }
 
-            System.out.println(fieldNames);
-            //System.out.println(dbfData);
+            log.info("Field names: {}", fieldNames);
 
             return dbfData;
 

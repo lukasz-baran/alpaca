@@ -43,7 +43,7 @@ public class NitrateStarter {
 
             DocumentCursor cursor = collection.find();
             for (Document document : cursor) {
-                System.out.println(document);
+                log.info("document: {}", document);
             }
 
 
@@ -57,14 +57,14 @@ public class NitrateStarter {
             personRepo.insert(testPerson);
             Cursor<Person> personCursor = personRepo.find();
             for (Person document : personCursor) {
-                System.out.println(document);
+                log.info("document: {}", document);
             }
 
             ObjectRepository<Address> addressRepo = db.getRepository(Address.class);
             addressRepo.insert(Address.of("Tkaczowa", "code"));
             Cursor<Address> addressCursor = addressRepo.find();
             for (Address document : addressCursor) {
-                System.out.println(document);
+                log.info("document: {}", document);
             }
 
 

@@ -4,6 +4,7 @@ import com.evolve.importing.person.Person;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
@@ -37,12 +38,13 @@ import java.util.*;
 @AllArgsConstructor
 @Builder
 @Getter
+@Slf4j
 public class GrupyAlfabetyczne {
 
     private final Map<Grupa, List<Person>> grupyLudzie = new HashMap<>();
 
     public void addNewPerson(Grupa grupa, Person person) {
-        System.out.println("add new person " + grupa);
+        log.info("add new person {}", grupa);
         final List<Person> osoby = grupyLudzie.getOrDefault(grupa, new ArrayList<>());
         osoby.add(person);
         grupyLudzie.put(grupa, osoby);
@@ -54,12 +56,9 @@ public class GrupyAlfabetyczne {
     }
 
     public void validateContinuity() {
-        System.out.println("VALIDATE continuity - start");
-        grupyLudzie.forEach((grupa, ludzie) -> {
-            //System.out.println("checking: " + grupa);
-            validateContinuity(grupa, ludzie);
-        });
-        System.out.println("VALIDATE continuity - end");
+        log.info("VALIDATE continuity - start");
+        grupyLudzie.forEach(this::validateContinuity);
+        log.info("VALIDATE continuity - end");
     }
 
     private void validateContinuity(Grupa grupa, List<Person> personList) {
@@ -67,13 +66,11 @@ public class GrupyAlfabetyczne {
         firstPerson.ifPresent(person -> {
             String index = "000";
             final Iterator<Person> iterator = personList.iterator();
-//            iterator.next();
 
             while (iterator.hasNext()) {
                 final Person personToCheck = iterator.next();
                 int previous = Integer.parseInt(index);
                 int next = Integer.parseInt(personToCheck.getIndex());
-                //System.out.println("checking: " + next);
                 if (previous + 1 != next) {
                     throw new RuntimeException("No continuity for " + personToCheck);
                 }
