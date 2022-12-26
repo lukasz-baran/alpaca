@@ -42,7 +42,6 @@ public class Registration extends Application {
 
         //((VBox) scene.getRoot()).getChildren().addAll(menuBar);
         vBox.getChildren().addAll(mainMenu(), mainTable());
-
         stage.setScene(scene);
 
 
@@ -62,6 +61,16 @@ public class Registration extends Application {
     }
 
     private VBox mainTable() {
+//        Scene scene = new Scene(new Group());
+//        stage.setTitle("Table View Sample");
+//        stage.setWidth(450);
+//        stage.setHeight(500);
+//
+//        final Label label = new Label("Address Book");
+//        label.setFont(new Font("Arial", 20));
+//
+//        table.setEditable(true);
+
         final TableView<PersonModel> table = new TableView<>();
         final Label label = new Label("Lista osób");
         label.setFont(new Font("Arial", 12));

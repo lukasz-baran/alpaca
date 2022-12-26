@@ -38,7 +38,7 @@ public class Person implements Serializable {
 
     private PersonStatus status; // TODO should come with dates (death, removal, resignation)
 
-    private AuthorizedPerson authorizedPerson; // if null nobody is authorized
+    private List<AuthorizedPerson> authorizedPersons; // if null nobody is authorized
 
     private List<Comment> comments; // notatki
 
