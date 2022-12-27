@@ -20,7 +20,7 @@ class SmartPersonDeducerShould {
                 .NAZ_ODB7("rez.")
                 .build();
 
-        var address = SmartPersonDeducer.decuceAddress(person);
+        var address = SmartPersonDeducer.deduceAddress(person);
 
         assertThat(address)
                 .hasValue(Address.of("Monopolowa 1 / 7", "35-020", "Rzeszów"));
@@ -38,8 +38,7 @@ class SmartPersonDeducerShould {
                 .NAZ_ODB6("39-308 Wadowice Górne")
                 .NAZ_ODB7("rez.")
                 .build();
-        final String input = "39-308 Wadowice Górne";
-        var address = SmartPersonDeducer.decuceAddress(person);
+        var address = SmartPersonDeducer.deduceAddress(person);
 
         assertThat(address)
                 .hasValue(Address.of("Monopolowa 1 / 7", "39-308", "Wadowice Górne"));

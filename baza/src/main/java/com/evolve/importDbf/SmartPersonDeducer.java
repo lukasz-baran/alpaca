@@ -13,7 +13,7 @@ public class SmartPersonDeducer {
     //ul. Wyspiañskiego 63/2
     static final Pattern STREET_PATTERN = Pattern.compile("([uU]l\\. )?[\\p{IsAlphabetic} ]+\\d+ ?/ ?\\d+");
 
-    public static Optional<Address> decuceAddress(DbfPerson person) {
+    public static Optional<Address> deduceAddress(DbfPerson person) {
         final List<String> guesses = List.of(person.getNAZ_ODB3().trim(),
                 person.getNAZ_ODB4().trim(),
                 person.getNAZ_ODB5().trim(),
