@@ -2,11 +2,10 @@ package com.evolve;
 
 import com.evolve.importDbf.DbfPerson;
 import com.evolve.importDbf.ImportDbfFile;
-import com.evolve.importing.ImportAlphanumeric;
-import com.evolve.importing.ImportPeople;
-import com.evolve.importing.group.GrupyAlfabetyczne;
-import com.evolve.importing.person.Person;
-import com.evolve.repo.NitrateStarter;
+import com.evolve.importDoc.ImportAlphanumeric;
+import com.evolve.importDoc.ImportPeople;
+import com.evolve.importDoc.group.GrupyAlfabetyczne;
+import com.evolve.importDoc.person.Person;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import lombok.SneakyThrows;

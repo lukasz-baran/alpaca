@@ -1,7 +1,7 @@
-package com.evolve.importing;
+package com.evolve.importDoc;
 
-import com.evolve.importing.person.Person;
-import com.evolve.importing.person.PersonReader;
+import com.evolve.importDoc.person.Person;
+import com.evolve.importDoc.person.PersonReader;
 import com.google.common.io.Resources;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

@@ -1,8 +1,8 @@
-package com.evolve.importing.group;
+package com.evolve.importDoc.group;
 
-import com.evolve.importing.person.KartotekaId;
-import com.evolve.importing.person.Person;
-import com.evolve.importing.person.PersonStatusDetails;
+import com.evolve.importDoc.person.KartotekaId;
+import com.evolve.importDoc.person.Person;
+import com.evolve.importDoc.person.PersonStatusDetails;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;

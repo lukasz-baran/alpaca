@@ -1,9 +1,9 @@
-package com.evolve.importing;
+package com.evolve.importDoc;
 
-import com.evolve.importing.group.Grupa;
-import com.evolve.importing.group.GrupyAlfabetyczne;
-import com.evolve.importing.group.PersonGroupReader;
-import com.evolve.importing.person.Person;
+import com.evolve.importDoc.group.Grupa;
+import com.evolve.importDoc.group.GrupyAlfabetyczne;
+import com.evolve.importDoc.group.PersonGroupReader;
+import com.evolve.importDoc.person.Person;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -92,9 +92,6 @@ public class ImportAlphanumeric {
      * - it's empty
      */
     boolean skipLine(String line) {
-        if (StringUtils.isBlank(line)) {
-            return true;
-        }
-        return false;
+        return StringUtils.isBlank(line);
     }
 }

@@ -1,4 +1,4 @@
-package com.evolve.importing.exception;
+package com.evolve.exception;
 
 public class ImportFailedException extends RuntimeException {
 

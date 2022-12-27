@@ -1,10 +1,9 @@
-package com.evolve.importing.group;
+package com.evolve.importDoc.group;
 
-import com.evolve.importing.person.PersonStatusDetails;
+import com.evolve.importDoc.person.PersonStatusDetails;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class PersonGroupReaderShould {
 
