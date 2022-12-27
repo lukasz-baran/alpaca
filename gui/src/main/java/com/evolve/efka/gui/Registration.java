@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -35,12 +36,18 @@ public class Registration extends Application {
         stage.setTitle("Kartoteka");
         stage.setMaximized(true);
 
+//        VBox vBox = new VBox();
+//        Group group = new Group();
+//        Scene scene = new Scene(group);
+//        stage.setTitle("Table View Sample");
+//        stage.setWidth(450);
+//        stage.setHeight(500);
+//        group.getChildren().addAll(mainMenu(), mainTable());
+//        stage.setScene(scene);
 
         VBox vBox = new VBox();
         Scene scene = new Scene(vBox, 400, 350);
         scene.setFill(Color.OLDLACE);
-
-        //((VBox) scene.getRoot()).getChildren().addAll(menuBar);
         vBox.getChildren().addAll(mainMenu(), mainTable());
         stage.setScene(scene);
 
@@ -61,15 +68,6 @@ public class Registration extends Application {
     }
 
     private VBox mainTable() {
-//        Scene scene = new Scene(new Group());
-//        stage.setTitle("Table View Sample");
-//        stage.setWidth(450);
-//        stage.setHeight(500);
-//
-//        final Label label = new Label("Address Book");
-//        label.setFont(new Font("Arial", 20));
-//
-//        table.setEditable(true);
 
         final TableView<PersonModel> table = new TableView<>();
         final Label label = new Label("Lista osób");
@@ -98,9 +96,10 @@ public class Registration extends Application {
         table.getColumns().addAll(idColumn, firstNameCol, lastNameCol, emailCol);
 
         final VBox vbox = new VBox();
-        vbox.setSpacing(5);
+        //vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label, table);
+//        vbox.getChildren().addAll(label, table);
+        vbox.getChildren().addAll(table);
 
         //((Group) scene.getRoot()).getChildren().addAll(vbox);
         return vbox;

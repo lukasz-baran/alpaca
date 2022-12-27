@@ -61,7 +61,7 @@ public class NitrateStarter {
             }
 
             ObjectRepository<Address> addressRepo = db.getRepository(Address.class);
-            addressRepo.insert(Address.of("Tkaczowa", "code"));
+            addressRepo.insert(Address.of("Tkaczowa", "34-678", "Ruda Śląska"));
             Cursor<Address> addressCursor = addressRepo.find();
             for (Address document : addressCursor) {
                 log.info("document: {}", document);

@@ -1,7 +1,6 @@
 package com.evolve.domain;
 
 import lombok.*;
-import org.dizitart.no2.repository.annotations.Id;
 
 import java.io.Serializable;
 
@@ -9,15 +8,15 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class Address implements Serializable {
 
     private String street;
-    private String postCode;
+    private String postalCode;
     private String city;
 
-    public static Address of(String street, String cityCode) {
-        // TODO split cityCode into two
-        return new Address(street, cityCode, cityCode);
+    public static Address of(String street, String postalCode, String city) {
+        return new Address(street, postalCode, city);
     }
 
 }

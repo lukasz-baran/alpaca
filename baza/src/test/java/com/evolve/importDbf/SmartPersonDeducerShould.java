@@ -23,7 +23,7 @@ class SmartPersonDeducerShould {
         var address = SmartPersonDeducer.decuceAddress(person);
 
         assertThat(address)
-                .hasValue(Address.of("Monopolowa 1 / 7", "35-020 Rzeszów"));
+                .hasValue(Address.of("Monopolowa 1 / 7", "35-020", "Rzeszów"));
 
     }
 
@@ -42,7 +42,7 @@ class SmartPersonDeducerShould {
         var address = SmartPersonDeducer.decuceAddress(person);
 
         assertThat(address)
-                .hasValue(Address.of("Monopolowa 1 / 7", "39-308 Wadowice Górne"));
+                .hasValue(Address.of("Monopolowa 1 / 7", "39-308", "Wadowice Górne"));
     }
 
 }
