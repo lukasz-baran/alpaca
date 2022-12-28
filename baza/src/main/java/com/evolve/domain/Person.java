@@ -1,9 +1,7 @@
 package com.evolve.domain;
 
 import lombok.*;
-import org.dizitart.no2.collection.Document;
-import org.dizitart.no2.mapper.Mappable;
-import org.dizitart.no2.mapper.NitriteMapper;
+import org.dizitart.no2.repository.annotations.Id;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -14,6 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Person implements Serializable {
+
+    @Id
+    private Person personId;
 
     private Integer registryNum; // numer kartoteki
     private Integer oldRegistryNum; // numer starej kartoteki
@@ -52,6 +53,11 @@ public class Person implements Serializable {
     public static class PersonAddress extends Address {
 
         private AddressType type;
+
+        public PersonAddress(Address address, AddressType type) {
+            super(address.getStreet(), address.getPostalCode(), address.getCity());
+            this.type = type;
+        }
 
         public PersonAddress(String street, String postCode, String city, AddressType type) {
             super(street, postCode, city);

@@ -1,13 +1,12 @@
-package com.evolve.efka.gui;
+package com.evolve.gui;
 
+import com.evolve.app.EfkaSpringApp;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -17,8 +16,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ConfigurableApplicationContext;
 
 public class Registration extends Application {
+    private ConfigurableApplicationContext applicationContext;
+
     private final ObservableList<PersonModel> data =
             FXCollections.observableArrayList(
                     new PersonModel("123", "Jacob", "Smith", "jacob.smith@example.com"),
@@ -32,7 +36,20 @@ public class Registration extends Application {
     }
 
     @Override
+    public void init() {
+        applicationContext = new SpringApplicationBuilder(EfkaSpringApp.class).run();
+    }
+
+    @Override
+    public void stop() {
+        applicationContext.close();
+        Platform.exit();
+    }
+
+    @Override
     public void start(Stage stage) {
+        applicationContext.publishEvent(new StageReadyEvent(stage));
+
         stage.setTitle("Kartoteka");
         stage.setMaximized(true);
 
@@ -229,6 +246,12 @@ public class Registration extends Application {
 
         //Creating a scene object
         return new Scene(gridPane);
+    }
+
+    static class StageReadyEvent extends ApplicationEvent {
+        public StageReadyEvent(Stage stage) {
+            super(stage);
+        }
     }
 
 }

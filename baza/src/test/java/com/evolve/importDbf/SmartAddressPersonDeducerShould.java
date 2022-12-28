@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class SmartPersonDeducerShould {
+class SmartAddressPersonDeducerShould {
 
     @Test
     void deduceAddress() {
@@ -20,7 +20,7 @@ class SmartPersonDeducerShould {
                 .NAZ_ODB7("rez.")
                 .build();
 
-        var address = SmartPersonDeducer.deduceAddress(person);
+        var address = SmartAddressPersonDeducer.deduceAddress(person);
 
         assertThat(address)
                 .hasValue(Address.of("Monopolowa 1 / 7", "35-020", "Rzeszów"));
@@ -38,7 +38,7 @@ class SmartPersonDeducerShould {
                 .NAZ_ODB6("39-308 Wadowice Górne")
                 .NAZ_ODB7("rez.")
                 .build();
-        var address = SmartPersonDeducer.deduceAddress(person);
+        var address = SmartAddressPersonDeducer.deduceAddress(person);
 
         assertThat(address)
                 .hasValue(Address.of("Monopolowa 1 / 7", "39-308", "Wadowice Górne"));

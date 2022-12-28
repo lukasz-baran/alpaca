@@ -5,7 +5,7 @@ import com.evolve.domain.Address;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class SmartPersonDeducer {
+public class SmartAddressPersonDeducer {
 
     // \p{IsAlphabetic} - includes also Polish characters ąćż..
     static final Pattern CITY_CODE_PATTERN = Pattern.compile("\\d{2}-\\d{3} [\\p{IsAlphabetic} ]+");

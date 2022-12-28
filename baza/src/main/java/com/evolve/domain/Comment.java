@@ -1,7 +1,6 @@
 package com.evolve.domain;
 
 import lombok.Data;
-import lombok.Getter;
 
 import java.time.LocalDateTime;
 
