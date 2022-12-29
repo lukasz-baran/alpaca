@@ -1,6 +1,7 @@
 package com.evolve.importDbf.deducers;
 
 import com.evolve.importDbf.DbfPerson;
+import com.evolve.utils.StringFix;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,6 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
 
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
+
 @Slf4j
 public class NamePersonDeducer implements SmartDeducer<NamePersonDeducer.DeducedCredentials> {
     private static final String SEPARATOR = " ";
@@ -19,20 +22,23 @@ public class NamePersonDeducer implements SmartDeducer<NamePersonDeducer.Deduced
     private final String nazwa2;
 
     public NamePersonDeducer(DbfPerson dbfPerson) {
-        this.nazwa1 = dbfPerson.getNAZ_ODB1().trim();
-        this.nazwa2 = dbfPerson.getNAZ_ODB2().trim();
+        this.nazwa1 = trimToEmpty(dbfPerson.getNAZ_ODB1());
+        this.nazwa2 = trimToEmpty(dbfPerson.getNAZ_ODB2());
     }
 
     @Override
     public Optional<DeducedCredentials> deduceFrom(List<String> guesses) {
         final String[] first = this.nazwa1.split(SEPARATOR, 2);
         final String[] second = this.nazwa2.split(SEPARATOR, 2);
+        if (first.length < 2 || second.length < 2) {
+            return Optional.empty();
+        }
 
         if (StringUtils.equalsAnyIgnoreCase(first[0], second[0]) &&
                 StringUtils.equalsAnyIgnoreCase(first[1], second[1])) {
             return Optional.of(new DeducedCredentials(
-                    StringUtils.capitalize(first[1]),
-                    StringUtils.capitalize(first[0])));
+                    StringFix.capitalize(first[1]),
+                    StringFix.capitalize(first[0])));
         }
 
         log.warn("Unable to get consistent first name and last name for {} and {}", nazwa1, nazwa2);
@@ -44,8 +50,6 @@ public class NamePersonDeducer implements SmartDeducer<NamePersonDeducer.Deduced
         // no need to remove anything
         return guesses;
     }
-
-    // TODO deduce and compare names from the fields
 
     @Getter
     @AllArgsConstructor

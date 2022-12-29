@@ -15,6 +15,7 @@ class SmartAddressPersonDeducerShould {
     void deduceAddress() {
 
         var person = DbfPerson.builder()
+                .SYM_ODB("02543")
                 .NAZ_ODB1("EINSTEIN ALBERT")
                 .NAZ_ODB2("EINSTEIN ALBERT")
                 .NAZ_ODB3("17.12.64 5.11.92")
@@ -25,7 +26,8 @@ class SmartAddressPersonDeducerShould {
                 .build();
 
         Optional<Person.PersonAddress> address =
-            new PersonDataDeducer(person).deduce().getAddresses().stream().findFirst();
+            new PersonDataDeducer(person).deduce().orElseThrow().getAddresses()
+                    .stream().findFirst();
 
         assertThat(address)
                 .hasValue(new Person.PersonAddress(Address.of("Monopolowa 1 / 7", "35-020", "Rzeszów"), Person.AddressType.HOME));
@@ -35,6 +37,7 @@ class SmartAddressPersonDeducerShould {
     @Test
     void deduceCityEvenIfCityNameHasWhitespace() {
         var person = DbfPerson.builder()
+                .SYM_ODB("02543")
                 .NAZ_ODB1("EINSTEIN ALBERT")
                 .NAZ_ODB2("EINSTEIN ALBERT")
                 .NAZ_ODB3("17.12.64 5.11.92")
@@ -45,7 +48,8 @@ class SmartAddressPersonDeducerShould {
                 .build();
 
         Optional<Person.PersonAddress> address =
-                new PersonDataDeducer(person).deduce().getAddresses().stream().findFirst();
+                new PersonDataDeducer(person).deduce().orElseThrow().getAddresses()
+                        .stream().findFirst();
 
         assertThat(address)
                 .hasValue(new Person.PersonAddress(Address.of("Monopolowa 1 / 7", "39-308", "Wadowice Górne"), Person.AddressType.HOME));

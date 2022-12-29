@@ -10,6 +10,6 @@ class ImportAlphanumericShould {
     @Test
     void verifyGroups() {
         assertThat(ImportAlphanumeric.START_SECTIONS)
-                .hasSize(24);
+                .hasSize(25);
     }
 }

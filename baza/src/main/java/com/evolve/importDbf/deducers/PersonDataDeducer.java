@@ -2,27 +2,39 @@ package com.evolve.importDbf.deducers;
 
 import com.evolve.domain.Address;
 import com.evolve.domain.Person;
+import com.evolve.domain.PersonId;
 import com.evolve.importDbf.DbfPerson;
+import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
+@Slf4j
 public class PersonDataDeducer {
 
     private final DbfPerson person;
 
-    public Person deduce() {
-        List<String> guesses = List.of(
-                person.getNAZ_ODB3().trim(),
-                person.getNAZ_ODB4().trim(),
-                person.getNAZ_ODB5().trim(),
-                person.getNAZ_ODB6().trim(),
-                person.getNAZ_ODB7().trim());
+    public Optional<Person> deduce() {
+        List<String> guesses = Lists.newArrayList(
+                StringUtils.trim(person.getNAZ_ODB3()),
+                StringUtils.trim(person.getNAZ_ODB4()),
+                StringUtils.trim(person.getNAZ_ODB5()),
+                StringUtils.trim(person.getNAZ_ODB6()),
+                StringUtils.trim(person.getNAZ_ODB7()));
 
         NamePersonDeducer namePersonDeducer = new NamePersonDeducer(person);
         final Optional<NamePersonDeducer.DeducedCredentials> credentials = namePersonDeducer.deduceFrom(guesses);
+
+        PersonIdDeducer personIdDeducer = new PersonIdDeducer(person);
+        final Optional<PersonId> personId = personIdDeducer.deduceFrom(guesses);
+        if (personId.isEmpty()) {
+            log.warn("Unable to deduce ID from {}", person);
+            return Optional.empty();
+        }
 
         SmartAddressPersonDeducer addressDeducer = new SmartAddressPersonDeducer();
         Optional<Address> maybeAddress = addressDeducer.deduceFrom(guesses);
@@ -45,12 +57,16 @@ public class PersonDataDeducer {
         final List<Person.AuthorizedPerson> authorizedPeople =
                 maybeAuthorizedPerson.map(List::of).orElse(List.of());
 
-        return Person.builder()
+
+
+        return Optional.of(
+                Person.builder()
+                .personId(personId.orElse(null))
                 .firstName(credentials.map(NamePersonDeducer.DeducedCredentials::getFirstName).orElse(null))
                 .lastName(credentials.map(NamePersonDeducer.DeducedCredentials::getLastName).orElse(null))
                 .addresses(personAddresses)
                 .authorizedPersons(authorizedPeople)
-                .build();
+                .build());
     }
 
 }

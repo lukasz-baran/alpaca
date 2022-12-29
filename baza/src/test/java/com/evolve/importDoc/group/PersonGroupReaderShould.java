@@ -19,7 +19,7 @@ class PersonGroupReaderShould {
     @Test
     void recognizeDateOfResignation() {
         assertThat(PersonGroupReader.decodeStatus(RECORD_REZ))
-                .isEqualTo(PersonStatusDetails.resigned("III-99"));
+                .isEqualTo(PersonStatusDetails.resigned("III-98"));
     }
 
 

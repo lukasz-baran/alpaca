@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode
 public class PersonStatusDetails {
     public static final String NO_DATA = null;
 
