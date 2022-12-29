@@ -1,5 +1,6 @@
 package com.evolve.importDoc.person;
 
+import com.evolve.domain.PersonStatusDetails;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 

@@ -19,7 +19,7 @@ public class UnitsPopulateService implements InitializingBean {
     private final Nitrite nitrite;
 
     private static final List<Unit> UNITS = List.of(
-            Unit.of("01 – Szpital wojewódzki nr 1 im. Frederyka Chopina"),
+            Unit.of("01 – Szpital wojewódzki nr 1 im. Fryderyka Chopina"),
             Unit.of("02 – Szpital wojewódzki nr 2"),
             Unit.of("03 – SP ZOZ nr 1"),
             Unit.of("04 – ZOZ nr 2"),

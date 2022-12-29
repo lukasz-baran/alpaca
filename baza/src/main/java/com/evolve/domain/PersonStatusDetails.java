@@ -1,23 +1,21 @@
-package com.evolve.importDoc.person;
+package com.evolve.domain;
 
-import com.evolve.domain.PersonStatus;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * Describes Person status: dead, resigned, etc
  */
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @Getter
+@NoArgsConstructor
 public class PersonStatusDetails {
     public static final String NO_DATA = null;
 
-    private final PersonStatus status;
-    private final String deathDate;
-    private final String resignationDate;
-    private final String comment;
+    private PersonStatus status;
+    private String deathDate;
+    private String resignationDate;
+    private String comment;
 
     /**
      * resigned without date

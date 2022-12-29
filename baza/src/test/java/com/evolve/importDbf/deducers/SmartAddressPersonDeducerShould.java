@@ -1,7 +1,11 @@
-package com.evolve.importDbf;
+package com.evolve.importDbf.deducers;
 
 import com.evolve.domain.Address;
+import com.evolve.domain.Person;
+import com.evolve.importDbf.DbfPerson;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,10 +24,11 @@ class SmartAddressPersonDeducerShould {
                 .NAZ_ODB7("rez.")
                 .build();
 
-        var address = SmartAddressPersonDeducer.deduceAddress(person);
+        Optional<Person.PersonAddress> address =
+            new PersonDataDeducer(person).deduce().getAddresses().stream().findFirst();
 
         assertThat(address)
-                .hasValue(Address.of("Monopolowa 1 / 7", "35-020", "Rzeszów"));
+                .hasValue(new Person.PersonAddress(Address.of("Monopolowa 1 / 7", "35-020", "Rzeszów"), Person.AddressType.HOME));
 
     }
 
@@ -38,10 +43,13 @@ class SmartAddressPersonDeducerShould {
                 .NAZ_ODB6("39-308 Wadowice Górne")
                 .NAZ_ODB7("rez.")
                 .build();
-        var address = SmartAddressPersonDeducer.deduceAddress(person);
+
+        Optional<Person.PersonAddress> address =
+                new PersonDataDeducer(person).deduce().getAddresses().stream().findFirst();
 
         assertThat(address)
-                .hasValue(Address.of("Monopolowa 1 / 7", "39-308", "Wadowice Górne"));
+                .hasValue(new Person.PersonAddress(Address.of("Monopolowa 1 / 7", "39-308", "Wadowice Górne"), Person.AddressType.HOME));
+
     }
 
 }

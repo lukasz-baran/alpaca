@@ -8,7 +8,6 @@ import lombok.Getter;
 @Getter
 @EqualsAndHashCode
 public class PersonId {
-    private String unitNumber; // 95 - nie płaci składek
     private String groupNumber; // numer grupy alfabetycznej (01-24)
     private String index; // numer porzadkowy w grupie
 

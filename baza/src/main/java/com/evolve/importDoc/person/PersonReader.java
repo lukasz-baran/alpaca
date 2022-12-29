@@ -1,5 +1,7 @@
 package com.evolve.importDoc.person;
 
+import com.evolve.domain.PersonStatusDetails;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

@@ -1,6 +1,6 @@
 package com.evolve.importDoc.group;
 
-import com.evolve.importDoc.person.PersonStatusDetails;
+import com.evolve.domain.PersonStatusDetails;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

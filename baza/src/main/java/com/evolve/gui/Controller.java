@@ -35,6 +35,12 @@ public class Controller {
     @FXML
     private MenuItem removeMenuItem;
 
+    @FXML
+    private MenuItem deletePersonDataMenuItem;
+
+    @FXML
+    private MenuItem importDbfMenuItem;
+
     private ObservableList<Item> itemList;
 
     public void initialize() {

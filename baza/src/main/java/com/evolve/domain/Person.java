@@ -14,7 +14,9 @@ import java.util.List;
 public class Person implements Serializable {
 
     @Id
-    private Person personId;
+    private PersonId personId;
+
+    private String unitNumber; // 95 - nie płaci składek
 
     private Integer registryNum; // numer kartoteki
     private Integer oldRegistryNum; // numer starej kartoteki
@@ -74,6 +76,9 @@ public class Person implements Serializable {
 
     @AllArgsConstructor
     @Getter
+    @ToString
+    @EqualsAndHashCode
+    @Builder
     public static class AuthorizedPerson {
         private String firstName;
         private String lastName;

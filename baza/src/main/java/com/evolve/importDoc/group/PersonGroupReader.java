@@ -2,7 +2,7 @@ package com.evolve.importDoc.group;
 
 import com.evolve.importDoc.person.KartotekaId;
 import com.evolve.importDoc.person.Person;
-import com.evolve.importDoc.person.PersonStatusDetails;
+import com.evolve.domain.PersonStatusDetails;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
