@@ -14,8 +14,21 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import net.rgielen.fxweaver.core.FxmlView;
+import org.springframework.stereotype.Component;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+//@Component
+//@FxmlView("sample.fxml")
 public class Controller {
+    //private final FxControllerAndView<SomeDialog, VBox> someDialog;
 
     @FXML
     private ListView<Item> itemListView;
@@ -43,6 +56,7 @@ public class Controller {
 
     private ObservableList<Item> itemList;
 
+    @FXML
     public void initialize() {
         itemList = FXCollections.observableArrayList();
         genItems();
@@ -75,20 +89,33 @@ public class Controller {
         });
 
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
-        newMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                itemList.clear();
-            }
-        });
+        newMenuItem.setOnAction(event -> itemList.clear());
 
         removeMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 Item item = itemListView.getSelectionModel().getSelectedItem();
                 itemList.remove(item);
-
             }
         });
 
+        final FileChooser fileChooser = new FileChooser();
+        importDbfMenuItem.setOnAction(event -> {
+            Stage stage = (Stage)itemListView.getScene().getWindow();
+            File file = fileChooser.showOpenDialog(stage);
+            if (file != null) {
+                openFile(file);
+            }
+        });
+
+    }
+
+    private void openFile(File file) {
+        final Desktop desktop = Desktop.getDesktop();
+        try {
+            desktop.open(file);
+        } catch (IOException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void genItems() {

@@ -1,29 +1,22 @@
 package com.evolve.gui;
 
-import com.evolve.app.EfkaSpringApp;
+import com.evolve.EfkaSpringApp;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
 
 
 @Slf4j
 public class Registration extends Application {
-    private ConfigurableApplicationContext applicationContext;
+    private ConfigurableApplicationContext context;
 
     private final ObservableList<PersonModel> data =
             FXCollections.observableArrayList(
@@ -33,24 +26,23 @@ public class Registration extends Application {
                     new PersonModel("126", "Emma", "Jones", "emma.jones@example.com"),
                     new PersonModel("127", "Michael", "Brown", "michael.brown@example.com"));
 
-    public static void main(String[] args){
-        launch(args);
-    }
-
     @Override
     public void init() {
-        applicationContext = new SpringApplicationBuilder(EfkaSpringApp.class).run();
+        //applicationContext = new SpringApplicationBuilder(EfkaSpringApp.class).run();
+        this.context = new SpringApplicationBuilder()
+                .sources(EfkaSpringApp.class)
+                .run(getParameters().getRaw().toArray(new String[0]));
     }
 
     @Override
     public void stop() {
-        applicationContext.close();
+        context.close();
         Platform.exit();
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        applicationContext.publishEvent(new StageReadyEvent(primaryStage));
+        context.publishEvent(new StageReadyEvent(primaryStage));
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("sample.fxml"));
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 300, 275));
@@ -124,10 +116,6 @@ public class Registration extends Application {
         return vbox;
     }*/
 
-    static class StageReadyEvent extends ApplicationEvent {
-        public StageReadyEvent(Stage stage) {
-            super(stage);
-        }
-    }
+
 
 }
