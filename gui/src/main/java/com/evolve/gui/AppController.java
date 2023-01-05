@@ -1,37 +1,39 @@
 package com.evolve.gui;
 
+import com.evolve.gui.components.RetentionFileChooser;
+import com.evolve.importing.event.DbfImportCompletedEvent;
+import com.evolve.importing.importDbf.ImportDbfService;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
 import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Getter
 @Component
 @FxmlView("sample.fxml")
+@RequiredArgsConstructor
+@Slf4j
 public class AppController {
     //private final FxControllerAndView<SomeDialog, VBox> someDialog;
-//
+
+    private final RetentionFileChooser fileChooser;
+    private final ImportDbfService importDbfService;
 
     @FXML
     ListView<Item> itemListView;
@@ -59,7 +61,8 @@ public class AppController {
 
     private ObservableList<Item> itemList;
 
-   // @FXML
+
+    // @FXML
     public void initialize() {
         itemList = FXCollections.observableArrayList();
         genItems();
@@ -101,7 +104,6 @@ public class AppController {
             }
         });
 
-        final FileChooser fileChooser = new FileChooser();
         importDbfMenuItem.setOnAction(event -> {
             Stage stage = (Stage)itemListView.getScene().getWindow();
             File file = fileChooser.showOpenDialog(stage);
@@ -113,17 +115,20 @@ public class AppController {
     }
 
     private void openFile(File file) {
-        final Desktop desktop = Desktop.getDesktop();
-        try {
-            desktop.open(file);
-        } catch (IOException ex) {
-            Logger.getLogger(AppController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        log.info("Opened dbf file {}", file);
+        importDbfService.startImport(file.getPath());
     }
 
     private void genItems() {
         for (int i = 0; i < 10; i++) {
             itemList.add(new Item("Item_" + Integer.toString(i)));
         }
+    }
+
+    @EventListener
+    public void handleContextStart(DbfImportCompletedEvent importCompleted) {
+        log.info("import: " + importCompleted.getMessage());
+        Alert a = new Alert(Alert.AlertType.INFORMATION, importCompleted.getMessage());
+        a.show();
     }
 }

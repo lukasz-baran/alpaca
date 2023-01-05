@@ -3,7 +3,7 @@ package com.evolve.gui;
 import javafx.application.Application;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication (scanBasePackages = "com.evolve.gui")
+@SpringBootApplication(scanBasePackages = "com.evolve")
 public class AlpacaSpringApp {
     public static void main(String[] args) {
         Application.launch(AlpacaJavafxApp.class, args);

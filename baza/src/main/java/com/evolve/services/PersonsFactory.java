@@ -1,8 +1,8 @@
 package com.evolve.services;
 
 import com.evolve.domain.Person;
-import com.evolve.importDbf.DbfPerson;
-import com.evolve.importDbf.deducers.PersonDataDeducer;
+import com.evolve.importing.importDbf.DbfPerson;
+import com.evolve.importing.importDbf.deducers.PersonDataDeducer;
 
 import java.util.List;
 import java.util.Optional;
