@@ -16,6 +16,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import lombok.Getter;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.stereotype.Component;
 
@@ -25,13 +26,15 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//@Component
-//@FxmlView("sample.fxml")
-public class Controller {
+@Getter
+@Component
+@FxmlView("sample.fxml")
+public class AppController {
     //private final FxControllerAndView<SomeDialog, VBox> someDialog;
+//
 
     @FXML
-    private ListView<Item> itemListView;
+    ListView<Item> itemListView;
 
     @FXML
     private Button addButton;
@@ -56,7 +59,7 @@ public class Controller {
 
     private ObservableList<Item> itemList;
 
-    @FXML
+   // @FXML
     public void initialize() {
         itemList = FXCollections.observableArrayList();
         genItems();
@@ -114,7 +117,7 @@ public class Controller {
         try {
             desktop.open(file);
         } catch (IOException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AppController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -1,23 +1,24 @@
 package com.evolve.gui;
 
-import com.evolve.EfkaSpringApp;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import lombok.extern.slf4j.Slf4j;
+import net.rgielen.fxweaver.core.FxWeaver;
+import net.rgielen.fxweaver.spring.SpringFxWeaver;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
+@Component
+public class AlpacaJavafxApp extends Application {
 
-@Slf4j
-public class Registration extends Application {
-    private ConfigurableApplicationContext context;
-
+    private ConfigurableApplicationContext applicationContext;
     private final ObservableList<PersonModel> data =
             FXCollections.observableArrayList(
                     new PersonModel("123", "Jacob", "Smith", "jacob.smith@example.com"),
@@ -26,31 +27,38 @@ public class Registration extends Application {
                     new PersonModel("126", "Emma", "Jones", "emma.jones@example.com"),
                     new PersonModel("127", "Michael", "Brown", "michael.brown@example.com"));
 
+
     @Override
     public void init() {
-        //applicationContext = new SpringApplicationBuilder(EfkaSpringApp.class).run();
-        this.context = new SpringApplicationBuilder()
-                .sources(EfkaSpringApp.class)
-                .run(getParameters().getRaw().toArray(new String[0]));
+        String[] args = getParameters().getRaw().toArray(new String[0]);
+        this.applicationContext = new SpringApplicationBuilder()
+                .sources(AlpacaSpringApp.class)
+                .run(args);
+    }
+
+    @Override
+    public void start(Stage stage) {
+        applicationContext.publishEvent(new StageReadyEvent(stage));
+        FxWeaver fxWeaver = applicationContext.getBean(FxWeaver.class);
+        Parent root = fxWeaver.loadView(AppController.class);
+        applicationContext.getBean(AppController.class).initialize();
+        Scene scene = new Scene(root);
+        stage.setTitle("Alpaca - accounting");
+        stage.setScene(scene);
+        stage.getIcons().add(new Image("alpaca.png"));
+        stage.show();
     }
 
     @Override
     public void stop() {
-        context.close();
+        this.applicationContext.close();
         Platform.exit();
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-        context.publishEvent(new StageReadyEvent(primaryStage));
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
-        primaryStage.setMinHeight(400);
-        primaryStage.setMinWidth(600);
-        primaryStage.show();
+    @Bean
+    public FxWeaver fxWeaver(ConfigurableApplicationContext applicationContext) {
+        return new SpringFxWeaver(applicationContext);
     }
-
 
 /*    @Override
     public void start(Stage stage) {
@@ -117,5 +125,5 @@ public class Registration extends Application {
     }*/
 
 
-
 }
+
