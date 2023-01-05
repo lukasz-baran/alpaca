@@ -4,16 +4,15 @@ import com.evolve.gui.components.RetentionFileChooser;
 import com.evolve.importing.event.DbfImportCompletedEvent;
 import com.evolve.importing.importDbf.ImportDbfService;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -31,12 +30,28 @@ import java.io.File;
 @Slf4j
 public class AppController {
     //private final FxControllerAndView<SomeDialog, VBox> someDialog;
+    private final ObservableList<PersonModel> data =
+            FXCollections.observableArrayList(
+                    new PersonModel("123", "Jacob", "Smith", "jacob.smith@example.com"),
+                    new PersonModel("124", "Isabella", "Johnson", "isabella.johnson@example.com"),
+                    new PersonModel("125", "Ethan", "Williams", "ethan.williams@example.com"),
+                    new PersonModel("126", "Emma", "Jones", "emma.jones@example.com"),
+                    new PersonModel("127", "Michael", "Brown", "michael.brown@example.com"));
 
     private final RetentionFileChooser fileChooser;
     private final ImportDbfService importDbfService;
 
     @FXML
-    ListView<Item> itemListView;
+    private TableView<PersonModel> personTable;
+
+    @FXML
+    TableColumn<PersonModel, String> idColumn;
+    @FXML
+    TableColumn<PersonModel, String> firstNameColumn;
+    @FXML
+    TableColumn<PersonModel, String> lastNameColumn;
+    @FXML
+    TableColumn<PersonModel, String> emailColumn;
 
     @FXML
     private Button addButton;
@@ -66,46 +81,43 @@ public class AppController {
     public void initialize() {
         itemList = FXCollections.observableArrayList();
         genItems();
-        itemListView.setItems(itemList);
+
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+        personTable.setItems(data);
 
         registerEventHandlers();
     }
 
     private void registerEventHandlers() {
-        addButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
+        addButton.setOnAction(event -> itemList.add(new Item(nameTextField.getText())));
+
+        nameTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
                 itemList.add(new Item(nameTextField.getText()));
             }
         });
 
-        nameTextField.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ENTER) {
-                    itemList.add(new Item(nameTextField.getText()));
-                }
-            }
-        });
-
         quitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
-        quitMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                Platform.exit();
-                System.exit(0);
-            }
+        quitMenuItem.setOnAction(event -> {
+            Platform.exit();
+            System.exit(0);
         });
 
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
         newMenuItem.setOnAction(event -> itemList.clear());
 
-        removeMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                Item item = itemListView.getSelectionModel().getSelectedItem();
-                itemList.remove(item);
-            }
+        removeMenuItem.setOnAction(event -> {
+            PersonModel item = personTable.getSelectionModel().getSelectedItem();
+            data.remove(item);
+            //Item item = itemListView.getSelectionModel().getSelectedItem();
+            //itemList.remove(item);
         });
 
         importDbfMenuItem.setOnAction(event -> {
-            Stage stage = (Stage)itemListView.getScene().getWindow();
+            Stage stage = (Stage)personTable.getScene().getWindow();
             File file = fileChooser.showOpenDialog(stage);
             if (file != null) {
                 openFile(file);
