@@ -1,5 +1,6 @@
 package com.evolve.gui;
 
+import com.evolve.domain.Person;
 import javafx.beans.property.SimpleStringProperty;
 
 @SuppressWarnings("unused")
@@ -15,6 +16,10 @@ public class PersonModel {
         this.firstName = new SimpleStringProperty(fName);
         this.lastName = new SimpleStringProperty(lName);
         this.email = new SimpleStringProperty(email);
+    }
+
+    PersonModel(Person person) {
+        this(person.getPersonId(), person.getFirstName(), person.getLastName(), person.getEmail());
     }
 
     public String getId() {

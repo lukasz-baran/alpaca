@@ -1,12 +1,17 @@
 package com.evolve.gui;
 
+import com.evolve.domain.Person;
+import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.gui.components.RetentionFileChooser;
 import com.evolve.importing.event.DbfImportCompletedEvent;
 import com.evolve.importing.importDbf.ImportDbfService;
+import com.evolve.services.PersonsService;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -22,6 +27,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.List;
+import java.util.Locale;
 
 @Getter
 @Component
@@ -30,16 +37,13 @@ import java.io.File;
 @Slf4j
 public class AppController {
     //private final FxControllerAndView<SomeDialog, VBox> someDialog;
-    private final ObservableList<PersonModel> data =
-            FXCollections.observableArrayList(
-                    new PersonModel("123", "Jacob", "Smith", "jacob.smith@example.com"),
-                    new PersonModel("124", "Isabella", "Johnson", "isabella.johnson@example.com"),
-                    new PersonModel("125", "Ethan", "Williams", "ethan.williams@example.com"),
-                    new PersonModel("126", "Emma", "Jones", "emma.jones@example.com"),
-                    new PersonModel("127", "Michael", "Brown", "michael.brown@example.com"));
+
+    private ObservableList<PersonModel> data;
 
     private final RetentionFileChooser fileChooser;
     private final ImportDbfService importDbfService;
+
+    private final PersonsService personsService;
 
     @FXML
     private TableView<PersonModel> personTable;
@@ -74,13 +78,17 @@ public class AppController {
     @FXML
     private MenuItem importDbfMenuItem;
 
+    @FXML
+    private TextField filterField;
+
+    // TODO no longer needed
     private ObservableList<Item> itemList;
 
 
     // @FXML
     public void initialize() {
-        itemList = FXCollections.observableArrayList();
-        genItems();
+        Locale.setDefault(new Locale("pl"));
+        populateTable("id", true);
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
@@ -131,16 +139,25 @@ public class AppController {
         importDbfService.startImport(file.getPath());
     }
 
-    private void genItems() {
-        for (int i = 0; i < 10; i++) {
-            itemList.add(new Item("Item_" + Integer.toString(i)));
-        }
-    }
-
     @EventListener
     public void handleContextStart(DbfImportCompletedEvent importCompleted) {
         log.info("import: " + importCompleted.getMessage());
-        Alert a = new Alert(Alert.AlertType.INFORMATION, importCompleted.getMessage());
-        a.show();
+        new Alert(Alert.AlertType.INFORMATION, importCompleted.getMessage()).show();
+        populateTable("id", true);
+    }
+
+    void populateTable(String sortBy, boolean upDown) {
+        List<Person> persons =
+                personsService.fetch(PersonLookupCriteria.builder()
+                                .sortBy(sortBy)
+                                .upDown(upDown)
+                        .build());
+
+        data = FXCollections.observableArrayList();
+        persons.stream()
+                .map(PersonModel::new)
+                .forEach(data::add);
+
+        personTable.setItems(data);
     }
 }

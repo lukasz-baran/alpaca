@@ -21,9 +21,10 @@ public class AuthorizedPersonDeducer implements SmartDeducer<Person.AuthorizedPe
                 .findFirst();
         return maybeWife.map(goodGuess -> {
             final String trimmed = StringUtils.removeStart(goodGuess, "ż.");
-            String[] afterSplit = trimmed.split(" ");
-            return new Person.AuthorizedPerson(afterSplit[0], afterSplit[1], "żona", null, null, null);
-        });
+            return trimmed.split(" ");
+        })
+        .filter(afterSplit -> afterSplit.length > 1)
+        .map(afterSplit -> new Person.AuthorizedPerson(afterSplit[0], afterSplit[1], "żona", null, null, null));
         // TODO deduce other relations
 
     }

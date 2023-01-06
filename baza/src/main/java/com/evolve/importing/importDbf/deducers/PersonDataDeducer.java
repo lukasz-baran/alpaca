@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +49,9 @@ public class PersonDataDeducer {
             guesses = authorizedPersonDeducer.removeGuesses(guesses);
         }
 
+        PersonDateOfBirthDeducer personDateOfBirthDeducer = new PersonDateOfBirthDeducer();
+        Optional<LocalDate> maybeDob = personDateOfBirthDeducer.deduceFrom(List.of(StringUtils.trim(person.getNAZ_ODB3())));
+
 
         final List<Person.PersonAddress> personAddresses =
                 maybeAddress.map(address -> new Person.PersonAddress(address, Person.AddressType.HOME))
@@ -61,9 +65,10 @@ public class PersonDataDeducer {
 
         return Optional.of(
                 Person.builder()
-                .personId(personId.orElse(null))
+                .personId(personId.map(PersonId::toString).orElse(null))
                 .firstName(credentials.map(NamePersonDeducer.DeducedCredentials::getFirstName).orElse(null))
                 .lastName(credentials.map(NamePersonDeducer.DeducedCredentials::getLastName).orElse(null))
+                .dob(maybeDob.orElse(null))
                 .addresses(personAddresses)
                 .authorizedPersons(authorizedPeople)
                 .build());

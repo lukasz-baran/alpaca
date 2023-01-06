@@ -1,6 +1,7 @@
 package com.evolve.domain;
 
 import lombok.*;
+import org.dizitart.no2.repository.annotations.Entity;
 import org.dizitart.no2.repository.annotations.Id;
 
 import java.io.Serializable;
@@ -11,10 +12,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+//@Entity
 public class Person implements Serializable {
 
     @Id
-    private PersonId personId;
+    private String personId;
 
     private String unitNumber; // 95 - nie płaci składek
 
@@ -79,6 +81,7 @@ public class Person implements Serializable {
     @ToString
     @EqualsAndHashCode
     @Builder
+    @NoArgsConstructor
     public static class AuthorizedPerson {
         private String firstName;
         private String lastName;
