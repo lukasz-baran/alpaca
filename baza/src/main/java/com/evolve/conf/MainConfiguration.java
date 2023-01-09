@@ -21,15 +21,19 @@ class MainConfiguration {
     private String databaseFilePassword;
 
     @Bean
-    Nitrite nitrateDb() {
+    Nitrite nitrateDb(LocalDateJacksonExtension localDateJacksonExtension) {
         final MVStoreModule storeModule = MVStoreModule.withConfig()
                 .filePath(databaseFilePath)
                 .compress(true)
                 .build();
+
+        JacksonMapperModule jacksonMapperModule = new JacksonMapperModule(localDateJacksonExtension);
+
         log.info("database initialized");
         return Nitrite.builder()
                 .loadModule(storeModule)
-                .loadModule(new JacksonMapperModule())
+                .loadModule(jacksonMapperModule)
                 .openOrCreate(databaseFileUsername, databaseFilePassword);
     }
+
 }

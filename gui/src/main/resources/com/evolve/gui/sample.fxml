@@ -44,16 +44,17 @@
             <children>
                 <SplitPane dividerPositions="0.3573667711598746" layoutX="77.0" layoutY="79.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                        <AnchorPane minHeight="0.0" minWidth="100.0" prefHeight="160.0" prefWidth="100.0">
                             <children>
                             <TableView fx:id="personTable" layoutX="10.0" layoutY="10.0" maxWidth="1000.0"
-                                       prefHeight="363.0" prefWidth="279.0" AnchorPane.bottomAnchor="5.0"
+                                       prefHeight="363.0" prefWidth="279.0" AnchorPane.bottomAnchor="35.0"
                                        AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
                               <columns>
                                 <TableColumn fx:id="idColumn" editable="false" prefWidth="75.0" text="ID" />
                                 <TableColumn fx:id="firstNameColumn" editable="false" prefWidth="75.0" text="Imię" />
                                 <TableColumn fx:id="lastNameColumn" editable="false" prefWidth="75.0" text="Nazwisko" />
                                 <TableColumn fx:id="emailColumn" editable="false" prefWidth="75.0" text="Email" />
+                                <TableColumn fx:id="dobColumn" editable="false" prefWidth="75.0" text="Data ur." />
                               </columns>
                                 <contextMenu>
                                     <ContextMenu>
@@ -66,6 +67,14 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                             </TableView>
+                                <HBox id="HBox" alignment="TOP_CENTER" prefHeight="18.0" prefWidth="640.0" spacing="5.0"
+                                      AnchorPane.bottomAnchor="5.0"
+                                      AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                                    <children>
+                                        <Label text="Filter Table:" textAlignment="RIGHT" />
+                                        <TextField fx:id="filterField" alignment="TOP_LEFT" prefHeight="15.0" prefWidth="78.0" HBox.hgrow="ALWAYS" />
+                                    </children>
+                                </HBox>
                             </children>
                             <padding>
                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -111,12 +120,6 @@
                 </SplitPane>
             </children>
         </AnchorPane>
-          <HBox id="HBox" alignment="TOP_CENTER" prefHeight="18.0" prefWidth="640.0" spacing="5.0">
-              <children>
-                  <Label text="Filter Table:" textAlignment="RIGHT" />
-                  <TextField fx:id="filterField" alignment="TOP_RIGHT" prefHeight="15.0" prefWidth="78.0" HBox.hgrow="ALWAYS" />
-              </children>
-          </HBox>
       <Pagination prefHeight="12.0" prefWidth="640.0" />
 
     </children>

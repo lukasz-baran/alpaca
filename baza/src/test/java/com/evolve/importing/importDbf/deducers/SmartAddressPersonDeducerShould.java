@@ -11,6 +11,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class SmartAddressPersonDeducerShould {
 
+    final IssuesLogger issuesLogger = new IssuesLogger();
+
     @Test
     void deduceAddress() {
 
@@ -26,7 +28,7 @@ class SmartAddressPersonDeducerShould {
                 .build();
 
         Optional<Person.PersonAddress> address =
-            new PersonDataDeducer(person).deduce().orElseThrow().getAddresses()
+            new PersonDataDeducer(person, issuesLogger).deduce().orElseThrow().getAddresses()
                     .stream().findFirst();
 
         assertThat(address)
@@ -48,7 +50,7 @@ class SmartAddressPersonDeducerShould {
                 .build();
 
         Optional<Person.PersonAddress> address =
-                new PersonDataDeducer(person).deduce().orElseThrow().getAddresses()
+                new PersonDataDeducer(person, issuesLogger).deduce().orElseThrow().getAddresses()
                         .stream().findFirst();
 
         assertThat(address)

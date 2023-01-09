@@ -1,6 +1,8 @@
 package com.evolve.services;
 
+import com.evolve.FindPerson;
 import com.evolve.domain.Person;
+import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.domain.Unit;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.dizitart.no2.repository.ObjectRepository;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,9 +23,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class PersonsService implements InitializingBean {
+public class PersonsService implements InitializingBean, FindPerson {
     private final Nitrite nitrite;
 
+    @Override
+    public List<PersonListView> fetchList(PersonLookupCriteria criteria) {
+        return fetch(criteria)
+                .stream()
+                .map(PersonListView::of)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<Person> fetch(PersonLookupCriteria criteria) {
         final ObjectRepository<Person> personRepo = nitrite.getRepository(Person.class);
 

@@ -18,6 +18,7 @@ import java.util.Optional;
 public class PersonDataDeducer {
 
     private final DbfPerson person;
+    private final IssuesLogger issuesLogger;
 
     public Optional<Person> deduce() {
         List<String> guesses = Lists.newArrayList(
@@ -27,9 +28,6 @@ public class PersonDataDeducer {
                 StringUtils.trim(person.getNAZ_ODB6()),
                 StringUtils.trim(person.getNAZ_ODB7()));
 
-        NamePersonDeducer namePersonDeducer = new NamePersonDeducer(person);
-        final Optional<NamePersonDeducer.DeducedCredentials> credentials = namePersonDeducer.deduceFrom(guesses);
-
         PersonIdDeducer personIdDeducer = new PersonIdDeducer(person);
         final Optional<PersonId> personId = personIdDeducer.deduceFrom(guesses);
         if (personId.isEmpty()) {
@@ -37,19 +35,24 @@ public class PersonDataDeducer {
             return Optional.empty();
         }
 
-        SmartAddressPersonDeducer addressDeducer = new SmartAddressPersonDeducer();
+        final IssuesLogger.ImportIssues issues = issuesLogger.forPersonId(personId.map(PersonId::toString).orElse(null));
+
+        final NamePersonDeducer namePersonDeducer = new NamePersonDeducer(person, issues);
+        final Optional<NamePersonDeducer.DeducedCredentials> credentials = namePersonDeducer.deduceFrom(guesses);
+
+        final SmartAddressPersonDeducer addressDeducer = new SmartAddressPersonDeducer(issues);
         Optional<Address> maybeAddress = addressDeducer.deduceFrom(guesses);
         if (maybeAddress.isPresent()) {
             guesses = addressDeducer.removeGuesses(guesses);
         }
 
-        AuthorizedPersonDeducer authorizedPersonDeducer = new AuthorizedPersonDeducer();
+        final AuthorizedPersonDeducer authorizedPersonDeducer = new AuthorizedPersonDeducer(issues);
         Optional<Person.AuthorizedPerson> maybeAuthorizedPerson = authorizedPersonDeducer.deduceFrom(guesses);
         if (maybeAuthorizedPerson.isPresent()) {
             guesses = authorizedPersonDeducer.removeGuesses(guesses);
         }
 
-        PersonDateOfBirthDeducer personDateOfBirthDeducer = new PersonDateOfBirthDeducer();
+        final PersonDateOfBirthDeducer personDateOfBirthDeducer = new PersonDateOfBirthDeducer(issues);
         Optional<LocalDate> maybeDob = personDateOfBirthDeducer.deduceFrom(List.of(StringUtils.trim(person.getNAZ_ODB3())));
 
 

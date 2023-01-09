@@ -1,17 +1,16 @@
 package com.evolve.gui;
 
-import com.evolve.domain.Person;
+import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.gui.components.RetentionFileChooser;
 import com.evolve.importing.event.DbfImportCompletedEvent;
 import com.evolve.importing.importDbf.ImportDbfService;
 import com.evolve.services.PersonsService;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -23,10 +22,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,6 +57,8 @@ public class AppController {
     TableColumn<PersonModel, String> lastNameColumn;
     @FXML
     TableColumn<PersonModel, String> emailColumn;
+    @FXML
+    TableColumn<PersonModel, LocalDate> dobColumn;
 
     @FXML
     private Button addButton;
@@ -81,10 +84,6 @@ public class AppController {
     @FXML
     private TextField filterField;
 
-    // TODO no longer needed
-    private ObservableList<Item> itemList;
-
-
     // @FXML
     public void initialize() {
         Locale.setDefault(new Locale("pl"));
@@ -94,19 +93,18 @@ public class AppController {
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-        personTable.setItems(data);
+        dobColumn.setCellValueFactory(new PropertyValueFactory<>("dob"));
 
         registerEventHandlers();
     }
 
     private void registerEventHandlers() {
-        addButton.setOnAction(event -> itemList.add(new Item(nameTextField.getText())));
-
-        nameTextField.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                itemList.add(new Item(nameTextField.getText()));
-            }
-        });
+//        addButton.setOnAction(event -> itemList.add(new Item(nameTextField.getText())));
+//        nameTextField.setOnKeyPressed(event -> {
+//            if (event.getCode() == KeyCode.ENTER) {
+//                itemList.add(new Item(nameTextField.getText()));
+//            }
+//        });
 
         quitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
         quitMenuItem.setOnAction(event -> {
@@ -115,7 +113,7 @@ public class AppController {
         });
 
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
-        newMenuItem.setOnAction(event -> itemList.clear());
+        //newMenuItem.setOnAction(event -> itemList.clear());
 
         removeMenuItem.setOnAction(event -> {
             PersonModel item = personTable.getSelectionModel().getSelectedItem();
@@ -147,8 +145,8 @@ public class AppController {
     }
 
     void populateTable(String sortBy, boolean upDown) {
-        List<Person> persons =
-                personsService.fetch(PersonLookupCriteria.builder()
+        List<PersonListView> persons =
+                personsService.fetchList(PersonLookupCriteria.builder()
                                 .sortBy(sortBy)
                                 .upDown(upDown)
                         .build());
@@ -158,6 +156,35 @@ public class AppController {
                 .map(PersonModel::new)
                 .forEach(data::add);
 
-        personTable.setItems(data);
+        FilteredList<PersonModel> filteredData = new FilteredList<>(data, p -> true);
+
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(person -> {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                // Compare first name and last name of every person with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                String firstName = StringUtils.trimToEmpty(person.getFirstName()).toLowerCase();
+                if (firstName.contains(lowerCaseFilter)) {
+                    return true; // Filter matches first name.
+                }
+
+                if (StringUtils.trimToEmpty(person.getLastName()).toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches last name.
+                }
+                return false; // Does not match.
+            });
+        });
+
+        SortedList<PersonModel> sortedData = new SortedList<>(filteredData);
+
+        // 4. Bind the SortedList comparator to the TableView comparator.
+        sortedData.comparatorProperty().bind(personTable.comparatorProperty());
+
+        personTable.setItems(sortedData);
     }
 }

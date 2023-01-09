@@ -1,7 +1,11 @@
 package com.evolve.gui;
 
-import com.evolve.domain.Person;
+import com.evolve.domain.PersonListView;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+
+import java.time.LocalDate;
 
 @SuppressWarnings("unused")
 public class PersonModel {
@@ -10,16 +14,19 @@ public class PersonModel {
     private final SimpleStringProperty firstName;
     private final SimpleStringProperty lastName;
     private final SimpleStringProperty email;
+    private final ObjectProperty<LocalDate> dob;
 
-    PersonModel(String id, String fName, String lName, String email) {
+    PersonModel(String id, String fName, String lName, String email, LocalDate dob) {
         this.id = new SimpleStringProperty(id);
         this.firstName = new SimpleStringProperty(fName);
         this.lastName = new SimpleStringProperty(lName);
         this.email = new SimpleStringProperty(email);
+        this.dob = new SimpleObjectProperty<>(dob);
     }
 
-    PersonModel(Person person) {
-        this(person.getPersonId(), person.getFirstName(), person.getLastName(), person.getEmail());
+    PersonModel(PersonListView person) {
+        this(person.getPersonId(), person.getFirstName(), person.getLastName(), person.getEmail(),
+                person.getDob());
     }
 
     public String getId() {
@@ -50,5 +57,11 @@ public class PersonModel {
         email.set(fName);
     }
 
+    public LocalDate getDob() {
+        return dob.get();
+    }
+    public void setDob(LocalDate dob) {
+        this.dob.set(dob);
+    }
 
 }
