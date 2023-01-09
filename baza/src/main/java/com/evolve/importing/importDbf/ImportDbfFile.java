@@ -35,7 +35,7 @@ public class ImportDbfFile {
             Object[] rowObjects;
 
             while ((rowObjects = reader.nextRecord()) != null) {
-                log.info("number of objects {}", rowObjects.length);
+                //log.debug("number of objects {}", rowObjects.length);
 
                 Map<String, Object> personData = new HashMap<>();
 

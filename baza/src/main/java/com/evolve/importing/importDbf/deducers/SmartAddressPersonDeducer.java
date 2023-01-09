@@ -6,13 +6,17 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class SmartAddressPersonDeducer implements SmartDeducer<Address>{
+public class SmartAddressPersonDeducer extends AbstractSmartDeducer<Address>{
 
     // \p{IsAlphabetic} - includes also Polish characters ąćż..
     static final Pattern CITY_CODE_PATTERN = Pattern.compile("\\d{2}-\\d{3} [\\p{IsAlphabetic} ]+");
 
     //ul. Wyspiañskiego 63/2
     static final Pattern STREET_PATTERN = Pattern.compile("([uU]l\\. )?[\\p{IsAlphabetic} ]+\\d+ ?/ ?\\d+");
+
+    public SmartAddressPersonDeducer(IssuesLogger.ImportIssues issues) {
+        super(issues);
+    }
 
     @Override
     public Optional<Address> deduceFrom(List<String> guesses) {

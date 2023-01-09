@@ -15,7 +15,7 @@ public class PersonAssertion extends ObjectAssert<Person> {
     }
 
     public PersonAssertion hasPersonId(PersonId expected) {
-        assertThat(actual.getPersonId()).isEqualTo(expected);
+        assertThat(actual.getPersonId()).isEqualTo(expected.toString());
         return this;
     }
 

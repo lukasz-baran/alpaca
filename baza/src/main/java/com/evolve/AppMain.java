@@ -6,6 +6,7 @@ import com.evolve.importing.importDoc.ImportAlphanumeric;
 import com.evolve.importing.importDoc.ImportPeople;
 import com.evolve.importing.importDoc.group.GrupyAlfabetyczne;
 import com.evolve.importing.importDoc.person.Person;
+import com.evolve.services.PersonsFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import lombok.SneakyThrows;
@@ -41,9 +42,12 @@ public class AppMain {
         log.info("Wczytano " + grupyAlfabetyczne.getSize() + " z grup alfabetycznych");
         log.info("Wczytano " + osobyDbf.size());
 
-
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(new File("osobyDbf.json"), osobyDbf);
+
+        List<com.evolve.domain.Person> osoby =new PersonsFactory().from(osobyDbf);
+
+        //System.out.println(osoby);
 
     }
 

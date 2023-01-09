@@ -15,13 +15,15 @@ import java.util.Optional;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 @Slf4j
-public class NamePersonDeducer implements SmartDeducer<NamePersonDeducer.DeducedCredentials> {
+public class NamePersonDeducer extends
+                AbstractSmartDeducer<NamePersonDeducer.DeducedCredentials> {
     private static final String SEPARATOR = " ";
 
     private final String nazwa1;
     private final String nazwa2;
 
-    public NamePersonDeducer(DbfPerson dbfPerson) {
+    public NamePersonDeducer(DbfPerson dbfPerson, IssuesLogger.ImportIssues issues) {
+        super(issues);
         this.nazwa1 = trimToEmpty(dbfPerson.getNAZ_ODB1());
         this.nazwa2 = trimToEmpty(dbfPerson.getNAZ_ODB2());
     }
@@ -41,7 +43,8 @@ public class NamePersonDeducer implements SmartDeducer<NamePersonDeducer.Deduced
                     StringFix.capitalize(first[0])));
         }
 
-        log.warn("Unable to get consistent first name and last name for {} and {}", nazwa1, nazwa2);
+        final String logLine = String.format("Unable to get consistent first name and last name for %s and %s", nazwa1, nazwa2);
+        issues.store(logLine);
         return Optional.empty();
     }
 

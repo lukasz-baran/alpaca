@@ -10,9 +10,13 @@ import java.util.stream.Collectors;
 
 import static java.util.function.Predicate.not;
 
-public class AuthorizedPersonDeducer implements SmartDeducer<Person.AuthorizedPerson> {
+public class AuthorizedPersonDeducer extends AbstractSmartDeducer<Person.AuthorizedPerson> {
 
     private static final Predicate<String> IS_WIFE = s -> s.startsWith("ż.");
+
+    public AuthorizedPersonDeducer(IssuesLogger.ImportIssues issues) {
+        super(issues);
+    }
 
     @Override
     public Optional<Person.AuthorizedPerson> deduceFrom(List<String> guesses) {

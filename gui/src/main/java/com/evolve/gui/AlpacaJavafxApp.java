@@ -2,8 +2,6 @@ package com.evolve.gui;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -17,16 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AlpacaJavafxApp extends Application {
-
     private ConfigurableApplicationContext applicationContext;
-    private final ObservableList<PersonModel> data =
-            FXCollections.observableArrayList(
-                    new PersonModel("123", "Jacob", "Smith", "jacob.smith@example.com"),
-                    new PersonModel("124", "Isabella", "Johnson", "isabella.johnson@example.com"),
-                    new PersonModel("125", "Ethan", "Williams", "ethan.williams@example.com"),
-                    new PersonModel("126", "Emma", "Jones", "emma.jones@example.com"),
-                    new PersonModel("127", "Michael", "Brown", "michael.brown@example.com"));
-
 
     @Override
     public void init() {

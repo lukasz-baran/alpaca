@@ -25,7 +25,7 @@ class PersonDataDeducerShould {
     @Test
     void deducePersonData() {
         // when
-        final Person person = new PersonDataDeducer(PERSON_DBF).deduce().orElseThrow();
+        final Person person = new PersonDataDeducer(PERSON_DBF, new IssuesLogger()).deduce().orElseThrow();
 
         // then
         assertPerson(person)
@@ -47,7 +47,7 @@ class PersonDataDeducerShould {
                 .build();
 
         // when
-        final Optional<Person> person = new PersonDataDeducer(invalidPersonData).deduce();
+        final Optional<Person> person = new PersonDataDeducer(invalidPersonData, new IssuesLogger()).deduce();
 
         // then
         assertThat(person).isEmpty();
