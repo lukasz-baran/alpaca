@@ -4,10 +4,12 @@ import com.evolve.domain.PersonListView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @SuppressWarnings("unused")
+@ToString
 public class PersonModel {
 
     private final SimpleStringProperty id;

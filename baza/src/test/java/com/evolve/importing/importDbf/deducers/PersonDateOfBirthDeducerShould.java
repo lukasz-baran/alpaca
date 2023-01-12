@@ -8,6 +8,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,6 +33,16 @@ class PersonDateOfBirthDeducerShould {
                 .hasValue(LocalDate.of(1958, Month.DECEMBER, 28));
         assertThat(deducer.deduceDob("20,10,71"))
                 .hasValue(LocalDate.of(1971, Month.OCTOBER, 20));
+    }
+
+    @Test
+    void findCorrectGuess() {
+        List<String> guesses = List.of("rubbish", "30,11.67 30-12-1996");
+
+        Optional<LocalDate> result = deducer.deduceFrom(guesses);
+
+        assertThat(result)
+                .hasValue(LocalDate.of(1967, Month.NOVEMBER, 30));
     }
 
 }

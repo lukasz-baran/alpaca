@@ -7,6 +7,8 @@ import com.evolve.importing.event.DbfImportCompletedEvent;
 import com.evolve.importing.importDbf.ImportDbfService;
 import com.evolve.services.PersonsService;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -37,6 +39,8 @@ import java.util.Locale;
 @RequiredArgsConstructor
 @Slf4j
 public class AppController {
+    public static final int PERSONS_PER_PAGE = 100;
+
     //private final FxControllerAndView<SomeDialog, VBox> someDialog;
 
     private ObservableList<PersonModel> data;
@@ -64,7 +68,13 @@ public class AppController {
     private Button addButton;
 
     @FXML
-    private TextField nameTextField;
+    private TextField firstNameTextField;
+
+    @FXML
+    private TextField secondNameTextField;
+
+    @FXML
+    private TextField lastNameTextField;
 
     @FXML
     private MenuItem newMenuItem;
@@ -83,6 +93,9 @@ public class AppController {
 
     @FXML
     private TextField filterField;
+
+    @FXML
+    private Pagination pagination;
 
     // @FXML
     public void initialize() {
@@ -130,6 +143,14 @@ public class AppController {
             }
         });
 
+        //personTable.setFocusModel();
+        personTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PersonModel>() {
+            @Override
+            public void changed(ObservableValue<? extends PersonModel> observable, PersonModel oldValue,
+                    PersonModel newValue) {
+                System.out.println(newValue);
+            }
+        });
     }
 
     private void openFile(File file) {
@@ -145,11 +166,25 @@ public class AppController {
     }
 
     void populateTable(String sortBy, boolean upDown) {
-        List<PersonListView> persons =
+        final List<PersonListView> persons =
                 personsService.fetchList(PersonLookupCriteria.builder()
                                 .sortBy(sortBy)
                                 .upDown(upDown)
                         .build());
+
+        // TODO set pagination
+        final int numberOfPersons = persons.size();
+        System.out.println("liczba osób " + numberOfPersons);
+
+        int pageCount = numberOfPersons / PERSONS_PER_PAGE;
+        pagination.setPageCount(pageCount);
+        pagination.setCurrentPageIndex(1);
+        pagination.setMaxPageIndicatorCount(3);
+//        pagination.setPageFactory(pageNumber -> {
+//
+//        });
+
+        System.out.println(pagination.getPageCount());
 
         data = FXCollections.observableArrayList();
         persons.stream()

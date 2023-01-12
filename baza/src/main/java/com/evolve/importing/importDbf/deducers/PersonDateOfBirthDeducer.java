@@ -9,6 +9,12 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * TODO add corrections:
+ *  Kusz Marta: 08.11.1958
+ *  Artur Mazur 27.04.1966
+ *
+ */
 @Slf4j
 public class PersonDateOfBirthDeducer extends AbstractSmartDeducer<LocalDate> {
     //30,11.67
@@ -25,8 +31,9 @@ public class PersonDateOfBirthDeducer extends AbstractSmartDeducer<LocalDate> {
 
     @Override
     public Optional<LocalDate> deduceFrom(List<String> guesses) {
-        return guesses.stream().findFirst().flatMap(this::deduceDob);
-
+        return guesses.stream()
+                .filter(guess -> guess.matches("^" + DOB.pattern() + ".*"))
+                .findFirst().flatMap(this::deduceDob);
     }
 
     @Override

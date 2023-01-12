@@ -46,9 +46,7 @@
                     <items>
                         <AnchorPane minHeight="0.0" minWidth="100.0" prefHeight="160.0" prefWidth="100.0">
                             <children>
-                            <TableView fx:id="personTable" layoutX="10.0" layoutY="10.0" maxWidth="1000.0"
-                                       prefHeight="363.0" prefWidth="279.0" AnchorPane.bottomAnchor="35.0"
-                                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
+                            <TableView fx:id="personTable" layoutX="10.0" layoutY="10.0" maxWidth="1000.0" prefHeight="363.0" prefWidth="279.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
                               <columns>
                                 <TableColumn fx:id="idColumn" editable="false" prefWidth="75.0" text="ID" />
                                 <TableColumn fx:id="firstNameColumn" editable="false" prefWidth="75.0" text="Imię" />
@@ -67,9 +65,7 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                             </TableView>
-                                <HBox id="HBox" alignment="TOP_CENTER" prefHeight="18.0" prefWidth="640.0" spacing="5.0"
-                                      AnchorPane.bottomAnchor="5.0"
-                                      AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                                <HBox id="HBox" alignment="TOP_CENTER" prefHeight="18.0" prefWidth="640.0" spacing="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
                                     <children>
                                         <Label text="Filter Table:" textAlignment="RIGHT" />
                                         <TextField fx:id="filterField" alignment="TOP_LEFT" prefHeight="15.0" prefWidth="78.0" HBox.hgrow="ALWAYS" />
@@ -88,8 +84,10 @@
                                             <children>
                                                 <GridPane layoutX="75.0" layoutY="63.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                     <columnConstraints>
-                                                        <ColumnConstraints hgrow="NEVER" minWidth="50.0" prefWidth="100.0" />
-                                                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                                        <ColumnConstraints hgrow="NEVER" maxWidth="93.0" minWidth="50.0" prefWidth="67.0" />
+                                                        <ColumnConstraints hgrow="ALWAYS" maxWidth="320.0" minWidth="10.0" prefWidth="320.0" />
+                                          <ColumnConstraints hgrow="ALWAYS" maxWidth="320.0" minWidth="10.0" prefWidth="320.0" />
+                                          <ColumnConstraints hgrow="ALWAYS" maxWidth="320.0" minWidth="10.0" prefWidth="320.0" />
                                                     </columnConstraints>
                                                     <rowConstraints>
                                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -97,9 +95,13 @@
                                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                     </rowConstraints>
                                                     <children>
-                                                        <TextField fx:id="nameTextField" prefWidth="324.0" GridPane.columnIndex="1" />
-                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name" />
+                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwisko" GridPane.rowIndex="1" />
+                                                        <TextField fx:id="firstNameTextField" prefWidth="324.0" GridPane.columnIndex="1" />
+                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Imię" />
                                                         <Button fx:id="addButton" mnemonicParsing="false" text="Add" GridPane.rowIndex="2" />
+                                                        <TextField fx:id="secondNameTextField" GridPane.columnIndex="3" />
+                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Drugie imię" wrappingWidth="102.625" GridPane.columnIndex="2" />
+                                                        <TextField fx:id="lastNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                     </children>
                                                 </GridPane>
                                             </children>
@@ -120,7 +122,7 @@
                 </SplitPane>
             </children>
         </AnchorPane>
-      <Pagination prefHeight="12.0" prefWidth="640.0" />
+      <Pagination fx:id="pagination" prefHeight="12.0" prefWidth="640.0" />
 
     </children>
 </VBox>

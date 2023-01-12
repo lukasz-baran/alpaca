@@ -38,9 +38,10 @@ public class NamePersonDeducer extends
 
         if (StringUtils.equalsAnyIgnoreCase(first[0], second[0]) &&
                 StringUtils.equalsAnyIgnoreCase(first[1], second[1])) {
+
             return Optional.of(new DeducedCredentials(
                     StringFix.capitalize(first[1]),
-                    StringFix.capitalize(first[0])));
+                    StringFix.capitalizeLastName(first[0])));
         }
 
         final String logLine = String.format("Unable to get consistent first name and last name for %s and %s", nazwa1, nazwa2);

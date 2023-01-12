@@ -53,7 +53,7 @@ public class PersonDataDeducer {
         }
 
         final PersonDateOfBirthDeducer personDateOfBirthDeducer = new PersonDateOfBirthDeducer(issues);
-        Optional<LocalDate> maybeDob = personDateOfBirthDeducer.deduceFrom(List.of(StringUtils.trim(person.getNAZ_ODB3())));
+        Optional<LocalDate> maybeDob = personDateOfBirthDeducer.deduceFrom(guesses);
 
 
         final List<Person.PersonAddress> personAddresses =

@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public class StatusPersonDeducer implements SmartDeducer<PersonStatus> {
 
+    // TODO "ZMARŁ"
+
     @Override
     public Optional<PersonStatus> deduceFrom(List<String> guesses) {
         return Optional.empty();

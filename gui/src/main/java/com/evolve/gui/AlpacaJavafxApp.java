@@ -29,8 +29,7 @@ public class AlpacaJavafxApp extends Application {
     public void start(Stage stage) {
         applicationContext.publishEvent(new StageReadyEvent(stage));
         FxWeaver fxWeaver = applicationContext.getBean(FxWeaver.class);
-        Parent root = fxWeaver.loadView(AppController.class);
-        applicationContext.getBean(AppController.class).initialize();
+        Parent root = fxWeaver.loadView(AppController.class); // note: initialize() is called now
         Scene scene = new Scene(root);
         stage.setTitle("Alpaca - accounting");
         stage.setScene(scene);
