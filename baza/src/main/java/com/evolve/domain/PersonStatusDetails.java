@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode
+@Builder
 public class PersonStatusDetails {
     public static final String NO_DATA = null;
 
@@ -22,22 +23,32 @@ public class PersonStatusDetails {
      * resigned without date
      */
     public static PersonStatusDetails resigned() {
-        return new PersonStatusDetails(PersonStatus.RESIGNED, NO_DATA, NO_DATA, NO_DATA);
+        return PersonStatusDetails.builder()
+                .status(PersonStatus.RESIGNED)
+                .build();
     }
 
     /**
      * still active
      */
     public static PersonStatusDetails active() {
-        return new PersonStatusDetails(PersonStatus.ACTIVE, NO_DATA, NO_DATA, NO_DATA);
+        return PersonStatusDetails.builder()
+                .status(PersonStatus.ACTIVE)
+                .build();
     }
 
     public static PersonStatusDetails dead(String deathDate) {
-        return new PersonStatusDetails(PersonStatus.DEAD, deathDate, NO_DATA, NO_DATA);
+        return PersonStatusDetails.builder()
+                .status(PersonStatus.DEAD)
+                .deathDate(deathDate)
+                .build();
     }
 
     public static PersonStatusDetails resigned(String resignationDate) {
-        return new PersonStatusDetails(PersonStatus.RESIGNED, NO_DATA, resignationDate, NO_DATA);
+        return PersonStatusDetails.builder()
+                .status(PersonStatus.RESIGNED)
+                .resignationDate(resignationDate)
+                .build();
     }
 
     @Override

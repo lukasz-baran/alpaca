@@ -7,10 +7,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import net.rgielen.fxweaver.core.FxWeaver;
-import net.rgielen.fxweaver.spring.SpringFxWeaver;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -42,76 +40,6 @@ public class AlpacaJavafxApp extends Application {
         this.applicationContext.close();
         Platform.exit();
     }
-
-    @Bean
-    public FxWeaver fxWeaver(ConfigurableApplicationContext applicationContext) {
-        return new SpringFxWeaver(applicationContext);
-    }
-
-/*    @Override
-    public void start(Stage stage) {
-        applicationContext.publishEvent(new StageReadyEvent(stage));
-
-        stage.setTitle("Kartoteka");
-        stage.setMaximized(true);
-
-        VBox vBox = new VBox();
-        Scene scene = new Scene(vBox, 400, 350);
-        scene.setFill(Color.OLDLACE);
-        vBox.getChildren().addAll(mainMenu(), mainTable());
-        stage.setScene(scene);
-        stage.show();
-    }
-
-
-    private MenuBar mainMenu() {
-        final MenuBar menuBar = new MenuBar();
-        final Menu menuFile = new Menu("Plik");
-        final Menu menuEdit = new Menu("Edytuj");
-
-        final MenuItem menuItem = new MenuItem("Importuj jednostki");
-        menuItem.setOnAction(e -> log.info("Opening Database Connection..."));
-        menuEdit.getItems().add(menuItem);
-
-        Menu menuView = new Menu("Widok");
-        menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
-        return menuBar;
-    }
-
-    private VBox mainTable() {
-
-        final TableView<PersonModel> table = new TableView<>();
-        final Label label = new Label("Lista osób");
-        label.setFont(new Font("Arial", 12));
-
-        table.setEditable(true);
-
-        TableColumn<PersonModel, String> idColumn = new TableColumn<>("ID");
-        idColumn.setMinWidth(100);
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-
-        TableColumn<PersonModel, String> firstNameCol = new TableColumn<>("Imię");
-        firstNameCol.setMinWidth(100);
-        firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-
-        TableColumn<PersonModel, String> lastNameCol = new TableColumn<>("Nazwisko");
-        lastNameCol.setMinWidth(100);
-        lastNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-
-        TableColumn<PersonModel, String> emailCol = new TableColumn<>("Email");
-        emailCol.setMinWidth(200);
-        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
-
-        table.setItems(data);
-
-        table.getColumns().addAll(idColumn, firstNameCol, lastNameCol, emailCol);
-
-        final VBox vbox = new VBox();
-        vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(table);
-        return vbox;
-    }*/
-
 
 }
 

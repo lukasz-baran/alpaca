@@ -17,18 +17,20 @@ public class PersonModel {
     private final SimpleStringProperty lastName;
     private final SimpleStringProperty email;
     private final ObjectProperty<LocalDate> dob;
+    private final SimpleStringProperty status;
 
-    PersonModel(String id, String fName, String lName, String email, LocalDate dob) {
+    PersonModel(String id, String fName, String lName, String email, LocalDate dob, String status) {
         this.id = new SimpleStringProperty(id);
         this.firstName = new SimpleStringProperty(fName);
         this.lastName = new SimpleStringProperty(lName);
         this.email = new SimpleStringProperty(email);
         this.dob = new SimpleObjectProperty<>(dob);
+        this.status = new SimpleStringProperty(status);
     }
 
     PersonModel(PersonListView person) {
         this(person.getPersonId(), person.getFirstName(), person.getLastName(), person.getEmail(),
-                person.getDob());
+                person.getDob(), person.getStatus().name());
     }
 
     public String getId() {
@@ -64,6 +66,13 @@ public class PersonModel {
     }
     public void setDob(LocalDate dob) {
         this.dob.set(dob);
+    }
+
+    public String getStatus() {
+        return status.get();
+    }
+    public void setStatus(String status) {
+        this.status.set(status);
     }
 
 }

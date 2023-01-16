@@ -41,7 +41,7 @@ public class Person implements Serializable {
 
     private List<BankAccount> bankAccounts;
 
-    private PersonStatus status; // TODO should come with dates (death, removal, resignation)
+    private PersonStatusDetails status;
 
     private List<AuthorizedPerson> authorizedPersons; // if null nobody is authorized
 

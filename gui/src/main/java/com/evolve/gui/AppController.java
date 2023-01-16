@@ -7,13 +7,10 @@ import com.evolve.importing.event.DbfImportCompletedEvent;
 import com.evolve.importing.importDbf.ImportDbfService;
 import com.evolve.services.PersonsService;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
@@ -23,32 +20,34 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 @Getter
 @Component
 @FxmlView("sample.fxml")
 @RequiredArgsConstructor
 @Slf4j
-public class AppController {
+public class AppController implements Initializable {
+
     public static final int PERSONS_PER_PAGE = 100;
 
-    //private final FxControllerAndView<SomeDialog, VBox> someDialog;
-
-    private ObservableList<PersonModel> data;
+    private final PersonListModel personListModel;
 
     private final RetentionFileChooser fileChooser;
     private final ImportDbfService importDbfService;
-
     private final PersonsService personsService;
+    private final FxWeaver fxWeaver;
 
     @FXML
     private TableView<PersonModel> personTable;
@@ -60,21 +59,12 @@ public class AppController {
     @FXML
     TableColumn<PersonModel, String> lastNameColumn;
     @FXML
-    TableColumn<PersonModel, String> emailColumn;
-    @FXML
     TableColumn<PersonModel, LocalDate> dobColumn;
+    @FXML
+    TableColumn<PersonModel, String> statusColumn;
 
     @FXML
-    private Button addButton;
-
-    @FXML
-    private TextField firstNameTextField;
-
-    @FXML
-    private TextField secondNameTextField;
-
-    @FXML
-    private TextField lastNameTextField;
+    Tab tabPersonDetails;
 
     @FXML
     private MenuItem newMenuItem;
@@ -97,27 +87,29 @@ public class AppController {
     @FXML
     private Pagination pagination;
 
-    // @FXML
-    public void initialize() {
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         Locale.setDefault(new Locale("pl"));
         populateTable("id", true);
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         dobColumn.setCellValueFactory(new PropertyValueFactory<>("dob"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        tabPersonDetails.setContent(fxWeaver.loadView(PersonDetailsController.class));
 
         registerEventHandlers();
     }
 
     private void registerEventHandlers() {
-//        addButton.setOnAction(event -> itemList.add(new Item(nameTextField.getText())));
-//        nameTextField.setOnKeyPressed(event -> {
-//            if (event.getCode() == KeyCode.ENTER) {
-//                itemList.add(new Item(nameTextField.getText()));
-//            }
-//        });
+        //        addButton.setOnAction(event -> itemList.add(new Item(nameTextField.getText())));
+        //        nameTextField.setOnKeyPressed(event -> {
+        //            if (event.getCode() == KeyCode.ENTER) {
+        //                itemList.add(new Item(nameTextField.getText()));
+        //            }
+        //        });
 
         quitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
         quitMenuItem.setOnAction(event -> {
@@ -128,15 +120,8 @@ public class AppController {
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
         //newMenuItem.setOnAction(event -> itemList.clear());
 
-        removeMenuItem.setOnAction(event -> {
-            PersonModel item = personTable.getSelectionModel().getSelectedItem();
-            data.remove(item);
-            //Item item = itemListView.getSelectionModel().getSelectedItem();
-            //itemList.remove(item);
-        });
-
         importDbfMenuItem.setOnAction(event -> {
-            Stage stage = (Stage)personTable.getScene().getWindow();
+            Stage stage = (Stage) personTable.getScene().getWindow();
             File file = fileChooser.showOpenDialog(stage);
             if (file != null) {
                 openFile(file);
@@ -144,12 +129,17 @@ public class AppController {
         });
 
         //personTable.setFocusModel();
-        personTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PersonModel>() {
-            @Override
-            public void changed(ObservableValue<? extends PersonModel> observable, PersonModel oldValue,
-                    PersonModel newValue) {
-                System.out.println(newValue);
-            }
+        personTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(newValue);
+            //                        FxControllerAndView<PersonDetailsController, AnchorPane> personDetails =
+            //                            fxWeaver.loadView(PersonDetailsController.class);
+
+            //                        personDetails.getController()
+            //                                .setPerson(newValue);
+            personListModel.getCurrentPersonProperty().setValue(newValue);
+            //fxWeaver.loadController(PersonDetailsController.class);
+
+            //.setPerson(newValue);
         });
     }
 
@@ -166,11 +156,7 @@ public class AppController {
     }
 
     void populateTable(String sortBy, boolean upDown) {
-        final List<PersonListView> persons =
-                personsService.fetchList(PersonLookupCriteria.builder()
-                                .sortBy(sortBy)
-                                .upDown(upDown)
-                        .build());
+        final List<PersonListView> persons = personsService.fetchList(PersonLookupCriteria.builder().sortBy(sortBy).upDown(upDown).build());
 
         // TODO set pagination
         final int numberOfPersons = persons.size();
@@ -180,18 +166,15 @@ public class AppController {
         pagination.setPageCount(pageCount);
         pagination.setCurrentPageIndex(1);
         pagination.setMaxPageIndicatorCount(3);
-//        pagination.setPageFactory(pageNumber -> {
-//
-//        });
+        //        pagination.setPageFactory(pageNumber -> {
+        //
+        //        });
 
         System.out.println(pagination.getPageCount());
 
-        data = FXCollections.observableArrayList();
-        persons.stream()
-                .map(PersonModel::new)
-                .forEach(data::add);
+        personListModel.feed(persons);
 
-        FilteredList<PersonModel> filteredData = new FilteredList<>(data, p -> true);
+        FilteredList<PersonModel> filteredData = personListModel.getFilteredList();
 
         filterField.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredData.setPredicate(person -> {
@@ -222,4 +205,5 @@ public class AppController {
 
         personTable.setItems(sortedData);
     }
+
 }

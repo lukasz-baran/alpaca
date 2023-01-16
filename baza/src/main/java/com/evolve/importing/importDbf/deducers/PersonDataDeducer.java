@@ -3,6 +3,7 @@ package com.evolve.importing.importDbf.deducers;
 import com.evolve.domain.Address;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonId;
+import com.evolve.domain.PersonStatusDetails;
 import com.evolve.importing.importDbf.DbfPerson;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,7 @@ public class PersonDataDeducer {
         }
 
         final AuthorizedPersonDeducer authorizedPersonDeducer = new AuthorizedPersonDeducer(issues);
-        Optional<Person.AuthorizedPerson> maybeAuthorizedPerson = authorizedPersonDeducer.deduceFrom(guesses);
+        Optional<List<Person.AuthorizedPerson>> maybeAuthorizedPerson = authorizedPersonDeducer.deduceFrom(guesses);
         if (maybeAuthorizedPerson.isPresent()) {
             guesses = authorizedPersonDeducer.removeGuesses(guesses);
         }
@@ -62,19 +63,21 @@ public class PersonDataDeducer {
                         .orElse(List.of());
 
         final List<Person.AuthorizedPerson> authorizedPeople =
-                maybeAuthorizedPerson.map(List::of).orElse(List.of());
+                maybeAuthorizedPerson.orElse(List.of());
 
+        final StatusPersonDeducer statusPersonDeducer = new StatusPersonDeducer();
+        Optional<PersonStatusDetails> personStatusDetails = statusPersonDeducer.deduceFrom(guesses);
 
-
-        return Optional.of(
-                Person.builder()
+        final Person personData = Person.builder()
                 .personId(personId.map(PersonId::toString).orElse(null))
                 .firstName(credentials.map(NamePersonDeducer.DeducedCredentials::getFirstName).orElse(null))
                 .lastName(credentials.map(NamePersonDeducer.DeducedCredentials::getLastName).orElse(null))
                 .dob(maybeDob.orElse(null))
                 .addresses(personAddresses)
                 .authorizedPersons(authorizedPeople)
-                .build());
+                .status(personStatusDetails.orElse(null))
+                .build();
+        return Optional.of(personData);
     }
 
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 // shortened data about a person
 // for showing in the main table
@@ -19,10 +20,14 @@ public class PersonListView {
 
     private final LocalDate dob; // urodzony/urodzona
 
+    private final PersonStatus status;
+
     public static PersonListView of(Person person) {
         return new PersonListView(person.getPersonId(), person.getFirstName(), person.getSecondName(),
                 person.getLastName(), person.getEmail(),
-                person.getDob());
+                person.getDob(),
+                Optional.ofNullable(person.getStatus()).map(PersonStatusDetails::getStatus)
+                    .orElse(PersonStatus.ACTIVE));
     }
 
 }

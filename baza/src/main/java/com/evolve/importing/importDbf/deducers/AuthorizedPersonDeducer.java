@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import static java.util.function.Predicate.not;
 
-public class AuthorizedPersonDeducer extends AbstractSmartDeducer<Person.AuthorizedPerson> {
+public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.AuthorizedPerson>> {
 
     private static final Set<PersonRelative> RELATIVE_TYPES = Set.of(
             PersonRelative.of("ż.", "żona"),
@@ -35,12 +35,13 @@ public class AuthorizedPersonDeducer extends AbstractSmartDeducer<Person.Authori
     }
 
     @Override
-    public Optional<Person.AuthorizedPerson> deduceFrom(List<String> guesses) {
+    public Optional<List<Person.AuthorizedPerson>> deduceFrom(List<String> guesses) {
         return RELATIVE_TYPES.stream()
                 .map(relativeType -> relativeType.deduceAuthorizedPerson(guesses))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .findFirst();
+                .findFirst()
+                .map(List::of);
     }
 
     @Override
