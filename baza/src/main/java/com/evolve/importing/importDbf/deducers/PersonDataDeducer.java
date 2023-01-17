@@ -68,14 +68,30 @@ public class PersonDataDeducer {
         final StatusPersonDeducer statusPersonDeducer = new StatusPersonDeducer();
         Optional<PersonStatusDetails> personStatusDetails = statusPersonDeducer.deduceFrom(guesses);
 
+
+        List<String> infoGuesses = Lists.newArrayList(
+                StringUtils.trim(person.getEMAIL()),
+                StringUtils.trim(person.getINFO()),
+                StringUtils.trim(person.getTEL0()),
+                StringUtils.trim(person.getTEL1()));
+
+        final EmailPersonDeducer emailPersonDeducer = new EmailPersonDeducer(issues);
+        final Optional<String> maybeEmail = emailPersonDeducer.deduceFrom(infoGuesses);
+        if (maybeEmail.isPresent()) {
+            infoGuesses = emailPersonDeducer.removeGuesses(infoGuesses);
+        }
+
         final Person personData = Person.builder()
                 .personId(personId.map(PersonId::toString).orElse(null))
                 .firstName(credentials.map(NamePersonDeducer.DeducedCredentials::getFirstName).orElse(null))
+                .secondName(credentials.map(NamePersonDeducer.DeducedCredentials::getSecondName).orElse(null))
+                .gender(credentials.map(NamePersonDeducer.DeducedCredentials::getGender).orElse(null))
                 .lastName(credentials.map(NamePersonDeducer.DeducedCredentials::getLastName).orElse(null))
                 .dob(maybeDob.orElse(null))
                 .addresses(personAddresses)
                 .authorizedPersons(authorizedPeople)
                 .status(personStatusDetails.orElse(null))
+                .email(maybeEmail.orElse(null))
                 .build();
         return Optional.of(personData);
     }

@@ -131,15 +131,7 @@ public class AppController implements Initializable {
         //personTable.setFocusModel();
         personTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println(newValue);
-            //                        FxControllerAndView<PersonDetailsController, AnchorPane> personDetails =
-            //                            fxWeaver.loadView(PersonDetailsController.class);
-
-            //                        personDetails.getController()
-            //                                .setPerson(newValue);
             personListModel.getCurrentPersonProperty().setValue(newValue);
-            //fxWeaver.loadController(PersonDetailsController.class);
-
-            //.setPerson(newValue);
         });
     }
 
@@ -188,13 +180,18 @@ public class AppController implements Initializable {
 
                 String firstName = StringUtils.trimToEmpty(person.getFirstName()).toLowerCase();
                 if (firstName.contains(lowerCaseFilter)) {
-                    return true; // Filter matches first name.
+                    return true;
                 }
 
                 if (StringUtils.trimToEmpty(person.getLastName()).toLowerCase().contains(lowerCaseFilter)) {
-                    return true; // Filter matches last name.
+                    return true;
                 }
-                return false; // Does not match.
+
+                if (StringUtils.trimToEmpty(person.getId()).toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }
+
+                return false;
             });
         });
 

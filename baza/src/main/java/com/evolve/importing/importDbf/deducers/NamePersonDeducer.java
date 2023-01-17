@@ -1,5 +1,6 @@
 package com.evolve.importing.importDbf.deducers;
 
+import com.evolve.domain.Person;
 import com.evolve.importing.importDbf.DbfPerson;
 import com.evolve.utils.StringFix;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,6 @@ import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 public class NamePersonDeducer extends
                 AbstractSmartDeducer<NamePersonDeducer.DeducedCredentials> {
     private static final String SEPARATOR = " ";
-
     private final String nazwa1;
     private final String nazwa2;
 
@@ -39,8 +39,21 @@ public class NamePersonDeducer extends
         if (StringUtils.equalsAnyIgnoreCase(first[0], second[0]) &&
                 StringUtils.equalsAnyIgnoreCase(first[1], second[1])) {
 
+            // check double names
+            final String firstName;
+            final String secondName;
+            if (StringUtils.contains(first[1], SEPARATOR)) {
+                String[] firstAndSecond = first[1].split(SEPARATOR);
+                firstName = firstAndSecond[0];
+                secondName = firstAndSecond[1];
+            } else {
+                firstName = first[1];
+                secondName = null;
+            }
+
             return Optional.of(new DeducedCredentials(
-                    StringFix.capitalize(first[1]),
+                    StringFix.capitalize(firstName),
+                    StringFix.capitalize(secondName),
                     StringFix.capitalizeLastName(first[0])));
         }
 
@@ -61,7 +74,19 @@ public class NamePersonDeducer extends
     @ToString
     public static class DeducedCredentials {
         private final String firstName;
+        private final String secondName;
         private final String lastName;
+        private static final List<String> NON_TYPICAL_FEMALE_NAMES = List.of("Miriam", "Beatrycze", "Nel",
+                "Abigail", "Karmen", "Noemi");
+
+        public Person.Gender getGender() {
+            if (NON_TYPICAL_FEMALE_NAMES.stream().anyMatch(name -> StringUtils.equalsAnyIgnoreCase(name, firstName))) {
+                return Person.Gender.FEMALE;
+            }
+
+            // this is very poor way of checking Gender
+            return StringUtils.trimToEmpty(firstName).endsWith("a") ? Person.Gender.FEMALE : Person.Gender.MALE;
+        }
     }
 
 

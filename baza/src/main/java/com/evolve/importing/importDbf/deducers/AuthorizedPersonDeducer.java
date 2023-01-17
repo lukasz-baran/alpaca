@@ -19,7 +19,10 @@ public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.Au
             PersonRelative.of("s.", "syn"),
             PersonRelative.of("c.", "córka"),
             PersonRelative.of("c,", "córka"),
-            PersonRelative.of("mt.", "matka")
+            PersonRelative.of("mt.", "matka"),
+            PersonRelative.of("mt-", "matka"),
+            PersonRelative.of("br.", "brat"),
+            PersonRelative.of("oj.", "ojciec")
         );
     // TODO handle other relations
     // TODO handle two relatives ->

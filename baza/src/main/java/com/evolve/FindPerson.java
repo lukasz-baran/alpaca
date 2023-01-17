@@ -5,6 +5,7 @@ import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonLookupCriteria;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FindPerson {
 
@@ -12,5 +13,6 @@ public interface FindPerson {
 
     List<Person> fetch(PersonLookupCriteria criteria);
 
+    Person findById(String id);
 
 }

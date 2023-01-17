@@ -6,6 +6,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.evolve.gui.PersonDetailsController">
     <padding>
@@ -14,25 +17,72 @@
     <GridPane layoutX="75.0" layoutY="63.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
               AnchorPane.topAnchor="0.0">
         <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" maxWidth="93.0" minWidth="50.0" prefWidth="67.0"/>
+            <ColumnConstraints hgrow="NEVER" maxWidth="93.0" minWidth="80.0" prefWidth="67.0"/>
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="320.0" minWidth="100.0" prefWidth="320.0"/>
+<!--
             <ColumnConstraints hgrow="ALWAYS" maxWidth="320.0" minWidth="10.0" prefWidth="320.0"/>
             <ColumnConstraints hgrow="ALWAYS" maxWidth="320.0" minWidth="10.0" prefWidth="320.0"/>
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="320.0" minWidth="10.0" prefWidth="320.0"/>
+-->
         </columnConstraints>
         <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
         </rowConstraints>
         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwisko" GridPane.rowIndex="1"/>
-            <TextField fx:id="firstNameTextField" prefWidth="324.0" GridPane.columnIndex="1"/>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Imię"/>
-            <Button fx:id="addButton" mnemonicParsing="false" text="Add" GridPane.rowIndex="2"/>
-            <TextField fx:id="secondNameTextField" GridPane.columnIndex="3"/>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="ID"/>
+            <TextField fx:id="idTextField" prefWidth="324.0" GridPane.columnIndex="1"/>
+
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Imię" GridPane.rowIndex="1"/>
+            <TextField fx:id="firstNameTextField" prefWidth="324.0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwisko" GridPane.rowIndex="2"/>
+            <TextField fx:id="lastNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Drugie imię" wrappingWidth="102.625"
-                  GridPane.columnIndex="2"/>
-            <TextField fx:id="lastNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                  GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <TextField fx:id="secondNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Płeć" wrappingWidth="102.625"
+                  GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+
+            <!-- prefHeight="30.0" -->
+            <HBox alignment="CENTER_LEFT" prefWidth="255.0" spacing="15.0"
+                  GridPane.columnIndex="1" GridPane.rowIndex="4">
+                <VBox.margin>
+                    <Insets left="25.0" right="25.0"/>
+                </VBox.margin>
+                <RadioButton fx:id="maleRadioButton" disable="true" selected="true" text="Mężczyzna">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="genderToggleGroup" />
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton fx:id="femaleRadioButton" disable="true" text="Kobieta" toggleGroup="$genderToggleGroup">
+                    <HBox.margin>
+                        <Insets left="10.0"/>
+                    </HBox.margin>
+                </RadioButton>
+            </HBox>
+
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Data urodzenia" wrappingWidth="102.625"
+                  GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <!-- prefHeight="30.0" -->
+            <DatePicker fx:id="dobPicker" editable="false"  prefWidth="245.0"
+                        promptText="Data urodzenia" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                <VBox.margin>
+                    <Insets left="25.0"/>
+                </VBox.margin>
+            </DatePicker>
+
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email" wrappingWidth="102.625"
+                  GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+            <TextField fx:id="emailTextField" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+<!--            <Button fx:id="addButton" mnemonicParsing="false" text="Add" GridPane.rowIndex="3"/>-->
+
         </children>
     </GridPane>
 </AnchorPane>

@@ -4,18 +4,15 @@ import com.evolve.FindPerson;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonLookupCriteria;
-import com.evolve.domain.Unit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.common.SortOrder;
 import org.dizitart.no2.filters.Filter;
-import org.dizitart.no2.repository.Cursor;
 import org.dizitart.no2.repository.ObjectRepository;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -45,6 +42,12 @@ public class PersonsService implements InitializingBean, FindPerson {
                 .toList();
     }
 
+    @Override
+    public Person findById(String id) {
+        final ObjectRepository<Person> personRepo = nitrite.getRepository(Person.class);
+
+        return personRepo.getById(id);
+    }
 
     public void insertPersons(List<Person> personList) {
         validatePerson(personList);
