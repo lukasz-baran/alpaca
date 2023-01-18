@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Component
@@ -38,6 +39,8 @@ public class PersonDetailsController implements Initializable {
     @FXML RadioButton femaleRadioButton;
     @FXML ToggleGroup genderToggleGroup;
     @FXML DatePicker dobPicker;
+    @FXML TextField registryNumberTextField;
+    @FXML TextField oldRegistryNumberTextField;
     @FXML TextField emailTextField;
 
     @Override
@@ -60,12 +63,14 @@ public class PersonDetailsController implements Initializable {
         secondNameTextField.setText(person.getSecondName());
         lastNameTextField.setText(person.getLastName());
         emailTextField.setText(person.getEmail());
+        registryNumberTextField.setText(Optional.ofNullable(person.getRegistryNum())
+                .map(Object::toString).orElse(null));
+        oldRegistryNumberTextField.setText(Optional.ofNullable(person.getOldRegistryNum())
+                .map(Object::toString).orElse(null));
 
         genderToggleGroup.selectToggle(Person.Gender.MALE == person.getGender()
                 ? maleRadioButton
                 : femaleRadioButton);
-
-        //view.genderToggleGroup.selectedToggleProperty().addListener(genderChangeListener);
 
         this.birthDay.setValue(person.getDob());
         Bindings.bindBidirectional(dobPicker.valueProperty(), birthDay);

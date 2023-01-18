@@ -17,14 +17,15 @@ import java.util.Optional;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 @Slf4j
-public class NamePersonDeducer extends
-                AbstractSmartDeducer<NamePersonDeducer.DeducedCredentials> {
+public class PersonCredentialsDeducer extends
+                AbstractSmartDeducer<PersonCredentialsDeducer.DeducedCredentials> {
     private static final String SEPARATOR = " ";
 
     private static final Map<String, String> NAMES_FIX = Map.ofEntries(
             Map.entry("Alicj", "Alicja"),
             Map.entry("Barbar", "Barbara"),
             Map.entry("Beat", "Beata"),
+            Map.entry("Bogu", "Bogumiła"),
             Map.entry("Elż", "Elżbieta"),
             Map.entry("Elżbie", "Elżbieta"),
             Map.entry("Elżbiet", "Elżbieta"),
@@ -57,7 +58,7 @@ public class NamePersonDeducer extends
     private final String nazwa2;
 
 
-    public NamePersonDeducer(DbfPerson dbfPerson, IssuesLogger.ImportIssues issues) {
+    public PersonCredentialsDeducer(DbfPerson dbfPerson, IssuesLogger.ImportIssues issues) {
         super(issues);
         this.nazwa1 = trimToEmpty(dbfPerson.getNAZ_ODB1());
         this.nazwa2 = trimToEmpty(dbfPerson.getNAZ_ODB2());

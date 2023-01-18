@@ -38,8 +38,8 @@ public class PersonDataDeducer {
 
         final IssuesLogger.ImportIssues issues = issuesLogger.forPersonId(personId.map(PersonId::toString).orElse(null));
 
-        final NamePersonDeducer namePersonDeducer = new NamePersonDeducer(person, issues);
-        final Optional<NamePersonDeducer.DeducedCredentials> credentials = namePersonDeducer.deduceFrom(guesses);
+        final PersonCredentialsDeducer namePersonDeducer = new PersonCredentialsDeducer(person, issues);
+        final Optional<PersonCredentialsDeducer.DeducedCredentials> credentials = namePersonDeducer.deduceFrom(guesses);
 
         final SmartAddressPersonDeducer addressDeducer = new SmartAddressPersonDeducer(issues);
         Optional<Address> maybeAddress = addressDeducer.deduceFrom(guesses);
@@ -81,13 +81,20 @@ public class PersonDataDeducer {
             infoGuesses = emailPersonDeducer.removeGuesses(infoGuesses);
         }
 
+        // ustalmy numery w kartotekach
+        final RegistryNumbersDeducer registryNumbersDeducer = new RegistryNumbersDeducer(issues);
+        final Optional<RegistryNumbersDeducer.RegistryNumber> registryNumbers =
+                registryNumbersDeducer.deduceFrom(Lists.newArrayList(person.getNR_IDENT()));
+
         final Person personData = Person.builder()
                 .personId(personId.map(PersonId::toString).orElse(null))
-                .firstName(credentials.map(NamePersonDeducer.DeducedCredentials::getFirstName).orElse(null))
-                .secondName(credentials.map(NamePersonDeducer.DeducedCredentials::getSecondName).orElse(null))
-                .gender(credentials.map(NamePersonDeducer.DeducedCredentials::getGender).orElse(null))
-                .lastName(credentials.map(NamePersonDeducer.DeducedCredentials::getLastName).orElse(null))
+                .firstName(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getFirstName).orElse(null))
+                .secondName(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getSecondName).orElse(null))
+                .gender(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getGender).orElse(null))
+                .lastName(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getLastName).orElse(null))
                 .dob(maybeDob.orElse(null))
+                .registryNum(registryNumbers.flatMap(RegistryNumbersDeducer.RegistryNumber::getRegistryNum).orElse(null))
+                .oldRegistryNum(registryNumbers.flatMap(RegistryNumbersDeducer.RegistryNumber::getOldRegistryNum).orElse(null))
                 .addresses(personAddresses)
                 .authorizedPersons(authorizedPeople)
                 .status(personStatusDetails.orElse(null))

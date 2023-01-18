@@ -9,7 +9,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-class NamePersonDeducerShould {
+class PersonCredentialsDeducerShould {
 
     @Test
     void deduceSecondName() {
@@ -18,12 +18,12 @@ class NamePersonDeducerShould {
                 .NAZ_ODB2("KOWALSKA ZOFIA GRAŻYNA")
                 .build();
 
-        NamePersonDeducer namePersonDeducer = new NamePersonDeducer(dbfPerson, mock(IssuesLogger.ImportIssues.class));
+        PersonCredentialsDeducer namePersonDeducer = new PersonCredentialsDeducer(dbfPerson, mock(IssuesLogger.ImportIssues.class));
 
         var result = namePersonDeducer.deduceFrom(List.of()); // result is ignored
 
         assertThat(result)
-                .hasValue(new NamePersonDeducer.DeducedCredentials(
+                .hasValue(new PersonCredentialsDeducer.DeducedCredentials(
                         "Zofia",
                         "Grażyna",
                         "Kowalska"));
