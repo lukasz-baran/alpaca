@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
@@ -19,8 +20,42 @@ import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 public class NamePersonDeducer extends
                 AbstractSmartDeducer<NamePersonDeducer.DeducedCredentials> {
     private static final String SEPARATOR = " ";
+
+    private static final Map<String, String> NAMES_FIX = Map.ofEntries(
+            Map.entry("Alicj", "Alicja"),
+            Map.entry("Barbar", "Barbara"),
+            Map.entry("Beat", "Beata"),
+            Map.entry("Elż", "Elżbieta"),
+            Map.entry("Elżbie", "Elżbieta"),
+            Map.entry("Elżbiet", "Elżbieta"),
+            Map.entry("Gabrie", "Gabriela"),
+            Map.entry("Halin", "Halina"),
+            Map.entry("Józe", "Józefa"),
+            Map.entry("Julitt", "Julita"),
+            Map.entry("Justy", "Justyna"),
+            Map.entry("Karolin", "Karolina"),
+            Map.entry("Kata", "Katarzyna"),
+            Map.entry("Katar", "Katarzyna"),
+            Map.entry("Katarz", "Katarzyna"),
+            Map.entry("Katarzy", "Katarzyna"),
+            Map.entry("Krysty", "Krystyna"),
+            Map.entry("Krystyn", "Krystyna"),
+            Map.entry("Krzy-fa", "Krzysztofa"),
+            Map.entry("Małgor", "Małgorzata"),
+            Map.entry("Małgorz", "Małgorzata"),
+            Map.entry("Małgorza", "Małgorzata"),
+            Map.entry("Małgorzat", "Małgorzata"),
+            Map.entry("Mar", "Maria"),
+            Map.entry("Mari", "Maria"),
+            Map.entry("Monik", "Monika"),
+            Map.entry("Pi0tr", "Piotr"),
+            Map.entry("Stanis", "Stanisława"),
+            Map.entry("Magdalen", "Magdalena"),
+            Map.entry("Magdale", "Magdalena"));
+
     private final String nazwa1;
     private final String nazwa2;
+
 
     public NamePersonDeducer(DbfPerson dbfPerson, IssuesLogger.ImportIssues issues) {
         super(issues);
@@ -52,7 +87,7 @@ public class NamePersonDeducer extends
             }
 
             return Optional.of(new DeducedCredentials(
-                    StringFix.capitalize(firstName),
+                    fixTruncatedFirstName(StringFix.capitalize(firstName)),
                     StringFix.capitalize(secondName),
                     StringFix.capitalizeLastName(first[0])));
         }
@@ -68,6 +103,13 @@ public class NamePersonDeducer extends
         return guesses;
     }
 
+    private static String fixTruncatedFirstName(String firstName) {
+        if (NAMES_FIX.containsKey(firstName)) {
+            return NAMES_FIX.get(firstName);
+        }
+        return firstName;
+    }
+
     @Getter
     @AllArgsConstructor
     @EqualsAndHashCode
@@ -77,7 +119,7 @@ public class NamePersonDeducer extends
         private final String secondName;
         private final String lastName;
         private static final List<String> NON_TYPICAL_FEMALE_NAMES = List.of("Miriam", "Beatrycze", "Nel",
-                "Abigail", "Karmen", "Noemi");
+                "Abigail", "Karmen", "Noemi", "Ivette");
 
         public Person.Gender getGender() {
             if (NON_TYPICAL_FEMALE_NAMES.stream().anyMatch(name -> StringUtils.equalsAnyIgnoreCase(name, firstName))) {
