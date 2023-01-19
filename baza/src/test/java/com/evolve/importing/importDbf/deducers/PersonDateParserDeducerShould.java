@@ -14,7 +14,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-class PersonDateOfBirthDeducerShould {
+class PersonDateParserDeducerShould {
     @Mock
     IssuesLogger.ImportIssues importIssues;
 

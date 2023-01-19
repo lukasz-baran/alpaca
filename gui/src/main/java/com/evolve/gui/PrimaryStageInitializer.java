@@ -1,8 +1,5 @@
 package com.evolve.gui;
 
-import com.sun.tools.javac.Main;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;

@@ -35,5 +35,4 @@ class MainConfiguration {
                 .loadModule(jacksonMapperModule)
                 .openOrCreate(databaseFileUsername, databaseFilePassword);
     }
-
 }

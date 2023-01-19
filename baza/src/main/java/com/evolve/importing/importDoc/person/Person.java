@@ -30,7 +30,9 @@ public class Person {
         return StringUtils.isNotBlank(lastName) && StringUtils.isNotBlank(firstName);
     }
 
-
+    public String getPersonId() {
+        return numerGrupy + index;
+    }
 
 
 }
