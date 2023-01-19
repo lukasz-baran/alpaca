@@ -36,22 +36,20 @@
         </rowConstraints>
         <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="ID"/>
-            <TextField fx:id="idTextField" prefWidth="324.0" GridPane.columnIndex="1"/>
+            <TextField fx:id="idTextField" editable="false" GridPane.columnIndex="1"/>
 
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Imię" GridPane.rowIndex="1"/>
-            <TextField fx:id="firstNameTextField" prefWidth="324.0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <TextField fx:id="firstNameTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwisko" GridPane.rowIndex="2"/>
-            <TextField fx:id="lastNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <TextField fx:id="lastNameTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Drugie imię" wrappingWidth="102.625"
                   GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-            <TextField fx:id="secondNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <TextField fx:id="secondNameTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Płeć" wrappingWidth="102.625"
                   GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-
-            <!-- prefHeight="30.0" -->
             <HBox alignment="CENTER_LEFT" prefWidth="255.0" spacing="15.0"
                   GridPane.columnIndex="1" GridPane.rowIndex="4">
                 <VBox.margin>
@@ -81,15 +79,15 @@
 
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Kartoteka" wrappingWidth="102.625"
                   GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-            <TextField fx:id="registryNumberTextField" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+            <TextField fx:id="registryNumberTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
 
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Stara kartoteka" wrappingWidth="102.625"
                   GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-            <TextField fx:id="oldRegistryNumberTextField" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+            <TextField fx:id="oldRegistryNumberTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
 
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email" wrappingWidth="102.625"
                   GridPane.columnIndex="0" GridPane.rowIndex="8"/>
-            <TextField fx:id="emailTextField" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+            <TextField fx:id="emailTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
 
 <!--            <Button fx:id="addButton" mnemonicParsing="false" text="Add" GridPane.rowIndex="3"/>-->
 

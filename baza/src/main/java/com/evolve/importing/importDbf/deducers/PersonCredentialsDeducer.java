@@ -22,10 +22,17 @@ public class PersonCredentialsDeducer extends
     private static final String SEPARATOR = " ";
 
     private static final Map<String, String> NAMES_FIX = Map.ofEntries(
+            Map.entry("Agnie", "Agnieszka"),
+            Map.entry("Agnies", "Agnieszka"),
+            Map.entry("Agniesz", "Agnieszka"),
+            Map.entry("Agnieszk", "Agnieszka"),
+            Map.entry("Aleksande", "Aleksander"),
+            Map.entry("Aleksandr", "Aleksandra"),
             Map.entry("Alicj", "Alicja"),
             Map.entry("Barbar", "Barbara"),
             Map.entry("Beat", "Beata"),
             Map.entry("Bogu", "Bogumiła"),
+            Map.entry("Domi", "Dominika"),
             Map.entry("Elż", "Elżbieta"),
             Map.entry("Elżbie", "Elżbieta"),
             Map.entry("Elżbiet", "Elżbieta"),

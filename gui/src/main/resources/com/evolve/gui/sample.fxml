@@ -48,11 +48,11 @@
                             <children>
                             <TableView fx:id="personTable" layoutX="10.0" layoutY="10.0" maxWidth="1000.0" prefHeight="363.0" prefWidth="279.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
                               <columns>
-                                <TableColumn fx:id="idColumn" editable="false" prefWidth="75.0" text="ID" />
-                                <TableColumn fx:id="firstNameColumn" editable="false" prefWidth="75.0" text="Imię" />
-                                <TableColumn fx:id="lastNameColumn" editable="false" prefWidth="75.0" text="Nazwisko" />
-                                <TableColumn fx:id="dobColumn" editable="false" prefWidth="75.0" text="Data ur." />
-                                <TableColumn fx:id="statusColumn" editable="false" prefWidth="75.0" text="Status" />
+                                <TableColumn fx:id="idColumn" editable="false" minWidth="45" maxWidth="50.0" text="ID" />
+                                <TableColumn fx:id="firstNameColumn" editable="false" minWidth="100" text="Imię" />
+                                <TableColumn fx:id="lastNameColumn" editable="false" minWidth="120" text="Nazwisko" />
+                                <TableColumn fx:id="dobColumn" editable="false"  minWidth="75" maxWidth="75" text="Data ur." />
+                                <TableColumn fx:id="statusColumn" editable="false" minWidth="50" text="Status" />
                               </columns>
                                 <contextMenu>
                                     <ContextMenu>
@@ -78,11 +78,9 @@
                         </AnchorPane>
                         <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                             <tabs>
-                                <Tab text="List Items" fx:id="tabPersonDetails">
-<!--                                    <PersonDetails minHeight="0.0" minWidth="0.0" prefHeight="160.0"
-                                                   prefWidth="100.0"/>-->
+                                <Tab text="Podstawowe dane" fx:id="tabPersonDetails">
                                 </Tab>
-                                <Tab text="Untitled Tab 2">
+                                <Tab text="Oryginalne dane">
                                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0"
                                                 prefWidth="200.0"/>
                                 </Tab>

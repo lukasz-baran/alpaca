@@ -1,18 +1,17 @@
 package com.evolve.domain;
 
 import lombok.*;
-import org.dizitart.no2.repository.annotations.Entity;
 import org.dizitart.no2.repository.annotations.Id;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-//@Entity
 public class Person implements Serializable {
 
     @Id
@@ -46,6 +45,8 @@ public class Person implements Serializable {
     private List<AuthorizedPerson> authorizedPersons; // if null nobody is authorized
 
     private List<Comment> comments; // notatki
+
+    private Map<String, Object> rawData;
 
     public enum Gender {
         MALE,

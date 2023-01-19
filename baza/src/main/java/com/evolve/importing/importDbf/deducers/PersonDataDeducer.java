@@ -6,7 +6,6 @@ import com.evolve.domain.PersonId;
 import com.evolve.domain.PersonStatusDetails;
 import com.evolve.importing.importDbf.DbfPerson;
 import com.google.common.collect.Lists;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,29 +13,33 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-@RequiredArgsConstructor
+
 @Slf4j
 public class PersonDataDeducer {
-
     private final DbfPerson person;
     private final IssuesLogger issuesLogger;
+    private List<String> guesses;
 
-    public Optional<Person> deduce() {
-        List<String> guesses = Lists.newArrayList(
+    public PersonDataDeducer(DbfPerson person, IssuesLogger issuesLogger) {
+        this.person = person;
+        this.issuesLogger = issuesLogger;
+        this.guesses = Lists.newArrayList(
                 StringUtils.trim(person.getNAZ_ODB3()),
                 StringUtils.trim(person.getNAZ_ODB4()),
                 StringUtils.trim(person.getNAZ_ODB5()),
                 StringUtils.trim(person.getNAZ_ODB6()),
                 StringUtils.trim(person.getNAZ_ODB7()));
 
+    }
+
+    public Optional<Person> deduce() {
         PersonIdDeducer personIdDeducer = new PersonIdDeducer(person);
         final Optional<PersonId> personId = personIdDeducer.deduceFrom(guesses);
+        final IssuesLogger.ImportIssues issues = issuesLogger.forPersonId(personId.map(PersonId::toString).orElse(null));
         if (personId.isEmpty()) {
             log.warn("Unable to deduce ID from {}", person);
             return Optional.empty();
         }
-
-        final IssuesLogger.ImportIssues issues = issuesLogger.forPersonId(personId.map(PersonId::toString).orElse(null));
 
         final PersonCredentialsDeducer namePersonDeducer = new PersonCredentialsDeducer(person, issues);
         final Optional<PersonCredentialsDeducer.DeducedCredentials> credentials = namePersonDeducer.deduceFrom(guesses);
@@ -99,6 +102,7 @@ public class PersonDataDeducer {
                 .authorizedPersons(authorizedPeople)
                 .status(personStatusDetails.orElse(null))
                 .email(maybeEmail.orElse(null))
+                .rawData(person.getData())
                 .build();
         return Optional.of(personData);
     }

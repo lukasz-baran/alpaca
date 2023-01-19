@@ -15,7 +15,7 @@ import java.util.Map;
 @ToString
 public class DbfPerson {
       @JsonIgnore
-      private final Map<String, String> data;
+      private final Map<String, Object> data;
       private String SYM_ODB;
       private String NAZ_ODB1;
       private String NAZ_ODB2;
@@ -51,6 +51,7 @@ public class DbfPerson {
 
       public static DbfPerson of(Map<String, Object> data) {
          return DbfPerson.builder()
+              .data(data)
               .SYM_ODB(data.get("SYM_ODB").toString())
               .NAZ_ODB1(data.get("NAZ_ODB1").toString())
               .NAZ_ODB2(data.get("NAZ_ODB2").toString())
