@@ -28,6 +28,25 @@
             <artifactId>nitrite-jackson-mapper</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.1.214</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>2.3.4.RELEASE</version>
+        </dependency>
+
+        <!-- content repository -->
+        <dependency>
+            <groupId>com.github.paulcwarren</groupId>
+            <artifactId>spring-content-fs-boot-starter</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+
         <!-- spring boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -84,6 +103,8 @@
             <artifactId>poi-ooxml</artifactId>
             <version>5.2.2</version>
         </dependency>
+
+        <!-- handle dbf -->
         <dependency>
             <groupId>com.github.albfernandez</groupId>
             <artifactId>javadbf</artifactId>

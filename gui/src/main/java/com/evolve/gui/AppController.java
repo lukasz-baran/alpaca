@@ -63,8 +63,9 @@ public class AppController implements Initializable {
     @FXML
     TableColumn<PersonModel, String> statusColumn;
 
-    @FXML
-    Tab tabPersonDetails;
+    @FXML Tab tabPersonDetails;
+    @FXML Tab tabOriginalDetails;
+    @FXML Tab tabDocuments;
 
     @FXML
     private MenuItem newMenuItem;
@@ -99,6 +100,7 @@ public class AppController implements Initializable {
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         tabPersonDetails.setContent(fxWeaver.loadView(PersonDetailsController.class));
+        tabOriginalDetails.setContent(fxWeaver.loadView(OriginalDetailsController.class));
 
         registerEventHandlers();
     }

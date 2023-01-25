@@ -6,7 +6,8 @@ NOTE: Characters encoding is in  Charset.forName("Cp1250")
 # Technology stack 
 * Java version: 17
 * GUI: JavaFX
-* Database: Local nosql https://github.com/nitrite/nitrite-java
+* NoSQL Database: Local nosql https://github.com/nitrite/nitrite-java
+* H2 with storing data on disk: https://www.baeldung.com/h2-embedded-db-data-storage
 
 # JavaFX topics
 * Sorting and pagination: http://incepttechnologies.blogspot.com/p/javafx-tableview-with-pagination-and.html
@@ -22,6 +23,9 @@ NOTE: Characters encoding is in  Charset.forName("Cp1250")
 
 # Event Driven Architecture
 * https://www.baeldung.com/spring-events
+
+# Content Repository
+* https://paulcwarren.github.io/spring-content/spring-content-fs-docs/
 
 ## Open Issues
 * how to keep configuration changes?
