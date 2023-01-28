@@ -154,7 +154,7 @@ public class AppController implements Initializable {
 
         // TODO set pagination
         final int numberOfPersons = persons.size();
-        System.out.println("liczba osób " + numberOfPersons);
+        log.info("total person number {}", numberOfPersons);
 
         int pageCount = numberOfPersons / PERSONS_PER_PAGE;
         pagination.setPageCount(pageCount);

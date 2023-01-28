@@ -1,5 +1,6 @@
-package com.evolve.gui;
+package com.evolve;
 
+import com.evolve.gui.AlpacaJavafxApp;
 import javafx.application.Application;
 import javafx.scene.Node;
 import net.rgielen.fxweaver.core.FxControllerAndView;
@@ -9,12 +10,17 @@ import net.rgielen.fxweaver.spring.SpringFxWeaver;
 import org.springframework.beans.factory.InjectionPoint;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+@EnableJpaRepositories(basePackages = "com.evolve.*")
+@EntityScan("com.evolve.*")
 @SpringBootApplication(scanBasePackages = "com.evolve")
 public class AlpacaSpringApp {
+
     public static void main(String[] args) {
         Application.launch(AlpacaJavafxApp.class, args);
     }
@@ -33,4 +39,5 @@ public class AlpacaSpringApp {
         return new InjectionPointLazyFxControllerAndViewResolver(fxWeaver)
                 .resolve(injectionPoint);
     }
+
 }

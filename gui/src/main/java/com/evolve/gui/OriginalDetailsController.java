@@ -11,6 +11,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ import java.util.ResourceBundle;
 @Component
 @FxmlView("original-details.fxml")
 @RequiredArgsConstructor
+@Slf4j
 public class OriginalDetailsController implements Initializable {
     private final PersonsService personsService;
     private final PersonListModel personListModel;
@@ -42,8 +44,9 @@ public class OriginalDetailsController implements Initializable {
     }
 
     public void setPerson(PersonModel personModel) {
-        Person person = personsService.findById(personModel.getId());
-        System.out.println(person);
+        final Person person = personsService.findById(personModel.getId());
+        log.info("Original person details: {}", person);
+
         data.clear();
         person.getRawData()
                 .forEach((key, value) -> {

@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,7 @@ import java.util.ResourceBundle;
 @Component
 @FxmlView("person-details.fxml")
 @RequiredArgsConstructor
+@Slf4j
 public class PersonDetailsController implements Initializable {
     private final PersonsService personsService;
     private final PersonListModel personListModel;
@@ -56,7 +58,7 @@ public class PersonDetailsController implements Initializable {
 
     public void setPerson(PersonModel personModel) {
         Person person = personsService.findById(personModel.getId());
-        System.out.println(person);
+        log.info("Person details: {}", person);
 
         idTextField.setText(person.getPersonId());
         firstNameTextField.setText(person.getFirstName());

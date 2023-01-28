@@ -214,7 +214,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.evolve.gui.AlpacaSpringApp</mainClass>
+                    <mainClass>com.evolve.AlpacaSpringApp</mainClass>
                 </configuration>
                 <version>2.6.3</version>
             </plugin>
