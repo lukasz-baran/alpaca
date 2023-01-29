@@ -89,6 +89,10 @@ public class PersonDataDeducer {
         final Optional<RegistryNumbersDeducer.RegistryNumber> registryNumbers =
                 registryNumbersDeducer.deduceFrom(Lists.newArrayList(person.getNR_IDENT()));
 
+        // numer jednostki
+        final UnitNumberDeducer unitNumberDeducer = new UnitNumberDeducer(issues);
+        final Optional<String> unitNumber = unitNumberDeducer.deduceFrom(List.of(person.getKONTO_WNP()));
+
         final Person personData = Person.builder()
                 .personId(personId.map(PersonId::toString).orElse(null))
                 .firstName(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getFirstName).orElse(null))
@@ -102,6 +106,7 @@ public class PersonDataDeducer {
                 .authorizedPersons(authorizedPeople)
                 .status(personStatusDetails.orElse(null))
                 .email(maybeEmail.orElse(null))
+                .unitNumber(unitNumber.orElse(null))
                 .rawData(person.getData())
                 .build();
         return Optional.of(personData);

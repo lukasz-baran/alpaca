@@ -3,23 +3,29 @@ package com.evolve.gui;
 import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.gui.components.RetentionFileChooser;
+import com.evolve.gui.dictionaries.UnitsController;
 import com.evolve.importing.event.DbfImportCompletedEvent;
 import com.evolve.importing.importDbf.ImportDbfService;
 import com.evolve.services.PersonsService;
 import javafx.application.Platform;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.apache.commons.lang3.StringUtils;
@@ -49,38 +55,27 @@ public class AppController implements Initializable {
     private final PersonsService personsService;
     private final FxWeaver fxWeaver;
 
+    private final FxControllerAndView<UnitsController, VBox> dialog;
+
     @FXML
     private TableView<PersonModel> personTable;
 
-    @FXML
-    TableColumn<PersonModel, String> idColumn;
-    @FXML
-    TableColumn<PersonModel, String> firstNameColumn;
-    @FXML
-    TableColumn<PersonModel, String> lastNameColumn;
-    @FXML
-    TableColumn<PersonModel, LocalDate> dobColumn;
-    @FXML
-    TableColumn<PersonModel, String> statusColumn;
+    @FXML TableColumn<PersonModel, String> idColumn;
+    @FXML TableColumn<PersonModel, String> firstNameColumn;
+    @FXML TableColumn<PersonModel, String> lastNameColumn;
+    @FXML TableColumn<PersonModel, LocalDate> dobColumn;
+    @FXML TableColumn<PersonModel, String> statusColumn;
 
     @FXML Tab tabPersonDetails;
     @FXML Tab tabOriginalDetails;
     @FXML Tab tabDocuments;
 
-    @FXML
-    private MenuItem newMenuItem;
-
-    @FXML
-    private MenuItem quitMenuItem;
-
-    @FXML
-    private MenuItem removeMenuItem;
-
-    @FXML
-    private MenuItem deletePersonDataMenuItem;
-
-    @FXML
-    private MenuItem importDbfMenuItem;
+    @FXML MenuItem newMenuItem;
+    @FXML MenuItem quitMenuItem;
+    @FXML MenuItem removeMenuItem;
+    @FXML MenuItem deletePersonDataMenuItem;
+    @FXML MenuItem importDbfMenuItem;
+    @FXML MenuItem unitsMenuItem;
 
     @FXML
     private TextField filterField;
@@ -106,29 +101,36 @@ public class AppController implements Initializable {
     }
 
     private void registerEventHandlers() {
-        //        addButton.setOnAction(event -> itemList.add(new Item(nameTextField.getText())));
-        //        nameTextField.setOnKeyPressed(event -> {
-        //            if (event.getCode() == KeyCode.ENTER) {
-        //                itemList.add(new Item(nameTextField.getText()));
-        //            }
-        //        });
-
         quitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
-        quitMenuItem.setOnAction(event -> {
-            Platform.exit();
-            System.exit(0);
-        });
 
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
         //newMenuItem.setOnAction(event -> itemList.clear());
 
-        importDbfMenuItem.setOnAction(event -> {
-            Stage stage = (Stage) personTable.getScene().getWindow();
-            File file = fileChooser.showOpenDialog(stage);
-            if (file != null) {
-                openFile(file);
-            }
+        unitsMenuItem.setOnAction(event -> {
+            dialog.getController().show();
+
+            /*
+            Label secondLabel = new Label("I'm a Label on new Window");
+
+            StackPane secondaryLayout = new StackPane();
+            secondaryLayout.getChildren().add(secondLabel);
+
+            Scene secondScene = new Scene(secondaryLayout, 230, 100);
+
+            // New window (Stage)
+            Stage newWindow = new Stage();
+            newWindow.setTitle("Second Stage");
+            newWindow.setScene(secondScene);
+
+            // Set position of second window, related to primary window.
+//            newWindow.setX(primaryStage.getX() + 200);
+//            newWindow.setY(primaryStage.getY() + 100);
+
+            newWindow.show();
+
+             */
         });
+
 
         //personTable.setFocusModel();
         personTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -205,4 +207,16 @@ public class AppController implements Initializable {
         personTable.setItems(sortedData);
     }
 
+    public void quitClicked(ActionEvent actionEvent) {
+        Platform.exit();
+        System.exit(0);
+    }
+
+    public void importDbfClicked(ActionEvent actionEvent) {
+        Stage stage = (Stage) personTable.getScene().getWindow();
+        File file = fileChooser.showOpenDialog(stage);
+        if (file != null) {
+            openFile(file);
+        }
+    }
 }

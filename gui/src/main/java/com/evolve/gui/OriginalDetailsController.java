@@ -44,6 +44,10 @@ public class OriginalDetailsController implements Initializable {
     }
 
     public void setPerson(PersonModel personModel) {
+        if (personModel == null || personModel.getId() == null) {
+            return;
+        }
+
         final Person person = personsService.findById(personModel.getId());
         log.info("Original person details: {}", person);
 

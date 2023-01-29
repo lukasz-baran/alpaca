@@ -8,16 +8,18 @@
         <MenuBar prefWidth="626.0" VBox.vgrow="NEVER">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
-                    <items>
-                        <MenuItem fx:id="newMenuItem" mnemonicParsing="false" text="New" />
-                        <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit" />
-                    </items>
+                    <MenuItem fx:id="newMenuItem" mnemonicParsing="false" text="New"/>
+                    <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit"
+                              onAction="#quitClicked"/>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Admin">
-                    <items>
-                        <MenuItem fx:id="deletePersonDataMenuItem" mnemonicParsing="false" text="Delete person data" />
-                        <MenuItem fx:id="importDbfMenuItem" mnemonicParsing="false" text="Import DBF" />
-                    </items>
+                    <MenuItem fx:id="deletePersonDataMenuItem" mnemonicParsing="false"
+                              text="Delete person data"/>
+                    <MenuItem fx:id="importDbfMenuItem" mnemonicParsing="false" text="Import DBF"
+                                onAction="#importDbfClicked" />
+                </Menu>
+                <Menu mnemonicParsing="false" text="Słowniki">
+                    <MenuItem fx:id="unitsMenuItem" mnemonicParsing="false" text="Lista jednostek"/>
                 </Menu>
             </menus>
         </MenuBar>
