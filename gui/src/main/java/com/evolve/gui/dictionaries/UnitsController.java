@@ -1,6 +1,7 @@
 package com.evolve.gui.dictionaries;
 
 import com.evolve.domain.Unit;
+import com.evolve.gui.StageReadyEvent;
 import com.evolve.services.UnitsService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +19,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -29,10 +31,11 @@ import java.util.ResourceBundle;
 @FxmlView("units-dialog.fxml")
 @RequiredArgsConstructor
 @Slf4j
-public class UnitsController implements Initializable {
+public class UnitsController implements Initializable, ApplicationListener<StageReadyEvent> {
     private final UnitsService unitsService;
     private final ObservableList<UnitEntry> units = FXCollections.observableArrayList();
 
+    private Stage primaryStage;
     private Stage stage;
 
     @FXML AnchorPane unitsDialog;
@@ -43,6 +46,7 @@ public class UnitsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.stage = new Stage();
+        stage.initOwner(primaryStage);
         stage.setScene(new Scene(unitsDialog));
         stage.setTitle("Jednostki");
         stage.initModality(Modality.WINDOW_MODAL);
@@ -76,6 +80,12 @@ public class UnitsController implements Initializable {
 
     public void show() {
         stage.show();
+    }
+
+    @Override
+    public void onApplicationEvent(StageReadyEvent event) {
+        this.primaryStage = event.getStage();
+        log.info("primaryStage set");
     }
 
     @AllArgsConstructor

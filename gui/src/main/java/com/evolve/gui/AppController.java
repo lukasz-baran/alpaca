@@ -77,11 +77,9 @@ public class AppController implements Initializable {
     @FXML MenuItem importDbfMenuItem;
     @FXML MenuItem unitsMenuItem;
 
-    @FXML
-    private TextField filterField;
+    @FXML TextField filterField;
 
-    @FXML
-    private Pagination pagination;
+    @FXML Pagination pagination;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

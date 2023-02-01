@@ -2,22 +2,24 @@ package com.evolve.gui;
 
 import com.evolve.domain.Person;
 import com.evolve.domain.Unit;
+import com.evolve.gui.components.AuthorizedPersonsController;
+import com.evolve.gui.components.PersonAddressesController;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.AnchorPane;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +28,6 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
-import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 
 @Component
 @FxmlView("person-details.fxml")
@@ -38,8 +38,12 @@ public class PersonDetailsController implements Initializable {
     private final UnitsService unitsService;
     private final PersonListModel personListModel;
 
+    @FXML
+    private final FxControllerAndView<AuthorizedPersonsController, AnchorPane> authorizedController;
+    @FXML
+    private final FxControllerAndView<PersonAddressesController, AnchorPane> personAddresses;
+
     private final ObjectProperty<LocalDate> birthDay = new SimpleObjectProperty<>();
-    private final ObservableList<AddressEntry> addresses = FXCollections.observableArrayList();
 
     private Map<String, Unit> units;
 
@@ -55,10 +59,6 @@ public class PersonDetailsController implements Initializable {
     @FXML TextField oldRegistryNumberTextField;
     @FXML TextField emailTextField;
     @FXML TextField unitNumberTextField;
-    @FXML TableView<AddressEntry> addressesTable;
-    @FXML TableColumn<AddressEntry, String> streetColumn;
-    @FXML TableColumn<AddressEntry, String> postalCodeColumn;
-    @FXML TableColumn<AddressEntry, String> cityColumn;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -66,15 +66,10 @@ public class PersonDetailsController implements Initializable {
 
         this.units = unitsService.fetchAll();
 
-        streetColumn.setCellValueFactory(new PropertyValueFactory<>("street"));
-        postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
-        cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
-
         personListModel.getCurrentPersonProperty().addListener(
                 (ObservableValue<? extends PersonModel> obs, PersonModel oldUser, PersonModel newUser) -> {
                     setPerson(newUser);
                 });
-
     }
 
     public void setPerson(PersonModel personModel) {
@@ -107,13 +102,10 @@ public class PersonDetailsController implements Initializable {
                         getUnitNumber(unitNumber)),
                         () -> this.unitNumberTextField.clear());
 
-        addresses.clear();
-        emptyIfNull(person.getAddresses())
-                .forEach(address -> {
-                    addresses.add(new AddressEntry(address));
-                });
+        personAddresses.getController().setPersonAddresses(person.getAddresses());
 
-        addressesTable.setItems(addresses);
+        authorizedController.getController()
+                .setAuthorizedPersons(person.getAuthorizedPersons());
     }
 
     private String getUnitNumber(String unitNumber) {
@@ -123,15 +115,5 @@ public class PersonDetailsController implements Initializable {
         return unitNumber + " - ???";
     }
 
-    @AllArgsConstructor
-    @Getter
-    public static class AddressEntry {
-        private String street;
-        private String postalCode;
-        private String city;
 
-        public AddressEntry(Person.PersonAddress personAddress) {
-            this(personAddress.getStreet(), personAddress.getPostalCode(), personAddress.getCity());
-        }
-    }
 }

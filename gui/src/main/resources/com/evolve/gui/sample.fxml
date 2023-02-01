@@ -3,78 +3,95 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox prefHeight="494.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.AppController">
-    <children>
-        <MenuBar prefWidth="626.0" VBox.vgrow="NEVER">
-            <menus>
-                <Menu mnemonicParsing="false" text="File">
-                    <MenuItem fx:id="newMenuItem" mnemonicParsing="false" text="New"/>
-                    <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit"
-                              onAction="#quitClicked"/>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Admin">
-                    <MenuItem fx:id="deletePersonDataMenuItem" mnemonicParsing="false"
-                              text="Delete person data"/>
-                    <MenuItem fx:id="importDbfMenuItem" mnemonicParsing="false" text="Import DBF"
-                                onAction="#importDbfClicked" />
-                </Menu>
-                <Menu mnemonicParsing="false" text="Słowniki">
-                    <MenuItem fx:id="unitsMenuItem" mnemonicParsing="false" text="Lista jednostek"/>
-                </Menu>
-            </menus>
-        </MenuBar>
-        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
-            <children>
-                <SplitPane dividerPositions="0.3573667711598746" layoutX="77.0" layoutY="79.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <items>
-                        <AnchorPane minHeight="0.0" minWidth="100.0" prefHeight="160.0" prefWidth="100.0">
-                            <children>
-                            <TableView fx:id="personTable" layoutX="10.0" layoutY="10.0" maxWidth="1000.0" prefHeight="363.0" prefWidth="279.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
-                              <columns>
-                                <TableColumn fx:id="idColumn" editable="false" minWidth="45" maxWidth="50.0" text="ID" />
-                                <TableColumn fx:id="firstNameColumn" editable="false" minWidth="100" text="Imię" />
-                                <TableColumn fx:id="lastNameColumn" editable="false" minWidth="120" text="Nazwisko" />
-                                <TableColumn fx:id="dobColumn" editable="false"  minWidth="75" maxWidth="75" text="Data ur." />
-                                <TableColumn fx:id="statusColumn" editable="false" minWidth="50" text="Status" />
-                              </columns>
-                                <contextMenu>
-                                    <ContextMenu>
-                                        <items>
-                                            <MenuItem fx:id="removeMenuItem" mnemonicParsing="false" text="Remove" />
-                                        </items>
-                                    </ContextMenu>
-                                </contextMenu>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                            </TableView>
-                                <HBox id="HBox" alignment="TOP_CENTER" prefHeight="18.0" prefWidth="640.0" spacing="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
-                                    <children>
-                                        <Label text="Filter Table:" textAlignment="RIGHT" />
-                                        <TextField fx:id="filterField" alignment="TOP_LEFT" prefHeight="15.0" prefWidth="78.0" HBox.hgrow="ALWAYS" />
-                                    </children>
-                                </HBox>
-                            </children>
-                            <padding>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </padding>
-                        </AnchorPane>
-                        <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-                            <tabs>
-                                <Tab text="Podstawowe dane" fx:id="tabPersonDetails">
-                                </Tab>
-                                <Tab text="Oryginalne dane" fx:id="tabOriginalDetails">
-                                </Tab>
-                                <Tab text="Dokumenty" fx:id="tabDocuments">
-                                </Tab>
+<VBox prefHeight="494.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/19"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.AppController">
+    <MenuBar prefWidth="626.0" VBox.vgrow="NEVER">
+        <menus>
+            <Menu mnemonicParsing="false" text="File">
+                <MenuItem fx:id="newMenuItem" mnemonicParsing="false" text="New"/>
+                <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit"
+                          onAction="#quitClicked"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Admin">
+                <MenuItem fx:id="deletePersonDataMenuItem" mnemonicParsing="false"
+                          text="Delete person data"/>
+                <MenuItem fx:id="importDbfMenuItem" mnemonicParsing="false" text="Import DBF"
+                          onAction="#importDbfClicked"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Słowniki">
+                <MenuItem fx:id="unitsMenuItem" mnemonicParsing="false" text="Lista jednostek"/>
+            </Menu>
+        </menus>
+    </MenuBar>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0"
+                VBox.vgrow="ALWAYS">
+        <children>
+            <SplitPane dividerPositions="0.3573667711598746" layoutX="77.0" layoutY="79.0"
+                       prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0"
+                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                       AnchorPane.topAnchor="0.0">
+                <items>
+                    <AnchorPane minHeight="0.0" minWidth="100.0" prefHeight="160.0"
+                                prefWidth="100.0">
+                        <children>
+                        <TableView fx:id="personTable" layoutX="10.0" layoutY="10.0"
+                                   maxWidth="1000.0" prefHeight="363.0" prefWidth="279.0"
+                                   AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0"
+                                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
+                            <columns>
+                                <TableColumn fx:id="idColumn" editable="false" minWidth="45"
+                                             maxWidth="50.0" text="ID"/>
+                                <TableColumn fx:id="firstNameColumn" editable="false"
+                                             minWidth="100" text="Imię"/>
+                                <TableColumn fx:id="lastNameColumn" editable="false"
+                                             minWidth="120" text="Nazwisko"/>
+                                <TableColumn fx:id="dobColumn" editable="false" minWidth="75"
+                                             maxWidth="75" text="Data ur."/>
+                                <TableColumn fx:id="statusColumn" editable="false" minWidth="50"
+                                             text="Status"/>
+                            </columns>
+                            <contextMenu>
+                                <ContextMenu>
+                                    <items>
+                                        <MenuItem fx:id="removeMenuItem" mnemonicParsing="false"
+                                                  text="Remove"/>
+                                    </items>
+                                </ContextMenu>
+                            </contextMenu>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                            </columnResizePolicy>
+                        </TableView>
+                            <HBox id="HBox" alignment="TOP_CENTER" prefHeight="18.0"
+                                  prefWidth="640.0" spacing="5.0" AnchorPane.bottomAnchor="5.0"
+                                  AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                                <children>
+                                    <Label text="Filter Table:" textAlignment="RIGHT"/>
+                                    <TextField fx:id="filterField" alignment="TOP_LEFT"
+                                               prefHeight="15.0" prefWidth="78.0"
+                                               HBox.hgrow="ALWAYS"/>
+                                </children>
+                            </HBox>
+                        </children>
+                        <padding>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                        </padding>
+                    </AnchorPane>
+                    <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+                        <tabs>
+                            <Tab text="Podstawowe dane" fx:id="tabPersonDetails">
+                            </Tab>
+                            <Tab text="Oryginalne dane" fx:id="tabOriginalDetails">
+                            </Tab>
+                            <Tab text="Dokumenty" fx:id="tabDocuments">
+                            </Tab>
 
-                            </tabs>
-                        </TabPane>
-                    </items>
-                </SplitPane>
-            </children>
-        </AnchorPane>
-      <Pagination fx:id="pagination" prefHeight="12.0" prefWidth="640.0" />
+                        </tabs>
+                    </TabPane>
+                </items>
+            </SplitPane>
+        </children>
+    </AnchorPane>
+    <Pagination fx:id="pagination" prefHeight="12.0" prefWidth="640.0"/>
 
-    </children>
 </VBox>
