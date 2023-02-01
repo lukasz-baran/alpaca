@@ -48,9 +48,18 @@ public class Person implements Serializable {
 
     private Map<String, Object> rawData;
 
+    @Getter
+    @RequiredArgsConstructor
     public enum Gender {
-        MALE,
-        FEMALE
+        MALE("Mężczyzna"),
+        FEMALE("Kobieta");
+
+        private final String name;
+
+        @Override
+        public String toString() {
+            return this.name;
+        }
     }
 
     @Getter

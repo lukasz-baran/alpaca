@@ -36,7 +36,6 @@ public class OriginalDetailsController implements Initializable {
         keyColumn.setCellValueFactory(new PropertyValueFactory<>("key"));
         valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
 
-
         personListModel.getCurrentPersonProperty().addListener(
                 (ObservableValue<? extends PersonModel> obs, PersonModel oldUser, PersonModel newUser) -> {
                     setPerson(newUser);

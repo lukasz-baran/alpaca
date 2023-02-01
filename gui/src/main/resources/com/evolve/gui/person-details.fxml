@@ -41,21 +41,9 @@
         <TextField fx:id="secondNameTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Płeć" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-        <HBox alignment="CENTER_LEFT" prefWidth="255.0" spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-            <HBox.margin>
-                <Insets left="25.0" right="25.0" />
-            </HBox.margin>
-            <RadioButton fx:id="maleRadioButton" disable="true" selected="true" text="Mężczyzna">
-                <toggleGroup>
-                    <ToggleGroup fx:id="genderToggleGroup" />
-                </toggleGroup>
-            </RadioButton>
-            <RadioButton fx:id="femaleRadioButton" disable="true" text="Kobieta" toggleGroup="$genderToggleGroup">
-                <HBox.margin>
-                    <Insets left="10.0" />
-                </HBox.margin>
-            </RadioButton>
-        </HBox>
+        <fx:include fx:id="personGender" source="components/gender-select.fxml"
+                    GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Data urodzenia" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="5" />
         <DatePicker fx:id="dobPicker" editable="false" prefWidth="245.0" promptText="Data urodzenia" GridPane.columnIndex="1" GridPane.rowIndex="5">
         </DatePicker>

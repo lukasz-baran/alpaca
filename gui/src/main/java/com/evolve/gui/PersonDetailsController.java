@@ -3,6 +3,7 @@ package com.evolve.gui;
 import com.evolve.domain.Person;
 import com.evolve.domain.Unit;
 import com.evolve.gui.components.AuthorizedPersonsController;
+import com.evolve.gui.components.GenderComboboxController;
 import com.evolve.gui.components.PersonAddressesController;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
@@ -13,10 +14,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxControllerAndView;
@@ -39,6 +39,8 @@ public class PersonDetailsController implements Initializable {
     private final PersonListModel personListModel;
 
     @FXML
+    private final FxControllerAndView<GenderComboboxController, HBox> personGender;
+    @FXML
     private final FxControllerAndView<AuthorizedPersonsController, AnchorPane> authorizedController;
     @FXML
     private final FxControllerAndView<PersonAddressesController, AnchorPane> personAddresses;
@@ -51,9 +53,6 @@ public class PersonDetailsController implements Initializable {
     @FXML TextField firstNameTextField;
     @FXML TextField secondNameTextField;
     @FXML TextField lastNameTextField;
-    @FXML RadioButton maleRadioButton;
-    @FXML RadioButton femaleRadioButton;
-    @FXML ToggleGroup genderToggleGroup;
     @FXML DatePicker dobPicker;
     @FXML TextField registryNumberTextField;
     @FXML TextField oldRegistryNumberTextField;
@@ -90,9 +89,7 @@ public class PersonDetailsController implements Initializable {
         oldRegistryNumberTextField.setText(Optional.ofNullable(person.getOldRegistryNum())
                 .map(Object::toString).orElse(null));
 
-        genderToggleGroup.selectToggle(Person.Gender.MALE == person.getGender()
-                ? maleRadioButton
-                : femaleRadioButton);
+        personGender.getController().setPersonGender(person);
 
         this.birthDay.setValue(person.getDob());
         Bindings.bindBidirectional(dobPicker.valueProperty(), birthDay);
@@ -104,8 +101,7 @@ public class PersonDetailsController implements Initializable {
 
         personAddresses.getController().setPersonAddresses(person.getAddresses());
 
-        authorizedController.getController()
-                .setAuthorizedPersons(person.getAuthorizedPersons());
+        authorizedController.getController().setAuthorizedPersons(person.getAuthorizedPersons());
     }
 
     private String getUnitNumber(String unitNumber) {

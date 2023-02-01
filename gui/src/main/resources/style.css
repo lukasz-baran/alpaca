@@ -1,0 +1,5 @@
+.combo-box-base:disabled,
+.list-cell:disabled
+{
+    -fx-opacity: 1;
+}
