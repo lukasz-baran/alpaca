@@ -13,13 +13,11 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Getter;
@@ -78,6 +76,7 @@ public class AppController implements Initializable {
     @FXML MenuItem unitsMenuItem;
 
     @FXML TextField filterField;
+    @FXML Button btnClearFilter;
 
     @FXML Pagination pagination;
 
@@ -94,6 +93,8 @@ public class AppController implements Initializable {
 
         tabPersonDetails.setContent(fxWeaver.loadView(PersonDetailsController.class));
         tabOriginalDetails.setContent(fxWeaver.loadView(OriginalDetailsController.class));
+
+        btnClearFilter.setOnAction(event -> filterField.clear());
 
         registerEventHandlers();
     }
@@ -132,7 +133,6 @@ public class AppController implements Initializable {
 
         //personTable.setFocusModel();
         personTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println(newValue);
             personListModel.getCurrentPersonProperty().setValue(newValue);
         });
     }
