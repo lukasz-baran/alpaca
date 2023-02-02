@@ -1,8 +1,8 @@
 package com.evolve.importing.importDbf.deducers;
 
+import com.evolve.domain.RegistryNumber;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
 
 import static java.util.function.Predicate.not;
 
-public class RegistryNumbersDeducer extends AbstractSmartDeducer<RegistryNumbersDeducer.RegistryNumber> {
+public class RegistryNumbersDeducer extends AbstractSmartDeducer<RegistryNumber> {
 
     public static final int TWO_NUMBERS_EXPECTED = 6;
 
@@ -79,39 +79,5 @@ public class RegistryNumbersDeducer extends AbstractSmartDeducer<RegistryNumbers
     }
 
 
-    @AllArgsConstructor
-    @EqualsAndHashCode
-    @ToString
-    public static class RegistryNumber {
-        private Integer oldRegistryNum; // numer starej kartoteki
-        private Integer registryNum; // numer kartoteki
 
-        public static RegistryNumber onlyOldRegistryNumber(String oldRegistry) {
-            return new RegistryNumber(parseOrNull(oldRegistry), null);
-        }
-
-        public RegistryNumber(String oldRegistry, String newRegistry) {
-            this(parseOrNull(oldRegistry), parseOrNull(newRegistry));
-        }
-
-        boolean isUseless() {
-            return this.oldRegistryNum == null && this.registryNum == null;
-        }
-
-        static Integer parseOrNull(String str) {
-            try {
-                return Integer.parseInt(str);
-            } catch (NumberFormatException nfe) {
-                return null;
-            }
-        }
-
-        public Optional<Integer> getOldRegistryNum() {
-            return Optional.ofNullable(oldRegistryNum);
-        }
-
-        public Optional<Integer> getRegistryNum() {
-            return Optional.ofNullable(registryNum);
-        }
-    }
 }

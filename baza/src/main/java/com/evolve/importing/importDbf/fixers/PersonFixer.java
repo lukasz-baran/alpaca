@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +76,19 @@ public class PersonFixer implements InitializingBean {
             case "lastName" -> person.setLastName(newValue);
             case "secondName" -> person.setSecondName(newValue);
             case "dob" -> DateParser.parse(newValue).ifPresent(person::setDob);
+            case "previousName" -> addPreviousLastName(person, newValue);
             default -> {}
         }
     }
+
+    public void addPreviousLastName(Person person, String previousLastName) {
+        if (person.getPreviousLastNames() == null) {
+            final List<String> previousLastNames = new ArrayList<>();
+            previousLastNames.add(previousLastName);
+            person.setPreviousLastNames(previousLastNames);
+        } else {
+            person.getPreviousLastNames().add(previousLastName);
+        }
+    }
+
 }

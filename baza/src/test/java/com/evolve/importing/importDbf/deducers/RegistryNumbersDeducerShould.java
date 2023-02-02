@@ -1,5 +1,6 @@
 package com.evolve.importing.importDbf.deducers;
 
+import com.evolve.domain.RegistryNumber;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,7 +25,7 @@ class RegistryNumbersDeducerShould {
         var result = numbersDeducer.deduceFrom(List.of(" 1 520  1876"));
 
         assertThat(result)
-                .hasValue(new RegistryNumbersDeducer.RegistryNumber(1520, 1876));
+                .hasValue(new RegistryNumber(1520, 1876));
     }
 
     @Test
@@ -32,7 +33,7 @@ class RegistryNumbersDeducerShould {
         var result = numbersDeducer.deduceFrom(List.of("   154  2564"));
 
         assertThat(result)
-                .hasValue(new RegistryNumbersDeducer.RegistryNumber(154, 2564));
+                .hasValue(new RegistryNumber(154, 2564));
     }
 
     @Test
@@ -40,7 +41,7 @@ class RegistryNumbersDeducerShould {
         var result = numbersDeducer.deduceFrom(List.of("   581"));
 
         assertThat(result)
-                .hasValue(new RegistryNumbersDeducer.RegistryNumber(581, null));
+                .hasValue(new RegistryNumber(581, null));
     }
 
     @Test
@@ -56,12 +57,12 @@ class RegistryNumbersDeducerShould {
         var result = numbersDeducer.deduceFrom(List.of("   ...  1896"));
 
         assertThat(result)
-                .hasValue(new RegistryNumbersDeducer.RegistryNumber(null, 1896));
+                .hasValue(new RegistryNumber(null, 1896));
 
         result = numbersDeducer.deduceFrom(List.of("        0211"));
 
         assertThat(result)
-                .hasValue(new RegistryNumbersDeducer.RegistryNumber(null, 211));
+                .hasValue(new RegistryNumber(null, 211));
     }
 
     @Test

@@ -19,9 +19,7 @@ public class Person implements Serializable {
 
     private String unitNumber; // 95 - nie płaci składek
 
-    private Integer registryNum; // numer kartoteki
-    private Integer oldRegistryNum; // numer starej kartoteki
-
+    private RegistryNumber registryNumber;
 
     private String firstName; // imię
     private String secondName; // drugie imię
@@ -41,6 +39,8 @@ public class Person implements Serializable {
     private List<BankAccount> bankAccounts;
 
     private PersonStatusDetails status;
+
+    private List<PersonStatusChange> statusChanges;
 
     private List<AuthorizedPerson> authorizedPersons; // if null nobody is authorized
 

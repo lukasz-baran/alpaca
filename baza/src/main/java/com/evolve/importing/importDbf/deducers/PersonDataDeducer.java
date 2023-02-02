@@ -1,15 +1,13 @@
 package com.evolve.importing.importDbf.deducers;
 
-import com.evolve.domain.Address;
-import com.evolve.domain.Person;
-import com.evolve.domain.PersonId;
-import com.evolve.domain.PersonStatusDetails;
+import com.evolve.domain.*;
 import com.evolve.importing.importDbf.DbfPerson;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,12 +84,14 @@ public class PersonDataDeducer {
 
         // ustalmy numery w kartotekach
         final RegistryNumbersDeducer registryNumbersDeducer = new RegistryNumbersDeducer(issues);
-        final Optional<RegistryNumbersDeducer.RegistryNumber> registryNumbers =
+        final Optional<RegistryNumber> registryNumbers =
                 registryNumbersDeducer.deduceFrom(Lists.newArrayList(person.getNR_IDENT()));
 
         // numer jednostki
         final UnitNumberDeducer unitNumberDeducer = new UnitNumberDeducer(issues);
-        final Optional<String> unitNumber = unitNumberDeducer.deduceFrom(List.of(person.getKONTO_WNP()));
+        final Optional<String> unitNumber = unitNumberDeducer.deduceFrom(Lists.newArrayList(person.getKONTO_WNP()));
+
+        final List<PersonStatusChange> statusChanges = deduceStatusChanges(maybeDob);
 
         final Person personData = Person.builder()
                 .personId(personId.map(PersonId::toString).orElse(null))
@@ -100,16 +100,27 @@ public class PersonDataDeducer {
                 .gender(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getGender).orElse(null))
                 .lastName(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getLastName).orElse(null))
                 .dob(maybeDob.orElse(null))
-                .registryNum(registryNumbers.flatMap(RegistryNumbersDeducer.RegistryNumber::getRegistryNum).orElse(null))
-                .oldRegistryNum(registryNumbers.flatMap(RegistryNumbersDeducer.RegistryNumber::getOldRegistryNum).orElse(null))
+                .registryNumber(registryNumbers.orElse(null))
                 .addresses(personAddresses)
                 .authorizedPersons(authorizedPeople)
                 .status(personStatusDetails.orElse(null))
+                .statusChanges(statusChanges)
                 .email(maybeEmail.orElse(null))
                 .unitNumber(unitNumber.orElse(null))
                 .rawData(person.getData())
                 .build();
         return Optional.of(personData);
+    }
+
+    List<PersonStatusChange> deduceStatusChanges(Optional<LocalDate> maybeDob) {
+        final List<PersonStatusChange> statusChanges = new ArrayList<>();
+        maybeDob.ifPresent(dob -> {
+            statusChanges.add(PersonStatusChange.builder()
+                            .eventType(PersonStatusChange.EventType.BORN)
+                            .when(dob)
+                    .build());
+        });
+        return statusChanges;
     }
 
 }

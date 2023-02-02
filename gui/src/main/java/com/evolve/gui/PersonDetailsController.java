@@ -5,6 +5,7 @@ import com.evolve.domain.Unit;
 import com.evolve.gui.components.AuthorizedPersonsController;
 import com.evolve.gui.components.GenderComboboxController;
 import com.evolve.gui.components.PersonAddressesController;
+import com.evolve.gui.components.RegistryNumbersController;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
 import javafx.beans.binding.Bindings;
@@ -44,6 +45,8 @@ public class PersonDetailsController implements Initializable {
     private final FxControllerAndView<AuthorizedPersonsController, AnchorPane> authorizedController;
     @FXML
     private final FxControllerAndView<PersonAddressesController, AnchorPane> personAddresses;
+    @FXML
+    private final FxControllerAndView<RegistryNumbersController, HBox> registryNumbers;
 
     private final ObjectProperty<LocalDate> birthDay = new SimpleObjectProperty<>();
 
@@ -54,8 +57,8 @@ public class PersonDetailsController implements Initializable {
     @FXML TextField secondNameTextField;
     @FXML TextField lastNameTextField;
     @FXML DatePicker dobPicker;
-    @FXML TextField registryNumberTextField;
-    @FXML TextField oldRegistryNumberTextField;
+//    @FXML TextField registryNumberTextField;
+//    @FXML TextField oldRegistryNumberTextField;
     @FXML TextField emailTextField;
     @FXML TextField unitNumberTextField;
 
@@ -84,11 +87,8 @@ public class PersonDetailsController implements Initializable {
         secondNameTextField.setText(person.getSecondName());
         lastNameTextField.setText(person.getLastName());
         emailTextField.setText(person.getEmail());
-        registryNumberTextField.setText(Optional.ofNullable(person.getRegistryNum())
-                .map(Object::toString).orElse(null));
-        oldRegistryNumberTextField.setText(Optional.ofNullable(person.getOldRegistryNum())
-                .map(Object::toString).orElse(null));
 
+        registryNumbers.getController().setPerson(person);
         personGender.getController().setPersonGender(person);
 
         this.birthDay.setValue(person.getDob());

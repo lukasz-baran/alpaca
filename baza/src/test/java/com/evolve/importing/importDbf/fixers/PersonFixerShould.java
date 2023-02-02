@@ -5,12 +5,10 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
-import java.io.IOException;
-
 class PersonFixerShould {
 
     @Test
-    void loadFile() throws IOException {
+    void loadFile() {
         ResourceLoader resourceLoader = new DefaultResourceLoader();
         Resource resource = resourceLoader.getResource("fixer.csv");
 
