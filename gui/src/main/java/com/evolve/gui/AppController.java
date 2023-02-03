@@ -78,8 +78,6 @@ public class AppController implements Initializable {
     @FXML TextField filterField;
     @FXML Button btnClearFilter;
 
-    @FXML Pagination pagination;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Locale.setDefault(new Locale("pl"));
@@ -105,31 +103,7 @@ public class AppController implements Initializable {
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
         //newMenuItem.setOnAction(event -> itemList.clear());
 
-        unitsMenuItem.setOnAction(event -> {
-            dialog.getController().show();
-
-            /*
-            Label secondLabel = new Label("I'm a Label on new Window");
-
-            StackPane secondaryLayout = new StackPane();
-            secondaryLayout.getChildren().add(secondLabel);
-
-            Scene secondScene = new Scene(secondaryLayout, 230, 100);
-
-            // New window (Stage)
-            Stage newWindow = new Stage();
-            newWindow.setTitle("Second Stage");
-            newWindow.setScene(secondScene);
-
-            // Set position of second window, related to primary window.
-//            newWindow.setX(primaryStage.getX() + 200);
-//            newWindow.setY(primaryStage.getY() + 100);
-
-            newWindow.show();
-
-             */
-        });
-
+        unitsMenuItem.setOnAction(event -> dialog.getController().show());
 
         //personTable.setFocusModel();
         personTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -157,14 +131,6 @@ public class AppController implements Initializable {
         log.info("total person number {}", numberOfPersons);
 
         int pageCount = numberOfPersons / PERSONS_PER_PAGE;
-        pagination.setPageCount(pageCount);
-        pagination.setCurrentPageIndex(1);
-        pagination.setMaxPageIndicatorCount(3);
-        //        pagination.setPageFactory(pageNumber -> {
-        //
-        //        });
-
-        System.out.println(pagination.getPageCount());
 
         personListModel.feed(persons);
 
@@ -208,6 +174,12 @@ public class AppController implements Initializable {
     public void quitClicked(ActionEvent actionEvent) {
         Platform.exit();
         System.exit(0);
+    }
+
+    public void notYetImplemented(ActionEvent actionEvent) {
+        final Alert alertBox = new Alert(Alert.AlertType.INFORMATION, "Feature is not yet implemented");
+        alertBox.initOwner(this.filterField.getScene().getWindow());
+        alertBox.show();
     }
 
     public void importDbfClicked(ActionEvent actionEvent) {

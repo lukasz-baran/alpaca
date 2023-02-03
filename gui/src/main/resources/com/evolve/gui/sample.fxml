@@ -23,6 +23,19 @@
             </Menu>
         </menus>
     </MenuBar>
+
+    <HBox id="quickMenu" alignment="BASELINE_LEFT" prefHeight="18.0"
+          spacing="5.0" AnchorPane.bottomAnchor="5.0"
+          AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+        <Button text="Nowy" onAction="#notYetImplemented"/>
+        <Button text="Edytuj" onAction="#notYetImplemented"/>
+        <Button text="Usuń" onAction="#notYetImplemented"/>
+        <Button text="Eksportuj" onAction="#notYetImplemented"/>
+        <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+        </padding>
+    </HBox>
+
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0"
                 VBox.vgrow="ALWAYS">
         <children>
@@ -91,6 +104,4 @@
             </SplitPane>
         </children>
     </AnchorPane>
-    <Pagination fx:id="pagination" prefHeight="12.0" prefWidth="640.0"/>
-
 </VBox>
