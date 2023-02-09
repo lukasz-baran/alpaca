@@ -3,7 +3,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.*?>
-<AnchorPane minHeight="0.0" minWidth="0.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+<AnchorPane minHeight="0.0" minWidth="0.0" xmlns="http://javafx.com/javafx/19"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.components.AuthorizedPersonsController">
     <TableView fx:id="authorizedPersonsTable" layoutY="19.0"
                prefHeight="120.0" prefWidth="300.0" AnchorPane.topAnchor="0.0"

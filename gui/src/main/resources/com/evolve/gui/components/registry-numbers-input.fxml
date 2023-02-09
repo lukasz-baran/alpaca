@@ -3,7 +3,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Text?>
-<HBox xmlns="http://javafx.com/javafx/17.0.2-ea"
+<HBox xmlns="http://javafx.com/javafx/19"
       stylesheets="@../../../../style.css"
       xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" prefWidth="255.0" spacing="15.0"
       fx:controller="com.evolve.gui.components.RegistryNumbersController">

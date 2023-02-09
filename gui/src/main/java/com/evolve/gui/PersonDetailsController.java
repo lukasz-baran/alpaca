@@ -2,10 +2,7 @@ package com.evolve.gui;
 
 import com.evolve.domain.Person;
 import com.evolve.domain.Unit;
-import com.evolve.gui.components.AuthorizedPersonsController;
-import com.evolve.gui.components.GenderComboboxController;
-import com.evolve.gui.components.PersonAddressesController;
-import com.evolve.gui.components.RegistryNumbersController;
+import com.evolve.gui.components.*;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
 import javafx.beans.binding.Bindings;
@@ -18,6 +15,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxControllerAndView;
@@ -47,6 +45,8 @@ public class PersonDetailsController implements Initializable {
     private final FxControllerAndView<PersonAddressesController, AnchorPane> personAddresses;
     @FXML
     private final FxControllerAndView<RegistryNumbersController, HBox> registryNumbers;
+    @FXML
+    private final FxControllerAndView<PersonStatusController, VBox> personStatusController;
 
     private final ObjectProperty<LocalDate> birthDay = new SimpleObjectProperty<>();
 
@@ -102,6 +102,8 @@ public class PersonDetailsController implements Initializable {
         personAddresses.getController().setPersonAddresses(person.getAddresses());
 
         authorizedController.getController().setAuthorizedPersons(person.getAuthorizedPersons());
+
+        personStatusController.getController().setPerson(person);
     }
 
     private String getUnitNumber(String unitNumber) {
