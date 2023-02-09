@@ -126,17 +126,11 @@ public class PersonCredentialsDeducer extends
         private final String firstName;
         private final String secondName;
         private final String lastName;
-        private static final List<String> NON_TYPICAL_FEMALE_NAMES = List.of("Miriam", "Beatrycze", "Nel",
-                "Abigail", "Karmen", "Noemi", "Ivette");
 
         public Person.Gender getGender() {
-            if (NON_TYPICAL_FEMALE_NAMES.stream().anyMatch(name -> StringUtils.equalsAnyIgnoreCase(name, firstName))) {
-                return Person.Gender.FEMALE;
-            }
-
-            // this is very poor way of checking Gender
-            return StringUtils.trimToEmpty(firstName).endsWith("a") ? Person.Gender.FEMALE : Person.Gender.MALE;
+            return PersonGenderDeducer.getGender(firstName);
         }
+
     }
 
 

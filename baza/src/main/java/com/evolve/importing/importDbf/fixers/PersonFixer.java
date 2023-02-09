@@ -1,7 +1,9 @@
 package com.evolve.importing.importDbf.fixers;
 
 import com.evolve.domain.Person;
+import com.evolve.domain.PersonStatusChange;
 import com.evolve.importing.DateParser;
+import com.evolve.importing.importDbf.deducers.PersonGenderDeducer;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
@@ -14,10 +16,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -72,13 +72,41 @@ public class PersonFixer implements InitializingBean {
 
     public void fix(Person person, String field, String newValue) {
         switch (field) {
-            case "firstName" -> person.setFirstName(newValue);
+            case "firstName" -> setPersonFirstNameAndGender(person, newValue);
             case "lastName" -> person.setLastName(newValue);
             case "secondName" -> person.setSecondName(newValue);
-            case "dob" -> DateParser.parse(newValue).ifPresent(person::setDob);
+            case "dob" -> DateParser.parse(newValue).ifPresent(dob -> addPersonDob(person, dob));
             case "previousName" -> addPreviousLastName(person, newValue);
             default -> {}
         }
+    }
+
+    public void setPersonFirstNameAndGender(Person person, String firstName) {
+        person.setFirstName(firstName);
+        person.setGender(PersonGenderDeducer.getGender(firstName));
+    }
+
+    public void addPersonDob(Person person, LocalDate actualPersonDob) {
+        person.setDob(actualPersonDob);
+
+        if (person.getStatusChanges() == null) {
+            person.setStatusChanges(new ArrayList<>());
+        }
+
+        final Optional<PersonStatusChange> personStatusChangeDob =
+            person.getStatusChanges()
+                .stream()
+                .filter(personStatusChange -> personStatusChange.getEventType() == PersonStatusChange.EventType.BORN)
+                .findFirst();
+        personStatusChangeDob
+                .ifPresentOrElse(statusChange -> {
+                    statusChange.setWhen(actualPersonDob);
+                    statusChange.setEventType(PersonStatusChange.EventType.BORN);
+                },
+                () -> person.getStatusChanges().add(PersonStatusChange.builder()
+                                .eventType(PersonStatusChange.EventType.BORN)
+                                .when(actualPersonDob)
+                        .build()));
     }
 
     public void addPreviousLastName(Person person, String previousLastName) {

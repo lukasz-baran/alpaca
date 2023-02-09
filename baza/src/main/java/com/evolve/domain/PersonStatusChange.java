@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 @AllArgsConstructor
 @Getter
+@Setter
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
@@ -25,7 +26,8 @@ public class PersonStatusChange {
         JOINED("Dołączenie"),
         RESIGNED("Rezygnacja"),
         DIED("Śmierć"),
-        REMOVED("Usunięcie");
+        REMOVED("Usunięcie"),
+        ACCOUNT_CREATED("Data założenia");
 
         private final String name;
 

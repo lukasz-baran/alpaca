@@ -1,10 +1,13 @@
 package com.evolve.utils;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class StringFix {
 
     public static String capitalizeLastName(String input) {

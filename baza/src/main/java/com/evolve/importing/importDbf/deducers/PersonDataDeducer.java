@@ -2,6 +2,7 @@ package com.evolve.importing.importDbf.deducers;
 
 import com.evolve.domain.*;
 import com.evolve.importing.importDbf.DbfPerson;
+import com.evolve.utils.DateUtils;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -91,7 +92,7 @@ public class PersonDataDeducer {
         final UnitNumberDeducer unitNumberDeducer = new UnitNumberDeducer(issues);
         final Optional<String> unitNumber = unitNumberDeducer.deduceFrom(Lists.newArrayList(person.getKONTO_WNP()));
 
-        final List<PersonStatusChange> statusChanges = deduceStatusChanges(maybeDob);
+        final List<PersonStatusChange> statusChanges = deduceStatusChanges(maybeDob, person);
 
         final Person personData = Person.builder()
                 .personId(personId.map(PersonId::toString).orElse(null))
@@ -112,14 +113,21 @@ public class PersonDataDeducer {
         return Optional.of(personData);
     }
 
-    List<PersonStatusChange> deduceStatusChanges(Optional<LocalDate> maybeDob) {
+    List<PersonStatusChange> deduceStatusChanges(Optional<LocalDate> maybeDob, DbfPerson person) {
         final List<PersonStatusChange> statusChanges = new ArrayList<>();
-        maybeDob.ifPresent(dob -> {
-            statusChanges.add(PersonStatusChange.builder()
-                            .eventType(PersonStatusChange.EventType.BORN)
-                            .when(dob)
-                    .build());
-        });
+        maybeDob.ifPresent(dob -> statusChanges.add(PersonStatusChange.builder()
+                        .eventType(PersonStatusChange.EventType.BORN)
+                        .when(dob)
+                .build()));
+
+        Optional.ofNullable(person)
+                .map(DbfPerson::getDATA_ZAL)
+                .ifPresent(accountCreationDate -> statusChanges.add(PersonStatusChange.builder()
+                                .eventType(PersonStatusChange.EventType.ACCOUNT_CREATED)
+                                .when(DateUtils.convertToLocalDateViaMilisecond(accountCreationDate))
+                        .build()));
+        //person.getDATA_ZAL()
+
         return statusChanges;
     }
 

@@ -4,9 +4,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.geometry.Insets?>
 <VBox xmlns="http://javafx.com/javafx/19"
       stylesheets="@../../../../style.css"
-      xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" prefWidth="255.0" spacing="15.0"
+      xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" prefWidth="255.0" spacing="5.0"
       GridPane.columnIndex="1" GridPane.rowIndex="4" fx:controller="com.evolve.gui.components.PersonStatusController">
     <ComboBox fx:id="personStatusCombo" GridPane.columnIndex="1" GridPane.rowIndex="4" >
     </ComboBox>
@@ -21,4 +22,8 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
         </columnResizePolicy>
     </TableView>
+
+    <padding>
+        <Insets bottom="10.0" left="0.0" right="0.0" top="10.0" />
+    </padding>
 </VBox>
