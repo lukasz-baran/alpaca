@@ -4,6 +4,7 @@ import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.gui.components.RetentionFileChooser;
 import com.evolve.gui.dictionaries.UnitsController;
+import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.importing.event.DbfImportCompletedEvent;
 import com.evolve.importing.importDbf.ImportDbfService;
 import com.evolve.services.PersonsService;
@@ -18,6 +19,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Getter;
@@ -27,6 +29,7 @@ import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +45,7 @@ import java.util.ResourceBundle;
 @FxmlView("sample.fxml")
 @RequiredArgsConstructor
 @Slf4j
-public class AppController implements Initializable {
+public class AppController implements Initializable, ApplicationListener<PersonEditionFinishedEvent> {
 
     public static final int PERSONS_PER_PAGE = 100;
 
@@ -54,6 +57,14 @@ public class AppController implements Initializable {
     private final FxWeaver fxWeaver;
 
     private final FxControllerAndView<UnitsController, VBox> dialog;
+
+    private final PersonDetailsController personDetailsController;
+
+    private final FxControllerAndView<PersonDetailsController, AnchorPane> personDetails;
+    public Button btnNew;
+    public Button btnEdit;
+    public Button btnDelete;
+    public Button btnExport;
 
     @FXML
     private TableView<PersonModel> personTable;
@@ -182,11 +193,53 @@ public class AppController implements Initializable {
         alertBox.show();
     }
 
+    public void editButtonClicked(ActionEvent actionEvent) {
+        if (this.personListModel.getCurrentPersonProperty().getValue() == null) {
+            log.warn("No person is selected - cannot edit");
+
+            final Alert alertBox = new Alert(Alert.AlertType.INFORMATION, "Nie można zacząć edycji, gdyż nie wybrano osoby");
+            alertBox.initOwner(this.filterField.getScene().getWindow());
+            alertBox.show();
+            return;
+        }
+
+        if (personDetailsController.startEditing()) {
+            btnEdit.setDisable(true);
+            btnDelete.setDisable(true);
+            btnNew.setDisable(true);
+            btnExport.setDisable(true);
+            personTable.setDisable(true);
+            filterField.setDisable(true);
+            btnClearFilter.setDisable(true);
+        }
+    }
+
     public void importDbfClicked(ActionEvent actionEvent) {
         Stage stage = (Stage) personTable.getScene().getWindow();
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             openFile(file);
         }
+    }
+
+    @Override
+    public void onApplicationEvent(PersonEditionFinishedEvent event) {
+        event.getEditedPerson().ifPresent(updatedPerson -> {
+            log.info("Edition successful");
+            // update person table with person data from event
+            personListModel.updatePerson(updatedPerson);
+            personTable.refresh();
+        });
+
+
+
+        btnEdit.setDisable(false);
+        btnDelete.setDisable(false);
+        btnNew.setDisable(false);
+        btnExport.setDisable(false);
+        personTable.setDisable(false);
+        filterField.setDisable(false);
+        btnClearFilter.setDisable(false);
+
     }
 }

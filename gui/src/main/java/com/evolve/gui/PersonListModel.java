@@ -1,5 +1,6 @@
 package com.evolve.gui;
 
+import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -29,4 +30,13 @@ public class PersonListModel {
         return new FilteredList<>(data, p -> true);
     }
 
+    public void updatePerson(Person updatedPerson) {
+        PersonModel personModel = data.stream()
+                .filter(p -> p.getId().equals(updatedPerson.getPersonId()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Person not found"));
+        personModel.update(updatedPerson);
+
+        currentPersonProperty.setValue(personModel);
+    }
 }

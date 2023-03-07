@@ -1,7 +1,7 @@
 package com.evolve.gui.dictionaries;
 
 import com.evolve.domain.Unit;
-import com.evolve.gui.StageReadyEvent;
+import com.evolve.gui.events.StageReadyEvent;
 import com.evolve.services.UnitsService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

@@ -1,5 +1,6 @@
 package com.evolve.gui;
 
+import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -75,4 +76,15 @@ public class PersonModel {
         this.status.set(status);
     }
 
+    public void update(Person updatedPerson) {
+        this.firstName.set(updatedPerson.getFirstName());
+        this.lastName.set(updatedPerson.getLastName());
+        this.email.set(updatedPerson.getEmail());
+        this.dob.set(updatedPerson.getDob());
+
+        if (updatedPerson.getStatus() != null && updatedPerson.getStatus().getStatus() != null) {
+            this.status.set(updatedPerson.getStatus().getStatus().name());
+        }
+
+    }
 }

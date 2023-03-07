@@ -1,20 +1,14 @@
 package com.evolve.gui;
 
-import com.evolve.content.ContentFile;
 import com.evolve.content.ContentStoreService;
-import com.evolve.content.FileContentStore;
-import com.evolve.content.FileRepository;
-import com.google.common.io.ByteStreams;
+import com.evolve.gui.events.StageReadyEvent;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
 
 @Component
 @Slf4j

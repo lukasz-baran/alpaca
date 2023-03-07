@@ -1,34 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.PersonDetailsController">
-    <GridPane layoutX="75.0" layoutY="63.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+<VBox VBox.vgrow="NEVER" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.evolve.gui.PersonDetailsController"
+      stylesheets="@../../../style.css">
+
+    <HBox id="personMenu" alignment="BASELINE_LEFT" prefHeight="18.0" spacing="5.0" >
+        <Button fx:id="btnSave" onAction="#saveButtonClicked" text="Zapisz" disable="true"/>
+        <Button fx:id="btnCancel" onAction="#cancelButtonClicked" text="Anuluj" disable="true"/>
+        <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+        </padding>
+    </HBox>
+
+    <ScrollPane>
+    <GridPane>
+
         <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" maxWidth="93.0" minWidth="80.0" prefWidth="67.0" />
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="320.0" minWidth="100.0" prefWidth="320.0" />
+            <ColumnConstraints maxWidth="93.0" minWidth="80.0" prefWidth="67.0" /> <!-- hgrow="NEVER"  -->
+            <ColumnConstraints maxWidth="320.0" minWidth="100.0" prefWidth="320.0" /> <!-- hgrow="ALWAYS" -->
         </columnConstraints>
-        <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <rowConstraints >
+            <RowConstraints minHeight="30" prefHeight="30.0" />
+            <RowConstraints minHeight="30" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
 
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
 
-            <RowConstraints minHeight="120.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="120.0" vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
          <RowConstraints />
         </rowConstraints>
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="ID" GridPane.rowIndex="0" />
-        <TextField fx:id="idTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <TextField fx:id="idTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                   styleClass="non-editable"
+                   />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Imię" GridPane.rowIndex="1" />
         <TextField fx:id="firstNameTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -40,16 +56,13 @@
         <TextField fx:id="secondNameTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Płeć" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-        <fx:include fx:id="personGender" source="components/gender-select.fxml"
-                    GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+        <fx:include fx:id="personGender" source="components/gender-select.fxml" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Data urodzenia" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-        <DatePicker fx:id="dobPicker" editable="false" prefWidth="245.0" promptText="Data urodzenia" GridPane.columnIndex="1" GridPane.rowIndex="5">
-        </DatePicker>
+        <fx:include fx:id="dobPicker" source="components/date-edit.fxml" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Kartoteka" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-        <fx:include fx:id="registryNumbers" source="components/registry-numbers-input.fxml"
-                    GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+        <fx:include fx:id="registryNumbers" source="components/registry-numbers-input.fxml" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="7" />
         <TextField fx:id="emailTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="7" />
@@ -58,20 +71,18 @@
         <TextField fx:id="unitNumberTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Adresy" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="9" />
-        <fx:include fx:id="personAddresses" source="components/person-addresses-list.fxml"
-                    GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+        <fx:include fx:id="personAddresses" source="components/person-addresses-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="9" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Upoważnieni" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="10" />
-        <fx:include fx:id="authorizedController" source="components/authorized-persons-list.fxml"
-                    GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+        <fx:include fx:id="authorizedController" source="components/authorized-persons-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="10" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="11" />
-        <fx:include fx:id="personStatusController" source="components/person-status.fxml"
-                    GridPane.columnIndex="1" GridPane.rowIndex="11"/>
+        <fx:include fx:id="personStatusController" source="components/person-status.fxml" GridPane.columnIndex="1" GridPane.rowIndex="11" />
 
     </GridPane>
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
+    </ScrollPane>
 
-</AnchorPane>
+</VBox>

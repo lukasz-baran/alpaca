@@ -5,6 +5,7 @@ import org.dizitart.no2.repository.annotations.Id;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +48,24 @@ public class Person implements Serializable {
     private List<Comment> comments; // notatki
 
     private Map<String, Object> rawData;
+
+    public void updatePersonDob(LocalDate dob) {
+        this.dob = dob;
+        if (statusChanges == null) {
+            statusChanges = new ArrayList<>();
+        }
+        statusChanges.stream()
+                .filter(statusChange -> statusChange.getEventType() == PersonStatusChange.EventType.BORN)
+                .findFirst()
+                .ifPresentOrElse(
+                        statusChange -> statusChange.setWhen(dob),
+                        () -> statusChanges.add(PersonStatusChange.builder()
+                                .eventType(PersonStatusChange.EventType.BORN)
+                                .when(dob)
+                                .build())
+                );
+    }
+
 
     @Getter
     @RequiredArgsConstructor

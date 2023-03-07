@@ -27,10 +27,10 @@
     <HBox id="quickMenu" alignment="BASELINE_LEFT" prefHeight="18.0"
           spacing="5.0" AnchorPane.bottomAnchor="5.0"
           AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
-        <Button text="Nowy" onAction="#notYetImplemented"/>
-        <Button text="Edytuj" onAction="#notYetImplemented"/>
-        <Button text="Usuń" onAction="#notYetImplemented"/>
-        <Button text="Eksportuj" onAction="#notYetImplemented"/>
+        <Button fx:id="btnNew" text="Nowy" onAction="#notYetImplemented"/>
+        <Button fx:id="btnEdit" text="Edytuj" onAction="#editButtonClicked"/>
+        <Button fx:id="btnDelete" text="Usuń" onAction="#notYetImplemented"/>
+        <Button fx:id="btnExport" text="Eksportuj" onAction="#notYetImplemented"/>
         <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
         </padding>
@@ -90,15 +90,12 @@
                         </padding>
                     </AnchorPane>
                     <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
-                        <tabs>
-                            <Tab text="Podstawowe dane" fx:id="tabPersonDetails">
-                            </Tab>
-                            <Tab text="Oryginalne dane" fx:id="tabOriginalDetails">
-                            </Tab>
-                            <Tab text="Dokumenty" fx:id="tabDocuments">
-                            </Tab>
-
-                        </tabs>
+                        <Tab text="Podstawowe dane" fx:id="tabPersonDetails">
+                        </Tab>
+                        <Tab text="Oryginalne dane" fx:id="tabOriginalDetails">
+                        </Tab>
+                        <Tab text="Dokumenty" fx:id="tabDocuments">
+                        </Tab>
                     </TabPane>
                 </items>
             </SplitPane>

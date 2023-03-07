@@ -1,4 +1,4 @@
-package com.evolve.gui;
+package com.evolve.gui.events;
 
 import javafx.stage.Stage;
 import lombok.Getter;

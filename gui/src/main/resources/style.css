@@ -3,3 +3,7 @@
 {
     -fx-opacity: 1;
 }
+
+.non-editable {
+    -fx-control-inner-background: #EEEEEE;
+}

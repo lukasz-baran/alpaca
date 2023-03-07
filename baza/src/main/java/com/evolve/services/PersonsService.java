@@ -64,7 +64,7 @@ public class PersonsService implements InitializingBean, FindPerson {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         log.info("LIST persons: ");
         final ObjectRepository<Person> unitRepo = nitrite.getRepository(Person.class);
 
