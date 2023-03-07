@@ -9,17 +9,26 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PersonValidator implements Validator<Person> {
+    public static final String FIRST_NAME_CANNOT_BE_EMPTY = "First name cannot be empty";
+    public static final String LAST_NAME_CANNOT_BE_EMPTY = "Last name cannot be empty";
+    public static final String EMAIL_IS_NOT_VALID = "Email must contain @";
 
     @Override
     public ValidationResult validate(Person toValidate) {
         final Set<String> violations = new HashSet<>();
 
         if (StringUtils.isBlank(toValidate.getFirstName())) {
-            violations.add("First name cannot be empty");
+            violations.add(FIRST_NAME_CANNOT_BE_EMPTY);
         }
 
         if (StringUtils.isBlank(toValidate.getLastName())) {
-            violations.add("Last name cannot be empty");
+            violations.add(LAST_NAME_CANNOT_BE_EMPTY);
+        }
+
+        if (StringUtils.isNotEmpty(toValidate.getEmail())) {
+            if (!toValidate.getEmail().contains("@")) {
+                violations.add(EMAIL_IS_NOT_VALID);
+            }
         }
 
         return new ValidationResult(violations);

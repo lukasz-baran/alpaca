@@ -28,6 +28,7 @@ public class PersonEditService {
         person.setLastName(command.lastName());
         person.setSecondName(command.secondName());
         person.updatePersonDob(command.dob());
+        person.setEmail(command.email());
 
 
         final Person.Gender gender = PersonGenderDeducer.getGender(command.firstName());

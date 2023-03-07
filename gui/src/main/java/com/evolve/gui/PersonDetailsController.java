@@ -169,6 +169,7 @@ public class PersonDetailsController extends EditableGuiElement
                 firstNameTextField.getText(),
                 lastNameTextField.getText(),
                 secondNameTextField.getText(),
+                emailTextField.getText(),
                 dobPicker.getController().getDate()
                 );
 

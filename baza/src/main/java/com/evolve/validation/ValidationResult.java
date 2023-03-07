@@ -31,4 +31,11 @@ public class ValidationResult {
         return validationMessages.isEmpty();
     }
 
+    public boolean isValid() {
+        return isEmpty();
+    }
+
+    public Set<String> getErrors() {
+        return validationMessages;
+    }
 }
