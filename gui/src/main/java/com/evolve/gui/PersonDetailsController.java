@@ -128,7 +128,6 @@ public class PersonDetailsController extends EditableGuiElement
 
     @Override
     public boolean startEditing() {
-        PersonModel personModel = personListModel.getCurrentPersonProperty().getValue();
         setEditable(true);
         return true;
     }
@@ -147,6 +146,8 @@ public class PersonDetailsController extends EditableGuiElement
         personGender.getController().setEditable(editable);
 
         dobPicker.getController().setEditable(editable);
+
+        personAddresses.getController().setEditable(editable);
     }
 
 
@@ -170,7 +171,8 @@ public class PersonDetailsController extends EditableGuiElement
                 lastNameTextField.getText(),
                 secondNameTextField.getText(),
                 emailTextField.getText(),
-                dobPicker.getController().getDate()
+                dobPicker.getController().getDate(),
+                personAddresses.getController().getAddresses()
                 );
 
         log.info("Update person data: {}", command);

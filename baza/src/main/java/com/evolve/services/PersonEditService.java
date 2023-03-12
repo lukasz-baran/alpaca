@@ -29,7 +29,7 @@ public class PersonEditService {
         person.setSecondName(command.secondName());
         person.updatePersonDob(command.dob());
         person.setEmail(command.email());
-
+        person.setAddresses(command.addresses());
 
         final Person.Gender gender = PersonGenderDeducer.getGender(command.firstName());
         person.setGender(gender);

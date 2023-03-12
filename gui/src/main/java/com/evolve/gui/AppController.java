@@ -204,13 +204,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
         }
 
         if (personDetailsController.startEditing()) {
-            btnEdit.setDisable(true);
-            btnDelete.setDisable(true);
-            btnNew.setDisable(true);
-            btnExport.setDisable(true);
-            personTable.setDisable(true);
-            filterField.setDisable(true);
-            btnClearFilter.setDisable(true);
+            disableControls(true);
         }
     }
 
@@ -231,15 +225,16 @@ public class AppController implements Initializable, ApplicationListener<PersonE
             personTable.refresh();
         });
 
+        disableControls(false);
+    }
 
-
-        btnEdit.setDisable(false);
-        btnDelete.setDisable(false);
-        btnNew.setDisable(false);
-        btnExport.setDisable(false);
-        personTable.setDisable(false);
-        filterField.setDisable(false);
-        btnClearFilter.setDisable(false);
-
+    void disableControls(boolean disable) {
+        btnEdit.setDisable(disable);
+        btnDelete.setDisable(disable);
+        btnNew.setDisable(disable);
+        btnExport.setDisable(disable);
+        personTable.setDisable(disable);
+        filterField.setDisable(disable);
+        btnClearFilter.setDisable(disable);
     }
 }
