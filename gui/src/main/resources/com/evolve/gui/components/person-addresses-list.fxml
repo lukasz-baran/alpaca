@@ -22,6 +22,7 @@
             <ContextMenu>
                 <items>
                     <MenuItem fx:id="deleteAddress" mnemonicParsing="false" text="Usuń"/>
+                    <MenuItem fx:id="addAddress" mnemonicParsing="false" text="Dodaj"/>
                 </items>
             </ContextMenu>
         </contextMenu>

@@ -55,6 +55,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     private final ImportDbfService importDbfService;
     private final PersonsService personsService;
     private final FxWeaver fxWeaver;
+    private final StageManager stageManager;
 
     private final FxControllerAndView<UnitsController, VBox> dialog;
 
@@ -130,7 +131,8 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     @EventListener
     public void handleContextStart(DbfImportCompletedEvent importCompleted) {
         log.info("import: " + importCompleted.getMessage());
-        new Alert(Alert.AlertType.INFORMATION, importCompleted.getMessage()).show();
+        stageManager.displayInformation(importCompleted.getMessage());
+
         populateTable("id", true);
     }
 
@@ -188,9 +190,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     }
 
     public void notYetImplemented(ActionEvent actionEvent) {
-        final Alert alertBox = new Alert(Alert.AlertType.INFORMATION, "Feature is not yet implemented");
-        alertBox.initOwner(this.filterField.getScene().getWindow());
-        alertBox.show();
+        stageManager.displayInformation("Feature is not yet implemented");
     }
 
     public void editButtonClicked(ActionEvent actionEvent) {

@@ -13,7 +13,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -42,6 +41,7 @@ public class PersonDetailsController extends EditableGuiElement
     private final PersonEditService personEditService;
     private final UnitsService unitsService;
     private final PersonListModel personListModel;
+    private final StageManager stageManager;
 
     @FXML
     private final FxControllerAndView<GenderComboboxController, HBox> personGender;
@@ -152,12 +152,15 @@ public class PersonDetailsController extends EditableGuiElement
 
 
     public void saveButtonClicked(ActionEvent actionEvent) {
+
+
         // display alert asking for confirmation if confirmed, send command to update person data and close the window  if not confirmed, revert changes on view and close the window
-        final Alert alertBox = new Alert(Alert.AlertType.CONFIRMATION, "Zapisać zmiany?");
-        alertBox.initOwner(this.idTextField.getScene().getWindow());
-        alertBox.showAndWait()
-                .filter(response -> response == alertBox.getButtonTypes().get(0))
-                .ifPresentOrElse(response ->persistChanges(), this::revertChanges);
+        boolean result = stageManager.displayConfirmation("Zapisać zmiany?");
+        if (result) {
+            persistChanges();
+        } else {
+            revertChanges();
+        }
     }
 
     public void cancelButtonClicked(ActionEvent actionEvent) {
@@ -183,9 +186,7 @@ public class PersonDetailsController extends EditableGuiElement
             savedPerson = personEditService.editPerson(command);
         } catch (ValidationException e) {
             log.error("Error while updating person data", e);
-            final Alert alertBox = new Alert(Alert.AlertType.WARNING, "Błąd walidacji: " +e.getErrorMessages());
-            alertBox.initOwner(this.idTextField.getScene().getWindow());
-            alertBox.showAndWait();
+            stageManager.displayWarning("Błąd walidacji: " +e.getErrorMessages());
             return;
         }
 

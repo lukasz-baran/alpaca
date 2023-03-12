@@ -2,8 +2,11 @@ package com.evolve.gui.components;
 
 import com.evolve.domain.Person;
 import com.evolve.gui.EditableGuiElement;
+import com.evolve.gui.StageManager;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,9 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,6 @@ import org.springframework.stereotype.Component;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -31,8 +31,14 @@ import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 @Component
 @FxmlView("person-addresses-list.fxml")
 @Slf4j
+@RequiredArgsConstructor
 public class PersonAddressesController extends EditableGuiElement implements Initializable {
+
+    private final StageManager stageManager;
     private final ObservableList<AddressEntry> addresses = FXCollections.observableArrayList();
+
+    private final ObjectProperty<AddressEntry> currentAddressProperty = new SimpleObjectProperty<>(null);
+
     private final BooleanProperty disabledProperty = new SimpleBooleanProperty(true);
 
     @FXML TableView<AddressEntry> addressesTable;
@@ -41,8 +47,7 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
     @FXML TableColumn<AddressEntry, String> cityColumn;
 
     @FXML MenuItem deleteAddress;
-
-
+    @FXML MenuItem addAddress;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -58,6 +63,7 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
         setPersonAddresses(Collections.emptyList()); // it's needed, without this initial call the table won't be populated with real data
 
         deleteAddress.setOnAction(this::handleDelete);
+        addAddress.setOnAction(this::handleAdd);
 
         addressesTable.editableProperty().bind(disabledProperty.not());
 
@@ -73,9 +79,28 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
 //            return row;
 //        });
         //This will allow the table to select multiple rows at once
-        addressesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        //addressesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+
+        this.addressesTable
+                .getSelectionModel()
+                .selectedItemProperty()
+                .addListener((obs, oldSelection, newSelection) -> this.currentAddressProperty.set(newSelection));
+
+        this.currentAddressProperty
+                .addListener((obs, oldEntry, newEntry) -> {
+                    if (newEntry == null) {
+                        addressesTable.getSelectionModel().clearSelection();
+                    } else {
+                        AddressEntry selectedPerson = addressesTable.getSelectionModel().getSelectedItem();
+                        if (selectedPerson != newEntry) {
+                            addressesTable.getSelectionModel().select(newEntry);
+                        }
+                    }
+                });
 
         deleteAddress.disableProperty().bind(disabledProperty);
+        addAddress.disableProperty().bind(disabledProperty);
     }
 
     public void setPersonAddresses(List<Person.PersonAddress> personAddresses) {
@@ -101,17 +126,22 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
         disabledProperty.set(!editable);
     }
 
+    void handleAdd(ActionEvent actionEvent) {
+        addressesTable.getItems().add(new AddressEntry("", "", ""));
+    }
+
     void handleDelete(ActionEvent event) {
-        //            List<PersonDetailMV> users = this.tableView.getSelectionModel().getSelectedItems();
+        final boolean result = stageManager.displayConfirmation("Usunąć zaznaczony adres?");
+        if (!result) {
+            return;
+        }
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation Dialog");
-        alert.setHeaderText(null);
-        alert.setContentText("Are you sure you want to delete selected?");
-        Optional<ButtonType> action = alert.showAndWait();
-        //            if (action.get() == ButtonType.OK) personService.deleteInBatch(users.stream().map(PersonDetailMV::getModel).collect(
-        //                    Collectors.toList()));
-
+        final AddressEntry selected = addressesTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            log.info("Removing address {}", selected);
+            addresses.remove(selected);
+            log.info("done");
+        }
     }
 
     /**
@@ -143,6 +173,7 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
     @AllArgsConstructor
     @Getter
     @Setter
+    @ToString
     public static class AddressEntry {
         private String street;
         private String postalCode;
