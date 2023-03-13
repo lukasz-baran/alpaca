@@ -3,6 +3,9 @@ package com.evolve.domain;
 import lombok.*;
 import org.dizitart.no2.repository.annotations.Id;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,6 +17,9 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Person implements Serializable {
+    public static final String FIRST_NAME_CANNOT_BE_EMPTY = "First name cannot be empty";
+    public static final String LAST_NAME_CANNOT_BE_EMPTY = "Last name cannot be empty";
+    public static final String EMAIL_IS_NOT_VALID = "Email address is not valid";
 
     @Id
     private String personId;
@@ -22,9 +28,14 @@ public class Person implements Serializable {
 
     private RegistryNumber registryNumber;
 
+    @NotBlank(message = FIRST_NAME_CANNOT_BE_EMPTY)
     private String firstName; // imię
+
     private String secondName; // drugie imię
+
+    @NotBlank(message = LAST_NAME_CANNOT_BE_EMPTY)
     private String lastName; // nazwisko
+
     private Gender gender;
 
     private List<String> previousLastNames; // poprzednie nazwiska (panieńskie, przed zmianą nazwiska)
@@ -32,9 +43,12 @@ public class Person implements Serializable {
     private LocalDate dob; // urodzony/urodzona
     private LocalDate memberSince; // data założenia konta
 
+    @Valid
     private List<PersonAddress> addresses; // lista adresów
 
     private List<String> phoneNumbers;
+
+    @Email(message = EMAIL_IS_NOT_VALID)
     private String email;
 
     private List<BankAccount> bankAccounts;
