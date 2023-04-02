@@ -4,8 +4,6 @@ import com.evolve.gui.EditableGuiElement;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.DatePicker;
@@ -26,24 +24,16 @@ public class DateEditController extends EditableGuiElement implements Initializa
     private final ObjectProperty<LocalDate> dateObjectProperty = new SimpleObjectProperty<>();
 
     @FXML DatePicker datePicker;
-    private final EventHandler<Event> disableDatePopup = (Event e) -> {
-        if (!datePicker.isEditable()) {
-            datePicker.hide();
-        }
-    };
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Bindings.bindBidirectional(datePicker.valueProperty(), this.dateObjectProperty);
-        datePicker.setOnShown(this.disableDatePopup);
-        //datePicker.setDisable(true);
+        datePicker.setEditable(false);
     }
 
     public void setDate(LocalDate date) {
         this.dateObjectProperty.setValue(date);
         Bindings.bindBidirectional(datePicker.valueProperty(), this.dateObjectProperty);
-        //datePicker.setOnMouseClicked(this.disableDatePopup);
-        datePicker.setOnShown(this.disableDatePopup);
     }
 
     @Override
@@ -58,8 +48,7 @@ public class DateEditController extends EditableGuiElement implements Initializa
 
     @Override
     public void setEditable(boolean editable) {
-        //datePicker.setDisable(!editable);
-        datePicker.setOnShown(editable ? null : this.disableDatePopup);
+        datePicker.setEditable(!editable);
     }
 
     public LocalDate getDate() {

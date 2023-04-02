@@ -11,6 +11,7 @@ public record EditPersonDataCommand(String id,
                                     String secondName,
                                     String email,
                                     LocalDate dob,
-                                    List<Person.PersonAddress> addresses) {
+                                    List<Person.PersonAddress> addresses,
+                                    List<Person.AuthorizedPerson> authorizedPersons) {
 
 }

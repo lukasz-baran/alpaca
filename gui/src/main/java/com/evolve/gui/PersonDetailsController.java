@@ -148,6 +148,7 @@ public class PersonDetailsController extends EditableGuiElement
         dobPicker.getController().setEditable(editable);
 
         personAddresses.getController().setEditable(editable);
+        authorizedController.getController().setEditable(editable);
     }
 
 
@@ -175,7 +176,8 @@ public class PersonDetailsController extends EditableGuiElement
                 secondNameTextField.getText(),
                 emailTextField.getText(),
                 dobPicker.getController().getDate(),
-                personAddresses.getController().getAddresses()
+                personAddresses.getController().getPersonAddresses(),
+                authorizedController.getController().getAuthorizedPersons()
                 );
 
         log.info("Update person data: {}", command);

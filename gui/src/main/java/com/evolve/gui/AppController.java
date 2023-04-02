@@ -42,7 +42,7 @@ import java.util.ResourceBundle;
 
 @Getter
 @Component
-@FxmlView("sample.fxml")
+@FxmlView("main-view.fxml")
 @RequiredArgsConstructor
 @Slf4j
 public class AppController implements Initializable, ApplicationListener<PersonEditionFinishedEvent> {

@@ -14,8 +14,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
+import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -25,6 +26,8 @@ public class PersonFixer implements InitializingBean {
     public static final String ID = "id";
     public static final String FIELD = "field";
     public static final String NEW_VALUE = "newValue";
+    private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+
 
     private final Resource resource;
     private final Map<String, Map<String, String>> data = new HashMap<>();
@@ -34,15 +37,17 @@ public class PersonFixer implements InitializingBean {
     }
 
     @SneakyThrows
-    public void loadData() {
-        final File csvData = resource.getFile();
+    public int loadData() {
+        // it has to be input stream, not file because it is in jar file
+        final InputStream csvData = resource.getInputStream();
+
         final CSVFormat format = CSVFormat.DEFAULT.builder()
                 .setDelimiter(',')
                 .setIgnoreEmptyLines(true)
                 .setHeader("id", "field", "newValue")
                 .build();
 
-        try (CSVParser parser = CSVParser.parse(csvData, Charset.defaultCharset(), format)) {
+        try (CSVParser parser = CSVParser.parse(csvData, DEFAULT_CHARSET, format)) {
             final List<CSVRecord> csvRecords = parser.getRecords();
             csvRecords.forEach(csvRecord -> {
                     final String id = csvRecord.get(ID);
@@ -54,6 +59,7 @@ public class PersonFixer implements InitializingBean {
         }
 
         log.info("Data loaded from fixer: {}", data);
+        return data.size();
     }
 
     @Override

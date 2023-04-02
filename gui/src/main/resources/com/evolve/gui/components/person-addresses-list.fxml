@@ -10,9 +10,9 @@
     <TableView fx:id="addressesTable" layoutY="19.0" prefHeight="120.0" prefWidth="300.0"
                AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
         <columns>
-            <TableColumn fx:id="streetColumn" onEditCommit="#changeStreetCellEvent" prefWidth="75.0" text="Ulica" />
-            <TableColumn fx:id="postalCodeColumn" onEditCommit="#changePostalCodeCellEvent" text="Kod pocztowy" />
-            <TableColumn fx:id="cityColumn" onEditCommit="#changeCityCellEvent" prefWidth="150.0" text="Miasto" />
+            <TableColumn fx:id="streetColumn" prefWidth="75.0" text="Ulica" />
+            <TableColumn fx:id="postalCodeColumn" text="Kod pocztowy" />
+            <TableColumn fx:id="cityColumn"  prefWidth="150.0" text="Miasto" />
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -21,7 +21,6 @@
         <contextMenu>
             <ContextMenu>
                 <items>
-                    <MenuItem fx:id="deleteAddress" mnemonicParsing="false" text="Usuń"/>
                     <MenuItem fx:id="addAddress" mnemonicParsing="false" text="Dodaj"/>
                 </items>
             </ContextMenu>

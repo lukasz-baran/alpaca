@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -47,10 +48,10 @@ public class StageManager {
         }
     }
 
-//    public void setPrimaryStage(Stage stage) {
-//        this.primaryStage = stage;
-//    }
-//
+    public Window getWindow() {
+        return primaryStage.getScene().getWindow();
+    }
+
     private void logAndExit(String errorMsg, Exception exception) {
         log.error(errorMsg, exception, exception.getCause());
         Platform.exit();

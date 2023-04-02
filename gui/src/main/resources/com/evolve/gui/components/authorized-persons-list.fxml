@@ -3,6 +3,8 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
 <AnchorPane minHeight="0.0" minWidth="0.0" xmlns="http://javafx.com/javafx/19"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.components.AuthorizedPersonsController">
     <TableView fx:id="authorizedPersonsTable" layoutY="19.0"
@@ -10,12 +12,21 @@
                AnchorPane.bottomAnchor="0.0"
                GridPane.columnIndex="1" GridPane.rowIndex="11">
         <columns>
-            <TableColumn fx:id="authorizedNameColumn" prefWidth="75.0" text="Osoba upoważniona"/>
+            <TableColumn fx:id="authorizedFirstNameColumn" prefWidth="75.0" text="Imię"/>
+            <TableColumn fx:id="authorizedLastNameColumn" prefWidth="75.0" text="Nazwisko"/>
             <TableColumn fx:id="relationColumn" text="Relacja"/>
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
         </columnResizePolicy>
+
+        <contextMenu>
+            <ContextMenu>
+                <items>
+                    <MenuItem fx:id="addAuthorizedPerson" mnemonicParsing="false" text="Dodaj"/>
+                </items>
+            </ContextMenu>
+        </contextMenu>
     </TableView>
 
 </AnchorPane>

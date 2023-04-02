@@ -1,6 +1,11 @@
 package com.evolve.gui;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
 public abstract class EditableGuiElement {
+
+    protected final BooleanProperty disabledProperty = new SimpleBooleanProperty(true);
 
     protected CurrentState currentState;
 
@@ -13,13 +18,17 @@ public abstract class EditableGuiElement {
         return CurrentState.EDITABLE;
     }
 
+
+
     /**
      *
      * @return {@code true} if edit was possible
      */
     public abstract boolean startEditing();
 
-    public abstract void setEditable(boolean editable);
+    public void setEditable(boolean editable) {
+        disabledProperty.set(!editable);
+    }
 
 
     enum CurrentState {
