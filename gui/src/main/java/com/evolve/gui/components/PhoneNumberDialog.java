@@ -24,7 +24,6 @@ public class PhoneNumberDialog extends DialogWindow<String> {
     public Optional<String> showDialog(Window window) {
         final Dialog<String> dialog = createDialog(window);
 
-        // Create the username and password labels and fields.
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
