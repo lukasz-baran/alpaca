@@ -25,14 +25,16 @@
             <ColumnConstraints maxWidth="320.0" minWidth="100.0" prefWidth="320.0" /> <!-- hgrow="ALWAYS" -->
         </columnConstraints>
         <rowConstraints >
-            <RowConstraints minHeight="30" prefHeight="30.0" />
+            <RowConstraints minHeight="30" prefHeight="30.0" /> <!-- 0 -->
             <RowConstraints minHeight="30" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" /> <!-- 2 -->
             <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" /> <!-- 4 -->
 
-            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" /> <!-- 5 -->
+            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" /> <!-- 6 -->
+
+            <RowConstraints vgrow="SOMETIMES" /> <!-- prefHeight="30.0"  -->
             <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
 
@@ -64,20 +66,23 @@
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Kartoteka" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="6" />
         <fx:include fx:id="registryNumbers" source="components/registry-numbers-input.fxml" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-        <TextField fx:id="emailTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Telefony" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+        <fx:include fx:id="phoneNumbersController" source="components/phone-numbers.fxml" GridPane.columnIndex="1" GridPane.rowIndex="7" />
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Jednostka" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="8" />
-        <TextField fx:id="unitNumberTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+        <TextField fx:id="emailTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8" />
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Adresy" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="9" />
-        <fx:include fx:id="personAddresses" source="components/person-addresses-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Jednostka" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+        <TextField fx:id="unitNumberTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="9" />
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Upoważnieni" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="10" />
-        <fx:include fx:id="authorizedController" source="components/authorized-persons-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Adresy" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+        <fx:include fx:id="personAddresses" source="components/person-addresses-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="10" />
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="11" />
-        <fx:include fx:id="personStatusController" source="components/person-status.fxml" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Upoważnieni" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="11" />
+        <fx:include fx:id="authorizedController" source="components/authorized-persons-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="12" />
+        <fx:include fx:id="personStatusController" source="components/person-status.fxml" GridPane.columnIndex="1" GridPane.rowIndex="12" />
 
     </GridPane>
     <padding>

@@ -1,9 +1,6 @@
 package com.evolve.importing.importDbf.deducers;
 
 import com.evolve.domain.RegistryNumber;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;

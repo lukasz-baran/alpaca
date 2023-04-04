@@ -5,32 +5,27 @@ import com.evolve.gui.DialogWindow;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
-import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
-@RequiredArgsConstructor
 public class PersonAddressDialog extends DialogWindow<Person.PersonAddress> {
 
     private final Person.PersonAddress personAddress;
 
+    public PersonAddressDialog(Person.PersonAddress personAddress) {
+        super("Adres", "Wprowadź adres");
+        this.personAddress = personAddress;
+    }
+
     @Override
     public Optional<Person.PersonAddress> showDialog(Window window) {
-        //final Dialog<Person.PersonAddress> dialog = new Dialog<>();
-        dialog.setTitle("Adres");
-        dialog.initOwner(window);
-        dialog.setHeaderText("Wprowadź adres");
+        final Dialog<Person.PersonAddress> dialog = createDialog(window);
 
-        // Set the icon (must be included in the project).
-        //dialog.setGraphic(new ImageView(this.getClass().getResource("login.png").toString()));
-
-        final ButtonType saveButtonType = new ButtonType("Zapisz", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
-
-        // Create the username and password labels and fields.
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);

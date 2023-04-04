@@ -8,28 +8,22 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
-import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
-@RequiredArgsConstructor
-public class AuthorizedPersonDialogForm extends DialogWindow<Person.AuthorizedPerson> {
+public class AuthorizedPersonDialog extends DialogWindow<Person.AuthorizedPerson> {
 
     private final Person.AuthorizedPerson authorizedPerson;
 
+    public AuthorizedPersonDialog( Person.AuthorizedPerson authorizedPerson) {
+        super("Osoba upoważniona", "Wprowadź dane osoby upoważnionej");
+        this.authorizedPerson = authorizedPerson;
+    }
+
     @Override
     public Optional<Person.AuthorizedPerson> showDialog(Window window) {
-        dialog.setTitle("Osoba upoważniona");
-        dialog.initOwner(window);
-        dialog.setHeaderText("Wprowadź dane osoby upoważnionej");
+        final Dialog<Person.AuthorizedPerson> dialog = createDialog(window);
 
-        // Set the icon (must be included in the project).
-        //dialog.setGraphic(new ImageView(this.getClass().getResource("login.png").toString()));
-
-        final ButtonType saveButtonType = new ButtonType("Zapisz", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
-
-        // Create the username and password labels and fields.
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);

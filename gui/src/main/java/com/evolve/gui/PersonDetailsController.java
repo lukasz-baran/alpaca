@@ -26,6 +26,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -50,6 +51,8 @@ public class PersonDetailsController extends EditableGuiElement
 
     @FXML
     private final FxControllerAndView<DateEditController, HBox> dobPicker;
+
+    @FXML private final FxControllerAndView<PhoneNumbersController, AnchorPane> phoneNumbersController;
 
     @FXML
     private final FxControllerAndView<PersonAddressesController, AnchorPane> personAddresses;
@@ -96,6 +99,8 @@ public class PersonDetailsController extends EditableGuiElement
         secondNameTextField.setText(person.getSecondName());
         lastNameTextField.setText(person.getLastName());
         emailTextField.setText(person.getEmail());
+
+        phoneNumbersController.getController().setPhoneNumbers(person.getPhoneNumbers());
 
         registryNumbers.getController().setPerson(person);
         personGender.getController().setPersonGender(person);
@@ -149,6 +154,7 @@ public class PersonDetailsController extends EditableGuiElement
 
         personAddresses.getController().setEditable(editable);
         authorizedController.getController().setEditable(editable);
+        phoneNumbersController.getController().setEditable(editable);
     }
 
 
@@ -175,6 +181,7 @@ public class PersonDetailsController extends EditableGuiElement
                 lastNameTextField.getText(),
                 secondNameTextField.getText(),
                 emailTextField.getText(),
+                phoneNumbersController.getController().getNumbers(),
                 dobPicker.getController().getDate(),
                 personAddresses.getController().getPersonAddresses(),
                 authorizedController.getController().getAuthorizedPersons()

@@ -29,6 +29,7 @@ public class PersonEditService {
         person.setSecondName(command.secondName());
         person.updatePersonDob(command.dob());
         person.setEmail(command.email());
+        person.setPhoneNumbers(command.phoneNumbers());
         person.setAddresses(command.addresses());
         person.setAuthorizedPersons(command.authorizedPersons());
 

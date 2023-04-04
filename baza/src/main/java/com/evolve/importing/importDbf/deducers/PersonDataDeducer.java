@@ -83,6 +83,9 @@ public class PersonDataDeducer {
             infoGuesses = emailPersonDeducer.removeGuesses(infoGuesses);
         }
 
+        final PhoneNumbersDeducer phoneNumbersDeducer = new PhoneNumbersDeducer(issues);
+        final Optional<List<String>> maybePhoneNumbers = phoneNumbersDeducer.deduceFrom(Lists.newArrayList(person.getTEL0(), person.getTEL1()));
+
         // ustalmy numery w kartotekach
         final RegistryNumbersDeducer registryNumbersDeducer = new RegistryNumbersDeducer(issues);
         final Optional<RegistryNumber> registryNumbers =
@@ -107,6 +110,7 @@ public class PersonDataDeducer {
                 .status(personStatusDetails.orElse(null))
                 .statusChanges(statusChanges)
                 .email(maybeEmail.orElse(null))
+                .phoneNumbers(maybePhoneNumbers.orElse(List.of()))
                 .unitNumber(unitNumber.orElse(null))
                 .rawData(person.getData())
                 .build();

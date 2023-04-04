@@ -10,6 +10,7 @@ public record EditPersonDataCommand(String id,
                                     String lastName,
                                     String secondName,
                                     String email,
+                                    List<String> phoneNumbers,
                                     LocalDate dob,
                                     List<Person.PersonAddress> addresses,
                                     List<Person.AuthorizedPerson> authorizedPersons) {

@@ -59,7 +59,7 @@ public class AuthorizedPersonsController extends EditableGuiElement implements I
 
                 final MenuItem editMenuItem = new MenuItem("Edytuj");
                 editMenuItem.setOnAction(event -> {
-                    new AuthorizedPersonDialogForm(row.getItem().getAuthorizedPerson())
+                    new AuthorizedPersonDialog(row.getItem().getAuthorizedPerson())
                         .showDialog(stageManager.getWindow())
                         .ifPresent(person -> {
                             row.getItem().setAuthorizedPerson(person);
@@ -86,7 +86,7 @@ public class AuthorizedPersonsController extends EditableGuiElement implements I
     }
 
     void addAuthorizedPerson(ActionEvent actionEvent) {
-        new AuthorizedPersonDialogForm(null)
+        new AuthorizedPersonDialog(null)
             .showDialog(stageManager.getWindow())
             .ifPresent(person -> {
                 list.add(new AuthorizedPersonEntry(person));
