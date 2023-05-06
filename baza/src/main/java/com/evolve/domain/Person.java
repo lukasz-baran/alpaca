@@ -134,4 +134,23 @@ public class Person implements Serializable {
         private String comment;
     }
 
+
+    public void addOrUpdateStatusChange(PersonStatusChange.EventType eventType, LocalDate when) {
+        if (this.statusChanges == null) {
+            this.statusChanges = new ArrayList<>();
+        }
+        this.statusChanges
+                .stream()
+                .filter(personStatusChange -> personStatusChange.getEventType() == eventType)
+                .findFirst()
+                .ifPresentOrElse(statusChange -> {
+                            statusChange.setWhen(when);
+                            statusChange.setEventType(eventType);
+                        },
+                        () -> this.statusChanges.add(PersonStatusChange.builder()
+                                .eventType(eventType)
+                                .when(when)
+                                .build()));
+    }
+
 }

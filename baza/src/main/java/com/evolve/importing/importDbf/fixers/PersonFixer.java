@@ -81,7 +81,8 @@ public class PersonFixer implements InitializingBean {
             case "firstName" -> setPersonFirstNameAndGender(person, newValue);
             case "lastName" -> person.setLastName(newValue);
             case "secondName" -> person.setSecondName(newValue);
-            case "dob" -> DateParser.parse(newValue).ifPresent(dob -> addPersonDob(person, dob));
+            case "dob" -> DateParser.parse(newValue).ifPresent(dob -> addPersonDateOfBirth(person, dob));
+            case "joinedDate" -> DateParser.parse(newValue).ifPresent(doa -> addPersonJoinedDate(person, doa));
             case "previousName" -> addPreviousLastName(person, newValue);
             default -> {}
         }
@@ -92,27 +93,13 @@ public class PersonFixer implements InitializingBean {
         person.setGender(PersonGenderDeducer.getGender(firstName));
     }
 
-    public void addPersonDob(Person person, LocalDate actualPersonDob) {
+    public void addPersonJoinedDate(Person person, LocalDate joinedDate) {
+        person.addOrUpdateStatusChange(PersonStatusChange.EventType.JOINED, joinedDate);
+    }
+
+    public void addPersonDateOfBirth(Person person, LocalDate actualPersonDob) {
         person.setDob(actualPersonDob);
-
-        if (person.getStatusChanges() == null) {
-            person.setStatusChanges(new ArrayList<>());
-        }
-
-        final Optional<PersonStatusChange> personStatusChangeDob =
-            person.getStatusChanges()
-                .stream()
-                .filter(personStatusChange -> personStatusChange.getEventType() == PersonStatusChange.EventType.BORN)
-                .findFirst();
-        personStatusChangeDob
-                .ifPresentOrElse(statusChange -> {
-                    statusChange.setWhen(actualPersonDob);
-                    statusChange.setEventType(PersonStatusChange.EventType.BORN);
-                },
-                () -> person.getStatusChanges().add(PersonStatusChange.builder()
-                                .eventType(PersonStatusChange.EventType.BORN)
-                                .when(actualPersonDob)
-                        .build()));
+        person.addOrUpdateStatusChange(PersonStatusChange.EventType.BORN, actualPersonDob);
     }
 
     public void addPreviousLastName(Person person, String previousLastName) {
