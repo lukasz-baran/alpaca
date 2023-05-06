@@ -107,17 +107,6 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
         addressesTable.setItems(list);
     }
 
-    @Override
-    protected boolean isEditable() {
-        return true;
-    }
-
-    @Override
-    public boolean startEditing() {
-        return false;
-    }
-
-
     void addPersonAddress(ActionEvent actionEvent) {
          new PersonAddressDialog(null).showDialog(stageManager.getWindow())
              .ifPresent(person -> {

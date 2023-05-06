@@ -46,11 +46,11 @@ public class ImportDbfFile {
                     personData.put(fieldName, rowObjects[i]);
                 }
 
-                log.info("person {}", personData);
+                //log.info("person {}", personData);
                 dbfData.addPerson(DbfPerson.of(personData));
             }
 
-            log.info("Field names: {}", fieldNames);
+            //log.info("Field names: {}", fieldNames);
 
             return dbfData;
 

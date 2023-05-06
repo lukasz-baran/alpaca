@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 @NoArgsConstructor
 @Builder
 @Getter
+@EqualsAndHashCode
 @ToString
 public class Person {
 

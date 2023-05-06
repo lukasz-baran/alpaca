@@ -1,14 +1,12 @@
 package com.evolve.importing.importDoc.person;
 
 import com.evolve.exception.ImportFailedException;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@EqualsAndHashCode
 public class KartotekaId {
     private final String id;
     private final boolean missing; // TODO replace with getter based on Optional

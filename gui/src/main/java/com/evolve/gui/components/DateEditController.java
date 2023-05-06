@@ -37,16 +37,6 @@ public class DateEditController extends EditableGuiElement implements Initializa
     }
 
     @Override
-    protected boolean isEditable() {
-        return true;
-    }
-
-    @Override
-    public boolean startEditing() {
-        return false;
-    }
-
-    @Override
     public void setEditable(boolean editable) {
         datePicker.setEditable(!editable);
     }

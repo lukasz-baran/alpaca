@@ -26,7 +26,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -52,7 +51,8 @@ public class PersonDetailsController extends EditableGuiElement
     @FXML
     private final FxControllerAndView<DateEditController, HBox> dobPicker;
 
-    @FXML private final FxControllerAndView<PhoneNumbersController, AnchorPane> phoneNumbersController;
+    @FXML
+    private final FxControllerAndView<PhoneNumbersController, AnchorPane> phoneNumbersController;
 
     @FXML
     private final FxControllerAndView<PersonAddressesController, AnchorPane> personAddresses;
@@ -126,16 +126,6 @@ public class PersonDetailsController extends EditableGuiElement
         return unitNumber + " - ???";
     }
 
-    @Override
-    protected boolean isEditable() {
-        return true;
-    }
-
-    @Override
-    public boolean startEditing() {
-        setEditable(true);
-        return true;
-    }
 
     @Override
     public void setEditable(boolean editable) {
@@ -159,8 +149,6 @@ public class PersonDetailsController extends EditableGuiElement
 
 
     public void saveButtonClicked(ActionEvent actionEvent) {
-
-
         // display alert asking for confirmation if confirmed, send command to update person data and close the window  if not confirmed, revert changes on view and close the window
         boolean result = stageManager.displayConfirmation("Zapisać zmiany?");
         if (result) {

@@ -43,22 +43,25 @@ public class RegistryNumbersDeducer extends AbstractSmartDeducer<RegistryNumber>
         }
 
         if (StringUtils.length(value) > TWO_NUMBERS_EXPECTED) {
-            StringTokenizer stringTokenizer = new StringTokenizer(value);
+            final StringTokenizer stringTokenizer = new StringTokenizer(value);
 
-            if (stringTokenizer.countTokens() == 3) {
+            if (stringTokenizer.countTokens() == 4) {
+                final String oldRegistry = stringTokenizer.nextToken() + stringTokenizer.nextToken();
+                final String newRegistry = stringTokenizer.nextToken() + stringTokenizer.nextToken();
 
+                return Optional.of(new RegistryNumber(newRegistry, oldRegistry));
+            } else if (stringTokenizer.countTokens() == 3) {
                 final String oldRegistry = stringTokenizer.nextToken() + stringTokenizer.nextToken();
                 final String newRegistry = stringTokenizer.nextToken();
 
-                return Optional.of(new RegistryNumber(oldRegistry, newRegistry));
+                return Optional.of(new RegistryNumber(newRegistry, oldRegistry));
             } else if (stringTokenizer.countTokens() == 2) {
                 final String oldRegistry = stringTokenizer.nextToken();
                 final String newRegistry = stringTokenizer.nextToken();
-                return Optional.of(new RegistryNumber(oldRegistry, newRegistry));
+                return Optional.of(new RegistryNumber(newRegistry, oldRegistry));
             } else if (stringTokenizer.countTokens() == 1) {
                 final String newRegistry = stringTokenizer.nextToken();
-                return Optional.of(new RegistryNumber(null, newRegistry));
-
+                return Optional.of(new RegistryNumber(newRegistry, null));
             }
         }
 
@@ -66,9 +69,9 @@ public class RegistryNumbersDeducer extends AbstractSmartDeducer<RegistryNumber>
             StringTokenizer stringTokenizer = new StringTokenizer(value);
             if (stringTokenizer.countTokens() == 2) {
                 final String oldRegistry = stringTokenizer.nextToken() + stringTokenizer.nextToken();
-                return Optional.of(RegistryNumber.onlyOldRegistryNumber(oldRegistry));
+                return Optional.of(RegistryNumber.onlyNewRegistryNumber(oldRegistry));
             }
-            return Optional.of(RegistryNumber.onlyOldRegistryNumber(stringTokenizer.nextToken()));
+            return Optional.of(RegistryNumber.onlyNewRegistryNumber(stringTokenizer.nextToken()));
         }
 
         return Optional.empty();

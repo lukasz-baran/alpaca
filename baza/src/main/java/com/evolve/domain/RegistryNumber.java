@@ -3,8 +3,6 @@ package com.evolve.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import java.util.Optional;
-
 @AllArgsConstructor
 @EqualsAndHashCode
 @NoArgsConstructor
@@ -16,6 +14,10 @@ public class RegistryNumber {
 
     public static RegistryNumber onlyOldRegistryNumber(String oldRegistry) {
         return new RegistryNumber(parseOrNull(oldRegistry), null);
+    }
+
+    public static RegistryNumber onlyNewRegistryNumber(String newRegistry) {
+        return new RegistryNumber(null, parseOrNull(newRegistry));
     }
 
     public RegistryNumber(String oldRegistry, String newRegistry) {

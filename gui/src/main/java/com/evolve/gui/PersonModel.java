@@ -3,6 +3,7 @@ package com.evolve.gui;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import lombok.ToString;
@@ -19,19 +20,22 @@ public class PersonModel {
     private final SimpleStringProperty email;
     private final ObjectProperty<LocalDate> dob;
     private final SimpleStringProperty status;
+    private final SimpleLongProperty registryNumber;
 
-    PersonModel(String id, String fName, String lName, String email, LocalDate dob, String status) {
+    PersonModel(String id, String fName, String lName, String email, LocalDate dob,
+            String status, Long registryNumber) {
         this.id = new SimpleStringProperty(id);
         this.firstName = new SimpleStringProperty(fName);
         this.lastName = new SimpleStringProperty(lName);
         this.email = new SimpleStringProperty(email);
         this.dob = new SimpleObjectProperty<>(dob);
         this.status = new SimpleStringProperty(status);
+        this.registryNumber = new SimpleLongProperty(registryNumber);
     }
 
     PersonModel(PersonListView person) {
         this(person.getPersonId(), person.getFirstName(), person.getLastName(), person.getEmail(),
-                person.getDob(), person.getStatus().name());
+                person.getDob(), person.getStatus().name(), person.getRegistryNumber());
     }
 
     public String getId() {
@@ -74,6 +78,14 @@ public class PersonModel {
     }
     public void setStatus(String status) {
         this.status.set(status);
+    }
+
+    public Long getRegistryNumber() {
+        return registryNumber.get();
+    }
+
+    public void setRegistryNumber(Long registryNumber) {
+        this.registryNumber.set(registryNumber);
     }
 
     public void update(Person updatedPerson) {

@@ -4,12 +4,13 @@ import com.evolve.importing.importDoc.group.Grupa;
 import com.evolve.importing.importDoc.group.GrupyAlfabetyczne;
 import com.evolve.importing.importDoc.group.PersonGroupReader;
 import com.evolve.importing.importDoc.person.Person;
-import lombok.RequiredArgsConstructor;
+import com.google.common.io.Resources;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -36,13 +37,19 @@ import java.util.Scanner;
  rez.
 
  */
-@RequiredArgsConstructor
 @Slf4j
 public class ImportAlphanumeric {
+    public static final String FILENAME_BY_ALPHA = "ludzie-alfabetycznie.txt";
+    public static final URL FILE_BY_ALPHA = Resources.getResource(FILENAME_BY_ALPHA);
+
     private final File fileAlphanumeric;
 
     public static final List<String> START_SECTIONS = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
             "K", "L", "Ł", "M", "N", "O", "P", "R", "S", "Ś", "T", "U", "W", "Z", "Ż");
+
+    public ImportAlphanumeric() {
+        this.fileAlphanumeric = new File(FILE_BY_ALPHA.getFile());
+    }
 
     @SneakyThrows
     public GrupyAlfabetyczne processFile() {

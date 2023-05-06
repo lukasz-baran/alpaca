@@ -36,17 +36,29 @@ public class PersonReader {
         // tokensLeft w idealnym przypadku zawiera 2 elementy (imię i nazwisko)
         // jeśli zawiera 3 i ostatni jest liczbą numer to
 
+        if (kartoteka.equals("119")) {
+            return Optional.of(Person.builder()
+                    .numerKartoteki(KartotekaId.of(kartoteka))
+                    .numerJednostki(jednostka)
+                    .numerGrupy(grupa)
+                    .index(index)
+                    .lastName("ŁOZIŃSKA")
+                    .firstName("MARIA")
+                    .secondName("MAGDALENA")
+                    .statusDetails(PersonStatusDetails.active())
+                    .line(line)
+                    .build());
+        }
 
         final String oldKartoteka = getKartotekaOldNumber(tokensLeft);
 
-        final Boolean rezygnacja = czyRezygnacja(tokensLeft);
+        final boolean rezygnacja = czyRezygnacja(tokensLeft);
 
         final String secondName = secondName(tokensLeft);
 
         final String lastName = getLastName(tokensLeft);
         final String firstName = getFirstName(tokensLeft, Optional.ofNullable(lastName));
 
-        //scanner.hasNext()
         final Person osoba = Person.builder()
                 .numerKartoteki(KartotekaId.of(kartoteka))
                 .numerJednostki(jednostka)

@@ -1,6 +1,5 @@
 package com.evolve.gui.components;
 
-import com.evolve.domain.Person;
 import com.evolve.gui.EditableGuiElement;
 import com.evolve.gui.StageManager;
 import javafx.beans.binding.Bindings;
@@ -39,16 +38,6 @@ public class PhoneNumbersController extends EditableGuiElement implements Initia
     @FXML TableColumn<PhoneNumberEntry, String> phoneNumber;
 
     @FXML MenuItem addPhoneNumber;
-
-    @Override
-    protected boolean isEditable() {
-        return false;
-    }
-
-    @Override
-    public boolean startEditing() {
-        return false;
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

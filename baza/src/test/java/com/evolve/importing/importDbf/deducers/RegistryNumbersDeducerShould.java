@@ -28,12 +28,21 @@ class RegistryNumbersDeducerShould {
                 .hasValue(new RegistryNumber(1520, 1876));
     }
 
+
+    @Test
+    void deduceFromFourNumbers() {
+        var result = numbersDeducer.deduceFrom(List.of(" 1 211 18 0"));
+
+        assertThat(result)
+                .hasValue(new RegistryNumber(180, 1211));
+    }
+
     @Test
     void deduceTwoNumbers() {
         var result = numbersDeducer.deduceFrom(List.of("   154  2564"));
 
         assertThat(result)
-                .hasValue(new RegistryNumber(154, 2564));
+                .hasValue(new RegistryNumber( 2564, 154));
     }
 
     @Test

@@ -40,16 +40,6 @@ public class GenderComboboxController extends EditableGuiElement implements Init
     }
 
     @Override
-    protected boolean isEditable() {
-        return true;
-    }
-
-    @Override
-    public boolean startEditing() {
-        return true;
-    }
-
-    @Override
     public void setEditable(boolean editable) {
         System.out.println("EDIT gender " + editable);
 //        if (editable) {

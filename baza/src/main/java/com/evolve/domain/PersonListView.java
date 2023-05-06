@@ -22,12 +22,26 @@ public class PersonListView {
 
     private final PersonStatus status;
 
+    private final Long registryNumber; // numer ewidencyjny (kartoteki)
+
     public static PersonListView of(Person person) {
         return new PersonListView(person.getPersonId(), person.getFirstName(), person.getSecondName(),
                 person.getLastName(), person.getEmail(),
                 person.getDob(),
-                Optional.ofNullable(person.getStatus()).map(PersonStatusDetails::getStatus)
-                    .orElse(PersonStatus.ACTIVE));
+                personStatus(person),
+                registryNumber(person));
+    }
+
+    static PersonStatus personStatus(Person person) {
+        return Optional.ofNullable(person.getStatus()).map(PersonStatusDetails::getStatus)
+                .orElse(PersonStatus.ACTIVE);
+    }
+
+    static Long registryNumber(Person person) {
+        return Optional.ofNullable(person.getRegistryNumber())
+                .map(RegistryNumber::getRegistryNum)
+                .map(Long::valueOf)
+                .orElse(0L);
     }
 
 }

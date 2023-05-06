@@ -12,7 +12,8 @@ public class SmartAddressPersonDeducer extends AbstractSmartDeducer<Address>{
     static final Pattern CITY_CODE_PATTERN = Pattern.compile("\\d{2}-\\d{3} [\\p{IsAlphabetic} ]+");
 
     //ul. Wyspiañskiego 63/2
-    static final Pattern STREET_PATTERN = Pattern.compile("([uU]l\\. )?[\\p{IsAlphabetic} ]+\\d+ ?/ ?\\d+");
+    static final String STREET_NUMBER_PATTERN = "( ?((/ ?\\d+)|[AaBbCcDdEeFfGg]))?";
+    static final Pattern STREET_PATTERN = Pattern.compile("([uU]l\\. )?[\\p{IsAlphabetic} \\.]+\\d+[AaBbCcDd]?" + STREET_NUMBER_PATTERN);
 
     public SmartAddressPersonDeducer(IssuesLogger.ImportIssues issues) {
         super(issues);

@@ -110,17 +110,6 @@ public class AuthorizedPersonsController extends EditableGuiElement implements I
                 .collect(Collectors.toList());
     }
 
-    @Override
-    protected boolean isEditable() {
-        return false;
-    }
-
-    @Override
-    public boolean startEditing() {
-        return false;
-    }
-
-
     @Setter
     @EqualsAndHashCode
     @AllArgsConstructor

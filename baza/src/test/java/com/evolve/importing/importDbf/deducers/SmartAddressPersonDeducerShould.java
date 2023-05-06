@@ -4,6 +4,8 @@ import com.evolve.domain.Address;
 import com.evolve.domain.Person;
 import com.evolve.importing.importDbf.DbfPerson;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Optional;
 
@@ -58,4 +60,28 @@ class SmartAddressPersonDeducerShould {
 
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"Monopolowa 1 / 7", "Kochanowskiego 17",
+            "Świadka 7/119", "M. C.Skłodowskiej 4/13", "Grunwaldzka 8 A",
+            "Al. Niepodległości 14",
+
+            "Kochanowskiego 3 B",
+            "Paderewskiego 122a",
+            "Obrońców poczty Gdań 1A/1",
+            "Warszawska 1/3/219",
+            "Chmielnik 476 G",
+            "Seniora 2/IV/4",
+            "Wiosenna 1 c / 3",
+            "Obr. Pokoju 74d /15",
+            "Sikorskiego 6a/3",
+            "Dąbka 10 F",
+            "8 Marca 2",
+            "Słowackiego 15a",
+            "6-go-Sierpnia 4",
+            "Potockiego 5 a",
+    })
+    void detectValidStreetNames(String input) {
+        assertThat(SmartAddressPersonDeducer.isStreet(input))
+                .isTrue();
+    }
 }
