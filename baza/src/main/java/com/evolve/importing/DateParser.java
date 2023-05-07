@@ -15,10 +15,10 @@ public class DateParser {
     static final String MONTH_PATTERN = "(\\d{1,2})";
     static final String YEAR_PATTERN = "(\\d{2,4})";
 
-    public static final Pattern DOB = Pattern.compile(DAY_PATTERN + DATE_SEPARATOR + MONTH_PATTERN + DATE_SEPARATOR + YEAR_PATTERN);
+    public static final Pattern DATE_PATTERN = Pattern.compile(DAY_PATTERN + DATE_SEPARATOR + MONTH_PATTERN + DATE_SEPARATOR + YEAR_PATTERN);
 
     public static Optional<LocalDate> parse(String input) {
-        final Matcher matcher = DOB.matcher(input);
+        final Matcher matcher = DATE_PATTERN.matcher(input);
 
         if (matcher.matches()) {
             int day = Integer.parseInt(matcher.group(1));

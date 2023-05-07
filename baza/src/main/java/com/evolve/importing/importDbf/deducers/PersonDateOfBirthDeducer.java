@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.evolve.importing.DateParser.DOB;
+import static com.evolve.importing.DateParser.DATE_PATTERN;
 
 @Slf4j
 public class PersonDateOfBirthDeducer extends AbstractSmartDeducer<LocalDate> {
@@ -19,7 +19,7 @@ public class PersonDateOfBirthDeducer extends AbstractSmartDeducer<LocalDate> {
     @Override
     public Optional<LocalDate> deduceFrom(List<String> guesses) {
         return guesses.stream()
-                .filter(guess -> guess.matches("^" + DOB.pattern() + ".*"))
+                .filter(guess -> guess.matches("^" + DATE_PATTERN.pattern() + ".*"))
                 .findFirst().flatMap(this::deduceDob);
     }
 

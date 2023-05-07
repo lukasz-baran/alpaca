@@ -2,7 +2,6 @@ package com.evolve.importing.importDbf.deducers;
 
 import com.evolve.domain.*;
 import com.evolve.importing.importDbf.DbfPerson;
-import com.evolve.utils.DateUtils;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -56,8 +55,10 @@ public class PersonDataDeducer {
         }
 
         final PersonDateOfBirthDeducer personDateOfBirthDeducer = new PersonDateOfBirthDeducer(issues);
-        Optional<LocalDate> maybeDob = personDateOfBirthDeducer.deduceFrom(guesses);
+        final Optional<LocalDate> maybeDob = personDateOfBirthDeducer.deduceFrom(guesses);
 
+        final JoiningDateDeducer joiningDateDeducer = new JoiningDateDeducer(issues);
+        final Optional<LocalDate> maybeJoiningDate = joiningDateDeducer.deduceFrom(guesses);
 
         final List<Person.PersonAddress> personAddresses =
                 maybeAddress.map(address -> new Person.PersonAddress(address, Person.AddressType.HOME))
@@ -95,7 +96,7 @@ public class PersonDataDeducer {
         final UnitNumberDeducer unitNumberDeducer = new UnitNumberDeducer(issues);
         final Optional<String> unitNumber = unitNumberDeducer.deduceFrom(Lists.newArrayList(person.getKONTO_WNP()));
 
-        final List<PersonStatusChange> statusChanges = deduceStatusChanges(maybeDob, person);
+        final List<PersonStatusChange> statusChanges = deduceStatusChanges(maybeDob, maybeJoiningDate);
 
         final Person personData = Person.builder()
                 .personId(personId.map(PersonId::toString).orElse(null))
@@ -117,19 +118,24 @@ public class PersonDataDeducer {
         return Optional.of(personData);
     }
 
-    List<PersonStatusChange> deduceStatusChanges(Optional<LocalDate> maybeDob, DbfPerson person) {
+    List<PersonStatusChange> deduceStatusChanges(Optional<LocalDate> maybeDob, Optional<LocalDate> maybeJoinedDate) {
         final List<PersonStatusChange> statusChanges = new ArrayList<>();
         maybeDob.ifPresent(dob -> statusChanges.add(PersonStatusChange.builder()
                         .eventType(PersonStatusChange.EventType.BORN)
                         .when(dob)
                 .build()));
 
-        Optional.ofNullable(person)
-                .map(DbfPerson::getDATA_ZAL)
-                .ifPresent(accountCreationDate -> statusChanges.add(PersonStatusChange.builder()
-                                .eventType(PersonStatusChange.EventType.ACCOUNT_CREATED)
-                                .when(DateUtils.convertToLocalDateViaMilisecond(accountCreationDate))
+        maybeJoinedDate.ifPresent(joinedDate -> statusChanges.add(PersonStatusChange.builder()
+                        .eventType(PersonStatusChange.EventType.JOINED)
+                        .when(joinedDate)
                         .build()));
+
+//        Optional.ofNullable(person)
+//                .map(DbfPerson::getDATA_ZAL)
+//                .ifPresent(accountCreationDate -> statusChanges.add(PersonStatusChange.builder()
+//                                .eventType(PersonStatusChange.EventType.ACCOUNT_CREATED)
+//                                .when(DateUtils.convertToLocalDateViaMilisecond(accountCreationDate))
+//                        .build()));
         //person.getDATA_ZAL()
 
         return statusChanges;
