@@ -17,6 +17,7 @@ public class PersonStatusDetails {
     private PersonStatus status;
     private String deathDate;
     private String resignationDate;
+    private String removedDate;
     private String comment;
 
     /**
@@ -25,6 +26,13 @@ public class PersonStatusDetails {
     public static PersonStatusDetails resigned() {
         return PersonStatusDetails.builder()
                 .status(PersonStatus.RESIGNED)
+                .build();
+    }
+
+    public static PersonStatusDetails resigned(String resignationDate) {
+        return PersonStatusDetails.builder()
+                .status(PersonStatus.RESIGNED)
+                .resignationDate(resignationDate)
                 .build();
     }
 
@@ -44,10 +52,19 @@ public class PersonStatusDetails {
                 .build();
     }
 
-    public static PersonStatusDetails resigned(String resignationDate) {
+    /**
+     * User was removed from the members list
+     */
+    public static PersonStatusDetails removed() {
         return PersonStatusDetails.builder()
-                .status(PersonStatus.RESIGNED)
-                .resignationDate(resignationDate)
+                .status(PersonStatus.REMOVED)
+                .build();
+    }
+
+    public static PersonStatusDetails removed(String removedDate) {
+        return PersonStatusDetails.builder()
+                .status(PersonStatus.REMOVED)
+                .removedDate(removedDate)
                 .build();
     }
 

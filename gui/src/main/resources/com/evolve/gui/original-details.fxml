@@ -16,5 +16,13 @@
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
         </columnResizePolicy>
+        <contextMenu>
+            <ContextMenu>
+                <items>
+                    <MenuItem fx:id="copyValue" mnemonicParsing="false" text="Kopiuj"/>
+                </items>
+            </ContextMenu>
+        </contextMenu>
+
     </TableView>
 </AnchorPane>

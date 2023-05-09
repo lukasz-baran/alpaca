@@ -10,24 +10,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class StatusPersonDeducerShould {
 
-    StatusPersonDeducer deducer = new StatusPersonDeducer();
+    final StatusPersonDeducer deducer = new StatusPersonDeducer();
 
     @Test
     void deduceIfPersonIsDead() {
-        PersonStatusDetails result = deducer.deduceFrom(List.of("        ZMARŁ 20-VII-2009"))
-                .orElseThrow(AssertionError::new);
+        assertThat(deducer.deduceFrom(List.of("        ZMARŁ 20-VII-2009")))
+                .hasValue(PersonStatusDetails.dead("20-VII-2009"));
 
-        assertThat(result.getStatus())
-                .isEqualTo(PersonStatus.DEAD);
-        assertThat(result.getDeathDate())
-                .isEqualTo("20-VII-2009");
+        assertThat(deducer.deduceFrom(List.of("ZM. 24.04.2005 r.")))
+                .hasValue(PersonStatusDetails.dead("24.04.2005 r."));
 
-        result = deducer.deduceFrom(List.of("ZM. 24.04.2005 r."))
-                .orElseThrow(AssertionError::new);
-        assertThat(result.getStatus())
-                .isEqualTo(PersonStatus.DEAD);
-        assertThat(result.getDeathDate())
-                .isEqualTo("24.04.2005 r.");
+        assertThat(deducer.deduceFrom(List.of("ZM 01.08.2014")))
+                .hasValue(PersonStatusDetails.dead("01.08.2014"));
     }
 
     @Test
@@ -48,5 +42,10 @@ class StatusPersonDeducerShould {
                 .isEqualTo("VIII/07");
     }
 
+    @Test
+    void deduceIfPersonIsRemoved() {
+        assertThat(deducer.deduceFrom(List.of("        Skreśl VIII-2007")))
+                .hasValue(PersonStatusDetails.removed("VIII-2007"));
+    }
 
 }

@@ -147,10 +147,20 @@ public class Person implements Serializable {
                             statusChange.setWhen(when);
                             statusChange.setEventType(eventType);
                         },
-                        () -> this.statusChanges.add(PersonStatusChange.builder()
-                                .eventType(eventType)
-                                .when(when)
-                                .build()));
+                        () -> addNewStatusChange(eventType, when));
+    }
+
+    private void addNewStatusChange(PersonStatusChange.EventType eventType, LocalDate when) {
+        PersonStatusChange newPersonStatusChange = PersonStatusChange.builder()
+                .eventType(eventType)
+                .when(when)
+                .build();
+
+        if (eventType == PersonStatusChange.EventType.BORN) {
+            this.statusChanges.add(0, newPersonStatusChange);
+        } else {
+            this.statusChanges.add(newPersonStatusChange);
+        }
     }
 
 }

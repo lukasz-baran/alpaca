@@ -20,8 +20,16 @@ public class JoiningDateDeducer extends AbstractSmartDeducer<LocalDate> {
     @Override
     public Optional<LocalDate> deduceFrom(List<String> guesses) {
         return guesses.stream()
-                .filter(guess -> guess.matches(DATE_JOINED))
+                .filter(this::isDateJoined)
                 .findFirst().flatMap(this::deduceJoiningDate);
+    }
+
+    boolean isDateJoined(String input) {
+        if (StatusPersonDeducer.RESIGNED.stream().anyMatch(input::startsWith)) {
+            return false;
+        }
+
+        return input.matches(DATE_JOINED);
     }
 
     @Override

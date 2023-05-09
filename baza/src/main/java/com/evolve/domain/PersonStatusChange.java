@@ -22,11 +22,11 @@ public class PersonStatusChange {
     @Getter
     @RequiredArgsConstructor
     public enum EventType {
-        BORN("Narodziny"),
+        BORN("Data urodzenia"),
         JOINED("Dołączenie"),
         RESIGNED("Rezygnacja"),
-        DIED("Śmierć"),
-        REMOVED("Usunięcie"),
+        DIED("Zmarł(a)"),
+        REMOVED("Skreślenie"),
         ACCOUNT_CREATED("Data założenia");
 
         private final String name;

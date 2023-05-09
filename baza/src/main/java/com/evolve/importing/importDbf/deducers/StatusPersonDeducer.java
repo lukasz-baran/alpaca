@@ -9,7 +9,8 @@ import java.util.Optional;
 public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
 
     public static final List<String> DECEASED = List.of("ZMARŁ", "ZM.", "ZM ");
-    public static final List<String> RESIGNED = List.of("REZ ", "REZ.");
+    public static final List<String> RESIGNED = List.of("REZ ", "REZ.", "rezygnacja", "Rezyg.");
+    public static final List<String> REMOVED = List.of("skreśl.", "Skreśl");
 
     @Override
     public Optional<PersonStatusDetails> deduceFrom(List<String> guesses) {
@@ -28,7 +29,15 @@ public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
                 .map(guess -> removeMatchingString(RESIGNED, guess))
                 .map(PersonStatusDetails::resigned);
 
-        return maybeResigned;
+        if (maybeResigned.isPresent()) {
+            return maybeResigned;
+        }
+
+        return guesses.stream()
+                .filter(guess -> containsIgnoreCase(REMOVED, guess))
+                .findFirst()
+                .map(guess -> removeMatchingString(REMOVED, guess))
+                .map(PersonStatusDetails::removed);
     }
 
     boolean containsIgnoreCase(List<String> list, String guess) {

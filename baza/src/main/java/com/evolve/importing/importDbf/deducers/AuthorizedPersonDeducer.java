@@ -16,9 +16,12 @@ public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.Au
     private static final Set<PersonRelative> RELATIVE_TYPES = Set.of(
             PersonRelative.of("ż.", "żona"),
             PersonRelative.of("m.", "mąż"),
+            PersonRelative.of("up. mąż", "mąż"),
             PersonRelative.of("s.", "syn"),
+            PersonRelative.of("up. syn", "syn"),
             PersonRelative.of("c.", "córka"),
             PersonRelative.of("c,", "córka"),
+            PersonRelative.of("stra ", "siostra"),
             PersonRelative.of("mt.", "matka"),
             PersonRelative.of("mt-", "matka"),
             PersonRelative.of("br.", "brat"),
@@ -68,7 +71,7 @@ public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.Au
                     .filter(isRelation())
                     .findFirst();
             return maybeRelation.map(goodGuess -> {
-                        final String trimmed = StringUtils.removeStart(goodGuess, this.distinct);
+                        final String trimmed = StringUtils.removeStart(goodGuess, this.distinct).trim();
                         return trimmed.split(" ");
                     })
                     .filter(afterSplit -> afterSplit.length > 1)

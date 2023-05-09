@@ -1,11 +1,13 @@
 package com.evolve.importing.importDbf.deducers;
 
 import com.evolve.domain.*;
+import com.evolve.importing.DateParser;
 import com.evolve.importing.importDbf.DbfPerson;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +28,8 @@ public class PersonDataDeducer {
                 StringUtils.trim(person.getNAZ_ODB4()),
                 StringUtils.trim(person.getNAZ_ODB5()),
                 StringUtils.trim(person.getNAZ_ODB6()),
-                StringUtils.trim(person.getNAZ_ODB7()));
+                StringUtils.trim(person.getNAZ_ODB7()),
+                StringUtils.trim(person.getINFO()));
 
     }
 
@@ -54,11 +57,8 @@ public class PersonDataDeducer {
             guesses = authorizedPersonDeducer.removeGuesses(guesses);
         }
 
-        final PersonDateOfBirthDeducer personDateOfBirthDeducer = new PersonDateOfBirthDeducer(issues);
-        final Optional<LocalDate> maybeDob = personDateOfBirthDeducer.deduceFrom(guesses);
-
-        final JoiningDateDeducer joiningDateDeducer = new JoiningDateDeducer(issues);
-        final Optional<LocalDate> maybeJoiningDate = joiningDateDeducer.deduceFrom(guesses);
+        final Optional<LocalDate> maybeDob = new PersonDateOfBirthDeducer(issues).deduceFrom(guesses);
+        final Optional<LocalDate> maybeJoiningDate = new JoiningDateDeducer(issues).deduceFrom(guesses);
 
         final List<Person.PersonAddress> personAddresses =
                 maybeAddress.map(address -> new Person.PersonAddress(address, Person.AddressType.HOME))
@@ -68,9 +68,7 @@ public class PersonDataDeducer {
         final List<Person.AuthorizedPerson> authorizedPeople =
                 maybeAuthorizedPerson.orElse(List.of());
 
-        final StatusPersonDeducer statusPersonDeducer = new StatusPersonDeducer();
-        Optional<PersonStatusDetails> personStatusDetails = statusPersonDeducer.deduceFrom(guesses);
-
+        final Optional<PersonStatusDetails> personStatusDetails = new StatusPersonDeducer().deduceFrom(guesses);
 
         List<String> infoGuesses = Lists.newArrayList(
                 StringUtils.trim(person.getEMAIL()),
@@ -96,7 +94,7 @@ public class PersonDataDeducer {
         final UnitNumberDeducer unitNumberDeducer = new UnitNumberDeducer(issues);
         final Optional<String> unitNumber = unitNumberDeducer.deduceFrom(Lists.newArrayList(person.getKONTO_WNP()));
 
-        final List<PersonStatusChange> statusChanges = deduceStatusChanges(maybeDob, maybeJoiningDate);
+        final List<PersonStatusChange> statusChanges = deduceStatusChanges(maybeDob, maybeJoiningDate, personStatusDetails);
 
         final Person personData = Person.builder()
                 .personId(personId.map(PersonId::toString).orElse(null))
@@ -118,7 +116,8 @@ public class PersonDataDeducer {
         return Optional.of(personData);
     }
 
-    List<PersonStatusChange> deduceStatusChanges(Optional<LocalDate> maybeDob, Optional<LocalDate> maybeJoinedDate) {
+    List<PersonStatusChange> deduceStatusChanges(Optional<LocalDate> maybeDob,
+            Optional<LocalDate> maybeJoinedDate, Optional<PersonStatusDetails> personStatusDetails) {
         final List<PersonStatusChange> statusChanges = new ArrayList<>();
         maybeDob.ifPresent(dob -> statusChanges.add(PersonStatusChange.builder()
                         .eventType(PersonStatusChange.EventType.BORN)
@@ -130,15 +129,41 @@ public class PersonDataDeducer {
                         .when(joinedDate)
                         .build()));
 
-//        Optional.ofNullable(person)
-//                .map(DbfPerson::getDATA_ZAL)
-//                .ifPresent(accountCreationDate -> statusChanges.add(PersonStatusChange.builder()
-//                                .eventType(PersonStatusChange.EventType.ACCOUNT_CREATED)
-//                                .when(DateUtils.convertToLocalDateViaMilisecond(accountCreationDate))
-//                        .build()));
-        //person.getDATA_ZAL()
-
+        personStatusDetails.ifPresent(statusDetails -> {
+            switch (statusDetails.getStatus()) {
+                case DEAD:
+                    statusChanges.add(PersonStatusChange.builder()
+                            .eventType(PersonStatusChange.EventType.DIED)
+                            .when(tryParseDate(statusDetails.getDeathDate()).orElse(null))
+                            .originalValue(statusDetails.getDeathDate())
+                            .build());
+                    break;
+                case RESIGNED:
+                    statusChanges.add(PersonStatusChange.builder()
+                            .eventType(PersonStatusChange.EventType.RESIGNED)
+                            .when(tryParseDate(statusDetails.getResignationDate()).orElse(null))
+                            .originalValue(statusDetails.getResignationDate())
+                            .build());
+                    break;
+                case REMOVED:
+                    statusChanges.add(PersonStatusChange.builder()
+                            .eventType(PersonStatusChange.EventType.REMOVED)
+                            .when(tryParseDate(statusDetails.getRemovedDate()).orElse(null))
+                            .originalValue(statusDetails.getRemovedDate())
+                            .build());
+                    break;
+                case UNKNOWN:
+                    break;
+            }
+        });
         return statusChanges;
     }
 
+    private static Optional<LocalDate> tryParseDate(String date) {
+        try {
+            return DateParser.parse(date);
+        } catch (DateTimeException dateTimeException) {
+            return Optional.empty();
+        }
+    }
 }
