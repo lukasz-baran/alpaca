@@ -1,6 +1,7 @@
 package com.evolve.importing.importDbf.deducers;
 
 import com.evolve.domain.Address;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -61,10 +62,16 @@ public class SmartAddressPersonDeducer extends AbstractSmartDeducer<Address>{
     }
 
     static boolean isStreet(String street) {
+        if (StringUtils.isBlank(street)) {
+            return false;
+        }
         return STREET_PATTERN.matcher(street).matches();
     }
 
     static boolean isCityCode(String candidate) {
+        if (StringUtils.isBlank(candidate)) {
+            return false;
+        }
         return CITY_CODE_PATTERN.matcher(candidate).matches();
     }
 

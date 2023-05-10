@@ -63,7 +63,7 @@ public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.Au
         }
 
         Predicate<String> isRelation() {
-            return s -> s.startsWith(this.distinct);
+            return s -> StringUtils.isNotBlank(s) && s.startsWith(this.distinct);
         }
 
         Optional<Person.AuthorizedPerson> deduceAuthorizedPerson(List<String> guesses) {

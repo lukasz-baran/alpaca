@@ -1,6 +1,7 @@
 package com.evolve.importing.importDbf.deducers;
 
 import com.evolve.importing.DateParser;
+import org.apache.commons.lang.StringUtils;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ public class JoiningDateDeducer extends AbstractSmartDeducer<LocalDate> {
     @Override
     public Optional<LocalDate> deduceFrom(List<String> guesses) {
         return guesses.stream()
+                .filter(StringUtils::isNotBlank)
                 .filter(this::isDateJoined)
                 .findFirst().flatMap(this::deduceJoiningDate);
     }
