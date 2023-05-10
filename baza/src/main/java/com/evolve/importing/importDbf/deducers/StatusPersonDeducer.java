@@ -8,9 +8,10 @@ import java.util.Optional;
 
 public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
 
-    public static final List<String> DECEASED = List.of("ZMARŁ", "ZM.", "ZM ");
+    //NOTE: the order in the following lists is important:
+    public static final List<String> DECEASED = List.of("ZMARŁA", "ZMARŁ", "ZM.", "ZM ");
     public static final List<String> RESIGNED = List.of("REZ ", "REZ.", "rezygnacja", "Rezyg.");
-    public static final List<String> REMOVED = List.of("skreśl.", "Skreśl");
+    public static final List<String> REMOVED = List.of("skreśl.", "Skreśl", "skre", "SKR");
 
     @Override
     public Optional<PersonStatusDetails> deduceFrom(List<String> guesses) {

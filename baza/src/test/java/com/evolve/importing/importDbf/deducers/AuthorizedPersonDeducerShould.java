@@ -28,10 +28,10 @@ class AuthorizedPersonDeducerShould {
                                 .relation("mąż")
                                 .build()));
 
-        assertThat(authorizedPersonDeducer.deduceFrom(List.of("stra Agnieszka Lampart")))
+        assertThat(authorizedPersonDeducer.deduceFrom(List.of("stra Agnieszka Kowalska")))
                 .hasValue(List.of(Person.AuthorizedPerson.builder()
                         .firstName("Agnieszka")
-                        .lastName("Lampart")
+                        .lastName("Kowalska")
                         .relation("siostra")
                         .build()));
 
@@ -42,6 +42,26 @@ class AuthorizedPersonDeducerShould {
                         .relation("syn")
                         .build()));
 
+        assertThat(authorizedPersonDeducer.deduceFrom(List.of("up. ż. Kos Katarzyna")))
+                .hasValue(List.of(Person.AuthorizedPerson.builder()
+                        .firstName("Kos")
+                        .lastName("Katarzyna")
+                        .relation("żona")
+                        .build()));
+
+        assertThat(authorizedPersonDeducer.deduceFrom(List.of("up. m. Jan Kowalski")))
+                .hasValue(List.of(Person.AuthorizedPerson.builder()
+                        .firstName("Jan")
+                        .lastName("Kowalski")
+                        .relation("mąż")
+                        .build()));
+
+        assertThat(authorizedPersonDeducer.deduceFrom(List.of("brat Jan Kowalski")))
+                .hasValue(List.of(Person.AuthorizedPerson.builder()
+                        .firstName("Jan")
+                        .lastName("Kowalski")
+                        .relation("brat")
+                        .build()));
 
     }
 }

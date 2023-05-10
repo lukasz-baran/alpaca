@@ -17,6 +17,9 @@ class StatusPersonDeducerShould {
         assertThat(deducer.deduceFrom(List.of("        ZMARŁ 20-VII-2009")))
                 .hasValue(PersonStatusDetails.dead("20-VII-2009"));
 
+        assertThat(deducer.deduceFrom(List.of("ZMARŁA 09-12-2013")))
+                .hasValue(PersonStatusDetails.dead("09-12-2013"));
+
         assertThat(deducer.deduceFrom(List.of("ZM. 24.04.2005 r.")))
                 .hasValue(PersonStatusDetails.dead("24.04.2005 r."));
 
@@ -46,6 +49,10 @@ class StatusPersonDeducerShould {
     void deduceIfPersonIsRemoved() {
         assertThat(deducer.deduceFrom(List.of("        Skreśl VIII-2007")))
                 .hasValue(PersonStatusDetails.removed("VIII-2007"));
+        assertThat(deducer.deduceFrom(List.of("skre")))
+                .hasValue(PersonStatusDetails.removed(""));
+        assertThat(deducer.deduceFrom(List.of("SKR XII/04")))
+                .hasValue(PersonStatusDetails.removed("XII/04"));
     }
 
 }

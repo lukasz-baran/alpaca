@@ -20,12 +20,15 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 @Component
 @FxmlView("original-details.fxml")
 @RequiredArgsConstructor
 @Slf4j
 public class OriginalDetailsController implements Initializable {
+    public static final Set<String> HIDDEN_DATA = Set.of("WWW", "NIP_UE");
+
     private final PersonsService personsService;
     private final PersonListModel personListModel;
 
@@ -67,7 +70,13 @@ public class OriginalDetailsController implements Initializable {
 
         data.clear();
         person.getRawData()
-                .forEach((key, value) -> {
+                .entrySet()
+                .stream()
+                .filter(entry -> !HIDDEN_DATA.contains(entry.getKey()))
+                .forEach(entry -> {
+
+                    final String key = entry.getKey();
+                    final Object value = entry.getValue();
                     data.add(new DetailsEntry(key, value != null ? value.toString() : "null"));
                 });
 
