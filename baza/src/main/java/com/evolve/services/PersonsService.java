@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.dizitart.no2.Nitrite;
+import org.dizitart.no2.collection.events.EventType;
 import org.dizitart.no2.common.SortOrder;
+import org.dizitart.no2.common.WriteResult;
 import org.dizitart.no2.filters.Filter;
 import org.dizitart.no2.repository.ObjectRepository;
 import org.springframework.beans.factory.InitializingBean;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.dizitart.no2.filters.FluentFilter.where;
@@ -78,6 +81,21 @@ public class PersonsService implements InitializingBean, FindPerson {
         final ObjectRepository<Person> personRepo = nitrite.getRepository(Person.class);
 
         return personRepo.getById(id);
+    }
+
+    public boolean insertPerson(Person person, Consumer<Person> callback) {
+        final ObjectRepository<Person> personRepo = nitrite.getRepository(Person.class);
+
+        personRepo.subscribe(eventInfo -> {
+            if (eventInfo.getEventType() == EventType.IndexEnd) {
+                log.info("indexing finished, callback...");
+                callback.accept(nitrite.getRepository(Person.class).getById(person.getPersonId()));
+            }
+        });
+
+        final WriteResult writeResult = personRepo.insert(person);
+        nitrite.commit();
+        return writeResult.getAffectedCount() > 0;
     }
 
     public void insertPersons(List<Person> personList) {

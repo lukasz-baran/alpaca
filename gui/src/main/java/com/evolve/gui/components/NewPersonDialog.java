@@ -4,11 +4,10 @@ import com.evolve.domain.Person;
 import com.evolve.gui.DialogWindow;
 import com.evolve.services.PersonsService;
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
 
@@ -16,13 +15,11 @@ import java.util.Optional;
 
 public class NewPersonDialog extends DialogWindow<Person> {
 
-    private final Person person;
     private final PersonsService personsService;
 
     public NewPersonDialog(PersonsService personsService) {
         super("Nowa osoba", "Podaj podstawowe dane osobowe nowego członka. Numer ID zostanie wygenerowany automatycznie");
         this.personsService = personsService;
-        this.person = new Person();
     }
 
     @Override
@@ -43,6 +40,10 @@ public class NewPersonDialog extends DialogWindow<Person> {
         personIdTextField.setPromptText("ID");
         personIdTextField.setEditable(false);
 
+        final DatePicker joinedDate = new DatePicker();
+        joinedDate.setPromptText("Data dołączenia");
+
+
         grid.add(new Label("Imię:"), 0, 0);
         grid.add(firstNameTextField, 1, 0);
         grid.add(new Label("Nazwisko:"), 0, 1);
@@ -51,15 +52,18 @@ public class NewPersonDialog extends DialogWindow<Person> {
         grid.add(new Label("ID:"), 0, 2);
         grid.add(personIdTextField, 1, 2);
 
+        grid.add(new Label("Dołączył(a):"), 0, 3);
+        grid.add(joinedDate, 1, 3);
+
         final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
 
         firstNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            validateSaveButton(saveButton, firstNameTextField, lastNameTextField);
+            validateSaveButton(saveButton, personIdTextField, firstNameTextField, lastNameTextField);
         });
         lastNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             regeneratePersonId(personIdTextField, lastNameTextField);
-            validateSaveButton(saveButton, firstNameTextField, lastNameTextField);
+            validateSaveButton(saveButton, personIdTextField, firstNameTextField, lastNameTextField);
         });
 
         dialog.getDialogPane().setContent(grid);
@@ -71,8 +75,9 @@ public class NewPersonDialog extends DialogWindow<Person> {
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
                 return Person.builder()
-                        .firstName(firstNameTextField.getText())
-                        .lastName(lastNameTextField.getText())
+                        .personId(personIdTextField.getText())
+                        .firstName(firstNameTextField.getText().trim())
+                        .lastName(lastNameTextField.getText().trim())
                         .build();
             }
             return null;
@@ -88,8 +93,11 @@ public class NewPersonDialog extends DialogWindow<Person> {
     }
 
     void validateSaveButton(
-            Node saveButton, TextField firstNameTextField, TextField lastNameTextField) {
-        boolean disable = firstNameTextField.getText().trim().isEmpty() || lastNameTextField.getText().trim().isEmpty();
+            Node saveButton, TextField personIdTextField, TextField firstNameTextField, TextField lastNameTextField) {
+        final boolean disable = personIdTextField.getText().trim().isEmpty()
+                || firstNameTextField.getText().trim().isEmpty()
+                || lastNameTextField.getText().trim().isEmpty();
+
         saveButton.setDisable(disable);
     }
 

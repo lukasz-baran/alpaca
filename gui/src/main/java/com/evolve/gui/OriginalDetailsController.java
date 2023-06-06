@@ -16,6 +16,7 @@ import javafx.scene.input.ClipboardContent;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -69,6 +70,13 @@ public class OriginalDetailsController implements Initializable {
         log.info("Original person details: {}", person);
 
         data.clear();
+
+        if (MapUtils.isEmpty(person.getRawData())) {
+            log.info("No raw data for person {}. This is fine because the person could be added manually",
+                    personModel.getId());
+            return;
+        }
+
         person.getRawData()
                 .entrySet()
                 .stream()

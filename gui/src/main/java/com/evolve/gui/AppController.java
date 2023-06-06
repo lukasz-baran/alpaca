@@ -1,6 +1,8 @@
 package com.evolve.gui;
 
-import com.evolve.gui.components.*;
+import com.evolve.gui.components.NewPersonController;
+import com.evolve.gui.components.NewPersonDialog;
+import com.evolve.gui.components.RetentionFileChooser;
 import com.evolve.gui.dictionaries.UnitsController;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.importing.importDbf.ImportDbfService;
@@ -20,7 +22,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Getter;
@@ -107,11 +108,17 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     }
 
     public void newPersonButtonClicked(ActionEvent actionEvent) {
-        new NewPersonDialog(personsService).showDialog(stageManager.getWindow())
-                .ifPresent(person -> {
-                    // TODO: add new person
-                    System.out.println("New person: " + person);
+        new NewPersonDialog(personsService)
+            .showDialog(stageManager.getWindow())
+            .ifPresent(person -> {
+                final boolean success = personsService.insertPerson(person, insertedPerson -> {
+                    log.info("New person successfully added: {}", insertedPerson);
+                    personListModel.insertPerson(insertedPerson);
                 });
+                if (!success) {
+                    stageManager.displayWarning("Nie udało się dodać osoby");
+                }
+            });
     }
 
     public void editButtonClicked(ActionEvent actionEvent) {

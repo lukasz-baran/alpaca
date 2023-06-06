@@ -31,12 +31,19 @@ public class PersonListModel {
     }
 
     public void updatePerson(Person updatedPerson) {
-        PersonModel personModel = data.stream()
+        final PersonModel personModel = data.stream()
                 .filter(p -> p.getId().equals(updatedPerson.getPersonId()))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Person not found"));
         personModel.update(updatedPerson);
 
         currentPersonProperty.setValue(personModel);
+    }
+
+    public void insertPerson(Person newPerson) {
+        final PersonModel addedPerson = new PersonModel(PersonListView.of(newPerson));
+        data.add(addedPerson);
+
+        currentPersonProperty.setValue(addedPerson);
     }
 }
