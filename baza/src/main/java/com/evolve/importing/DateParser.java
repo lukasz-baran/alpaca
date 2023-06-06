@@ -39,6 +39,10 @@ public class DateParser {
             .build();
 
     public static Optional<LocalDate> parse(String input) {
+        if (input == null) {
+            return Optional.empty();
+        }
+
         final Matcher matcher = DATE_PATTERN.matcher(input);
         if (matcher.matches()) {
             int day = Integer.parseInt(matcher.group(1));

@@ -52,6 +52,8 @@
                         </Tab>
                         <Tab text="Oryginalne dane" fx:id="tabOriginalDetails">
                         </Tab>
+                        <Tab text="Konta, notatki" fx:id="tabPersonAdditionalData">
+                        </Tab>
                         <Tab text="Dokumenty" fx:id="tabDocuments">
                         </Tab>
                     </TabPane>

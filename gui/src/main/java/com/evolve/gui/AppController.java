@@ -65,6 +65,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
 
     @FXML Tab tabPersonDetails;
     @FXML Tab tabOriginalDetails;
+    @FXML Tab tabPersonAdditionalData;
     @FXML Tab tabDocuments;
 
     @FXML MenuItem newMenuItem;
@@ -83,6 +84,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
         Locale.setDefault(new Locale("pl"));
         tabPersonDetails.setContent(fxWeaver.loadView(PersonDetailsController.class));
         tabOriginalDetails.setContent(fxWeaver.loadView(OriginalDetailsController.class));
+        tabPersonAdditionalData.setContent(fxWeaver.loadView(PersonAdditionalDataController.class));
 
         quitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
@@ -105,7 +107,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     }
 
     public void newPersonButtonClicked(ActionEvent actionEvent) {
-        new NewPersonDialog().showDialog(stageManager.getWindow())
+        new NewPersonDialog(personsService).showDialog(stageManager.getWindow())
                 .ifPresent(person -> {
                     // TODO: add new person
                     System.out.println("New person: " + person);

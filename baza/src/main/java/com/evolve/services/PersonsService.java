@@ -1,11 +1,10 @@
 package com.evolve.services;
 
 import com.evolve.FindPerson;
-import com.evolve.domain.Person;
-import com.evolve.domain.PersonListView;
-import com.evolve.domain.PersonLookupCriteria;
+import com.evolve.domain.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.common.SortOrder;
 import org.dizitart.no2.filters.Filter;
@@ -15,7 +14,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.dizitart.no2.filters.FluentFilter.where;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -40,6 +42,35 @@ public class PersonsService implements InitializingBean, FindPerson {
                 .sort("personId", criteria.getUpDown() ? SortOrder.Ascending : SortOrder.Descending)
                 //.limit(criteria.getPageSize())
                 .toList();
+    }
+
+    @Override
+    public Optional<String> findNextPersonId(String lastName) {
+        log.info("find next person id for last name: {}", lastName);
+        if (StringUtils.isBlank(lastName)) {
+            return Optional.empty();
+        }
+
+        final Character firstLetter = lastName.toUpperCase().charAt(0);
+        if (!Group.isAllowedCharacter(firstLetter)) {
+            log.info("Looks like we cannot deduce person ID for: {}", firstLetter);
+            return Optional.empty();
+        }
+
+        final ObjectRepository<Person> personRepo = nitrite.getRepository(Person.class);
+
+        final List<Person> persons = Group.groupFor(firstLetter)
+                .map(Group::getNumer)
+                .map(groupNumber -> personRepo.find(where("personId").regex("^" + groupNumber + ".*$"))
+                        .sort("personId", SortOrder.Descending)
+                        .toList())
+                .orElse(List.of());
+
+        return persons.stream().findFirst()
+                .map(Person::getPersonId)
+                .map(PersonId::of)
+                .map(PersonId::nextId)
+                .map(PersonId::toString);
     }
 
     @Override

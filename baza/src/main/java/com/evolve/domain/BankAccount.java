@@ -1,14 +1,17 @@
 package com.evolve.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+
+import java.util.List;
 
 @AllArgsConstructor
 @Getter
+@EqualsAndHashCode
 public class BankAccount {
 
     private final String number;
-    private final String bank;
-    // maybe some other data will be needed
+    private final List<String> notes;
 
 }

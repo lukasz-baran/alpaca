@@ -83,6 +83,7 @@ public class PersonFixer implements InitializingBean {
             case "secondName" -> person.setSecondName(newValue);
             case "dob" -> DateParser.parse(newValue).ifPresent(dob -> addPersonDateOfBirth(person, dob));
             case "joinedDate" -> DateParser.parse(newValue).ifPresent(doa -> addPersonJoinedDate(person, doa));
+            case "resignedDate" -> DateParser.parse(newValue).ifPresent(dor -> addPersonResignedDate(person, dor));
             case "previousName" -> addPreviousLastName(person, newValue);
             default -> {}
         }
@@ -95,6 +96,10 @@ public class PersonFixer implements InitializingBean {
 
     public void addPersonJoinedDate(Person person, LocalDate joinedDate) {
         person.addOrUpdateStatusChange(PersonStatusChange.EventType.JOINED, joinedDate);
+    }
+
+    public void addPersonResignedDate(Person person, LocalDate resignedDate) {
+        person.addOrUpdateStatusChange(PersonStatusChange.EventType.RESIGNED, resignedDate);
     }
 
     public void addPersonDateOfBirth(Person person, LocalDate actualPersonDob) {

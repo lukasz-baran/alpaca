@@ -3,6 +3,9 @@ package com.evolve.domain;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Comparator;
+import java.util.List;
+
 /**
  * Describes Person status: dead, resigned, etc
  */
@@ -66,6 +69,25 @@ public class PersonStatusDetails {
                 .status(PersonStatus.REMOVED)
                 .removedDate(removedDate)
                 .build();
+    }
+
+    public static PersonStatusDetails basedOnStatusChange(List<PersonStatusChange> statusChanges) {
+        // find newest status change
+        return statusChanges
+                .stream()
+                .filter(change -> change.getWhen() != null)
+                .max(Comparator.comparing(PersonStatusChange::getWhen))
+                .map(PersonStatusDetails::basedOnStatusChange)
+                .orElse(PersonStatusDetails.active());
+    }
+
+    static PersonStatusDetails basedOnStatusChange(PersonStatusChange change) {
+        return switch (change.getEventType()) {
+            case DIED ->  PersonStatusDetails.dead(change.getOriginalValue());
+            case RESIGNED -> PersonStatusDetails.resigned(change.getOriginalValue());
+            case REMOVED -> PersonStatusDetails.removed(change.getOriginalValue());
+            default -> PersonStatusDetails.active();
+        };
     }
 
     @Override

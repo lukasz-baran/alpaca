@@ -25,7 +25,7 @@ public class PersonIdDeducer implements SmartDeducer<PersonId> {
             log.info("Skipping incorrect SYM_ODB: {}", symbolOdb);
             return Optional.empty();
         }
-        return Optional.of(new PersonId(symbolOdb.substring(0, 2), symbolOdb.substring(2, 5)));
+        return Optional.of(PersonId.of(symbolOdb));
     }
 
     @Override

@@ -13,6 +13,14 @@ public interface FindPerson {
 
     List<Person> fetch(PersonLookupCriteria criteria);
 
+    /**
+     * Find next person id based on last name.
+     *
+     * @param lastName last name (can be null)
+     * @return empty() if last name is null or invalid (does not start with allowed characters)
+     */
+    Optional<String> findNextPersonId(String lastName);
+
     Person findById(String id);
 
 }

@@ -2,6 +2,7 @@ package com.evolve.gui.components;
 
 import com.evolve.domain.Person;
 import com.evolve.gui.DialogWindow;
+import com.evolve.services.PersonsService;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -16,10 +17,12 @@ import java.util.Optional;
 public class NewPersonDialog extends DialogWindow<Person> {
 
     private final Person person;
+    private final PersonsService personsService;
 
-    public NewPersonDialog() {
+    public NewPersonDialog(PersonsService personsService) {
         super("Nowa osoba", "Podaj podstawowe dane osobowe nowego członka. Numer ID zostanie wygenerowany automatycznie");
-        person = new Person();
+        this.personsService = personsService;
+        this.person = new Person();
     }
 
     @Override
@@ -36,10 +39,17 @@ public class NewPersonDialog extends DialogWindow<Person> {
         final TextField lastNameTextField = new TextField();
         lastNameTextField.setPromptText("Nazwisko");
 
+        final TextField personIdTextField = new TextField();
+        personIdTextField.setPromptText("ID");
+        personIdTextField.setEditable(false);
+
         grid.add(new Label("Imię:"), 0, 0);
         grid.add(firstNameTextField, 1, 0);
         grid.add(new Label("Nazwisko:"), 0, 1);
         grid.add(lastNameTextField, 1, 1);
+
+        grid.add(new Label("ID:"), 0, 2);
+        grid.add(personIdTextField, 1, 2);
 
         final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
@@ -48,6 +58,7 @@ public class NewPersonDialog extends DialogWindow<Person> {
             validateSaveButton(saveButton, firstNameTextField, lastNameTextField);
         });
         lastNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            regeneratePersonId(personIdTextField, lastNameTextField);
             validateSaveButton(saveButton, firstNameTextField, lastNameTextField);
         });
 
@@ -68,6 +79,12 @@ public class NewPersonDialog extends DialogWindow<Person> {
         });
 
         return dialog.showAndWait();
+    }
+
+    void regeneratePersonId(TextField personIdTextField, TextField lastNameTextField) {
+        personIdTextField.setText("");
+        personsService.findNextPersonId(lastNameTextField.getText().trim())
+                .ifPresent(personIdTextField::setText);
     }
 
     void validateSaveButton(

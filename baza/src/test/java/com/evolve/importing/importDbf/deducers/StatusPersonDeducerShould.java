@@ -53,6 +53,9 @@ class StatusPersonDeducerShould {
                 .hasValue(PersonStatusDetails.removed(""));
         assertThat(deducer.deduceFrom(List.of("SKR XII/04")))
                 .hasValue(PersonStatusDetails.removed("XII/04"));
+        assertThat(deducer.deduceFrom(List.of("Skreślenie 2012")))
+                .hasValue(PersonStatusDetails.removed("2012"));
+
     }
 
 }

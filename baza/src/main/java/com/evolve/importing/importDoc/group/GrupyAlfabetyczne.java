@@ -1,5 +1,6 @@
 package com.evolve.importing.importDoc.group;
 
+import com.evolve.domain.Group;
 import com.evolve.importing.importDoc.person.Person;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,9 +42,9 @@ import java.util.*;
 @Slf4j
 public class GrupyAlfabetyczne {
 
-    private final Map<Grupa, List<Person>> grupyLudzie = new HashMap<>();
+    private final Map<Group, List<Person>> grupyLudzie = new HashMap<>();
 
-    public void addNewPerson(Grupa grupa, Person person) {
+    public void addNewPerson(Group grupa, Person person) {
         log.info("add new person {}", grupa);
         final List<Person> osoby = grupyLudzie.getOrDefault(grupa, new ArrayList<>());
         osoby.add(person);
@@ -61,7 +62,7 @@ public class GrupyAlfabetyczne {
         log.info("VALIDATE continuity - end");
     }
 
-    private void validateContinuity(Grupa grupa, List<Person> personList) {
+    private void validateContinuity(Group grupa, List<Person> personList) {
         final Optional<Person> firstPerson = personList.stream().findFirst();
         firstPerson.ifPresent(person -> {
             String index = "000";

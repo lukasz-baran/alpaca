@@ -1,6 +1,6 @@
 package com.evolve.importing.importDoc;
 
-import com.evolve.importing.importDoc.group.Grupa;
+import com.evolve.domain.Group;
 import com.evolve.importing.importDoc.group.GrupyAlfabetyczne;
 import com.evolve.importing.importDoc.group.PersonGroupReader;
 import com.evolve.importing.importDoc.person.Person;
@@ -55,7 +55,7 @@ public class ImportAlphanumeric {
     public GrupyAlfabetyczne processFile() {
         final GrupyAlfabetyczne grupy = new GrupyAlfabetyczne();
 
-        Grupa currentGroup = null;
+        Group currentGroup = null;
 
         try (final Scanner scanner = new Scanner(fileAlphanumeric)) {
             while (scanner.hasNextLine()) {
@@ -65,7 +65,7 @@ public class ImportAlphanumeric {
                 }
 
                 if (groupStarter(line)) {
-                    currentGroup = Grupa.groupFor(line.charAt(0))
+                    currentGroup = Group.groupFor(line.charAt(0))
                             .orElseThrow(() -> new RuntimeException("Cannot assign to group " + line));
                     log.warn("Detected group: {}", currentGroup);
                     continue;

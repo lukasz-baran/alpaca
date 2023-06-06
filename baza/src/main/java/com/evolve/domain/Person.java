@@ -148,6 +148,8 @@ public class Person implements Serializable {
                             statusChange.setEventType(eventType);
                         },
                         () -> addNewStatusChange(eventType, when));
+
+        this.status = PersonStatusDetails.basedOnStatusChange(this.statusChanges);
     }
 
     private void addNewStatusChange(PersonStatusChange.EventType eventType, LocalDate when) {
