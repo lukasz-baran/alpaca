@@ -15,7 +15,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
@@ -111,12 +110,12 @@ public class AppController implements Initializable, ApplicationListener<PersonE
         new NewPersonDialog(personsService)
             .showDialog(stageManager.getWindow())
             .ifPresent(person -> {
-                final boolean success = personsService.insertPerson(person, insertedPerson -> {
-                    log.info("New person successfully added: {}", insertedPerson);
-                    personListModel.insertPerson(insertedPerson);
-                });
+                final boolean success = personsService.insertPerson(person);
+
                 if (!success) {
                     stageManager.displayWarning("Nie udało się dodać osoby");
+                } else {
+                    mainTableController.personInserted(person);
                 }
             });
     }
@@ -125,9 +124,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
         if (this.personListModel.getCurrentPersonProperty().getValue() == null) {
             log.warn("No person is selected - cannot edit");
 
-            final Alert alertBox = new Alert(Alert.AlertType.INFORMATION, "Nie można zacząć edycji, gdyż nie wybrano osoby");
-            alertBox.initOwner(stageManager.getWindow());
-            alertBox.show();
+            stageManager.displayWarning("Nie można zacząć edycji, gdyż nie wybrano osoby");
             return;
         }
 

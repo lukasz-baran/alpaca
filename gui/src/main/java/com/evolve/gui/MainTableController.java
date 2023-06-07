@@ -1,5 +1,6 @@
 package com.evolve.gui;
 
+import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
@@ -141,6 +142,13 @@ public class MainTableController implements Initializable, ApplicationListener<P
 
         disableControls(false);
 
+    }
+
+    public void personInserted(Person newPerson) {
+        final PersonModel personModel = personListModel.insertPerson(newPerson);
+        personTable.refresh();
+        personTable.getSelectionModel().select(personModel);
+        personTable.scrollTo(personModel);
     }
 
     public void disableControls(boolean disable) {

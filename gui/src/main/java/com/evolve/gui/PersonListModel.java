@@ -10,6 +10,7 @@ import javafx.collections.transformation.FilteredList;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -40,10 +41,13 @@ public class PersonListModel {
         currentPersonProperty.setValue(personModel);
     }
 
-    public void insertPerson(Person newPerson) {
+    public PersonModel insertPerson(Person newPerson) {
         final PersonModel addedPerson = new PersonModel(PersonListView.of(newPerson));
+
         data.add(addedPerson);
+        data.sort(Comparator.comparing(PersonModel::getId));
 
         currentPersonProperty.setValue(addedPerson);
+        return addedPerson;
     }
 }
