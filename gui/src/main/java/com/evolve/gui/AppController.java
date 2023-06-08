@@ -1,6 +1,5 @@
 package com.evolve.gui;
 
-import com.evolve.gui.components.NewPersonController;
 import com.evolve.gui.components.NewPersonDialog;
 import com.evolve.gui.components.RetentionFileChooser;
 import com.evolve.gui.dictionaries.UnitsController;
@@ -75,9 +74,6 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     @FXML MenuItem importDbfMenuItem;
     @FXML MenuItem unitsMenuItem;
     @FXML MenuItem importPeopleMenuItem;
-
-    @FXML
-    private final FxControllerAndView<NewPersonController, VBox> newPersonController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

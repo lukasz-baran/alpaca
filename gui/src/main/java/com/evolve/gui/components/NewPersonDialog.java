@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -84,8 +85,8 @@ public class NewPersonDialog extends DialogWindow<Person> {
 
                 final Person newPerson = Person.builder()
                         .personId(personIdTextField.getText())
-                        .firstName(firstNameTextField.getText().trim())
-                        .lastName(lastNameTextField.getText().trim())
+                        .firstName(StringUtils.capitalize(firstNameTextField.getText().trim()))
+                        .lastName(StringUtils.capitalize(lastNameTextField.getText().trim()))
                         .build();
 
                 final LocalDate dob = dobDatePicker.getValue();
