@@ -1,16 +1,20 @@
 package com.evolve.gui.components;
 
 import com.evolve.domain.Person;
+import com.evolve.domain.PersonStatusChange;
 import com.evolve.gui.DialogWindow;
 import com.evolve.services.PersonsService;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 public class NewPersonDialog extends DialogWindow<Person> {
@@ -40,9 +44,11 @@ public class NewPersonDialog extends DialogWindow<Person> {
         personIdTextField.setPromptText("ID");
         personIdTextField.setEditable(false);
 
-        final DatePicker joinedDate = new DatePicker();
-        joinedDate.setPromptText("Data dołączenia");
+        final DatePicker joinedDateDatePicker = new DatePicker();
+        joinedDateDatePicker.setPromptText("Data dołączenia");
 
+        final DatePicker dobDatePicker = new DatePicker();
+        dobDatePicker.setPromptText("Data urodzenia");
 
         grid.add(new Label("Imię:"), 0, 0);
         grid.add(firstNameTextField, 1, 0);
@@ -53,7 +59,10 @@ public class NewPersonDialog extends DialogWindow<Person> {
         grid.add(personIdTextField, 1, 2);
 
         grid.add(new Label("Dołączył(a):"), 0, 3);
-        grid.add(joinedDate, 1, 3);
+        grid.add(joinedDateDatePicker, 1, 3);
+
+        grid.add(new Label("Data urodzenia:"), 0, 4);
+        grid.add(dobDatePicker, 1, 4);
 
         final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
@@ -68,17 +77,28 @@ public class NewPersonDialog extends DialogWindow<Person> {
 
         dialog.getDialogPane().setContent(grid);
 
-        // Request focus on the username field by default.
         Platform.runLater(firstNameTextField::requestFocus);
 
-        // Convert the result to a username-password-pair when the login button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
-                return Person.builder()
+
+                final Person newPerson = Person.builder()
                         .personId(personIdTextField.getText())
                         .firstName(firstNameTextField.getText().trim())
                         .lastName(lastNameTextField.getText().trim())
                         .build();
+
+                final LocalDate dob = dobDatePicker.getValue();
+                if (dob != null) {
+                    newPerson.updatePersonDob(dob);
+                }
+
+                final LocalDate joined = joinedDateDatePicker.getValue();
+                if (joined != null) {
+                    newPerson.addOrUpdateStatusChange(PersonStatusChange.EventType.JOINED, joined);
+                }
+
+                return newPerson;
             }
             return null;
         });
