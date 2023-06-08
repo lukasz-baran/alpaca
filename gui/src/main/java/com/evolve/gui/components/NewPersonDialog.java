@@ -3,14 +3,13 @@ package com.evolve.gui.components;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatusChange;
 import com.evolve.gui.DialogWindow;
+import com.evolve.importing.importDbf.deducers.PersonGenderDeducer;
 import com.evolve.services.PersonsService;
+import com.sun.javafx.collections.ImmutableObservableList;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
 import org.apache.commons.lang3.StringUtils;
@@ -51,6 +50,9 @@ public class NewPersonDialog extends DialogWindow<Person> {
         final DatePicker dobDatePicker = new DatePicker();
         dobDatePicker.setPromptText("Data urodzenia");
 
+        final ComboBox<Person.Gender> genderCombo = new ComboBox<>(
+                new ImmutableObservableList<>(Person.Gender.FEMALE, Person.Gender.MALE));
+
         grid.add(new Label("Imię:"), 0, 0);
         grid.add(firstNameTextField, 1, 0);
         grid.add(new Label("Nazwisko:"), 0, 1);
@@ -65,10 +67,15 @@ public class NewPersonDialog extends DialogWindow<Person> {
         grid.add(new Label("Data urodzenia:"), 0, 4);
         grid.add(dobDatePicker, 1, 4);
 
+        grid.add(new Label("Płeć:"), 0, 5);
+        grid.add(genderCombo, 1, 5);
+
+
         final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
 
         firstNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            updatePersonGenderBasedOnFirstName(firstNameTextField, genderCombo);
             validateSaveButton(saveButton, personIdTextField, firstNameTextField, lastNameTextField);
         });
         lastNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -87,6 +94,7 @@ public class NewPersonDialog extends DialogWindow<Person> {
                         .personId(personIdTextField.getText())
                         .firstName(StringUtils.capitalize(firstNameTextField.getText().trim()))
                         .lastName(StringUtils.capitalize(lastNameTextField.getText().trim()))
+                        .gender(genderCombo.getValue())
                         .build();
 
                 final LocalDate dob = dobDatePicker.getValue();
@@ -105,6 +113,16 @@ public class NewPersonDialog extends DialogWindow<Person> {
         });
 
         return dialog.showAndWait();
+    }
+
+    void updatePersonGenderBasedOnFirstName(TextField firstNameTextField, ComboBox<Person.Gender> genderCombo) {
+        final String firstName = firstNameTextField.getText().trim();
+        if (firstName.isEmpty()) {
+            genderCombo.setValue(null);
+            return;
+        }
+
+        genderCombo.setValue(PersonGenderDeducer.getGender(firstName));
     }
 
     void regeneratePersonId(TextField personIdTextField, TextField lastNameTextField) {
