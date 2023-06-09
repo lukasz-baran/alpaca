@@ -53,7 +53,7 @@ public class UnitsController implements Initializable, ApplicationListener<Stage
         unitNumberColumn.setCellValueFactory(new PropertyValueFactory<>("unitNumber"));
         unitDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("unitDescription"));
 
-        final Map<String, Unit> unitsMap = unitsService.fetchAll();
+        final Map<String, Unit> unitsMap = unitsService.fetchMap();
 
         unitsMap.keySet()
                 .stream()

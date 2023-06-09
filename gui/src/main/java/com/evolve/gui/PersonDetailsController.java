@@ -78,7 +78,7 @@ public class PersonDetailsController extends EditableGuiElement
     public void initialize(URL url, ResourceBundle resourceBundle) {
         log.info("initialized - PersonDetails");
 
-        this.units = unitsService.fetchAll();
+        this.units = unitsService.fetchMap();
 
         personListModel.getCurrentPersonProperty().addListener(
                 (ObservableValue<? extends PersonModel> obs, PersonModel oldUser, PersonModel newUser) -> {

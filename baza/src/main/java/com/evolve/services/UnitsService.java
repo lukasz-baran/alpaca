@@ -19,7 +19,11 @@ import java.util.stream.Collectors;
 public class UnitsService {
     private final Nitrite nitrite;
 
-    public Map<String, Unit> fetchAll() {
+    public Map<String, Unit> fetchMap() {
+        return fetchList().stream().collect(Collectors.toMap(Unit::getId, unit -> unit));
+    }
+
+    public List<Unit> fetchList() {
         final ObjectRepository<Unit> unitRepo = nitrite.getRepository(Unit.class);
 
         final List<Unit> units = new ArrayList<>();
@@ -28,7 +32,7 @@ public class UnitsService {
             units.add(document);
         }
 
-        return units.stream().collect(Collectors.toMap(Unit::getId, unit -> unit));
+        return units;
     }
 
 }

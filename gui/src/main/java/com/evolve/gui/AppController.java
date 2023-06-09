@@ -10,6 +10,7 @@ import com.evolve.importing.importDoc.ImportPeople;
 import com.evolve.importing.importDoc.group.GrupyAlfabetyczne;
 import com.evolve.importing.importDoc.person.Person;
 import com.evolve.services.PersonsService;
+import com.evolve.services.UnitsService;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -49,6 +50,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     private final RetentionFileChooser fileChooser;
     private final ImportDbfService importDbfService;
     private final PersonsService personsService;
+    private final UnitsService unitsService;
     private final FxWeaver fxWeaver;
     private final StageManager stageManager;
 
@@ -103,7 +105,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     }
 
     public void newPersonButtonClicked(ActionEvent actionEvent) {
-        new NewPersonDialog(personsService)
+        new NewPersonDialog(personsService, unitsService)
             .showDialog(stageManager.getWindow())
             .ifPresent(person -> {
                 final boolean success = personsService.insertPerson(person);
