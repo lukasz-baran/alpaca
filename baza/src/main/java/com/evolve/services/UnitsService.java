@@ -35,4 +35,9 @@ public class UnitsService {
         return units;
     }
 
+    public void insertUnit(Unit newUnit) {
+        final ObjectRepository<Unit> unitRepo = nitrite.getRepository(Unit.class);
+        unitRepo.insert(newUnit);
+
+    }
 }

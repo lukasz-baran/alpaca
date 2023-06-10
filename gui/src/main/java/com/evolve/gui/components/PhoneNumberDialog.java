@@ -37,7 +37,6 @@ public class PhoneNumberDialog extends DialogWindow<String> {
         grid.add(new Label("Imię:"), 0, 0);
         grid.add(phoneNumberTextField, 1, 0);
 
-        // Enable/Disable login button depending on whether a username was entered.
         Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
 

@@ -2,6 +2,7 @@ package com.evolve.gui.components;
 
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatusChange;
+import com.evolve.domain.RegistryNumber;
 import com.evolve.domain.Unit;
 import com.evolve.gui.DialogWindow;
 import com.evolve.importing.importDbf.deducers.PersonGenderDeducer;
@@ -27,7 +28,7 @@ public class NewPersonDialog extends DialogWindow<Person> {
     private final UnitsService unitsService;
 
     public NewPersonDialog(PersonsService personsService, UnitsService unitsService) {
-        super("Nowa osoba", "Podaj podstawowe dane osobowe nowego członka. Numer ID zostanie wygenerowany automatycznie");
+        super("Nowa osoba", "Podaj dane osobowe nowej osoby. Numer ID zostanie wygenerowany automatycznie");
         this.personsService = personsService;
         this.unitsService = unitsService;
     }
@@ -60,11 +61,13 @@ public class NewPersonDialog extends DialogWindow<Person> {
         for (Unit unit : unitsService.fetchList()) {
             units.add(new UnitNumberItem(unit.getId(), unit.getName()));
         }
-
         final ComboBox<UnitNumberItem> unitNumberCombo = new ComboBox<>(units);
 
         final ComboBox<Person.Gender> genderCombo = new ComboBox<>(
                 new ImmutableObservableList<>(Person.Gender.FEMALE, Person.Gender.MALE));
+
+        final TextField registryNumberTextField = new TextField();
+        registryNumberTextField.setPromptText("Numer kartoteki");
 
         // first column
         grid.add(new Label("Imię:"), 0, 0);
@@ -87,6 +90,10 @@ public class NewPersonDialog extends DialogWindow<Person> {
 
         grid.add(new Label("Data urodzenia:"), 2, 2);
         grid.add(dobDatePicker, 3, 2);
+
+        grid.add(new Label("Kartoteka:"), 2, 3);
+        grid.add(registryNumberTextField, 3, 3);
+
 
         final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
@@ -115,6 +122,7 @@ public class NewPersonDialog extends DialogWindow<Person> {
                         .personId(personIdTextField.getText())
                         .firstName(StringUtils.capitalize(firstNameTextField.getText().trim()))
                         .lastName(StringUtils.capitalize(lastNameTextField.getText().trim()))
+                        .registryNumber(RegistryNumber.onlyNewRegistryNumber(registryNumberTextField.getText().trim()))
                         .gender(genderCombo.getValue())
                         .unitNumber(unitNumber)
                         .build();

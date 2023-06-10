@@ -21,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class StageManager {
+    public static final Image APPLICATION_ICON = new Image("alpaca.png");
 
     private final FxWeaver fxWeaver;
 

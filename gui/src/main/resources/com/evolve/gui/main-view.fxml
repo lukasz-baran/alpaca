@@ -8,7 +8,8 @@
     <MenuBar prefWidth="626.0" VBox.vgrow="NEVER">
         <menus>
             <Menu mnemonicParsing="false" text="File">
-                <MenuItem fx:id="newMenuItem" mnemonicParsing="false" text="New"/>
+                <MenuItem fx:id="newMenuItem" mnemonicParsing="false" text="Nowy"
+                          onAction="#newPersonButtonClicked"/>
                 <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit"
                           onAction="#quitClicked"/>
             </Menu>
