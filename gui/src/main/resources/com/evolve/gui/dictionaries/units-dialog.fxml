@@ -32,8 +32,8 @@
             </padding>
             <children>
                 <Button fx:id="btnAddUnit" text="Nowa jednostka" onAction="#onAddUnit" />
-                <Button fx:id="btnReloadUnits" text="Przywróć domyślne" />
-                <Button fx:id="btnSaveUnits" text="Zapisz i zamknij" disable="true" />
+                <Button fx:id="btnReloadUnits" text="Przywróć domyślne" onAction="#resetToDefaults"/>
+                <Button fx:id="btnSaveUnits" text="Zapisz i zamknij" disable="true" onAction="#saveUnits"/>
             </children>
         </VBox>
    </children>

@@ -1,5 +1,8 @@
 package com.evolve.gui.dictionaries;
 
+import com.evolve.FindPerson;
+import com.evolve.domain.Person;
+import com.evolve.domain.Unit;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.events.StageReadyEvent;
 import com.evolve.services.UnitsService;
@@ -28,6 +31,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.Comparator;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static com.evolve.gui.StageManager.APPLICATION_ICON;
@@ -40,13 +44,15 @@ import static com.evolve.gui.StageManager.APPLICATION_ICON;
 public class UnitsController implements Initializable, ApplicationListener<StageReadyEvent> {
     private static final String UNITS_DIALOG_TITLE = "Jednostki";
     private final UnitsService unitsService;
+    private final FindPerson findPerson;
+
     private final ObservableList<UnitEntry> units = FXCollections.observableArrayList();
     private final BooleanProperty listWasModifiedProperty = new SimpleBooleanProperty(false);
+    private final StageManager stageManager;
 
     private Stage primaryStage;
     private Stage stage;
 
-    private StageManager stageManager;
 
     @FXML HBox unitsDialog;
     @FXML TableView<UnitEntry> unitsTable;
@@ -71,7 +77,7 @@ public class UnitsController implements Initializable, ApplicationListener<Stage
 
         listWasModifiedProperty.addListener((observableValue, oldValue, newValue) -> {
             stage.setTitle(UNITS_DIALOG_TITLE + (newValue ? " *" : ""));
-            //btnSaveUnits.setDisable(!newValue);
+            btnSaveUnits.setDisable(!newValue);
         });
 
         loadUnits();
@@ -93,8 +99,16 @@ public class UnitsController implements Initializable, ApplicationListener<Stage
 
             final MenuItem removeMenuItem = new MenuItem("Usuń");
             removeMenuItem.setOnAction(event -> {
-//                list.remove(row.getItem());
-//                tableView.refresh();
+                final List<Person> list = findPerson.findByUnitId(row.getItem().getUnitNumber());
+                if (!list.isEmpty()) {
+                    stageManager.displayWarning("Nie można usunąć jednostki, która jest przypisana do "
+                            + list.size() + " osób.");
+                    return;
+                }
+
+                units.remove(row.getItem());
+                tableView.refresh();
+                listWasModifiedProperty.set(true);
             });
 //            removeMenuItem.disableProperty().bind(disabledProperty);
 
@@ -129,8 +143,6 @@ public class UnitsController implements Initializable, ApplicationListener<Stage
         new NewUnitDialog(units)
                 .showDialog(stage.getOwner())
                 .ifPresent(newUnit -> {
-                    unitsService.insertUnit(newUnit);
-
                     final UnitEntry newEntry = new UnitEntry(newUnit.getId(), newUnit.getName());
                     units.add(newEntry);
                     units.sort(Comparator.comparing(UnitEntry::getUnitNumber));
@@ -138,6 +150,23 @@ public class UnitsController implements Initializable, ApplicationListener<Stage
                     unitsTable.scrollTo(newEntry);
                     listWasModifiedProperty.set(true);
                 });
+    }
+
+    public void saveUnits(ActionEvent actionEvent) {
+        List<Unit> units = this.units.stream().map(entry ->
+                        new Unit(entry.getUnitNumber(), entry.getUnitDescription()))
+                        .toList();
+        unitsService.populateUnits(units);
+        listWasModifiedProperty.set(false);
+        stage.close(); //??
+    }
+
+    public void resetToDefaults(ActionEvent actionEvent) {
+        if (stageManager.displayConfirmation("Czy na pewno chcesz przywrócić pierwotną listę jednostek?")) {
+            unitsService.populateUnits(UnitsService.DEFAULT_UNITS);
+            units.clear();
+            loadUnits();
+        }
     }
 
     @AllArgsConstructor

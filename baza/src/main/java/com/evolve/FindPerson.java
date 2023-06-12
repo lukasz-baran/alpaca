@@ -23,4 +23,6 @@ public interface FindPerson {
 
     Person findById(String id);
 
+    List<Person> findByUnitId(String unitId);
+
 }

@@ -81,6 +81,13 @@ public class PersonsService implements InitializingBean, FindPerson {
         return personRepo.getById(id);
     }
 
+    @Override
+    public List<Person> findByUnitId(String unitId) {
+        final ObjectRepository<Person> personRepo = nitrite.getRepository(Person.class);
+        return personRepo.find(where("unitNumber").eq(unitId))
+                .toList();
+    }
+
     public boolean insertPerson(Person person) {
         log.info("Adding person {}", person);
         final ObjectRepository<Person> personRepo = nitrite.getRepository(Person.class);
