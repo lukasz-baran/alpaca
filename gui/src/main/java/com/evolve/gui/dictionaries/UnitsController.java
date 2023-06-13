@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static com.evolve.gui.StageManager.APPLICATION_ICON;
@@ -71,6 +72,29 @@ public class UnitsController implements Initializable, ApplicationListener<Stage
         stage.setTitle(UNITS_DIALOG_TITLE);
         stage.initModality(Modality.WINDOW_MODAL);
         stage.getIcons().add(APPLICATION_ICON);
+        stage.setResizable(false);
+
+        stage.setOnCloseRequest(event -> {
+            if (listWasModifiedProperty.get()) {
+                event.consume();
+                final Optional<ButtonType> action = stageManager.displayOkNoCancel("Lista jednostek została zmieniona\n" +
+                        "Wybierz 'OK' aby zapisać zmienioną listę jednostek\n" +
+                        "'Nie' aby wyjść bez zapisu zmian\n" +
+                        "'Anuluj' aby wrócić do edycji.");
+
+                action.ifPresent(actualAction -> {
+                   if (actualAction == ButtonType.OK) {
+                       saveUnits(null);
+                       listWasModifiedProperty.set(false);
+                       stage.close();
+                   } else if (actualAction == ButtonType.NO) {
+                       listWasModifiedProperty.set(false);
+                       stage.close();
+                   }
+                });
+            }
+        });
+
 
         unitNumberColumn.setCellValueFactory(new PropertyValueFactory<>("unitNumber"));
         unitDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("unitDescription"));
@@ -79,8 +103,6 @@ public class UnitsController implements Initializable, ApplicationListener<Stage
             stage.setTitle(UNITS_DIALOG_TITLE + (newValue ? " *" : ""));
             btnSaveUnits.setDisable(!newValue);
         });
-
-        loadUnits();
 
         unitsTable.setRowFactory(tableView -> {
             final TableRow<UnitEntry> row = new TableRow<>();
@@ -124,6 +146,7 @@ public class UnitsController implements Initializable, ApplicationListener<Stage
     }
 
     public void loadUnits() {
+        units.clear();
         unitsService.fetchList()
                 .forEach(unit -> this.units.add(new UnitEntry(unit.getId(), StringUtils.trimToEmpty(unit.getName()))));
         unitsTable.setItems(this.units);
@@ -131,6 +154,7 @@ public class UnitsController implements Initializable, ApplicationListener<Stage
 
     public void show() {
         stage.show();
+        loadUnits();
     }
 
     @Override
@@ -164,7 +188,6 @@ public class UnitsController implements Initializable, ApplicationListener<Stage
     public void resetToDefaults(ActionEvent actionEvent) {
         if (stageManager.displayConfirmation("Czy na pewno chcesz przywrócić pierwotną listę jednostek?")) {
             unitsService.populateUnits(UnitsService.DEFAULT_UNITS);
-            units.clear();
             loadUnits();
         }
     }

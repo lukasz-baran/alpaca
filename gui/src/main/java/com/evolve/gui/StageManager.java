@@ -84,4 +84,14 @@ public class StageManager {
         alert.initOwner(primaryStage.getScene().getWindow());
         alert.showAndWait();
     }
+
+    public Optional<ButtonType> displayOkNoCancel(String question) {
+        final Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Confirmation", ButtonType.OK, ButtonType.NO, ButtonType.CANCEL);
+        alert.setHeaderText(null);
+        alert.initOwner(primaryStage.getScene().getWindow());
+        alert.setContentText(question);
+
+        return alert.showAndWait();
+    }
+
 }
