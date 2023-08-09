@@ -67,7 +67,7 @@
         <fx:include fx:id="registryNumbers" source="components/registry-numbers-input.fxml" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Telefony" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-        <fx:include fx:id="phoneNumbersController" source="components/phone-numbers.fxml" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+        <fx:include fx:id="phoneNumbersController" source="person/phoneNumber/phone-numbers.fxml" GridPane.columnIndex="1" GridPane.rowIndex="7" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="8" />
         <TextField fx:id="emailTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8" />

@@ -1,4 +1,4 @@
-package com.evolve.gui.components;
+package com.evolve.gui.person.phoneNumber;
 
 import com.evolve.gui.EditableGuiElement;
 import com.evolve.gui.StageManager;
@@ -114,13 +114,4 @@ public class PhoneNumbersController extends EditableGuiElement implements Initia
                 });
     }
 
-    @AllArgsConstructor
-    @Setter
-    @ToString
-    public static class PhoneNumberEntry {
-
-        @Getter
-        private String number;
-
-    }
 }

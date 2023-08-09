@@ -5,6 +5,7 @@ import com.evolve.domain.Person;
 import com.evolve.domain.Unit;
 import com.evolve.gui.components.*;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
+import com.evolve.gui.person.phoneNumber.PhoneNumbersController;
 import com.evolve.gui.person.status.PersonStatusController;
 import com.evolve.services.PersonEditService;
 import com.evolve.services.PersonsService;

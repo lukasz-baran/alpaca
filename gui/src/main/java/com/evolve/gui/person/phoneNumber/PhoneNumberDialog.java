@@ -1,4 +1,4 @@
-package com.evolve.gui.components;
+package com.evolve.gui.person.phoneNumber;
 
 import com.evolve.gui.DialogWindow;
 import javafx.application.Platform;
@@ -34,7 +34,7 @@ public class PhoneNumberDialog extends DialogWindow<String> {
 
         Optional.ofNullable(phoneNumber).ifPresent(phoneNumberTextField::setText);
 
-        grid.add(new Label("Imię:"), 0, 0);
+        grid.add(new Label("Numer:"), 0, 0);
         grid.add(phoneNumberTextField, 1, 0);
 
         Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
