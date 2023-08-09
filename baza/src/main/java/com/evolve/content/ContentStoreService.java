@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.URLConnection;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -16,7 +17,8 @@ public class ContentStoreService {
     private final FileRepository fileRepository;
     private final FileContentStore fileContentStore;
 
-    public ContentFile setContent(File file) throws IOException {
+    @SneakyThrows
+    public ContentFile setContent(File file, String personId, String summary) {
         final String contentId = UUID.randomUUID().toString();
         final String mimeType = URLConnection.guessContentTypeFromName(file.getName());
 
@@ -25,6 +27,9 @@ public class ContentStoreService {
                 .contentId(contentId)
                 .contentMimeType(mimeType)
                 .contentLength(file.length())
+                .personId(personId)
+                .created(LocalDateTime.now())
+                .summary(summary)
                 .build();
         log.info("saving file {}", contentFile);
 
@@ -36,5 +41,11 @@ public class ContentStoreService {
         ContentFile contentFile = fileRepository.getById(id);
         log.info("reading file {}", contentFile);
         return fileContentStore.getContent(contentFile);
+    }
+
+    public void deleteContent(Long id) {
+        log.info("deleting file {}", id);
+        fileContentStore.unsetContent(fileRepository.getById(id));
+        fileRepository.deleteById(id);
     }
 }

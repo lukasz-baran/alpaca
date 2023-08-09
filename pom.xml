@@ -13,6 +13,7 @@
     <modules>
         <module>baza</module>
         <module>gui</module>
+        <module>alpaca-export</module>
     </modules>
 
     <repositories>

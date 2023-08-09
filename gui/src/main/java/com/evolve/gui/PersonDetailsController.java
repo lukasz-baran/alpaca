@@ -5,6 +5,7 @@ import com.evolve.domain.Person;
 import com.evolve.domain.Unit;
 import com.evolve.gui.components.*;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
+import com.evolve.gui.person.status.PersonStatusController;
 import com.evolve.services.PersonEditService;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
@@ -145,6 +146,7 @@ public class PersonDetailsController extends EditableGuiElement
         personAddresses.getController().setEditable(editable);
         authorizedController.getController().setEditable(editable);
         phoneNumbersController.getController().setEditable(editable);
+        personStatusController.getController().setEditable(editable);
     }
 
 

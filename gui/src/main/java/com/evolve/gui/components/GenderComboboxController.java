@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
@@ -27,6 +28,7 @@ public class GenderComboboxController extends EditableGuiElement implements Init
     public void initialize(URL url, ResourceBundle resourceBundle) {
         genderCombo.getItems().addAll(Person.Gender.values());
         genderCombo.valueProperty().bindBidirectional(genderObjectProperty);
+        genderCombo.setTooltip(new Tooltip("Płeć osoby jest wyznaczana na podstawie imienia"));
 
         genderCombo.setDisable(true);
         genderCombo.setEditable(false);

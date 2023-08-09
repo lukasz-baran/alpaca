@@ -1,8 +1,8 @@
 package com.evolve.gui;
 
 import com.evolve.gui.components.NewPersonDialog;
-import com.evolve.gui.components.RetentionFileChooser;
 import com.evolve.gui.dictionaries.UnitsController;
+import com.evolve.gui.documents.DocumentsController;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.importing.importDbf.ImportDbfService;
 import com.evolve.importing.importDoc.ImportAlphanumeric;
@@ -22,7 +22,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,14 +46,13 @@ public class AppController implements Initializable, ApplicationListener<PersonE
 
     private final PersonListModel personListModel;
 
-    private final RetentionFileChooser fileChooser;
     private final ImportDbfService importDbfService;
     private final PersonsService personsService;
     private final UnitsService unitsService;
     private final FxWeaver fxWeaver;
     private final StageManager stageManager;
 
-    private final FxControllerAndView<UnitsController, VBox> dialog;
+    private final FxControllerAndView<UnitsController, VBox> unitsDialogController;
 
     private final PersonDetailsController personDetailsController;
     private final MainTableController mainTableController;
@@ -83,11 +81,12 @@ public class AppController implements Initializable, ApplicationListener<PersonE
         tabPersonDetails.setContent(fxWeaver.loadView(PersonDetailsController.class));
         tabOriginalDetails.setContent(fxWeaver.loadView(OriginalDetailsController.class));
         tabPersonAdditionalData.setContent(fxWeaver.loadView(PersonAdditionalDataController.class));
+        tabDocuments.setContent(fxWeaver.loadView(DocumentsController.class));
 
         quitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
 
-        unitsMenuItem.setOnAction(event -> dialog.getController().show());
+        unitsMenuItem.setOnAction(event -> unitsDialogController.getController().show());
     }
 
     private void openFile(File file) {
@@ -132,8 +131,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     }
 
     public void importDbfClicked(ActionEvent actionEvent) {
-        Stage stage = (Stage) stageManager.getWindow();
-        File file = fileChooser.showOpenDialog(stage);
+        final File file = stageManager.getFileChooser(StageManager.DBF_EXTENSION_FILTER);
         if (file != null) {
             openFile(file);
         }

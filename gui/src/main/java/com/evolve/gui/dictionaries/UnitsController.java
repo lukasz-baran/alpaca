@@ -4,7 +4,6 @@ import com.evolve.FindPerson;
 import com.evolve.domain.Person;
 import com.evolve.domain.Unit;
 import com.evolve.gui.StageManager;
-import com.evolve.gui.events.StageReadyEvent;
 import com.evolve.services.UnitsService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -26,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -42,7 +40,7 @@ import static com.evolve.gui.StageManager.APPLICATION_ICON;
 @FxmlView("units-dialog.fxml")
 @RequiredArgsConstructor
 @Slf4j
-public class UnitsController implements Initializable, ApplicationListener<StageReadyEvent> {
+public class UnitsController implements Initializable {
     private static final String UNITS_DIALOG_TITLE = "Jednostki";
     private final UnitsService unitsService;
     private final FindPerson findPerson;
@@ -51,9 +49,7 @@ public class UnitsController implements Initializable, ApplicationListener<Stage
     private final BooleanProperty listWasModifiedProperty = new SimpleBooleanProperty(false);
     private final StageManager stageManager;
 
-    private Stage primaryStage;
     private Stage stage;
-
 
     @FXML HBox unitsDialog;
     @FXML TableView<UnitEntry> unitsTable;
@@ -67,7 +63,7 @@ public class UnitsController implements Initializable, ApplicationListener<Stage
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.stage = new Stage();
-        stage.initOwner(primaryStage);
+        stage.initOwner(stageManager.getPrimaryStage());
         stage.setScene(new Scene(unitsDialog));
         stage.setTitle(UNITS_DIALOG_TITLE);
         stage.initModality(Modality.WINDOW_MODAL);
@@ -155,12 +151,6 @@ public class UnitsController implements Initializable, ApplicationListener<Stage
     public void show() {
         stage.show();
         loadUnits();
-    }
-
-    @Override
-    public void onApplicationEvent(StageReadyEvent event) {
-        this.primaryStage = event.getStage();
-        log.info("primaryStage set");
     }
 
     public void onAddUnit(ActionEvent actionEvent) {

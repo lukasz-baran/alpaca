@@ -1,19 +1,23 @@
 package com.evolve.gui;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxWeaver;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -22,11 +26,26 @@ import java.util.Optional;
 @Slf4j
 public class StageManager {
     public static final Image APPLICATION_ICON = new Image("alpaca.png");
+    public static final FileChooser.ExtensionFilter DBF_EXTENSION_FILTER = new FileChooser.ExtensionFilter("dbf (*.dbf)", "*.dbf");
 
     private final FxWeaver fxWeaver;
+    private final SimpleObjectProperty<File> lastKnownDirectoryProperty;
 
     @Setter
+    @Getter
     private Stage primaryStage;
+
+    public File getFileChooser(FileChooser.ExtensionFilter extensionFilter) {
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.initialDirectoryProperty().bindBidirectional(lastKnownDirectoryProperty);
+        fileChooser.getExtensionFilters().setAll(extensionFilter);
+        final File chosenFile = fileChooser.showOpenDialog(getWindow());
+        if(chosenFile != null){
+            //Set the property to the directory of the chosenFile so the fileChooser will open here next
+            lastKnownDirectoryProperty.setValue(chosenFile.getParentFile());
+        }
+        return chosenFile;
+    }
 
     public void displayScene(Class<? extends Initializable> fxControllerClass,
             String title, String iconFileName) {
@@ -94,4 +113,11 @@ public class StageManager {
         return alert.showAndWait();
     }
 
+    public void displayError(String message) {
+        final Alert alert = new Alert(Alert.AlertType.ERROR, message);
+        alert.setTitle("Błąd");
+        alert.setHeaderText(null);
+        alert.initOwner(primaryStage.getScene().getWindow());
+        alert.showAndWait();
+    }
 }

@@ -12,16 +12,21 @@ import com.sun.javafx.collections.ImmutableObservableList;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
+@Slf4j
 public class NewPersonDialog extends DialogWindow<Person> {
 
     private final PersonsService personsService;
@@ -51,11 +56,17 @@ public class NewPersonDialog extends DialogWindow<Person> {
         personIdTextField.setPromptText("ID");
         personIdTextField.setEditable(false);
 
-        final DatePicker joinedDateDatePicker = new DatePicker();
-        joinedDateDatePicker.setPromptText("Data dołączenia");
+        final SecureLocalDateStringConverter joinedConverter = new SecureLocalDateStringConverter();
+        final DatePicker joinedDatePicker = new DatePicker();
+        joinedDatePicker.setConverter(joinedConverter);
+        joinedDatePicker.setPromptText("Data dołączenia");
+        joinedDatePicker.getEditor().setOnKeyTyped(new DatePickerKeyEventHandler(joinedConverter, joinedDatePicker));
 
+        final SecureLocalDateStringConverter dobConverter = new SecureLocalDateStringConverter();
         final DatePicker dobDatePicker = new DatePicker();
+        dobDatePicker.setConverter(dobConverter);
         dobDatePicker.setPromptText("Data urodzenia");
+        dobDatePicker.getEditor().setOnKeyTyped(new DatePickerKeyEventHandler(dobConverter, dobDatePicker));
 
         ObservableList<UnitNumberItem> units = FXCollections.observableArrayList();
         for (Unit unit : unitsService.fetchList()) {
@@ -76,7 +87,7 @@ public class NewPersonDialog extends DialogWindow<Person> {
         grid.add(lastNameTextField, 1, 1);
 
         grid.add(new Label("Dołączył(a):"), 0, 2);
-        grid.add(joinedDateDatePicker, 1, 2);
+        grid.add(joinedDatePicker, 1, 2);
 
         grid.add(new Label("Jednostka:"), 0, 3);
         grid.add(unitNumberCombo, 1, 3);
@@ -111,6 +122,7 @@ public class NewPersonDialog extends DialogWindow<Person> {
 
         Platform.runLater(firstNameTextField::requestFocus);
 
+
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
 
@@ -132,7 +144,7 @@ public class NewPersonDialog extends DialogWindow<Person> {
                     newPerson.updatePersonDob(dob);
                 }
 
-                final LocalDate joined = joinedDateDatePicker.getValue();
+                final LocalDate joined = joinedDatePicker.getValue();
                 if (joined != null) {
                     newPerson.addOrUpdateStatusChange(PersonStatusChange.EventType.JOINED, joined);
                 }
@@ -176,6 +188,23 @@ public class NewPersonDialog extends DialogWindow<Person> {
         @Override
         public String toString() {
             return unitNumber + " - " + unitName;
+        }
+    }
+
+    @RequiredArgsConstructor
+    static class DatePickerKeyEventHandler implements EventHandler<KeyEvent> {
+        private final SecureLocalDateStringConverter converter;
+        private final DatePicker datePicker;
+
+        @Override
+        public void handle(KeyEvent event) {
+            final String textValue = datePicker.getEditor().getText();
+            datePicker.setStyle("");
+            converter.fromString(textValue);
+            if (StringUtils.isNotBlank(textValue) && converter.hasParseError()) {
+                datePicker.setStyle("-fx-border-color: red");
+            }
+
         }
     }
 

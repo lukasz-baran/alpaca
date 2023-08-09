@@ -120,9 +120,7 @@ public class PersonsService implements InitializingBean, FindPerson {
         // index has to be rebuilt after each restart, without it first insert into collection will fail
         personRepo.rebuildIndex("personId", false);
 
-        for (Person document : personRepo.find()) {
-            log.info("document: {}", document);
-        }
+        log.info("Loaded {} persons", personRepo.find().size());
     }
 
     void validatePerson(List<Person> personList) {

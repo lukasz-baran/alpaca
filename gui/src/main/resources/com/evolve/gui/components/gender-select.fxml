@@ -3,7 +3,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.layout.*?>
 <HBox xmlns="http://javafx.com/javafx/19"
-      stylesheets="@../../../../style.css"
+      stylesheets="@../../../../styles/style.css"
       fx:id="genderComboHBox"
       xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" prefWidth="255.0" spacing="15.0"
       GridPane.columnIndex="1" GridPane.rowIndex="4" fx:controller="com.evolve.gui.components.GenderComboboxController">

@@ -1,15 +1,14 @@
 package com.evolve.content;
 
-import java.util.Date;
+import lombok.*;
+import org.springframework.content.commons.annotations.ContentId;
+import org.springframework.content.commons.annotations.ContentLength;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import lombok.*;
-import org.springframework.content.commons.annotations.ContentId;
-import org.springframework.content.commons.annotations.ContentLength;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -25,7 +24,7 @@ public class ContentFile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private Date created = new Date();
+    private LocalDateTime created;
     private String summary;
 
     @ContentId
@@ -34,5 +33,7 @@ public class ContentFile {
     private long contentLength;
 
     private String contentMimeType = "text/plain";
+
+    private String personId;
 
 }

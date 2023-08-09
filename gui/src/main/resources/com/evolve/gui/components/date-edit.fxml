@@ -3,7 +3,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.layout.*?>
 <HBox xmlns="http://javafx.com/javafx/19"
-      stylesheets="@../../../../style.css"
+      stylesheets="@../../../../styles/style.css"
       xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" prefWidth="255.0" spacing="15.0"
       GridPane.columnIndex="1" GridPane.rowIndex="4" fx:controller="com.evolve.gui.components.DateEditController">
     <DatePicker fx:id="datePicker" editable="false" prefWidth="245.0" promptText="Data urodzenia"

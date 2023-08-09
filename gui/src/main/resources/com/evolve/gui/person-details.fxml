@@ -7,7 +7,7 @@
 
 <VBox VBox.vgrow="NEVER" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.evolve.gui.PersonDetailsController"
-      stylesheets="@../../../style.css">
+      stylesheets="@../../../styles/style.css">
 
     <HBox id="personMenu" alignment="BASELINE_LEFT" prefHeight="18.0" spacing="5.0" >
         <Button fx:id="btnSave" onAction="#saveButtonClicked" text="Zapisz" disable="true"/>
@@ -82,7 +82,7 @@
         <fx:include fx:id="authorizedController" source="components/authorized-persons-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="11" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="12" />
-        <fx:include fx:id="personStatusController" source="components/person-status.fxml" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+        <fx:include fx:id="personStatusController" source="person/status/person-status.fxml" GridPane.columnIndex="1" GridPane.rowIndex="12" />
 
     </GridPane>
     <padding>
