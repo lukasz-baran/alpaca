@@ -1,4 +1,4 @@
-package com.evolve.gui.components;
+package com.evolve.gui.person.address;
 
 import com.evolve.domain.Person;
 import com.evolve.gui.DialogWindow;

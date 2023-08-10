@@ -6,7 +6,7 @@
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.MenuItem?>
 <AnchorPane minHeight="0.0" minWidth="0.0" xmlns="http://javafx.com/javafx/19"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.components.PersonAddressesController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.address.PersonAddressesController">
     <TableView fx:id="addressesTable" layoutY="19.0" prefHeight="120.0" prefWidth="300.0"
                AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
         <columns>

@@ -1,4 +1,4 @@
-package com.evolve.gui.components;
+package com.evolve.gui.person.address;
 
 import com.evolve.domain.Person;
 import com.evolve.gui.EditableGuiElement;
@@ -119,30 +119,6 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
         return list.stream()
                 .map(AddressEntry::getPersonAddress)
                 .collect(Collectors.toList());
-    }
-
-
-    @AllArgsConstructor
-    @Setter
-    @ToString
-    public static class AddressEntry {
-
-        @Getter
-        private Person.PersonAddress personAddress;
-
-
-        public String getStreet() {
-            return personAddress.getStreet();
-        }
-
-        public String getPostalCode() {
-            return personAddress.getPostalCode();
-        }
-
-        public String getCity() {
-            return personAddress.getCity();
-        }
-
     }
 
 }

@@ -76,7 +76,7 @@
         <TextField fx:id="unitNumberTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="9" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Adresy" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="10" />
-        <fx:include fx:id="personAddresses" source="components/person-addresses-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+        <fx:include fx:id="personAddresses" source="person/address/person-addresses-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="10" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Upoważnieni" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="11" />
         <fx:include fx:id="authorizedController" source="person/authorizedPerson/authorized-persons-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="11" />
