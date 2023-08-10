@@ -79,7 +79,7 @@
         <fx:include fx:id="personAddresses" source="components/person-addresses-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="10" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Upoważnieni" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="11" />
-        <fx:include fx:id="authorizedController" source="components/authorized-persons-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+        <fx:include fx:id="authorizedController" source="person/authorizedPerson/authorized-persons-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="11" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="12" />
         <fx:include fx:id="personStatusController" source="person/status/person-status.fxml" GridPane.columnIndex="1" GridPane.rowIndex="12" />
