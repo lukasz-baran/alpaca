@@ -32,6 +32,7 @@ public class PersonEditService {
         person.setPhoneNumbers(command.phoneNumbers());
         person.setAddresses(command.addresses());
         person.setAuthorizedPersons(command.authorizedPersons());
+        person.setStatusChanges(command.personStatusChanges());
 
         final Person.Gender gender = PersonGenderDeducer.getGender(command.firstName());
         person.setGender(gender);

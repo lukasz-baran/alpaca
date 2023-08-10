@@ -177,7 +177,8 @@ public class PersonDetailsController extends EditableGuiElement
                 phoneNumbersController.getController().getNumbers(),
                 dobPicker.getController().getDate(),
                 personAddresses.getController().getPersonAddresses(),
-                authorizedController.getController().getAuthorizedPersons()
+                authorizedController.getController().getAuthorizedPersons(),
+                personStatusController.getController().getStatusChanges()
                 );
 
         log.info("Update person data: {}", command);

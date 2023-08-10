@@ -6,6 +6,7 @@ import com.evolve.domain.PersonStatusChange;
 import com.evolve.domain.PersonStatusDetails;
 import com.evolve.gui.EditableGuiElement;
 import com.evolve.gui.StageManager;
+import com.evolve.gui.person.authorizedPerson.AuthorizedPersonEntry;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -26,6 +27,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 
@@ -46,7 +48,6 @@ public class PersonStatusController extends EditableGuiElement implements Initia
     @FXML TableColumn<PersonHistoryStatusEntry, String> originalValueColumn;
 
     @FXML MenuItem addNewStatus;
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -130,6 +131,12 @@ public class PersonStatusController extends EditableGuiElement implements Initia
                     statusChanges.add(new PersonHistoryStatusEntry(personStatus));
                     statusHistoryTable.refresh();
                 });
+    }
+
+    public List<PersonStatusChange> getStatusChanges() {
+        return statusChanges.stream()
+                .map(PersonHistoryStatusEntry::getPersonStatusChange)
+                .collect(Collectors.toList());
     }
 
 }
