@@ -3,7 +3,6 @@ package com.evolve.gui.person.address;
 import com.evolve.domain.Person;
 import com.evolve.gui.DialogWindow;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -26,10 +25,7 @@ public class PersonAddressDialog extends DialogWindow<Person.PersonAddress> {
     public Optional<Person.PersonAddress> showDialog(Window window) {
         final Dialog<Person.PersonAddress> dialog = createDialog(window);
 
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        final GridPane grid = createGridPane();
 
         final TextField streetTextField = new TextField();
         streetTextField.setPromptText("Ulica");

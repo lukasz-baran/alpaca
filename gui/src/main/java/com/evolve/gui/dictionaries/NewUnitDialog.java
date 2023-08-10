@@ -3,7 +3,6 @@ package com.evolve.gui.dictionaries;
 import com.evolve.domain.Unit;
 import com.evolve.gui.DialogWindow;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
@@ -29,10 +28,7 @@ public class NewUnitDialog extends DialogWindow<Unit> {
     public Optional<Unit> showDialog(Window window) {
         final Dialog<Unit> dialog = createDialog(window);
 
-        final GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        final GridPane grid = createGridPane();
 
         final List<String> unitIds = IntStream.range(1, 99)
                 .boxed()

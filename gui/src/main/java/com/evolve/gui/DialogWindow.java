@@ -1,9 +1,11 @@
 package com.evolve.gui;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -48,5 +50,13 @@ public abstract class DialogWindow<ENTITY> {
         //dialog.setGraphic(new ImageView(this.getClass().getResource("login.png").toString()));
 
         return dialog;
+    }
+
+    protected final GridPane createGridPane() {
+        final GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+        return grid;
     }
 }

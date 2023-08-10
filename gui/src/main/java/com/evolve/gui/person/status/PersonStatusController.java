@@ -6,7 +6,6 @@ import com.evolve.domain.PersonStatusChange;
 import com.evolve.domain.PersonStatusDetails;
 import com.evolve.gui.EditableGuiElement;
 import com.evolve.gui.StageManager;
-import com.evolve.gui.person.authorizedPerson.AuthorizedPersonEntry;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -120,13 +119,13 @@ public class PersonStatusController extends EditableGuiElement implements Initia
     void setPersonStatusHistory(final List<PersonStatusChange> personStatusChanges) {
         statusChanges.clear();
         emptyIfNull(personStatusChanges)
-                .forEach(address -> statusChanges.add(new PersonHistoryStatusEntry(address)));
+                .forEach(status -> statusChanges.add(new PersonHistoryStatusEntry(status)));
 
         statusHistoryTable.setItems(statusChanges);
     }
 
     private void addNewStatus(ActionEvent actionEvent) {
-        PersonStatusEditDialog.newStatus().showDialog(stageManager.getWindow())
+        PersonStatusEditDialog.newStatus(getStatusChanges()).showDialog(stageManager.getWindow())
                 .ifPresent(personStatus -> {
                     statusChanges.add(new PersonHistoryStatusEntry(personStatus));
                     statusHistoryTable.refresh();

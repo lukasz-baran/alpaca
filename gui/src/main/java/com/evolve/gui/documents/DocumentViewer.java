@@ -24,6 +24,9 @@ import java.util.ResourceBundle;
 
 import static com.evolve.gui.StageManager.APPLICATION_ICON;
 
+/**
+ * The code in this class is copied from <a href="https://stackoverflow.com/a/57176959/231290" target="_blank">this StackOverflow answer</a>.
+ */
 @Getter
 @Component
 @FxmlView("document-viewer.fxml")
@@ -53,9 +56,6 @@ public class DocumentViewer implements Initializable {
 
         final InputStream imageInputStream = contentStoreService.getContent(documentEntry.getId());
         final Image image = new Image(imageInputStream);
-
-        // TODO: the following is based on the
-        // https://stackoverflow.com/a/57176959/231290
 
         // simple displays ImageView the image as is
         ImageView iv1 = new ImageView();

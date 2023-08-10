@@ -3,9 +3,11 @@ package com.evolve.gui.person.authorizedPerson;
 import com.evolve.domain.Person;
 import com.evolve.gui.DialogWindow;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
 
@@ -15,7 +17,7 @@ public class AuthorizedPersonDialog extends DialogWindow<Person.AuthorizedPerson
 
     private final Person.AuthorizedPerson authorizedPerson;
 
-    public AuthorizedPersonDialog( Person.AuthorizedPerson authorizedPerson) {
+    public AuthorizedPersonDialog(Person.AuthorizedPerson authorizedPerson) {
         super("Osoba upoważniona", "Wprowadź dane osoby upoważnionej");
         this.authorizedPerson = authorizedPerson;
     }
@@ -24,10 +26,7 @@ public class AuthorizedPersonDialog extends DialogWindow<Person.AuthorizedPerson
     public Optional<Person.AuthorizedPerson> showDialog(Window window) {
         final Dialog<Person.AuthorizedPerson> dialog = createDialog(window);
 
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        final GridPane grid = createGridPane();
 
 //        private String firstName;
 //        private String lastName;
@@ -77,7 +76,6 @@ public class AuthorizedPersonDialog extends DialogWindow<Person.AuthorizedPerson
         // Request focus on the username field by default.
         Platform.runLater(firstNameTextField::requestFocus);
 
-        // Convert the result to a username-password-pair when the login button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
                 return new Person.AuthorizedPerson(

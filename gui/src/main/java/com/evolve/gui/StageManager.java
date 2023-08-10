@@ -120,4 +120,12 @@ public class StageManager {
         alert.initOwner(primaryStage.getScene().getWindow());
         alert.showAndWait();
     }
+
+    public static void displayInformation(Window window, String message) {
+        final Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
+        alert.setTitle("Warning");
+        alert.setHeaderText(null);
+        alert.initOwner(window);
+        alert.show();
+    }
 }

@@ -27,7 +27,7 @@ public class NewPersonDialogShould {
             Button openDialogButton = new Button("Open Dialog");
             openDialogButton.setId("openDialog");
             openDialogButton.setOnAction(event -> {
-                PersonStatusEditDialog personStatusEditDialog = new PersonStatusEditDialog(null, true);
+                PersonStatusEditDialog personStatusEditDialog = new PersonStatusEditDialog(null, new AcceptAnyValidator(), true);
                 personStatusEditDialog.showDialog(new Stage());
             });
             StackPane root = new StackPane(openDialogButton);

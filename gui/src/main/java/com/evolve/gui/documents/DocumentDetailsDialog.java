@@ -3,7 +3,6 @@ package com.evolve.gui.documents;
 import com.evolve.gui.DialogWindow;
 import com.evolve.gui.StageManager;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -33,10 +32,7 @@ public class DocumentDetailsDialog extends DialogWindow<FilePathAndDescription> 
     public Optional<FilePathAndDescription> showDialog(Window window) {
         final Dialog<FilePathAndDescription> dialog = createDialog(window);
 
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        final GridPane grid = createGridPane();
 
         final HBox group = new HBox();
         final TextField filePathTextField = new TextField();

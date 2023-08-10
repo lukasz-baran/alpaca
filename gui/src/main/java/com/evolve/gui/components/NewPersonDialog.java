@@ -13,7 +13,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
@@ -42,10 +41,7 @@ public class NewPersonDialog extends DialogWindow<Person> {
     public Optional<Person> showDialog(Window window) {
         final Dialog<Person> dialog = createDialog(window);
 
-        final GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        final GridPane grid = createGridPane();
 
         final TextField firstNameTextField = new TextField();
         firstNameTextField.setPromptText("Imię");

@@ -2,16 +2,22 @@ package com.evolve.gui.person.status;
 
 import com.evolve.domain.PersonStatusChange;
 import com.evolve.gui.DialogWindow;
+import com.evolve.gui.StageManager;
 import com.evolve.gui.components.SecureLocalDateStringConverter;
+import com.evolve.validation.ValidationResult;
+import com.evolve.validation.Validator;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -21,20 +27,25 @@ public class PersonStatusEditDialog extends DialogWindow<PersonStatusChange> {
     public static final String EVENT_TYPE_COMBO_BOX_ID = "eventTypeComboBox";
     private final PersonStatusChange editedValue;
     private final boolean isNewStatus;
+    private final Validator<PersonStatusChange> addingNewStatusValidator;
+
     @Getter
     Dialog<PersonStatusChange> dialog;
 
-    public static PersonStatusEditDialog newStatus() {
-        return new PersonStatusEditDialog(null);
+    public static PersonStatusEditDialog newStatus(List<PersonStatusChange> existingStatuses) {
+        return new PersonStatusEditDialog(null, new AddingNewStatusValidator(existingStatuses), false);
     }
 
     public PersonStatusEditDialog(PersonStatusChange editedValue) {
-        this(editedValue, false);
+        this(editedValue, new AcceptAnyValidator(), false);
     }
 
-    PersonStatusEditDialog(PersonStatusChange editedValue, boolean isTestMode) {
+    PersonStatusEditDialog(PersonStatusChange editedValue,
+            Validator<PersonStatusChange> validator,
+            boolean isTestMode) {
         super("Status", createHeader(editedValue), isTestMode);
         this.editedValue = editedValue;
+        this.addingNewStatusValidator = validator;
         this.isNewStatus = editedValue == null;
     }
 
@@ -42,10 +53,7 @@ public class PersonStatusEditDialog extends DialogWindow<PersonStatusChange> {
     public Optional<PersonStatusChange> showDialog(Window window) {
         this.dialog = createDialog(window);
 
-        final GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        final GridPane grid = createGridPane();
 
         final ComboBox<PersonStatusChange.EventType> eventTypeComboBox = new ComboBox<>();
         eventTypeComboBox.setId(EVENT_TYPE_COMBO_BOX_ID);
@@ -78,24 +86,13 @@ public class PersonStatusEditDialog extends DialogWindow<PersonStatusChange> {
         final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
 
-        eventTypeComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            setButtonsState(eventTypeComboBox, whenDatePicker, originalValueTextField);
-        });
-
-        whenDatePicker.valueProperty().addListener((options, oldValue, newValue) -> {
-            setButtonsState(eventTypeComboBox, whenDatePicker, originalValueTextField);
-        });
-
-        originalValueTextField.textProperty().addListener(value -> {
-            setButtonsState(eventTypeComboBox, whenDatePicker, originalValueTextField);
-        });
+        registerEventHandlers(window, saveButton, eventTypeComboBox, whenDatePicker, originalValueTextField);
 
         dialog.getDialogPane().setContent(grid);
 
         // Request focus on the username field by default.
         Platform.runLater(eventTypeComboBox::requestFocus);
 
-        // Convert the result to a username-password-pair when the login button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
 
@@ -119,6 +116,28 @@ public class PersonStatusEditDialog extends DialogWindow<PersonStatusChange> {
         return dialog.showAndWait();
     }
 
+    void registerEventHandlers(
+            Window window,
+            Node saveButton,
+            ComboBox<PersonStatusChange.EventType> eventTypeComboBox,
+            DatePicker whenDatePicker,
+            TextField originalValueTextField) {
+        saveButton.addEventFilter(ActionEvent.ACTION,
+            new SaveButtonEventHandler(eventTypeComboBox, whenDatePicker, originalValueTextField, addingNewStatusValidator, window));
+
+        eventTypeComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            setButtonsState(eventTypeComboBox, whenDatePicker, originalValueTextField);
+        });
+
+        whenDatePicker.valueProperty().addListener((options, oldValue, newValue) -> {
+            setButtonsState(eventTypeComboBox, whenDatePicker, originalValueTextField);
+        });
+
+        originalValueTextField.textProperty().addListener(value -> {
+            setButtonsState(eventTypeComboBox, whenDatePicker, originalValueTextField);
+        });
+    }
+
     void setButtonsState(ComboBox<PersonStatusChange.EventType> eventTypeComboBox,
             DatePicker whenDatePicker,
             TextField originalValueTextField) {
@@ -140,4 +159,30 @@ public class PersonStatusEditDialog extends DialogWindow<PersonStatusChange> {
                 .map(anything -> "Edytuj status")
                 .orElse("Dodaj nowy status");
     }
+
+    @RequiredArgsConstructor
+    public static class SaveButtonEventHandler implements EventHandler<ActionEvent> {
+        private final ComboBox<PersonStatusChange.EventType> eventTypeComboBox;
+        private final DatePicker whenDatePicker;
+        private final TextField originalValueTextField;
+        private final Validator<PersonStatusChange> addingNewStatusValidator;
+        private final Window window;
+
+        @Override
+        public void handle(ActionEvent event) {
+            final PersonStatusChange actualEntry = new PersonStatusChange(eventTypeComboBox.getValue(),
+                    whenDatePicker.getValue(), originalValueTextField.getText());
+
+            final ValidationResult validationResult = addingNewStatusValidator.validate(actualEntry);
+            if (!validationResult.isValid()) {
+                StageManager.displayInformation(window, validationResult
+                        .getErrors().stream().findFirst().orElse("Nieznany błąd walidacji - nie można zapisać statusu"));
+                // we should consume the event to prevent closing the dialog
+                event.consume();
+            }
+        }
+    }
+
 }
+
+

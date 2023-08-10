@@ -2,7 +2,6 @@ package com.evolve.gui.person.phoneNumber;
 
 import com.evolve.gui.DialogWindow;
 import javafx.application.Platform;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -24,10 +23,7 @@ public class PhoneNumberDialog extends DialogWindow<String> {
     public Optional<String> showDialog(Window window) {
         final Dialog<String> dialog = createDialog(window);
 
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        final GridPane grid = createGridPane();
 
         final TextField phoneNumberTextField = new TextField();
         phoneNumberTextField.setPromptText("Numer telefonu");

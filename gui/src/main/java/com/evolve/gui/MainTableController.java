@@ -80,9 +80,7 @@ public class MainTableController implements Initializable, ApplicationListener<P
         final List<PersonListView> persons = personsService.fetchList(
                 PersonLookupCriteria.builder().sortBy(sortBy).upDown(upDown).build());
 
-        // TODO set pagination
-        final int numberOfPersons = persons.size();
-        log.info("total person number {}", numberOfPersons);
+        log.info("total person number {}", persons.size());
 
         personListModel.feed(persons);
 
