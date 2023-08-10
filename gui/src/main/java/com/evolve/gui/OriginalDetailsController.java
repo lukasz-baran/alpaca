@@ -1,6 +1,8 @@
 package com.evolve.gui;
 
 import com.evolve.domain.Person;
+import com.evolve.gui.person.list.PersonListModel;
+import com.evolve.gui.person.list.PersonModel;
 import com.evolve.services.PersonsService;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;

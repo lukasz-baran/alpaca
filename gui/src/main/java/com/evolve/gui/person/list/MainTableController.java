@@ -1,8 +1,9 @@
-package com.evolve.gui;
+package com.evolve.gui.person.list;
 
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonLookupCriteria;
+import com.evolve.gui.StageManager;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.importing.event.DbfImportCompletedEvent;
 import com.evolve.services.PersonsService;

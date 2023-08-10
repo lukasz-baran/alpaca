@@ -1,4 +1,4 @@
-package com.evolve.gui;
+package com.evolve.gui.person.list;
 
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;

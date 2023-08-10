@@ -38,7 +38,7 @@ public class NewPersonDialogShould {
     }
 
     @Test
-    void makeSaveButtonEa(FxRobot robot) {
+    void enableSaveButtonOnlyWhenRequiredControlsAreFilled(FxRobot robot) {
         // given
         robot.clickOn("#openDialog");
         FxRobot dialogWindow = robot.targetWindow("Status");

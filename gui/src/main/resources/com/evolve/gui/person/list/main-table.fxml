@@ -6,7 +6,7 @@
 <AnchorPane fx:id="personTableAnchorPane"
         minHeight="0.0" minWidth="100.0" prefHeight="160.0"
             prefWidth="100.0" xmlns="http://javafx.com/javafx/19"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.MainTableController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.list.MainTableController">
     <children>
         <TableView fx:id="personTable" layoutX="10.0" layoutY="10.0"
                    maxWidth="1000.0" prefHeight="363.0" prefWidth="279.0"

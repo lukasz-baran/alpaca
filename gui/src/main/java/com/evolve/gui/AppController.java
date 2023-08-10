@@ -4,6 +4,8 @@ import com.evolve.gui.components.NewPersonDialog;
 import com.evolve.gui.dictionaries.UnitsController;
 import com.evolve.gui.documents.DocumentsController;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
+import com.evolve.gui.person.list.MainTableController;
+import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.importing.importDbf.ImportDbfService;
 import com.evolve.importing.importDoc.ImportAlphanumeric;
 import com.evolve.importing.importDoc.ImportPeople;

@@ -78,11 +78,7 @@ public class StageManager {
     }
 
     public void displayInformation(String message) {
-        final Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
-        alert.setTitle("Warning");
-        alert.setHeaderText(null);
-        alert.initOwner(primaryStage.getScene().getWindow());
-        alert.show();
+        displayInformation(primaryStage.getScene().getWindow(), message);
     }
 
     public boolean displayConfirmation(String question) {

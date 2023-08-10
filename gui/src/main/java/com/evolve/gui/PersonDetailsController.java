@@ -7,6 +7,8 @@ import com.evolve.gui.components.*;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.address.PersonAddressesController;
 import com.evolve.gui.person.authorizedPerson.AuthorizedPersonsController;
+import com.evolve.gui.person.list.PersonListModel;
+import com.evolve.gui.person.list.PersonModel;
 import com.evolve.gui.person.phoneNumber.PhoneNumbersController;
 import com.evolve.gui.person.status.PersonStatusController;
 import com.evolve.services.PersonEditService;
