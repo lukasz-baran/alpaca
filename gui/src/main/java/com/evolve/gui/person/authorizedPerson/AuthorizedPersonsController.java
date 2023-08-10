@@ -110,26 +110,4 @@ public class AuthorizedPersonsController extends EditableGuiElement implements I
                 .collect(Collectors.toList());
     }
 
-    @Setter
-    @EqualsAndHashCode
-    @AllArgsConstructor
-    public static class AuthorizedPersonEntry {
-
-        @Getter
-        private Person.AuthorizedPerson authorizedPerson;
-
-        public String getFirstName() {
-            return authorizedPerson.getFirstName();
-        }
-
-        public String getLastName() {
-            return authorizedPerson.getLastName();
-        }
-
-        public String getRelation() {
-            return authorizedPerson.getRelation();
-        }
-
-    }
-
 }
