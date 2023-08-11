@@ -3,7 +3,7 @@ package com.evolve.gui.person.status;
 import com.evolve.domain.PersonStatusChange;
 import com.evolve.gui.DialogWindow;
 import com.evolve.gui.StageManager;
-import com.evolve.gui.components.SecureLocalDateStringConverter;
+import com.evolve.alpaca.util.LocalDateStringConverter;
 import com.evolve.validation.ValidationResult;
 import com.evolve.validation.Validator;
 import javafx.application.Platform;
@@ -59,7 +59,7 @@ public class PersonStatusEditDialog extends DialogWindow<PersonStatusChange> {
         eventTypeComboBox.setId(EVENT_TYPE_COMBO_BOX_ID);
         eventTypeComboBox.getItems().addAll(PersonStatusChange.EventType.values());
 
-        final SecureLocalDateStringConverter whenConverter = new SecureLocalDateStringConverter();
+        final LocalDateStringConverter whenConverter = new LocalDateStringConverter();
         final DatePicker whenDatePicker = new DatePicker();
         whenDatePicker.setId(WHEN_DATE_PICKER_ID);
         whenDatePicker.setConverter(whenConverter);

@@ -1,9 +1,11 @@
 package com.evolve.gui;
 
 import com.evolve.EditPersonDataCommand;
+import com.evolve.alpaca.util.LocalDateStringConverter;
 import com.evolve.domain.Person;
 import com.evolve.domain.Unit;
-import com.evolve.gui.components.*;
+import com.evolve.gui.components.GenderComboboxController;
+import com.evolve.gui.components.RegistryNumbersController;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.address.PersonAddressesController;
 import com.evolve.gui.person.authorizedPerson.AuthorizedPersonsController;
@@ -21,6 +23,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -55,9 +58,6 @@ public class PersonDetailsController extends EditableGuiElement
     private final FxControllerAndView<AuthorizedPersonsController, AnchorPane> authorizedController;
 
     @FXML
-    private final FxControllerAndView<DateEditController, HBox> dobPicker;
-
-    @FXML
     private final FxControllerAndView<PhoneNumbersController, AnchorPane> phoneNumbersController;
 
     @FXML
@@ -76,6 +76,7 @@ public class PersonDetailsController extends EditableGuiElement
     @FXML TextField firstNameTextField;
     @FXML TextField secondNameTextField;
     @FXML TextField lastNameTextField;
+    @FXML TextField dobTextField;
 
     @FXML TextField emailTextField;
     @FXML TextField unitNumberTextField;
@@ -109,9 +110,12 @@ public class PersonDetailsController extends EditableGuiElement
         phoneNumbersController.getController().setPhoneNumbers(person.getPhoneNumbers());
 
         registryNumbers.getController().setPerson(person);
+
         personGender.getController().setPersonGender(person);
 
-        dobPicker.getController().setDate(person.getDob());
+        dobTextField.setText(LocalDateStringConverter.localDateToString(person.getDob()));
+        dobTextField.setEditable(false); // DOB is not editable using during person details edition
+        dobTextField.setTooltip(new Tooltip("Data urodzenia jest ustalana na podstawie listy statusów."));
 
         Optional.ofNullable(person.getUnitNumber())
                 .ifPresentOrElse(unitNumber -> this.unitNumberTextField.setText(
@@ -146,8 +150,6 @@ public class PersonDetailsController extends EditableGuiElement
         // FIXME person gender cannot be edited!
         personGender.getController().setEditable(editable);
 
-        dobPicker.getController().setEditable(editable);
-
         personAddresses.getController().setEditable(editable);
         authorizedController.getController().setEditable(editable);
         phoneNumbersController.getController().setEditable(editable);
@@ -177,7 +179,6 @@ public class PersonDetailsController extends EditableGuiElement
                 secondNameTextField.getText(),
                 emailTextField.getText(),
                 phoneNumbersController.getController().getNumbers(),
-                dobPicker.getController().getDate(),
                 personAddresses.getController().getPersonAddresses(),
                 authorizedController.getController().getAuthorizedPersons(),
                 personStatusController.getController().getStatusChanges()

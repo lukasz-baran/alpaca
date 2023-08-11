@@ -1,4 +1,4 @@
-package com.evolve.gui.components;
+package com.evolve.alpaca.util;
 
 import javafx.util.StringConverter;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 @Slf4j
-public class SecureLocalDateStringConverter extends StringConverter<LocalDate> {
+public class LocalDateStringConverter extends StringConverter<LocalDate> {
     public static final String DATE_PATTERN = "dd.MM.yyyy";
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_PATTERN);
 
@@ -19,13 +19,17 @@ public class SecureLocalDateStringConverter extends StringConverter<LocalDate> {
         return hasParseError;
     }
 
-    @Override
-    public String toString(LocalDate localDate) {
+    public static String localDateToString(LocalDate localDate) {
         log.info("toString called {}", localDate);
         if (localDate == null) {
             return "";
         }
         return DATE_FORMATTER.format(localDate);
+    }
+
+    @Override
+    public String toString(LocalDate localDate) {
+        return localDateToString(localDate);
     }
 
     @Override

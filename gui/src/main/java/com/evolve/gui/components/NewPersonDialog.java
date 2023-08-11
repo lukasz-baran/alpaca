@@ -1,5 +1,6 @@
 package com.evolve.gui.components;
 
+import com.evolve.alpaca.util.LocalDateStringConverter;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatusChange;
 import com.evolve.domain.RegistryNumber;
@@ -52,13 +53,13 @@ public class NewPersonDialog extends DialogWindow<Person> {
         personIdTextField.setPromptText("ID");
         personIdTextField.setEditable(false);
 
-        final SecureLocalDateStringConverter joinedConverter = new SecureLocalDateStringConverter();
+        final LocalDateStringConverter joinedConverter = new LocalDateStringConverter();
         final DatePicker joinedDatePicker = new DatePicker();
         joinedDatePicker.setConverter(joinedConverter);
         joinedDatePicker.setPromptText("Data dołączenia");
         joinedDatePicker.getEditor().setOnKeyTyped(new DatePickerKeyEventHandler(joinedConverter, joinedDatePicker));
 
-        final SecureLocalDateStringConverter dobConverter = new SecureLocalDateStringConverter();
+        final LocalDateStringConverter dobConverter = new LocalDateStringConverter();
         final DatePicker dobDatePicker = new DatePicker();
         dobDatePicker.setConverter(dobConverter);
         dobDatePicker.setPromptText("Data urodzenia");
@@ -137,7 +138,7 @@ public class NewPersonDialog extends DialogWindow<Person> {
 
                 final LocalDate dob = dobDatePicker.getValue();
                 if (dob != null) {
-                    newPerson.updatePersonDob(dob);
+                    newPerson.addOrUpdateStatusChange(PersonStatusChange.EventType.BORN, dob);
                 }
 
                 final LocalDate joined = joinedDatePicker.getValue();
@@ -189,7 +190,7 @@ public class NewPersonDialog extends DialogWindow<Person> {
 
     @RequiredArgsConstructor
     static class DatePickerKeyEventHandler implements EventHandler<KeyEvent> {
-        private final SecureLocalDateStringConverter converter;
+        private final LocalDateStringConverter converter;
         private final DatePicker datePicker;
 
         @Override

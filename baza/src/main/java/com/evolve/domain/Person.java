@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.collections4.ListUtils.emptyIfNull;
+
 @Builder
 @Data
 @NoArgsConstructor
@@ -63,23 +65,13 @@ public class Person implements Serializable {
 
     private Map<String, Object> rawData;
 
-    public void updatePersonDob(LocalDate dob) {
-        this.dob = dob;
-        if (statusChanges == null) {
-            statusChanges = new ArrayList<>();
-        }
-        statusChanges.stream()
+    public void setStatusChanges(List<PersonStatusChange> statusChanges) {
+        this.statusChanges = statusChanges;
+        emptyIfNull(statusChanges).stream()
                 .filter(statusChange -> statusChange.getEventType() == PersonStatusChange.EventType.BORN)
                 .findFirst()
-                .ifPresentOrElse(
-                        statusChange -> statusChange.setWhen(dob),
-                        () -> statusChanges.add(PersonStatusChange.builder()
-                                .eventType(PersonStatusChange.EventType.BORN)
-                                .when(dob)
-                                .build())
-                );
+                .ifPresent(dobStatusChange -> this.dob = dobStatusChange.getWhen());
     }
-
 
     @Getter
     @RequiredArgsConstructor
@@ -159,6 +151,7 @@ public class Person implements Serializable {
                 .build();
 
         if (eventType == PersonStatusChange.EventType.BORN) {
+            this.dob = when;
             this.statusChanges.add(0, newPersonStatusChange);
         } else {
             this.statusChanges.add(newPersonStatusChange);
