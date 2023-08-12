@@ -1,40 +1,29 @@
 package com.evolve.gui.person.status;
 
 import com.evolve.domain.PersonStatusChange;
+import com.evolve.gui.DialogTestBase;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
-import org.testfx.api.FxToolkit;
-import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.time.LocalDate;
 
 import static org.testfx.assertions.api.Assertions.assertThat;
 
-@ExtendWith(ApplicationExtension.class)
-public class NewPersonDialogShould {
+public class NewPersonStatusDialogShould extends DialogTestBase {
 
-    @BeforeEach
-    public void setup() throws Exception {
-        FxToolkit.setupSceneRoot(() -> {
-            Button openDialogButton = new Button("Open Dialog");
-            openDialogButton.setId("openDialog");
-            openDialogButton.setOnAction(event -> {
-                PersonStatusEditDialog personStatusEditDialog = new PersonStatusEditDialog(null, new AcceptAnyValidator(), true);
-                personStatusEditDialog.showDialog(new Stage());
-            });
-            StackPane root = new StackPane(openDialogButton);
-            root.setPrefSize(500, 500);
-            return new StackPane(root);
-        });
-        FxToolkit.setupStage(Stage::show);
+    @Override
+    protected EventHandler<ActionEvent> createTestedDialog() {
+        return event -> {
+            PersonStatusEditDialog personStatusEditDialog = new PersonStatusEditDialog(null, new AcceptAnyValidator(), true);
+            personStatusEditDialog.showDialog(new Stage());
+        };
     }
 
     @Test
