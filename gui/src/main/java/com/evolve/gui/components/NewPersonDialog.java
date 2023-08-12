@@ -1,5 +1,6 @@
 package com.evolve.gui.components;
 
+import com.evolve.alpaca.util.DatePickerKeyEventHandler;
 import com.evolve.alpaca.util.LocalDateStringConverter;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatusChange;
@@ -13,13 +14,10 @@ import com.sun.javafx.collections.ImmutableObservableList;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -185,23 +183,6 @@ public class NewPersonDialog extends DialogWindow<Person> {
         @Override
         public String toString() {
             return unitNumber + " - " + unitName;
-        }
-    }
-
-    @RequiredArgsConstructor
-    static class DatePickerKeyEventHandler implements EventHandler<KeyEvent> {
-        private final LocalDateStringConverter converter;
-        private final DatePicker datePicker;
-
-        @Override
-        public void handle(KeyEvent event) {
-            final String textValue = datePicker.getEditor().getText();
-            datePicker.setStyle("");
-            converter.fromString(textValue);
-            if (StringUtils.isNotBlank(textValue) && converter.hasParseError()) {
-                datePicker.setStyle("-fx-border-color: red");
-            }
-
         }
     }
 

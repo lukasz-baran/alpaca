@@ -1,5 +1,6 @@
 package com.evolve.gui.person.status;
 
+import com.evolve.alpaca.util.DatePickerKeyEventHandler;
 import com.evolve.domain.PersonStatusChange;
 import com.evolve.gui.DialogWindow;
 import com.evolve.gui.StageManager;
@@ -64,6 +65,7 @@ public class PersonStatusEditDialog extends DialogWindow<PersonStatusChange> {
         whenDatePicker.setId(WHEN_DATE_PICKER_ID);
         whenDatePicker.setConverter(whenConverter);
         whenDatePicker.setPromptText("Data");
+        whenDatePicker.getEditor().setOnKeyTyped(new DatePickerKeyEventHandler(whenConverter, whenDatePicker));
 
         final TextField originalValueTextField = new TextField();
         originalValueTextField.setId(ORIGINAL_VALUE_TEXT_ID);
