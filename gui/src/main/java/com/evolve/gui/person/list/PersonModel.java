@@ -10,6 +10,8 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
+
 @SuppressWarnings("unused")
 @ToString
 public class PersonModel {
@@ -97,6 +99,22 @@ public class PersonModel {
         if (updatedPerson.getStatus() != null && updatedPerson.getStatus().getStatus() != null) {
             this.status.set(updatedPerson.getStatus().getStatus().name());
         }
+    }
 
+    public boolean matches(String filteredText) {
+        if (filteredText == null || filteredText.isEmpty()) {
+            return true;
+        }
+
+        final String lowerCaseFilter = filteredText.toLowerCase();
+        if (trimToEmpty(getFirstName()).toLowerCase().contains(lowerCaseFilter)) {
+            return true;
+        }
+
+        if (trimToEmpty(getLastName()).toLowerCase().contains(lowerCaseFilter)) {
+            return true;
+        }
+
+        return trimToEmpty(getId()).toLowerCase().contains(lowerCaseFilter);
     }
 }

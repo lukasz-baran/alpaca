@@ -7,6 +7,7 @@ import com.evolve.domain.PersonStatusChange;
 import com.evolve.domain.RegistryNumber;
 import com.evolve.domain.Unit;
 import com.evolve.gui.DialogWindow;
+import com.evolve.gui.person.UnitNumberItem;
 import com.evolve.importing.importDbf.deducers.PersonGenderDeducer;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
@@ -122,7 +123,7 @@ public class NewPersonDialog extends DialogWindow<Person> {
             if (dialogButton == saveButtonType) {
 
                 final String unitNumber = Optional.ofNullable(unitNumberCombo.getValue())
-                        .map(item -> item.unitNumber)
+                        .map(UnitNumberItem::unitNumber)
                         .orElse(null);
 
                 final Person newPerson = Person.builder()
@@ -176,14 +177,4 @@ public class NewPersonDialog extends DialogWindow<Person> {
 
         saveButton.setDisable(disable);
     }
-
-
-    public record UnitNumberItem(String unitNumber, String unitName) {
-
-        @Override
-        public String toString() {
-            return unitNumber + " - " + unitName;
-        }
-    }
-
 }

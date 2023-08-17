@@ -6,6 +6,7 @@ import com.evolve.gui.documents.DocumentsController;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.list.MainTableController;
 import com.evolve.gui.person.list.PersonListModel;
+import com.evolve.gui.person.list.search.SearchPersonDialog;
 import com.evolve.importing.importDbf.ImportDbfService;
 import com.evolve.importing.importDoc.ImportAlphanumeric;
 import com.evolve.importing.importDoc.ImportPeople;
@@ -63,6 +64,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     public Button btnEdit;
     public Button btnDelete;
     public Button btnExport;
+    public Button btnSearch;
 
     @FXML Tab tabPersonDetails;
     @FXML Tab tabOriginalDetails;
@@ -132,6 +134,15 @@ public class AppController implements Initializable, ApplicationListener<PersonE
         disableControls(true);
     }
 
+    public void searchButtonClicked(ActionEvent actionEvent) {
+        new SearchPersonDialog(unitsService)
+                .showDialog(stageManager.getWindow())
+                .ifPresent(personSearchCriteria -> {
+                    System.out.println(personSearchCriteria);
+                    mainTableController.showSearchCriteria(personSearchCriteria);
+                });
+    }
+
     public void importDbfClicked(ActionEvent actionEvent) {
         final File file = stageManager.getFileChooser(StageManager.DBF_EXTENSION_FILTER);
         if (file != null) {
@@ -156,7 +167,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
         btnDelete.setDisable(disable);
         btnNew.setDisable(disable);
         btnExport.setDisable(disable);
+        btnSearch.setDisable(disable);
     }
-
 
 }

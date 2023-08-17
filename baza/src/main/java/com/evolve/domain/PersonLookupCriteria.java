@@ -16,4 +16,6 @@ public class PersonLookupCriteria {
 
     private String sortBy;
     private Boolean upDown;
+
+    private String unitNumber;
 }

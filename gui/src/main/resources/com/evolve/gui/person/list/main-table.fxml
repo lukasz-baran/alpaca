@@ -3,11 +3,21 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.text.Text?>
 <AnchorPane fx:id="personTableAnchorPane"
-        minHeight="0.0" minWidth="100.0" prefHeight="160.0"
+            minHeight="0.0" minWidth="100.0" prefHeight="160.0"
             prefWidth="100.0" xmlns="http://javafx.com/javafx/19"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.list.MainTableController">
     <children>
+        <HBox fx:id="searchCriteriaHBox" prefHeight="18.0" alignment="TOP_CENTER"
+              prefWidth="640.0" spacing="5.0" AnchorPane.bottomAnchor="5.0"
+              AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" visible="false">
+            <TextFlow>
+                <Text fx:id="textSearchCriteria" />
+                <Hyperlink fx:id="resetSearchHyperlink" text="Wyczyść"/>
+            </TextFlow>
+        </HBox>
         <TableView fx:id="personTable" layoutX="10.0" layoutY="10.0"
                    maxWidth="1000.0" prefHeight="363.0" prefWidth="279.0"
                    AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0"

@@ -5,6 +5,7 @@ import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
+import com.evolve.gui.person.list.search.PersonSearchCriteria;
 import com.evolve.importing.event.DbfImportCompletedEvent;
 import com.evolve.services.PersonsService;
 import javafx.beans.property.BooleanProperty;
@@ -13,16 +14,14 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -54,12 +53,16 @@ public class MainTableController implements Initializable, ApplicationListener<P
     @FXML TableColumn<PersonModel, String> statusColumn;
     @FXML TableColumn<PersonModel, Long> registryNumberColumn;
 
+    @FXML HBox searchCriteriaHBox;
+    @FXML Text textSearchCriteria;
+    @FXML Hyperlink resetSearchHyperlink;
+
     @FXML TextField filterField;
     @FXML Button btnClearFilter;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        populateTable("id", true);
+        populateTable("id", true, PersonSearchCriteria.empty());
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
@@ -75,44 +78,24 @@ public class MainTableController implements Initializable, ApplicationListener<P
         personTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             personListModel.getCurrentPersonProperty().setValue(newValue);
         });
+
+        resetSearchHyperlink.setOnAction(event -> showSearchCriteria(PersonSearchCriteria.empty()));
     }
 
-    void populateTable(String sortBy, boolean upDown) {
+    void populateTable(String sortBy, boolean upDown, PersonSearchCriteria criteria) {
         final List<PersonListView> persons = personsService.fetchList(
-                PersonLookupCriteria.builder().sortBy(sortBy).upDown(upDown).build());
+                PersonLookupCriteria.builder()
+                        .sortBy(sortBy)
+                        .upDown(upDown)
+                        .unitNumber(criteria.unitNumber())
+                        .build());
 
         log.info("total person number {}", persons.size());
 
-        personListModel.feed(persons);
+        final FilteredList<PersonModel> filteredData = personListModel.feed(persons);
 
-        FilteredList<PersonModel> filteredData = personListModel.getFilteredList();
-
-        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(person -> {
-                // If filter text is empty, display all persons.
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-
-                // Compare first name and last name of every person with filter text.
-                String lowerCaseFilter = newValue.toLowerCase();
-
-                String firstName = StringUtils.trimToEmpty(person.getFirstName()).toLowerCase();
-                if (firstName.contains(lowerCaseFilter)) {
-                    return true;
-                }
-
-                if (StringUtils.trimToEmpty(person.getLastName()).toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
-                }
-
-                if (StringUtils.trimToEmpty(person.getId()).toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
-                }
-
-                return false;
-            });
-        });
+        filterField.textProperty().addListener((observable, oldValue, newValue) ->
+                filteredData.setPredicate(person -> person.matches(newValue)));
 
         SortedList<PersonModel> sortedData = new SortedList<>(filteredData);
 
@@ -127,7 +110,7 @@ public class MainTableController implements Initializable, ApplicationListener<P
         log.info("import: " + importCompleted.getMessage());
         stageManager.displayInformation(importCompleted.getMessage());
 
-        populateTable("id", true);
+        populateTable("id", true, PersonSearchCriteria.empty());
     }
 
     @Override
@@ -152,5 +135,14 @@ public class MainTableController implements Initializable, ApplicationListener<P
 
     public void disableControls(boolean disable) {
         disabledProperty.setValue(disable);
+    }
+
+    public void showSearchCriteria(PersonSearchCriteria criteria) {
+        final boolean show = !criteria.isEmpty();
+        searchCriteriaHBox.setVisible(show);
+        final String text = "Kryteria: " + criteria;
+        textSearchCriteria.setText(text);
+        AnchorPane.setTopAnchor(personTable, show ? 35.0 : 5);
+        populateTable("id", true, criteria);
     }
 }

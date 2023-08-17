@@ -42,14 +42,17 @@ public abstract class DialogWindow<ENTITY> {
         dialog.getDialogPane().setId("dialogPane");
         dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
 
-        Button okButton = (Button) dialog.getDialogPane().lookupButton(saveButtonType);
-        okButton.setId("saveButton");
+        findSubmitButton(dialog).setId("saveButton");
 
 
         // Set the icon (must be included in the project).
         //dialog.setGraphic(new ImageView(this.getClass().getResource("login.png").toString()));
 
         return dialog;
+    }
+
+    protected final Button findSubmitButton(Dialog<ENTITY> dialog) {
+        return (Button) dialog.getDialogPane().lookupButton(saveButtonType);
     }
 
     protected final GridPane createGridPane() {

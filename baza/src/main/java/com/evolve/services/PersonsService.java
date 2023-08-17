@@ -38,9 +38,15 @@ public class PersonsService implements InitializingBean, FindPerson {
     public List<Person> fetch(PersonLookupCriteria criteria) {
         final ObjectRepository<Person> personRepo = nitrite.getRepository(Person.class);
 
+        if (StringUtils.isNotEmpty(criteria.getUnitNumber())) {
+            return personRepo.find(where("unitNumber").eq(criteria.getUnitNumber()))
+                    .sort("personId", criteria.getUpDown() ? SortOrder.Ascending : SortOrder.Descending)
+                    .toList();
+        }
 
         return personRepo.find()
                 .sort("personId", criteria.getUpDown() ? SortOrder.Ascending : SortOrder.Descending)
+
                 //.limit(criteria.getPageSize())
                 .toList();
     }

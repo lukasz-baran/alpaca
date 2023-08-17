@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.evolve.importing.importDoc.ImportAlphanumeric.FILENAME_BY_ALPHA;
 import static com.evolve.importing.importDoc.ImportPeople.FILENAME_BY_NUMBERS;
@@ -38,6 +39,9 @@ public class AppMain {
         final List<DbfPerson> osobyDbf = new ImportDbfFile()
                 .performImport(DBF_FILE.getPath())
                 .getOsoby();
+
+        var numery = osobyDbf.stream().map(DbfPerson::getNR_IDENT).collect(Collectors.toList());
+        System.out.println(numery);
 
         final List<com.evolve.domain.Person> persons = new PersonsFactory().from(osobyDbf);
 

@@ -33,6 +33,7 @@
         <Button fx:id="btnNew" text="Nowy" onAction="#newPersonButtonClicked"/>
         <Button fx:id="btnEdit" text="Edytuj" onAction="#editButtonClicked"/>
         <Button fx:id="btnDelete" text="Usuń" onAction="#notYetImplemented"/>
+        <Button fx:id="btnSearch" text="Szukaj" onAction="#searchButtonClicked"/>
         <Button fx:id="btnExport" text="Eksportuj" onAction="#notYetImplemented"/>
         <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
