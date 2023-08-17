@@ -115,7 +115,9 @@ public class PersonsService implements InitializingBean, FindPerson {
                 .stream()
                 .peek(person -> log.info("inserting {}", person))
                 .forEach(personRepo::insert);
-        personRepo.rebuildIndex("personId", false);
+
+        // TODO not sure if this is needed - when it is turn the indexing causes exception
+        //personRepo.rebuildIndex("personId", false);
     }
 
     @Override

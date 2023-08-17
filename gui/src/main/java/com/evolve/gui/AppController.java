@@ -1,5 +1,6 @@
 package com.evolve.gui;
 
+import com.evolve.gui.admin.importDbf.ImportDbfDialog;
 import com.evolve.gui.components.NewPersonDialog;
 import com.evolve.gui.dictionaries.UnitsController;
 import com.evolve.gui.documents.DocumentsController;
@@ -34,7 +35,6 @@ import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.Locale;
@@ -93,11 +93,6 @@ public class AppController implements Initializable, ApplicationListener<PersonE
         unitsMenuItem.setOnAction(event -> unitsDialogController.getController().show());
     }
 
-    private void openFile(File file) {
-        log.info("Opened dbf file {}", file);
-        importDbfService.startImport(file.getPath());
-    }
-
     public void quitClicked(ActionEvent actionEvent) {
         Platform.exit();
         System.exit(0);
@@ -144,10 +139,14 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     }
 
     public void importDbfClicked(ActionEvent actionEvent) {
-        final File file = stageManager.getFileChooser(StageManager.DBF_EXTENSION_FILTER);
-        if (file != null) {
-            openFile(file);
-        }
+        new ImportDbfDialog(stageManager)
+                .showDialog(stageManager.getWindow())
+                .ifPresent(dbFiles -> {
+                    log.info("Opened dbf file {}", dbFiles);
+                    if (dbFiles.getMainFile() != null) {
+                        importDbfService.startImport(dbFiles.getMainFile().getPath());
+                    }
+                });
     }
 
     public void importPeopleClicked(ActionEvent actionEvent) {
