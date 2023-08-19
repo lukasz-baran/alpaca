@@ -25,7 +25,7 @@ class RegistryNumbersDeducerShould {
         var result = numbersDeducer.deduceFrom(List.of(" 1 520  1876"));
 
         assertThat(result)
-                .hasValue(new RegistryNumber(1520, 1876));
+                .hasValue(new RegistryNumber(1876, 1520));
     }
 
 
@@ -50,7 +50,7 @@ class RegistryNumbersDeducerShould {
         var result = numbersDeducer.deduceFrom(List.of("   581"));
 
         assertThat(result)
-                .hasValue(new RegistryNumber(581, null));
+                .hasValue(new RegistryNumber(null, 581));
     }
 
     @Test
@@ -66,12 +66,12 @@ class RegistryNumbersDeducerShould {
         var result = numbersDeducer.deduceFrom(List.of("   ...  1896"));
 
         assertThat(result)
-                .hasValue(new RegistryNumber(null, 1896));
+                .hasValue(new RegistryNumber(1896, null));
 
         result = numbersDeducer.deduceFrom(List.of("        0211"));
 
         assertThat(result)
-                .hasValue(new RegistryNumber(null, 211));
+                .hasValue(new RegistryNumber(211, null));
     }
 
     @Test

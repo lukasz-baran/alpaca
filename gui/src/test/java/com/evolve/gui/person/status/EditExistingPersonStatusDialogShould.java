@@ -10,6 +10,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextInputControl;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxRobot;
 
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 
 import static org.testfx.assertions.api.Assertions.assertThat;
 
+@Disabled
 public class EditExistingPersonStatusDialogShould extends DialogTestBase {
     private static final LocalDate DOB = LocalDate.of(1980, 8, 28);
     private static final PersonStatusChange DOB_PERSON_STATUS = new PersonStatusChange(

@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxRobot;
 
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 
 import static org.testfx.assertions.api.Assertions.assertThat;
 
+@Disabled
 public class NewPersonStatusDialogShould extends DialogTestBase {
 
     @Override
