@@ -10,15 +10,17 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextInputControl;
 import javafx.stage.Stage;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.testfx.api.FxRobot;
 
 import java.time.LocalDate;
+import java.util.concurrent.CompletableFuture;
 
 import static org.testfx.assertions.api.Assertions.assertThat;
 
-@Disabled
+//@Disabled
 public class EditExistingPersonStatusDialogShould extends DialogTestBase {
     private static final LocalDate DOB = LocalDate.of(1980, 8, 28);
     private static final PersonStatusChange DOB_PERSON_STATUS = new PersonStatusChange(
@@ -65,10 +67,26 @@ public class EditExistingPersonStatusDialogShould extends DialogTestBase {
         assertThat(buttonSave).isEnabled();
 
         // when -- event type is changed
-        Platform.runLater(() -> eventTypeCombo.setValue(PersonStatusChange.EventType.JOINED));
+        //Platform.runLater(() -> eventTypeCombo.setValue(PersonStatusChange.EventType.JOINED));
+
+        myClickOn(() -> eventTypeCombo.setValue(PersonStatusChange.EventType.JOINED));
 
         // then -- save button is enabled
         assertThat(buttonSave).isEnabled();
+    }
+
+    @SneakyThrows
+    public void myClickOn(Runnable runnable) //throws Exception
+    {
+        CompletableFuture<Void> future = new CompletableFuture<>();
+
+        Platform.runLater(() ->
+        {
+            runnable.run();
+            future.complete(null);
+        });
+
+        future.get();
     }
 
 }
