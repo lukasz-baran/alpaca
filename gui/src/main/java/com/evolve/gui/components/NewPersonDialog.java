@@ -2,13 +2,9 @@ package com.evolve.gui.components;
 
 import com.evolve.alpaca.util.DatePickerKeyEventHandler;
 import com.evolve.alpaca.util.LocalDateStringConverter;
-import com.evolve.domain.Person;
-import com.evolve.domain.PersonStatusChange;
-import com.evolve.domain.RegistryNumber;
-import com.evolve.domain.Unit;
+import com.evolve.domain.*;
 import com.evolve.gui.DialogWindow;
 import com.evolve.gui.person.UnitNumberItem;
-import com.evolve.importing.importDbf.deducers.PersonGenderDeducer;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
 import com.sun.javafx.collections.ImmutableObservableList;

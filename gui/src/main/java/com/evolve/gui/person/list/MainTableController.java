@@ -6,7 +6,7 @@ import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.list.search.PersonSearchCriteria;
-import com.evolve.importing.event.DbfImportCompletedEvent;
+import com.evolve.alpaca.importing.event.DbfImportCompletedEvent;
 import com.evolve.services.PersonsService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

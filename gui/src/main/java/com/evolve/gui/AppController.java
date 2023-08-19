@@ -1,5 +1,10 @@
 package com.evolve.gui;
 
+import com.evolve.alpaca.importing.importDbf.ImportDbfService;
+import com.evolve.alpaca.importing.importDoc.ImportAlphanumeric;
+import com.evolve.alpaca.importing.importDoc.ImportPeople;
+import com.evolve.alpaca.importing.importDoc.group.GrupyAlfabetyczne;
+import com.evolve.alpaca.importing.importDoc.person.Person;
 import com.evolve.gui.admin.importDbf.ImportDbfDialog;
 import com.evolve.gui.components.NewPersonDialog;
 import com.evolve.gui.dictionaries.UnitsController;
@@ -8,11 +13,6 @@ import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.list.MainTableController;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.search.SearchPersonDialog;
-import com.evolve.importing.importDbf.ImportDbfService;
-import com.evolve.importing.importDoc.ImportAlphanumeric;
-import com.evolve.importing.importDoc.ImportPeople;
-import com.evolve.importing.importDoc.group.GrupyAlfabetyczne;
-import com.evolve.importing.importDoc.person.Person;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
 import javafx.application.Platform;
