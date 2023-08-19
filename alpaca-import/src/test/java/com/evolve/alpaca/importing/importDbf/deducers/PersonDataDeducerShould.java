@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Optional;
 
-import static com.evolve.alpaca.importing.importDbf.deducers.PersonAssertion.assertPerson;
+import static com.evolve.domain.PersonAssertion.assertPerson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PersonDataDeducerShould {

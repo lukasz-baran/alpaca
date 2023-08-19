@@ -1,7 +1,5 @@
-package com.evolve.alpaca.importing.importDbf.deducers;
+package com.evolve.domain;
 
-import com.evolve.domain.Person;
-import com.evolve.domain.PersonId;
 import org.assertj.core.api.ObjectAssert;
 
 import java.time.LocalDate;
