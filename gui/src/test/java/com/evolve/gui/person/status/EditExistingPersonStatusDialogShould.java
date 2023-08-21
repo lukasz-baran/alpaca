@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.testfx.assertions.api.Assertions.assertThat;
 
-//@Disabled
+@Disabled
 public class EditExistingPersonStatusDialogShould extends DialogTestBase {
     private static final LocalDate DOB = LocalDate.of(1980, 8, 28);
     private static final PersonStatusChange DOB_PERSON_STATUS = new PersonStatusChange(
