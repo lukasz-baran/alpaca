@@ -2,7 +2,7 @@ package com.evolve.alpaca.importing.importDbf.deducers;
 
 import com.evolve.domain.*;
 import com.evolve.alpaca.importing.DateParser;
-import com.evolve.alpaca.importing.importDbf.DbfPerson;
+import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

@@ -3,7 +3,7 @@ package com.evolve.alpaca.importing.importDbf.deducers;
 import com.evolve.domain.Address;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonId;
-import com.evolve.alpaca.importing.importDbf.DbfPerson;
+import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

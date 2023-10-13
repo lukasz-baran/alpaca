@@ -1,7 +1,7 @@
 package com.evolve.alpaca.importing.importDbf.deducers;
 
 import com.evolve.domain.Person;
-import com.evolve.alpaca.importing.importDbf.DbfPerson;
+import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
 import com.evolve.domain.PersonGenderDeducer;
 import com.evolve.utils.StringFix;
 import lombok.AllArgsConstructor;

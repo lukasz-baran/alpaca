@@ -10,12 +10,12 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @ToString
-public class DbfData {
+public class DbfData<T> {
     private final List<String> fields;
-    private final List<DbfPerson> osoby = new ArrayList<>();
+    private final List<T> items = new ArrayList<>();
 
-    public void addPerson(DbfPerson person) {
-        osoby.add(person);
+    public void addItem(T item) {
+        items.add(item);
     }
 
 }
