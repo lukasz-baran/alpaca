@@ -1,4 +1,4 @@
-package com.evolve.gui;
+package com.evolve.gui.person.accounts;
 
 import javafx.fxml.Initializable;
 import lombok.RequiredArgsConstructor;
