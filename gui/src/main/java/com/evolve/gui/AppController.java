@@ -144,7 +144,8 @@ public class AppController implements Initializable, ApplicationListener<PersonE
                 .ifPresent(dbFiles -> {
                     log.info("Opened dbf file {}", dbFiles);
                     if (dbFiles.getMainFile() != null) {
-                        importDbfService.startImport(dbFiles.getMainFile().getPath());
+                        importDbfService.startImport(dbFiles.getMainFile().getPath(),
+                                dbFiles.getPlanAccountsFile().getPath());
                     }
                 });
     }

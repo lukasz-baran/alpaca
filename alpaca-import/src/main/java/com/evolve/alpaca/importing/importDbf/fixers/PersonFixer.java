@@ -39,6 +39,9 @@ public class PersonFixer implements InitializingBean {
     @SneakyThrows
     public int loadData() {
         // it has to be input stream, not file because it is in jar file
+        if (!resource.exists()) {
+            return -1;
+        }
         final InputStream csvData = resource.getInputStream();
 
         final CSVFormat format = CSVFormat.DEFAULT.builder()
