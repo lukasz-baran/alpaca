@@ -36,8 +36,8 @@ public class PersonModel {
     }
 
     PersonModel(PersonListView person) {
-        this(person.getPersonId(), person.getFirstName(), person.getLastName(), person.getEmail(),
-                person.getDob(), person.getStatus().name(), person.getRegistryNumber());
+        this(person.personId(), person.firstName(), person.lastName(), person.email(),
+                person.dob(), person.status().name(), person.registryNumber());
     }
 
     public String getId() {

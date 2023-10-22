@@ -1,28 +1,18 @@
 package com.evolve.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import java.time.LocalDate;
 import java.util.Optional;
 
-// shortened data about a person
-// for showing in the main table
-@AllArgsConstructor
-@Getter
-public class PersonListView {
-    private final String personId;
-
-    private final String firstName; // imię
-    private final String secondName; // drugie imię
-    private final String lastName; // nazwisko
-    private final String email;
-
-    private final LocalDate dob; // urodzony/urodzona
-
-    private final PersonStatus status;
-
-    private final Long registryNumber; // numer ewidencyjny (kartoteki)
+/**
+ * Shortened data about a person for showing in the main table
+ * @param firstName      imię
+ * @param secondName     drugie imię
+ * @param lastName       nazwisko
+ * @param dob            urodzony/urodzona
+ * @param registryNumber numer ewidencyjny (kartoteki)
+ */
+public record PersonListView(String personId, String firstName, String secondName, String lastName, String email,
+                             LocalDate dob, PersonStatus status, Long registryNumber) {
 
     public static PersonListView of(Person person) {
         return new PersonListView(person.getPersonId(), person.getFirstName(), person.getSecondName(),
