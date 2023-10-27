@@ -10,7 +10,7 @@ import com.evolve.gui.components.NewPersonDialog;
 import com.evolve.gui.dictionaries.UnitsController;
 import com.evolve.gui.documents.DocumentsController;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
-import com.evolve.gui.person.accounts.PersonAdditionalDataController;
+import com.evolve.gui.person.accounts.PersonAccountsController;
 import com.evolve.gui.person.list.MainTableController;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.search.SearchPersonDialog;
@@ -85,7 +85,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
         Locale.setDefault(new Locale("pl"));
         tabPersonDetails.setContent(fxWeaver.loadView(PersonDetailsController.class));
         tabOriginalDetails.setContent(fxWeaver.loadView(OriginalDetailsController.class));
-        tabPersonAdditionalData.setContent(fxWeaver.loadView(PersonAdditionalDataController.class));
+        tabPersonAdditionalData.setContent(fxWeaver.loadView(PersonAccountsController.class));
         tabDocuments.setContent(fxWeaver.loadView(DocumentsController.class));
 
         quitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));

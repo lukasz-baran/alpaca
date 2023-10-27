@@ -11,12 +11,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static org.dizitart.no2.filters.FluentFilter.where;
+
 @RequiredArgsConstructor
 @Service
 @Slf4j
 public class AccountsService {
     private final Nitrite nitrite;
 
+    public List<Account> findByPersonId(String personId) {
+        final ObjectRepository<Account> accountRepo = nitrite.getRepository(Account.class);
+        return accountRepo.find(where("personId").eq(personId))
+                .toList();
+    }
 
     public void insertAccounts(List<Account> accounts) {
 

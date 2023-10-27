@@ -43,6 +43,11 @@ public class Account {
                     .findFirst()
                     .orElse(null);
         }
+
+        @Override
+        public String toString() {
+            return this.description;
+        }
     }
 
 }

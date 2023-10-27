@@ -1,6 +1,5 @@
 package com.evolve.domain;
 
-import com.evolve.domain.Person;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
