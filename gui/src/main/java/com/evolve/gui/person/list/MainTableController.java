@@ -106,7 +106,7 @@ public class MainTableController implements Initializable, ApplicationListener<P
     }
 
     @EventListener
-    public void handleContextStart(DbfImportCompletedEvent importCompleted) {
+    public void onPersonImportCompleted(DbfImportCompletedEvent importCompleted) {
         log.info("import: " + importCompleted.getMessage());
         stageManager.displayInformation(importCompleted.getMessage());
 

@@ -4,13 +4,16 @@ import com.evolve.domain.Account;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
 import com.evolve.services.AccountsService;
+import com.evolve.services.UnitsService;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +26,11 @@ import java.util.ResourceBundle;
 
 @Component
 @FxmlView("person-accounts.fxml")
-@RequiredArgsConstructor
 @Slf4j
 public class PersonAccountsController implements Initializable {
-
     private final PersonListModel personListModel;
     private final AccountsService accountsService;
+    private final AccountTooltipService accountTooltipService;
 
     private final ObservableList<AccountEntry> data = FXCollections.observableArrayList();
 
@@ -37,11 +39,29 @@ public class PersonAccountsController implements Initializable {
     @FXML TableColumn<AccountEntry, String> accountNameColumn;
     @FXML TableView<AccountEntry> accountsTable;
 
+    public PersonAccountsController(PersonListModel personListModel, AccountsService accountsService, UnitsService unitsService) {
+        this.personListModel = personListModel;
+        this.accountsService = accountsService;
+        this.accountTooltipService = new AccountTooltipService(unitsService);
+    }
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         accountIdColumn.setCellValueFactory(new PropertyValueFactory<>("accountId"));
+        accountIdColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String accountId, boolean empty) {
+                super.updateItem(accountId, empty);
+                setText(accountId);
+                setTooltip(new Tooltip(accountTooltipService.forAccountNumber(accountId)));
+            }
+        });
+
         accountTypeColumn.setCellValueFactory(new PropertyValueFactory<>("accountType"));
         accountNameColumn.setCellValueFactory(new PropertyValueFactory<>("accountName"));
+
+
 
         personListModel.getCurrentPersonProperty().addListener(
                 (ObservableValue<? extends PersonModel> obs, PersonModel oldUser, PersonModel newUser) -> populatePersonAccounts(newUser));

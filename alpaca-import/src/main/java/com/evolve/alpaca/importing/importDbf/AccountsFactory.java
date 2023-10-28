@@ -36,7 +36,7 @@ public class AccountsFactory {
         if (dbfAccount.getKS().length() != REAL_PERSON_ACCOUNT_LENGTH) {
             return null;
         }
-        return Account.AccountType.of(StringUtils.substring(dbfAccount.getKS(), 0, 3));
+        return Account.AccountType.ofAccountingNumber(dbfAccount.getKS());
     }
 
     static String getAccountName(DbfAccount dbfAccount) {

@@ -1,6 +1,7 @@
 package com.evolve.domain;
 
 import lombok.*;
+import org.apache.commons.lang.StringUtils;
 import org.dizitart.no2.repository.annotations.Id;
 
 import java.util.Arrays;
@@ -42,6 +43,11 @@ public class Account {
                     .filter(type -> type.code.equals(givenCode))
                     .findFirst()
                     .orElse(null);
+        }
+
+
+        public static AccountType ofAccountingNumber(String accountingNumber) {
+            return Account.AccountType.of(StringUtils.substring(accountingNumber, 0, 3));
         }
 
         @Override
