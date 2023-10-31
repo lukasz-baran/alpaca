@@ -16,7 +16,7 @@ import com.evolve.gui.person.status.PersonStatusController;
 import com.evolve.services.PersonEditService;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
-import com.evolve.validation.ValidationException;
+import com.evolve.alpaca.validation.ValidationException;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

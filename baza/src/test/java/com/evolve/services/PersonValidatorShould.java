@@ -2,7 +2,7 @@ package com.evolve.services;
 
 import com.evolve.domain.Address;
 import com.evolve.domain.Person;
-import com.evolve.validation.ValidationResult;
+import com.evolve.alpaca.validation.ValidationResult;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

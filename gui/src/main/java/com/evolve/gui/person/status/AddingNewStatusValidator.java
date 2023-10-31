@@ -1,8 +1,8 @@
 package com.evolve.gui.person.status;
 
+import com.evolve.alpaca.validation.ValidationResult;
+import com.evolve.alpaca.validation.Validator;
 import com.evolve.domain.PersonStatusChange;
-import com.evolve.validation.ValidationResult;
-import com.evolve.validation.Validator;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

@@ -9,7 +9,7 @@ import com.evolve.alpaca.importing.importDoc.ImportPeople;
 import com.evolve.alpaca.importing.importDoc.group.GrupyAlfabetyczne;
 import com.evolve.alpaca.importing.importDoc.person.Person;
 import com.evolve.alpaca.importing.importDbf.PersonsFactory;
-import com.evolve.utils.LogUtil;
+import com.evolve.alpaca.utils.LogUtil;
 import com.google.common.io.Resources;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

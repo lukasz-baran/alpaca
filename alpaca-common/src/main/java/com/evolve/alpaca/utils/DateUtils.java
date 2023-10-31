@@ -1,4 +1,4 @@
-package com.evolve.utils;
+package com.evolve.alpaca.utils;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

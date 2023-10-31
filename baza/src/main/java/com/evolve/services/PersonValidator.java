@@ -1,9 +1,9 @@
 package com.evolve.services;
 
 import com.evolve.domain.Person;
-import com.evolve.validation.ValidationAssertion;
-import com.evolve.validation.ValidationResult;
-import com.evolve.validation.Validator;
+import com.evolve.alpaca.validation.ValidationAssertion;
+import com.evolve.alpaca.validation.ValidationResult;
+import com.evolve.alpaca.validation.Validator;
 
 import java.util.HashSet;
 import java.util.Set;

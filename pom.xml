@@ -11,6 +11,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>alpaca-common</module>
         <module>baza</module>
         <module>gui</module>
         <module>alpaca-export</module>
@@ -212,6 +213,17 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.evolve</groupId>
+                <artifactId>alpaca-common</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.evolve</groupId>
+                <artifactId>alpaca-import</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>org.dizitart</groupId>

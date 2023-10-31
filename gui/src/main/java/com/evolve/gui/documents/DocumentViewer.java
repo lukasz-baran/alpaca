@@ -2,7 +2,7 @@ package com.evolve.gui.documents;
 
 import com.evolve.content.ContentStoreService;
 import com.evolve.gui.StageManager;
-import com.evolve.utils.LogUtil;
+import com.evolve.alpaca.utils.LogUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;

@@ -3,7 +3,7 @@ package com.evolve.services;
 import com.evolve.EditPersonDataCommand;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonGenderDeducer;
-import com.evolve.validation.ValidationException;
+import com.evolve.alpaca.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dizitart.no2.Nitrite;
