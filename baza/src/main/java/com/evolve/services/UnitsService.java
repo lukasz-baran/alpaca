@@ -3,6 +3,7 @@ package com.evolve.services;
 import com.evolve.domain.Unit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.filters.Filter;
 import org.dizitart.no2.repository.Cursor;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -99,6 +101,12 @@ public class UnitsService {
 
     public Map<String, Unit> fetchMap() {
         return fetchList().stream().collect(Collectors.toMap(Unit::getId, unit -> unit));
+    }
+
+    public Optional<Unit> getByUnitNumber(String unitNumber) {
+        return fetchList()
+                .stream().filter(unit -> unit.sameAs(unitNumber))
+                .findFirst();
     }
 
     public List<Unit> fetchList() {

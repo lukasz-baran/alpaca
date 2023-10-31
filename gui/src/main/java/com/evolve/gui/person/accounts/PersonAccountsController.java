@@ -36,6 +36,7 @@ public class PersonAccountsController implements Initializable {
 
     @FXML TableColumn<AccountEntry, String> accountIdColumn;
     @FXML TableColumn<AccountEntry, Account.AccountType> accountTypeColumn;
+    @FXML TableColumn<AccountEntry, String> unitNumberColumn;
     @FXML TableColumn<AccountEntry, String> accountNameColumn;
     @FXML TableView<AccountEntry> accountsTable;
 
@@ -45,7 +46,6 @@ public class PersonAccountsController implements Initializable {
         this.accountTooltipService = new AccountTooltipService(unitsService);
     }
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         accountIdColumn.setCellValueFactory(new PropertyValueFactory<>("accountId"));
@@ -54,11 +54,15 @@ public class PersonAccountsController implements Initializable {
             protected void updateItem(String accountId, boolean empty) {
                 super.updateItem(accountId, empty);
                 setText(accountId);
-                setTooltip(new Tooltip(accountTooltipService.forAccountNumber(accountId)));
+
+                accountTooltipService.forAccountNumber(accountId)
+                        .map(Tooltip::new)
+                        .ifPresent(this::setTooltip);
             }
         });
 
         accountTypeColumn.setCellValueFactory(new PropertyValueFactory<>("accountType"));
+        unitNumberColumn.setCellValueFactory(new PropertyValueFactory<>("unitNumber"));
         accountNameColumn.setCellValueFactory(new PropertyValueFactory<>("accountName"));
 
 
@@ -80,6 +84,7 @@ public class PersonAccountsController implements Initializable {
         accounts.forEach(account -> data.add(AccountEntry.of(account)));
 
         accountsTable.setItems(data);
+        accountsTable.refresh(); // refresh is called to clear tooltips attached to emptied cells
     }
 
     @Getter
@@ -89,10 +94,12 @@ public class PersonAccountsController implements Initializable {
     public static class AccountEntry {
         private String accountId;
         private Account.AccountType accountType;
+        private String unitNumber;
         private String accountName;
 
         public static AccountEntry of(Account account) {
-            return new AccountEntry(account.getAccountId(), account.getAccountType(), account.getAccountName());
+            return new AccountEntry(account.getAccountId(), account.getAccountType(),
+                    account.getUnitNumber(), account.getAccountName());
         }
     }
 }

@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.dizitart.no2.repository.annotations.Id;
 
 import java.io.Serializable;
 
 /**
- * Unit represents: medical institution or other type of assignements
+ * Unit represents: medical institution or other type of assignments
  */
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,6 +27,10 @@ public class Unit implements Serializable {
     public static Unit of(String line) {
         final String[] afterSplit = line.split(SEPARATOR, 2);
         return new Unit(afterSplit[0].trim(), afterSplit[1].trim());
+    }
+
+    public boolean sameAs(String unitNumber) {
+        return StringUtils.equals(id, unitNumber);
     }
 
 }

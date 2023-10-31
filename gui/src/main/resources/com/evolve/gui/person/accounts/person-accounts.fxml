@@ -15,6 +15,7 @@
         <columns>
             <TableColumn fx:id="accountIdColumn" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="ID" />
             <TableColumn fx:id="accountTypeColumn" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Typ" />
+            <TableColumn fx:id="unitNumberColumn" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Jednostka" />
             <TableColumn fx:id="accountNameColumn" prefWidth="220.0" text="Nazwa konta" />
         </columns>
         <columnResizePolicy>

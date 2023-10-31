@@ -27,6 +27,10 @@ public class Account {
 
     private AccountType accountType;
 
+    public static String getUnitNumber(String accountingNumber) {
+        return StringUtils.substring(accountingNumber, 3, 5);
+    }
+
     @RequiredArgsConstructor
     @Getter
     public enum AccountType {
