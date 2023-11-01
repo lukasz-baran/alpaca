@@ -45,10 +45,14 @@
     <HBox id="HBox" alignment="TOP_CENTER" prefHeight="18.0"
           prefWidth="640.0" spacing="5.0" AnchorPane.bottomAnchor="5.0"
           AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
-        <Label text="Filter Table:" textAlignment="RIGHT"/>
+        <TextFlow>
+            <Text fx:id="textNumberOfRecords"/>
+        </TextFlow>
         <TextField fx:id="filterField" alignment="TOP_LEFT"
                    prefHeight="15.0" prefWidth="78.0"
-                   HBox.hgrow="ALWAYS"/>
+                   HBox.hgrow="ALWAYS"
+                   promptText="Szybki filtr"
+        />
         <Button fx:id="btnClearFilter" text="Clear"/>
     </HBox>
 </AnchorPane>

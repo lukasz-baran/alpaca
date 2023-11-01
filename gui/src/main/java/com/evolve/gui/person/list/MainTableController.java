@@ -57,6 +57,7 @@ public class MainTableController implements Initializable, ApplicationListener<P
     @FXML Text textSearchCriteria;
     @FXML Hyperlink resetSearchHyperlink;
 
+    @FXML Text textNumberOfRecords;
     @FXML TextField filterField;
     @FXML Button btnClearFilter;
 
@@ -82,7 +83,7 @@ public class MainTableController implements Initializable, ApplicationListener<P
         resetSearchHyperlink.setOnAction(event -> showSearchCriteria(PersonSearchCriteria.empty()));
     }
 
-    void populateTable(String sortBy, boolean upDown, PersonSearchCriteria criteria) {
+    private void populateTable(String sortBy, boolean upDown, PersonSearchCriteria criteria) {
         final List<PersonListView> persons = personsService.fetchList(
                 PersonLookupCriteria.builder()
                         .sortBy(sortBy)
@@ -94,8 +95,10 @@ public class MainTableController implements Initializable, ApplicationListener<P
 
         final FilteredList<PersonModel> filteredData = personListModel.feed(persons);
 
-        filterField.textProperty().addListener((observable, oldValue, newValue) ->
-                filteredData.setPredicate(person -> person.matches(newValue)));
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(person -> person.matches(newValue));
+            refreshNumberOfItems();
+        });
 
         SortedList<PersonModel> sortedData = new SortedList<>(filteredData);
 
@@ -103,6 +106,7 @@ public class MainTableController implements Initializable, ApplicationListener<P
         sortedData.comparatorProperty().bind(personTable.comparatorProperty());
 
         personTable.setItems(sortedData);
+        refreshNumberOfItems();
     }
 
     @EventListener
@@ -144,5 +148,9 @@ public class MainTableController implements Initializable, ApplicationListener<P
         textSearchCriteria.setText(text);
         AnchorPane.setTopAnchor(personTable, show ? 35.0 : 5);
         populateTable("id", true, criteria);
+    }
+
+    private void refreshNumberOfItems() {
+        textNumberOfRecords.setText("Liczba: " + personTable.getItems().size());
     }
 }
