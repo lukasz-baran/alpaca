@@ -1,4 +1,4 @@
-package com.evolve.gui;
+package com.evolve.gui.person.originalDetails;
 
 import com.evolve.domain.Person;
 import com.evolve.gui.person.list.PersonListModel;

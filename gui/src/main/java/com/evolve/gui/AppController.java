@@ -14,6 +14,7 @@ import com.evolve.gui.person.accounts.PersonAccountsController;
 import com.evolve.gui.person.list.MainTableController;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.search.SearchPersonDialog;
+import com.evolve.gui.person.originalDetails.OriginalDetailsController;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
 import javafx.application.Platform;
