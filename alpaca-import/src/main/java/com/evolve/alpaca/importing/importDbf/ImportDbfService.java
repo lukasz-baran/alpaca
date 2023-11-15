@@ -62,9 +62,9 @@ public class ImportDbfService {
                             .orElse("");
 
                     if (StringUtils.equals(kartotekaId.getRegistryNum().toString(), registryNumber)) {
-                        System.out.println("personId " + personId + " has correct registry number");
+                        log.info("personId " + personId + " has correct registry number");
                     } else {
-                        System.out.println("personId " + personId +
+                        log.info("personId " + personId +
                                 " has INVALID registry number: " + kartotekaId.getRegistryNum().toString() + " " +
                                 registryNumber + " old: " + oldRegistryNumber);
 

@@ -1,6 +1,6 @@
 package com.evolve.alpaca.importing.importDbf;
 
-import com.evolve.exception.ImportFailedException;
+import com.evolve.alpaca.importing.exception.ImportFailedException;
 import com.linuxense.javadbf.DBFException;
 import com.linuxense.javadbf.DBFField;
 import com.linuxense.javadbf.DBFReader;

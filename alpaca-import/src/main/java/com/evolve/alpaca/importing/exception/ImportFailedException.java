@@ -1,4 +1,4 @@
-package com.evolve.exception;
+package com.evolve.alpaca.importing.exception;
 
 public class ImportFailedException extends RuntimeException {
 
