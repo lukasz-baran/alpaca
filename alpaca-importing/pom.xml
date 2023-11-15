@@ -15,12 +15,12 @@
     <dependencies>
         <dependency>
             <groupId>com.evolve</groupId>
-            <artifactId>baza</artifactId>
+            <artifactId>alpaca-core</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.evolve</groupId>
-            <artifactId>baza</artifactId>
+            <artifactId>alpaca-core</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <type>test-jar</type>
             <scope>test</scope>

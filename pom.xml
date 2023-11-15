@@ -12,7 +12,7 @@
 
     <modules>
         <module>alpaca-common</module>
-        <module>baza</module>
+        <module>alpaca-core</module>
         <module>gui</module>
         <module>alpaca-export</module>
         <module>alpaca-importing</module>
