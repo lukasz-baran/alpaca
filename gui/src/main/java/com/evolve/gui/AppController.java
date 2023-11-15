@@ -4,7 +4,8 @@ import com.evolve.alpaca.importing.importDbf.ImportDbfService;
 import com.evolve.alpaca.importing.importDoc.ImportAlphanumeric;
 import com.evolve.alpaca.importing.importDoc.ImportPeople;
 import com.evolve.alpaca.importing.importDoc.group.GrupyAlfabetyczne;
-import com.evolve.alpaca.importing.importDoc.person.Person;
+import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
+import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.gui.admin.importDbf.ImportDbfDialog;
 import com.evolve.gui.components.NewPersonDialog;
 import com.evolve.gui.dictionaries.UnitsController;
@@ -100,6 +101,11 @@ public class AppController implements Initializable, ApplicationListener<PersonE
         System.exit(0);
     }
 
+    public void exportDb(ActionEvent actionEvent) {
+        List<com.evolve.domain.Person> personList = personsService.fetch(PersonLookupCriteria.builder().upDown(true).build());
+        personList.forEach(System.out::println);
+    }
+
     public void notYetImplemented(ActionEvent actionEvent) {
         stageManager.displayInformation("Feature is not yet implemented");
     }
@@ -153,7 +159,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     }
 
     public void importPeopleClicked(ActionEvent actionEvent) {
-        final List<Person> people = new ImportPeople(false).processFile();
+        final List<PersonFromDoc> people = new ImportPeople(false).processFile();
 
         final GrupyAlfabetyczne grupyAlfabetyczne = new ImportAlphanumeric()
                 .processFile();

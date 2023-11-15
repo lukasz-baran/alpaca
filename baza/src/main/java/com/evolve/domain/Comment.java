@@ -1,12 +1,19 @@
 package com.evolve.domain;
 
-import lombok.Data;
+import lombok.*;
 
+import javax.persistence.Embeddable;
 import java.time.LocalDateTime;
 
-@Data
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
+@Embeddable
 public class Comment {
-    private final String comment;
-    private final LocalDateTime added;
+    private String comment;
+    private LocalDateTime added;
 
 }

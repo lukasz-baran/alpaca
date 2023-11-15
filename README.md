@@ -5,8 +5,7 @@ Alpaca is a small desktop application that collects information about associatio
 ## Technology stack 
 * Java version: 17
 * GUI: JavaFX
-* NoSQL Database: Local nosql https://github.com/nitrite/nitrite-java
-* H2 with storing data on disk: https://www.baeldung.com/h2-embedded-db-data-storage
+* Database: H2 with storing data on disk: https://www.baeldung.com/h2-embedded-db-data-storage
 
 ## JavaFX topics
 * Sorting and pagination: http://incepttechnologies.blogspot.com/p/javafx-tableview-with-pagination-and.html

@@ -86,9 +86,12 @@ public class PersonDataDeducer {
         final Optional<List<String>> maybePhoneNumbers = phoneNumbersDeducer.deduceFrom(Lists.newArrayList(person.getTEL0(), person.getTEL1()));
 
         // ustalmy numery w kartotekach
-        final RegistryNumbersDeducer registryNumbersDeducer = new RegistryNumbersDeducer(issues);
-        final Optional<RegistryNumber> registryNumbers =
-                registryNumbersDeducer.deduceFrom(Lists.newArrayList(person.getNR_IDENT()));
+        final Optional<RegistryNumber> registryNumber =
+                new RegistryNumbersDeducer(issues, RegistryNumbersDeducer.RegistryNumberType.NEW)
+                        .deduceFrom(Lists.newArrayList(person.getNR_IDENT()));
+        final Optional<RegistryNumber> oldRegistryNumber =
+                new RegistryNumbersDeducer(issues, RegistryNumbersDeducer.RegistryNumberType.OLD)
+                        .deduceFrom(Lists.newArrayList(person.getNR_IDENT()));
 
         // numer jednostki
         final UnitNumberDeducer unitNumberDeducer = new UnitNumberDeducer(issues);
@@ -103,7 +106,8 @@ public class PersonDataDeducer {
                 .gender(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getGender).orElse(null))
                 .lastName(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getLastName).orElse(null))
                 .dob(maybeDob.orElse(null))
-                .registryNumber(registryNumbers.orElse(null))
+                .registryNumber(registryNumber.orElse(null))
+                .oldRegistryNumber(oldRegistryNumber.orElse(null))
                 .addresses(personAddresses)
                 .authorizedPersons(authorizedPeople)
                 .status(personStatusDetails.orElse(null))

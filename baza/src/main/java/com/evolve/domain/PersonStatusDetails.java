@@ -3,6 +3,7 @@ package com.evolve.domain;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.persistence.Embeddable;
 import java.util.Comparator;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Builder
+@Embeddable
 public class PersonStatusDetails {
     public static final String NO_DATA = null;
 

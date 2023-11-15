@@ -1,32 +1,46 @@
 package com.evolve.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
-@AllArgsConstructor
+import javax.persistence.Embeddable;
+import java.util.Optional;
+
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 @EqualsAndHashCode
 @NoArgsConstructor
 @Getter
 @ToString
+@Embeddable
 public class RegistryNumber {
-    private Integer oldRegistryNum; // numer starej kartoteki
     private Integer registryNum; // numer kartoteki
 
-    public static RegistryNumber onlyOldRegistryNumber(String oldRegistry) {
-        return new RegistryNumber(parseOrNull(oldRegistry), null);
+    public static RegistryNumber of(String input) {
+        if (StringUtils.isBlank(input)) {
+            return new RegistryNumber(null);
+        }
+
+        final String sanitizedInput = sanitize(input);
+        return new RegistryNumber(parseOrNull(sanitizedInput));
     }
 
-    public static RegistryNumber onlyNewRegistryNumber(String newRegistry) {
-        return new RegistryNumber(null, parseOrNull(newRegistry));
+    private static String sanitize(@NonNull String input) {
+        if (input.endsWith(".")) {
+            return input.replaceAll("\\.", "");
+        }
+        return input;
     }
 
-    public RegistryNumber(String oldRegistry, String newRegistry) {
-        this(parseOrNull(oldRegistry), parseOrNull(newRegistry));
+    public static RegistryNumber fromText(String newRegistry) {
+        return of(parseOrNull(newRegistry));
     }
 
-    @JsonIgnore
-    public boolean isUseless() {
-        return this.oldRegistryNum == null && this.registryNum == null;
+    public static RegistryNumber of(Integer integer) {
+        return new RegistryNumber(integer);
+    }
+
+    public Optional<Integer> getNumber() {
+        return Optional.ofNullable(registryNum);
     }
 
     static Integer parseOrNull(String str) {

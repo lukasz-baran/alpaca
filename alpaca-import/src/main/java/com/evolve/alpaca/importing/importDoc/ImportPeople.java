@@ -1,6 +1,6 @@
 package com.evolve.alpaca.importing.importDoc;
 
-import com.evolve.alpaca.importing.importDoc.person.Person;
+import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
 import com.evolve.alpaca.importing.importDoc.person.PersonReader;
 import com.google.common.io.Resources;
 import lombok.SneakyThrows;
@@ -30,8 +30,8 @@ public class ImportPeople {
     }
 
     @SneakyThrows
-    public List<Person> processFile() {
-        final List<Person> personList = new ArrayList<>();
+    public List<PersonFromDoc> processFile() {
+        final List<PersonFromDoc> personList = new ArrayList<>();
         try (final Scanner scanner = new Scanner(fileByNumbers)) {
             while (scanner.hasNextLine()) {
                 final String line = scanner.nextLine().replaceAll(INCORRECT_SEPARATOR, "-");
@@ -39,10 +39,10 @@ public class ImportPeople {
                     continue;
                 }
 
-                Optional<Person> maybePerson = PersonReader.fromLine(line);
+                Optional<PersonFromDoc> maybePerson = PersonReader.fromLine(line);
 
                 if (maybePerson.isPresent()) {
-                    Person person = maybePerson.get();
+                    PersonFromDoc person = maybePerson.get();
 
                     if (!person.isCorrect() && logging) {
                         log.warn("incorrect: {}", person);

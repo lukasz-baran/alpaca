@@ -126,7 +126,7 @@ public class NewPersonDialog extends DialogWindow<Person> {
                         .personId(personIdTextField.getText())
                         .firstName(StringUtils.capitalize(firstNameTextField.getText().trim()))
                         .lastName(StringUtils.capitalize(lastNameTextField.getText().trim()))
-                        .registryNumber(RegistryNumber.onlyNewRegistryNumber(registryNumberTextField.getText().trim()))
+                        .registryNumber(RegistryNumber.fromText(registryNumberTextField.getText().trim()))
                         .gender(genderCombo.getValue())
                         .unitNumber(unitNumber)
                         .build();

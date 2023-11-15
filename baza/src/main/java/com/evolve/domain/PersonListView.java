@@ -22,6 +22,10 @@ public record PersonListView(String personId, String firstName, String secondNam
                 registryNumber(person));
     }
 
+    public Optional<Long> getRegistryNumber() {
+        return Optional.ofNullable(registryNumber);
+    }
+
     static PersonStatus personStatus(Person person) {
         return Optional.ofNullable(person.getStatus()).map(PersonStatusDetails::getStatus)
                 .orElse(PersonStatus.ACTIVE);
@@ -31,7 +35,7 @@ public record PersonListView(String personId, String firstName, String secondNam
         return Optional.ofNullable(person.getRegistryNumber())
                 .map(RegistryNumber::getRegistryNum)
                 .map(Long::valueOf)
-                .orElse(0L);
+                .orElse(null);
     }
 
 }

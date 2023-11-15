@@ -1,8 +1,8 @@
 package com.evolve.alpaca.importing.importDoc.group;
 
-import com.evolve.alpaca.importing.importDoc.person.KartotekaId;
-import com.evolve.alpaca.importing.importDoc.person.Person;
+import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
 import com.evolve.domain.PersonStatusDetails;
+import com.evolve.domain.RegistryNumber;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
@@ -21,14 +21,14 @@ public class PersonGroupReader {
      */
     public static final Pattern REZ_REGEX = Pattern.compile("REZ\\s[IVX]{1,4}-\\d{2}");
 
-    public static Optional<Person> fromLine(String line) {
+    public static Optional<PersonFromDoc> fromLine(String line) {
         try {
 
         final PersonStatusDetails personStatusDetails = decodeStatus(line);
         final StringTokenizer tokenizer = new StringTokenizer(line);
 
         final String numerKartoteki = line.startsWith("\t") ? null : tokenizer.nextToken();
-        KartotekaId kartotekaId = KartotekaId.of(numerKartoteki);
+        final RegistryNumber registryNumber = RegistryNumber.of(numerKartoteki);
 
         if (!tokenizer.hasMoreTokens()) {
             log.info("Line is not finished on: {}", numerKartoteki);
@@ -41,8 +41,8 @@ public class PersonGroupReader {
         final String lastName = tokenizer.nextToken();
         final String firstName = tokenizer.nextToken();
 
-        return Optional.of(Person.builder()
-                .numerKartoteki(kartotekaId)
+        return Optional.of(PersonFromDoc.builder()
+                .numerKartoteki(registryNumber)
                 .numerJednostki(numerJednostki)
                 .numerGrupy(numberGrupy)
                 .index(index)

@@ -36,8 +36,8 @@ public class RegistryNumbersController implements Initializable {
                         .map(RegistryNumber::getRegistryNum)
                         .map(Object::toString).orElse(null));
         oldRegistryNumberProperty.setValue(
-                Optional.ofNullable(person.getRegistryNumber())
-                        .map(RegistryNumber::getOldRegistryNum)
+                Optional.ofNullable(person.getOldRegistryNumber())
+                        .flatMap(RegistryNumber::getNumber)
                         .map(Object::toString).orElse(null));
     }
 }

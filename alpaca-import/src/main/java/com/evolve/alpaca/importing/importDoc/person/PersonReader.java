@@ -1,6 +1,7 @@
 package com.evolve.alpaca.importing.importDoc.person;
 
 import com.evolve.domain.PersonStatusDetails;
+import com.evolve.domain.RegistryNumber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ public class PersonReader {
             "MICHAŁ", "PIOTR",
             "PAWEŁ", "GRAŻYNA",
             "HALINA");
-    public static Optional<Person> fromLine(String line) {
+    public static Optional<PersonFromDoc> fromLine(String line) {
         final StringTokenizer tokenizer = new StringTokenizer(line);
         final int tokensNumber = tokenizer.countTokens();
 
@@ -37,8 +38,8 @@ public class PersonReader {
         // jeśli zawiera 3 i ostatni jest liczbą numer to
 
         if (kartoteka.equals("119")) {
-            return Optional.of(Person.builder()
-                    .numerKartoteki(KartotekaId.of(kartoteka))
+            return Optional.of(PersonFromDoc.builder()
+                    .numerKartoteki(RegistryNumber.of(kartoteka))
                     .numerJednostki(jednostka)
                     .numerGrupy(grupa)
                     .index(index)
@@ -59,8 +60,8 @@ public class PersonReader {
         final String lastName = getLastName(tokensLeft);
         final String firstName = getFirstName(tokensLeft, Optional.ofNullable(lastName));
 
-        final Person osoba = Person.builder()
-                .numerKartoteki(KartotekaId.of(kartoteka))
+        final PersonFromDoc osoba = PersonFromDoc.builder()
+                .numerKartoteki(RegistryNumber.of(kartoteka))
                 .numerJednostki(jednostka)
                 .numerGrupy(grupa)
                 .index(index)

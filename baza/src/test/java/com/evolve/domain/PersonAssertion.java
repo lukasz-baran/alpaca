@@ -1,15 +1,15 @@
 package com.evolve.domain;
 
-import org.assertj.core.api.ObjectAssert;
+import org.assertj.core.api.AbstractAssert;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PersonAssertion extends ObjectAssert<Person> {
+public class PersonAssertion extends AbstractAssert<PersonAssertion, Person> {
 
     public PersonAssertion(Person person) {
-        super(person);
+        super(person, PersonAssertion.class);
     }
 
     public static PersonAssertion assertPerson(Person person) {
@@ -21,6 +21,11 @@ public class PersonAssertion extends ObjectAssert<Person> {
         return this;
     }
 
+    public PersonAssertion hasPersonId(String expected) {
+        assertThat(actual.getPersonId()).isEqualTo(expected);
+        return this;
+    }
+
     public PersonAssertion hasFirstName(String expected) {
         assertThat(actual.getFirstName()).isEqualTo(expected);
         return this;
@@ -28,6 +33,11 @@ public class PersonAssertion extends ObjectAssert<Person> {
 
     public PersonAssertion hasLastName(String expected) {
         assertThat(actual.getLastName()).isEqualTo(expected);
+        return this;
+    }
+
+    public PersonAssertion hasUnitNumber(String expectedUnitNumber) {
+        assertThat(actual.getUnitNumber()).isEqualTo(expectedUnitNumber);
         return this;
     }
 

@@ -1,41 +1,19 @@
 package com.evolve.domain;
 
-import org.dizitart.no2.common.util.ObjectUtils;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.VarHandle;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-@Disabled("nitrite db does not support compound classes in Java 17")
 class PersonIdShould {
 
-    private static final VarHandle MODIFIERS;
-
-    static {
-        try {
-            var lookup = MethodHandles.privateLookupIn(Field.class, MethodHandles.lookup());
-            MODIFIERS = lookup.findVarHandle(Field.class, "modifiers", int.class);
-        } catch (IllegalAccessException | NoSuchFieldException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
     @Test
-    void beUsedAsNitriteId() throws NoSuchFieldException {
-        var emptyElementDataField = PersonId.class.getDeclaredField("groupNumber");
-        // make field non-final
-        MODIFIERS.set(emptyElementDataField, emptyElementDataField.getModifiers() & ~Modifier.FINAL);
+    void getNextId() {
+        assertThat(PersonId.nextId(PersonId.of("01009")))
+                .isEqualTo(PersonId.of("01010"));
 
-         emptyElementDataField = PersonId.class.getDeclaredField("index");
-        // make field non-final
-        MODIFIERS.set(emptyElementDataField, emptyElementDataField.getModifiers() & ~Modifier.FINAL);
-
-        ObjectUtils.newInstance(PersonId.class, true);
+        assertThatCode(() -> PersonId.nextId(PersonId.of("01999")))
+                .hasMessage("Maximum number of people in group reached: 999");
     }
 
 }

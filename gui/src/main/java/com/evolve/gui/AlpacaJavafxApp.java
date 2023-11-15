@@ -4,13 +4,8 @@ import com.evolve.AlpacaSpringApp;
 import com.evolve.gui.events.StageReadyEvent;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
-import net.rgielen.fxweaver.core.FxWeaver;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
@@ -36,14 +31,6 @@ public class AlpacaJavafxApp extends Application {
         stageManager = applicationContext.getBean(StageManager.class);
         stageManager.setPrimaryStage(stage);
         stageManager.displayScene(AppController.class, "Alpaca - accounting", "alpaca.png");
-
-//        FxWeaver fxWeaver = applicationContext.getBean(FxWeaver.class);
-//        Parent root = fxWeaver.loadView(AppController.class); // note: initialize() is called now
-//        Scene scene = new Scene(root);
-//        stage.setTitle("Alpaca - accounting");
-//        stage.setScene(scene);
-//        stage.getIcons().add(new Image("alpaca.png"));
-//        stage.show();
     }
 
     @Override

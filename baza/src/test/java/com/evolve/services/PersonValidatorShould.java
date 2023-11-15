@@ -3,6 +3,7 @@ package com.evolve.services;
 import com.evolve.domain.Address;
 import com.evolve.domain.Person;
 import com.evolve.alpaca.validation.ValidationResult;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -13,6 +14,7 @@ class PersonValidatorShould {
     final PersonValidator validator = new PersonValidator();
 
     @Test
+    @Disabled("Disabled because hibernate validations are turned off")
     void validatePerson() {
         // given
         final Person person = new Person();

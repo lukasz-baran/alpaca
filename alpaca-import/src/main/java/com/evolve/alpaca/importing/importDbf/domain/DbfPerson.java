@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Getter
@@ -15,7 +17,7 @@ import java.util.Map;
 @ToString
 public class DbfPerson {
       @JsonIgnore
-      private final Map<String, Object> data;
+      private final Map<String, String> data;
       private String SYM_ODB;
       private String NAZ_ODB1;
       private String NAZ_ODB2;
@@ -49,9 +51,22 @@ public class DbfPerson {
       private String PLATNIK; // ignore - always empty
       private String UZ;
 
+      static Map<String, String> rawData(Map<String, Object> data) {
+            if (data == null) {
+                  return Map.of();
+            }
+            return data.entrySet().stream().collect(
+                    Collectors.toMap(Map.Entry::getKey,
+                            a -> nullToEmpty(a.getValue()), (prev, next) -> next, HashMap::new));
+      }
+
+      private static String nullToEmpty(Object object) {
+            return object == null ? "" : object.toString();
+      }
+
       public static DbfPerson of(Map<String, Object> data) {
          return DbfPerson.builder()
-              .data(data)
+              .data(rawData(data))
               .SYM_ODB(data.get("SYM_ODB").toString())
               .NAZ_ODB1(data.get("NAZ_ODB1").toString())
               .NAZ_ODB2(data.get("NAZ_ODB2").toString())

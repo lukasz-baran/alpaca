@@ -3,7 +3,7 @@ package com.evolve.alpaca.importing.importDoc;
 import com.evolve.domain.Group;
 import com.evolve.alpaca.importing.importDoc.group.GrupyAlfabetyczne;
 import com.evolve.alpaca.importing.importDoc.group.PersonGroupReader;
-import com.evolve.alpaca.importing.importDoc.person.Person;
+import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
 import com.google.common.io.Resources;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -71,7 +71,7 @@ public class ImportAlphanumeric {
                     continue;
                 }
 
-                final Optional<Person> person = PersonGroupReader.fromLine(line);
+                final Optional<PersonFromDoc> person = PersonGroupReader.fromLine(line);
                 person.ifPresentOrElse(System.out::println, () -> System.err.println("Unable to decode line: " + line));
 
                 if (person.isPresent()) {

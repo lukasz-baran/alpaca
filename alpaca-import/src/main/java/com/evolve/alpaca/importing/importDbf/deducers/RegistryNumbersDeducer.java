@@ -8,14 +8,15 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.StringTokenizer;
 
-import static java.util.function.Predicate.not;
-
 public class RegistryNumbersDeducer extends AbstractSmartDeducer<RegistryNumber> {
 
     public static final int TWO_NUMBERS_EXPECTED = 6;
 
-    public RegistryNumbersDeducer(IssuesLogger.ImportIssues issues) {
+    private final RegistryNumberType registryNumberType;
+
+    public RegistryNumbersDeducer(IssuesLogger.ImportIssues issues, RegistryNumberType registryNumberType) {
         super(issues);
+        this.registryNumberType = registryNumberType;
     }
 
     @Override
@@ -23,8 +24,7 @@ public class RegistryNumbersDeducer extends AbstractSmartDeducer<RegistryNumber>
         return guesses.stream()
                 .filter(Objects::nonNull)
                 .findFirst()
-                .flatMap(this::parseRegistryNumbers)
-                .filter(not(RegistryNumber::isUseless));
+                .flatMap(this::parseRegistryNumbers);
     }
 
     @Override
@@ -49,19 +49,23 @@ public class RegistryNumbersDeducer extends AbstractSmartDeducer<RegistryNumber>
                 final String oldRegistry = stringTokenizer.nextToken() + stringTokenizer.nextToken();
                 final String newRegistry = stringTokenizer.nextToken() + stringTokenizer.nextToken();
 
-                return Optional.of(new RegistryNumber(newRegistry, oldRegistry));
+                return properRegistryType(oldRegistry, newRegistry);
+
             } else if (stringTokenizer.countTokens() == 3) {
                 final String oldRegistry = stringTokenizer.nextToken() + stringTokenizer.nextToken();
                 final String newRegistry = stringTokenizer.nextToken();
 
-                return Optional.of(new RegistryNumber(newRegistry, oldRegistry));
+                return properRegistryType(oldRegistry, newRegistry);
+
             } else if (stringTokenizer.countTokens() == 2) {
                 final String oldRegistry = stringTokenizer.nextToken();
                 final String newRegistry = stringTokenizer.nextToken();
-                return Optional.of(new RegistryNumber(newRegistry, oldRegistry));
+
+                return properRegistryType(oldRegistry, newRegistry);
+
             } else if (stringTokenizer.countTokens() == 1) {
                 final String newRegistry = stringTokenizer.nextToken();
-                return Optional.of(new RegistryNumber(newRegistry, null));
+                return Optional.of(RegistryNumber.fromText(newRegistry));
             }
         }
 
@@ -69,15 +73,26 @@ public class RegistryNumbersDeducer extends AbstractSmartDeducer<RegistryNumber>
             StringTokenizer stringTokenizer = new StringTokenizer(value);
             if (stringTokenizer.countTokens() == 2) {
                 final String oldRegistry = stringTokenizer.nextToken() + stringTokenizer.nextToken();
-                return Optional.of(RegistryNumber.onlyNewRegistryNumber(oldRegistry));
+                return Optional.of(RegistryNumber.fromText(oldRegistry));
             }
-            return Optional.of(RegistryNumber.onlyNewRegistryNumber(stringTokenizer.nextToken()));
+            return Optional.of(RegistryNumber.fromText(stringTokenizer.nextToken()));
         }
 
         return Optional.empty();
 
     }
 
+    private Optional<RegistryNumber> properRegistryType(String oldRegistry, String newRegistry) {
+        return switch (registryNumberType) {
+            case NEW -> Optional.of(RegistryNumber.fromText(newRegistry));
+            case OLD -> Optional.of(RegistryNumber.fromText(oldRegistry));
+        };
+    }
 
+    // used by deducer logic which type we're interested in:
+    public enum RegistryNumberType {
+        OLD,
+        NEW
+    }
 
 }

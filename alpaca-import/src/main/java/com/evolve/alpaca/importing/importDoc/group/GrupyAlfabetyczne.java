@@ -1,7 +1,7 @@
 package com.evolve.alpaca.importing.importDoc.group;
 
 import com.evolve.domain.Group;
-import com.evolve.alpaca.importing.importDoc.person.Person;
+import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,11 +42,11 @@ import java.util.*;
 @Slf4j
 public class GrupyAlfabetyczne {
 
-    private final Map<Group, List<Person>> grupyLudzie = new HashMap<>();
+    private final Map<Group, List<PersonFromDoc>> grupyLudzie = new HashMap<>();
 
-    public void addNewPerson(Group grupa, Person person) {
+    public void addNewPerson(Group grupa, PersonFromDoc person) {
         log.info("add new person {}", grupa);
-        final List<Person> osoby = grupyLudzie.getOrDefault(grupa, new ArrayList<>());
+        final List<PersonFromDoc> osoby = grupyLudzie.getOrDefault(grupa, new ArrayList<>());
         osoby.add(person);
         grupyLudzie.put(grupa, osoby);
     }
@@ -62,14 +62,14 @@ public class GrupyAlfabetyczne {
         log.info("VALIDATE continuity - end");
     }
 
-    private void validateContinuity(Group grupa, List<Person> personList) {
-        final Optional<Person> firstPerson = personList.stream().findFirst();
+    private void validateContinuity(Group grupa, List<PersonFromDoc> personList) {
+        final Optional<PersonFromDoc> firstPerson = personList.stream().findFirst();
         firstPerson.ifPresent(person -> {
             String index = "000";
-            final Iterator<Person> iterator = personList.iterator();
+            final Iterator<PersonFromDoc> iterator = personList.iterator();
 
             while (iterator.hasNext()) {
-                final Person personToCheck = iterator.next();
+                final PersonFromDoc personToCheck = iterator.next();
                 int previous = Integer.parseInt(index);
                 int next = Integer.parseInt(personToCheck.getIndex());
                 if (previous + 1 != next) {

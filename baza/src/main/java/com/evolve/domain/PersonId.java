@@ -8,11 +8,10 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * PersonId cannot be used as @Id for Person class.
- * Nitrite is not ready yet for Java17 changes
- * @see <a href="https://stackoverflow.com/questions/69124839/jdk11-to-jdk12-migration-java-lang-nosuchfieldexception-modifiers">...</a>
  */
 @AllArgsConstructor
 @Getter
@@ -46,5 +45,10 @@ public class PersonId implements Comparable<PersonId>, Serializable{
         }
         return new PersonId(current.getGroupNumber(), String.format("%03d", Integer.parseInt(current.getIndex()) + 1));
     }
+
+    public static Optional<String> firstId(Optional<String> maybeGroupNumber) {
+        return maybeGroupNumber.map(groupNumber -> new PersonId(groupNumber, "001")).map(PersonId::toString);
+    }
+
 
 }

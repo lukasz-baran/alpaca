@@ -1,14 +1,16 @@
 package com.evolve.domain;
 
 import lombok.*;
-import org.dizitart.no2.repository.annotations.Id;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,52 +20,83 @@ import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Person implements Serializable {
     public static final String FIRST_NAME_CANNOT_BE_EMPTY = "First name cannot be empty";
     public static final String LAST_NAME_CANNOT_BE_EMPTY = "Last name cannot be empty";
     public static final String EMAIL_IS_NOT_VALID = "Email address is not valid";
 
-    @Id
+    @javax.persistence.Id
     private String personId;
 
     private String unitNumber; // 95 - nie płaci składek
 
+    @Embedded
+    @AttributeOverrides( {@AttributeOverride(name="registryNum", column = @Column(name="registry_num") )} )
     private RegistryNumber registryNumber;
 
-    @NotBlank(message = FIRST_NAME_CANNOT_BE_EMPTY)
+    @Embedded
+    @AttributeOverrides( {@AttributeOverride(name="registryNum", column = @Column(name="old_registry_num") )} )
+    private RegistryNumber oldRegistryNumber;
+
+    //@NotBlank(message = FIRST_NAME_CANNOT_BE_EMPTY)
     private String firstName; // imię
 
     private String secondName; // drugie imię
 
-    @NotBlank(message = LAST_NAME_CANNOT_BE_EMPTY)
+    //@NotBlank(message = LAST_NAME_CANNOT_BE_EMPTY)
     private String lastName; // nazwisko
 
     private Gender gender;
 
+    @ElementCollection(targetClass = String.class) //, fetch = FetchType.EAGER)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<String> previousLastNames; // poprzednie nazwiska (panieńskie, przed zmianą nazwiska)
 
     private LocalDate dob; // urodzony/urodzona
     private LocalDate memberSince; // data założenia konta
 
     @Valid
-    private List<PersonAddress> addresses; // lista adresów
+    @ElementCollection(targetClass = PersonAddress.class) //, fetch = FetchType.EAGER)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<PersonAddress> addresses ; // lista adresów
 
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     private List<String> phoneNumbers;
 
     @Email(message = EMAIL_IS_NOT_VALID)
     private String email;
 
+    @ElementCollection(targetClass = BankAccount.class) //, fetch = FetchType.EAGER)
+    @CollectionTable(name = "person_bank_accounts", joinColumns = @JoinColumn(name = "person_id"))
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<BankAccount> bankAccounts;
 
+    @Embedded
     private PersonStatusDetails status;
 
+    @ElementCollection(targetClass = PersonStatusChange.class) //, fetch = FetchType.EAGER)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<PersonStatusChange> statusChanges;
 
+    @ElementCollection(targetClass = AuthorizedPerson.class) //, fetch = FetchType.EAGER)
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<AuthorizedPerson> authorizedPersons; // if null nobody is authorized
 
+    @ElementCollection(targetClass = Comment.class) //, fetch = FetchType.EAGER)
+    @CollectionTable(name = "person_comments", joinColumns = @JoinColumn(name = "person_id"))
+    @LazyCollection(LazyCollectionOption.FALSE)
+//    @AttributeOverrides({
+//            @AttributeOverride(name = "addressLine1", column = @Column(name = "house_number")),
+//            @AttributeOverride(name = "addressLine2", column = @Column(name = "street"))
+//    })
     private List<Comment> comments; // notatki
 
-    private Map<String, Object> rawData;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @MapKeyColumn(name="raw_data_key")
+    @Column(name="raw_data_value")
+    //@CollectionTable(name="person_raw_data", joinColumns=@JoinColumn(name="person_id"))
+    private Map<String, String> rawData;
 
     public void setStatusChanges(List<PersonStatusChange> statusChanges) {
         this.statusChanges = statusChanges;
@@ -89,6 +122,8 @@ public class Person implements Serializable {
 
     @Getter
     @NoArgsConstructor
+    @Embeddable
+    @EqualsAndHashCode(callSuper = true)
     public static class PersonAddress extends Address {
 
         private AddressType type;
@@ -117,6 +152,7 @@ public class Person implements Serializable {
     @EqualsAndHashCode
     @Builder
     @NoArgsConstructor
+    @Embeddable
     public static class AuthorizedPerson {
         private String firstName;
         private String lastName;

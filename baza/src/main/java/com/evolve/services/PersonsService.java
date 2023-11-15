@@ -2,29 +2,22 @@ package com.evolve.services;
 
 import com.evolve.FindPerson;
 import com.evolve.domain.*;
+import com.evolve.repo.jpa.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.dizitart.no2.Nitrite;
-import org.dizitart.no2.common.SortOrder;
-import org.dizitart.no2.common.WriteResult;
-import org.dizitart.no2.filters.Filter;
-import org.dizitart.no2.repository.ObjectRepository;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
-
-import static org.dizitart.no2.filters.FluentFilter.where;
 
 @RequiredArgsConstructor
 @Slf4j
 @Service
 public class PersonsService implements InitializingBean, FindPerson {
-    private final Nitrite nitrite;
+    private final PersonRepository personRepository;
 
     @Override
     public List<PersonListView> fetchList(PersonLookupCriteria criteria) {
@@ -36,19 +29,13 @@ public class PersonsService implements InitializingBean, FindPerson {
 
     @Override
     public List<Person> fetch(PersonLookupCriteria criteria) {
-        final ObjectRepository<Person> personRepo = nitrite.getRepository(Person.class);
-
         if (StringUtils.isNotEmpty(criteria.getUnitNumber())) {
-            return personRepo.find(where("unitNumber").eq(criteria.getUnitNumber()))
-                    .sort("personId", criteria.getUpDown() ? SortOrder.Ascending : SortOrder.Descending)
-                    .toList();
+            return personRepository.findAll(
+                    Example.of(Person.builder().unitNumber(criteria.getUnitNumber()).build()),
+                    criteria.getSort());
         }
 
-        return personRepo.find()
-                .sort("personId", criteria.getUpDown() ? SortOrder.Ascending : SortOrder.Descending)
-
-                //.limit(criteria.getPageSize())
-                .toList();
+        return personRepository.findAll(criteria.getSort());
     }
 
     @Override
@@ -64,16 +51,19 @@ public class PersonsService implements InitializingBean, FindPerson {
             return Optional.empty();
         }
 
-        final ObjectRepository<Person> personRepo = nitrite.getRepository(Person.class);
+        final Optional<String> maybeGroupName = Group.groupFor(firstLetter)
+                .map(Group::getNumer);
 
-        final List<Person> persons = Group.groupFor(firstLetter)
-                .map(Group::getNumer)
-                .map(groupNumber -> personRepo.find(where("personId").regex("^" + groupNumber + ".*$"))
-                        .sort("personId", SortOrder.Descending)
-                        .toList())
-                .orElse(List.of());
+        final List<Person> personFromDb = maybeGroupName
+                .map(personRepository::findByGroupName)
+                .orElse(Collections.emptyList());
 
-        return persons.stream().findFirst()
+        if (personFromDb.isEmpty()) {
+            return PersonId.firstId(maybeGroupName);
+        }
+
+        return personFromDb.stream()
+                .max(Comparator.comparing(Person::getPersonId))
                 .map(Person::getPersonId)
                 .map(PersonId::of)
                 .map(PersonId::nextId)
@@ -81,54 +71,32 @@ public class PersonsService implements InitializingBean, FindPerson {
     }
 
     @Override
-    public Person findById(String id) {
-        final ObjectRepository<Person> personRepo = nitrite.getRepository(Person.class);
-
-        return personRepo.getById(id);
+    public Person findById(String personId) {
+        return personRepository.findByPersonId(personId);
     }
 
     @Override
-    public List<Person> findByUnitId(String unitId) {
-        final ObjectRepository<Person> personRepo = nitrite.getRepository(Person.class);
-        return personRepo.find(where("unitNumber").eq(unitId))
-                .toList();
+    public List<Person> findByUnitId(String unitNumber) {
+        return personRepository.findAll(
+                Example.of(Person.builder().unitNumber(unitNumber).build()));
     }
 
     public boolean insertPerson(Person person) {
         log.info("Adding person {}", person);
-        final ObjectRepository<Person> personRepo = nitrite.getRepository(Person.class);
-
-        final WriteResult writeResult = personRepo.insert(person);
-
-        return writeResult.getAffectedCount() > 0;
+        final Person insertedPerson = personRepository.save(person);
+        return true;
     }
 
     public void insertPersons(List<Person> personList) {
         validatePerson(personList);
 
-        final ObjectRepository<Person> personRepo = nitrite.getRepository(Person.class);
-        personRepo.remove(Filter.ALL);
-        personRepo.dropAllIndices();
-        nitrite.commit();
-
-        personList
-                .stream()
-                .peek(person -> log.info("inserting {}", person))
-                .forEach(personRepo::insert);
-
-        // TODO not sure if this is needed - when it is turn the indexing causes exception
-        //personRepo.rebuildIndex("personId", false);
+        personRepository.deleteAll();
+        personRepository.saveAll(personList);
     }
 
     @Override
     public void afterPropertiesSet() {
         log.info("LIST persons: ");
-        final ObjectRepository<Person> personRepo = nitrite.getRepository(Person.class);
-
-        // index has to be rebuilt after each restart, without it first insert into collection will fail
-        personRepo.rebuildIndex("personId", false);
-
-        log.info("Loaded {} persons", personRepo.find().size());
     }
 
     void validatePerson(List<Person> personList) {

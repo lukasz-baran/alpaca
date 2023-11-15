@@ -1,7 +1,10 @@
 package com.evolve.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
+import org.apache.commons.lang.BooleanUtils;
+import org.springframework.data.domain.Sort;
 
 @Builder
 @Getter
@@ -18,4 +21,10 @@ public class PersonLookupCriteria {
     private Boolean upDown;
 
     private String unitNumber;
+
+    @JsonIgnore
+    public Sort getSort() {
+        final Sort sort = Sort.by(sortBy == null || "id".equals(sortBy) ? "personId" : sortBy);
+        return BooleanUtils.isTrue(upDown) ? sort.ascending() : sort.descending();
+    }
 }

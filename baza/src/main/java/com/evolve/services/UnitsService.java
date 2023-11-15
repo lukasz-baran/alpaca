@@ -1,16 +1,11 @@
 package com.evolve.services;
 
 import com.evolve.domain.Unit;
+import com.evolve.repo.jpa.UnitRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
-import org.dizitart.no2.Nitrite;
-import org.dizitart.no2.filters.Filter;
-import org.dizitart.no2.repository.Cursor;
-import org.dizitart.no2.repository.ObjectRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -96,8 +91,7 @@ public class UnitsService {
             Unit.of("96 – inni"),
             Unit.of("99 – zmarli"));
 
-
-    private final Nitrite nitrite;
+    private final UnitRepository unitRepository;
 
     public Map<String, Unit> fetchMap() {
         return fetchList().stream().collect(Collectors.toMap(Unit::getId, unit -> unit));
@@ -110,21 +104,12 @@ public class UnitsService {
     }
 
     public List<Unit> fetchList() {
-        final ObjectRepository<Unit> unitRepo = nitrite.getRepository(Unit.class);
-
-        final List<Unit> units = new ArrayList<>();
-        Cursor<Unit> unitCursor = unitRepo.find();
-        for (Unit document : unitCursor) {
-            units.add(document);
-        }
-
-        return units;
+        return unitRepository.findAll();
     }
 
     public void populateUnits(List<Unit> units) {
-        final ObjectRepository<Unit> unitRepo = nitrite.getRepository(Unit.class);
-        unitRepo.remove(Filter.ALL);
-        units.forEach(unitRepo::insert);
+        unitRepository.deleteAll();
+        unitRepository.saveAll(units);
     }
 
 }

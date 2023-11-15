@@ -20,6 +20,9 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * PersonFixer is the last resort of engine that imports data from DBF files.
+ */
 @Component
 @Slf4j
 public class PersonFixer implements InitializingBean {

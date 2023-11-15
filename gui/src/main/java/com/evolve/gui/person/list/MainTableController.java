@@ -71,6 +71,19 @@ public class MainTableController implements Initializable, ApplicationListener<P
         dobColumn.setCellValueFactory(new PropertyValueFactory<>("dob"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         registryNumberColumn.setCellValueFactory(new PropertyValueFactory<>("registryNumber"));
+        // the following handler prevents from showing 0 in registry number cells
+        // 0 means that the registry number is unknown which valid according to business requirements:
+        registryNumberColumn.setCellFactory(param -> new TableCell<>() {
+            @Override
+            protected void updateItem(Long itemQuantity, boolean empty) {
+                super.updateItem(itemQuantity, empty);
+                if (empty || itemQuantity.equals(0L)) {
+                    setText(null);
+                } else {
+                    setText(itemQuantity.toString());
+                }
+            }
+        });
 
         personTableAnchorPane.disableProperty().bind(disabledProperty);
 

@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
-import org.dizitart.no2.repository.annotations.Id;
 
+import javax.persistence.Entity;
 import java.io.Serializable;
 
 /**
@@ -16,10 +16,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @ToString
+@Entity
 public class Unit implements Serializable {
     private static final String SEPARATOR = "–";
 
-    @Id
+    @javax.persistence.Id
     private String id;
 
     private String name;

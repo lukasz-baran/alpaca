@@ -2,6 +2,8 @@ package com.evolve.domain;
 
 import lombok.*;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.time.LocalDate;
 
 @AllArgsConstructor
@@ -11,9 +13,11 @@ import java.time.LocalDate;
 @ToString
 @EqualsAndHashCode
 @Builder
+@Embeddable
 public class PersonStatusChange {
 
     private EventType eventType;
+    @Column(name = "whenAdded")
     private LocalDate when;
 
     // sometimes it is impossible to get exact date, so we keep here original value

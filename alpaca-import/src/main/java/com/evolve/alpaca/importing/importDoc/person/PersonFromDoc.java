@@ -1,6 +1,7 @@
 package com.evolve.alpaca.importing.importDoc.person;
 
 import com.evolve.domain.PersonStatusDetails;
+import com.evolve.domain.RegistryNumber;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -10,9 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class Person {
+public class PersonFromDoc {
 
-    private KartotekaId numerKartoteki; // numer porządkowy nie wszyscy mają
+    private RegistryNumber numerKartoteki; // numer porządkowy nie wszyscy mają
     private String numerJednostki; // 95 - nie płaci składek
     private String numerGrupy; // numer grupy alfabetycznej (01-24)
     private String index; // numer porzadkowy w grupie

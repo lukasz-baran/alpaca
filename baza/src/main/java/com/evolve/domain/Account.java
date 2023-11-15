@@ -2,17 +2,18 @@ package com.evolve.domain;
 
 import lombok.*;
 import org.apache.commons.lang.StringUtils;
-import org.dizitart.no2.repository.annotations.Id;
 
+import javax.persistence.Entity;
 import java.util.Arrays;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Account {
 
-    @Id
+    @javax.persistence.Id
     private String accountId;
     private String accountName; // imię i nazwisko albo coś innego
 
