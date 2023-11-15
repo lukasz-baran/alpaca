@@ -15,7 +15,7 @@
         <module>baza</module>
         <module>gui</module>
         <module>alpaca-export</module>
-        <module>alpaca-import</module>
+        <module>alpaca-importing</module>
     </modules>
 
     <repositories>
@@ -234,7 +234,7 @@
             </dependency>
             <dependency>
                 <groupId>com.evolve</groupId>
-                <artifactId>alpaca-import</artifactId>
+                <artifactId>alpaca-importing</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 

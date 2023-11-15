@@ -36,7 +36,7 @@
 
         <dependency>
             <groupId>com.evolve</groupId>
-            <artifactId>alpaca-import</artifactId>
+            <artifactId>alpaca-importing</artifactId>
         </dependency>
 
         <dependency>
