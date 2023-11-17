@@ -33,7 +33,7 @@ public class PersonEditService {
         final Person.Gender gender = PersonGenderDeducer.getGender(command.firstName());
         person.setGender(gender);
 
-        new PersonValidator()
+        new PersonEditionValidator()
                 .validate(person)
                 .throwException(ValidationException::new);
 

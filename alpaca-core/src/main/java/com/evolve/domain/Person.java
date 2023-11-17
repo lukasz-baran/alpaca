@@ -10,7 +10,6 @@ import javax.validation.constraints.Email;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +21,6 @@ import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 @AllArgsConstructor
 @Entity
 public class Person implements Serializable {
-    public static final String FIRST_NAME_CANNOT_BE_EMPTY = "First name cannot be empty";
-    public static final String LAST_NAME_CANNOT_BE_EMPTY = "Last name cannot be empty";
     public static final String EMAIL_IS_NOT_VALID = "Email address is not valid";
 
     @javax.persistence.Id
@@ -39,12 +36,8 @@ public class Person implements Serializable {
     @AttributeOverrides( {@AttributeOverride(name="registryNum", column = @Column(name="old_registry_num") )} )
     private RegistryNumber oldRegistryNumber;
 
-    //@NotBlank(message = FIRST_NAME_CANNOT_BE_EMPTY)
     private String firstName; // imię
-
     private String secondName; // drugie imię
-
-    //@NotBlank(message = LAST_NAME_CANNOT_BE_EMPTY)
     private String lastName; // nazwisko
 
     private Gender gender;

@@ -1,20 +1,17 @@
 package com.evolve.services;
 
-import com.evolve.domain.Address;
-import com.evolve.domain.Person;
 import com.evolve.alpaca.validation.ValidationResult;
-import org.junit.jupiter.api.Disabled;
+import com.evolve.domain.Person;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PersonValidatorShould {
-    final PersonValidator validator = new PersonValidator();
+class PersonEditionValidatorShould {
+    final PersonEditionValidator validator = new PersonEditionValidator();
 
     @Test
-    @Disabled("Disabled because hibernate validations are turned off")
     void validatePerson() {
         // given
         final Person person = new Person();
@@ -36,12 +33,11 @@ class PersonValidatorShould {
         result = validator.validate(person);
 
         // then
-        //assertThat(result.isValid()).isFalse();
         assertThat(result.getErrors())
                 .hasSize(3)
-                .contains(Person.LAST_NAME_CANNOT_BE_EMPTY,
-                        Person.FIRST_NAME_CANNOT_BE_EMPTY,
-                        Address.STREET_IS_NOT_VALID);
+                .contains(PersonEditionValidator.LAST_NAME_CANNOT_BE_EMPTY,
+                        PersonEditionValidator.FIRST_NAME_CANNOT_BE_EMPTY,
+                        AddressValidator.STREET_IS_NOT_VALID);
 
     }
 }

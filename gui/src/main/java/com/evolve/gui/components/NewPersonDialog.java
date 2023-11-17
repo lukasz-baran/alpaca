@@ -7,7 +7,6 @@ import com.evolve.gui.DialogWindow;
 import com.evolve.gui.person.UnitNumberItem;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
-import com.sun.javafx.collections.ImmutableObservableList;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -67,7 +66,7 @@ public class NewPersonDialog extends DialogWindow<Person> {
         final ComboBox<UnitNumberItem> unitNumberCombo = new ComboBox<>(units);
 
         final ComboBox<Person.Gender> genderCombo = new ComboBox<>(
-                new ImmutableObservableList<>(Person.Gender.FEMALE, Person.Gender.MALE));
+                FXCollections.observableArrayList(Person.Gender.FEMALE, Person.Gender.MALE));
 
         final TextField registryNumberTextField = new TextField();
         registryNumberTextField.setPromptText("Numer kartoteki");
