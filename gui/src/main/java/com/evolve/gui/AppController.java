@@ -5,7 +5,6 @@ import com.evolve.alpaca.importing.importDoc.ImportAlphanumeric;
 import com.evolve.alpaca.importing.importDoc.ImportPeople;
 import com.evolve.alpaca.importing.importDoc.group.GrupyAlfabetyczne;
 import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
-import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.gui.admin.importDbf.ImportDbfDialog;
 import com.evolve.gui.components.NewPersonDialog;
 import com.evolve.gui.dictionaries.UnitsController;
@@ -16,6 +15,7 @@ import com.evolve.gui.person.list.MainTableController;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.search.SearchPersonDialog;
 import com.evolve.gui.person.originalDetails.OriginalDetailsController;
+import com.evolve.gui.person.problemsExplorer.ProblemsExplorerController;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
 import javafx.application.Platform;
@@ -63,6 +63,8 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     private final PersonDetailsController personDetailsController;
     private final MainTableController mainTableController;
 
+    private final FxControllerAndView<ProblemsExplorerController, VBox> problemsExplorerController;
+
     public Button btnNew;
     public Button btnEdit;
     public Button btnDelete;
@@ -101,9 +103,8 @@ public class AppController implements Initializable, ApplicationListener<PersonE
         System.exit(0);
     }
 
-    public void exportDb(ActionEvent actionEvent) {
-        List<com.evolve.domain.Person> personList = personsService.fetch(PersonLookupCriteria.builder().upDown(true).build());
-        personList.forEach(System.out::println);
+    public void problemsExplorerClicked(ActionEvent actionEvent) {
+        problemsExplorerController.getController().show();
     }
 
     public void notYetImplemented(ActionEvent actionEvent) {

@@ -14,8 +14,6 @@
                           onAction="#quitClicked"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Admin">
-                <MenuItem fx:id="deletePersonDataMenuItem" mnemonicParsing="false"
-                          text="Delete person data"/>
                 <MenuItem fx:id="importDbfMenuItem" mnemonicParsing="false" text="Import DBF"
                           onAction="#importDbfClicked"/>
                 <MenuItem fx:id="importPeopleMenuItem" mnemonicParsing="false" text="Import People"
@@ -34,7 +32,7 @@
         <Button fx:id="btnEdit" text="Edytuj" onAction="#editButtonClicked"/>
         <Button fx:id="btnDelete" text="Usuń" onAction="#notYetImplemented"/>
         <Button fx:id="btnSearch" text="Szukaj" onAction="#searchButtonClicked"/>
-        <Button fx:id="btnExport" text="Eksportuj" onAction="#exportDb"/>
+        <Button fx:id="btnExport" text="Błędy" onAction="#problemsExplorerClicked"/>
         <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
         </padding>

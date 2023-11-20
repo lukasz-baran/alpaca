@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 public class PersonLookupCriteria {
     public static final long DEFAULT_PAGE = 1;
     public static final long DEFAULT_PAGE_SIZE = 50;
+    public static final PersonLookupCriteria ALL = PersonLookupCriteria.builder().build();
 
     @Builder.Default
     private Long page = DEFAULT_PAGE;

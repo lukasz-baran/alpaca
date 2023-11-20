@@ -28,7 +28,7 @@ public class AlpacaIntegrationTest {
     @Test
     void testApp() {
         // given  -- initially database is empty
-        var list = personsService.fetchList(PersonLookupCriteria.builder().build());
+        var list = personsService.fetchList(PersonLookupCriteria.ALL);
         assertThat(list)
                 .isEmpty();
 
@@ -50,7 +50,7 @@ public class AlpacaIntegrationTest {
         personsService.insertPerson(newPerson);
 
         // then
-        assertThat(personsService.fetch(PersonLookupCriteria.builder().build()), PersonAssertion.class)
+        assertThat(personsService.fetch(PersonLookupCriteria.ALL), PersonAssertion.class)
                 .hasSize(1)
                 .first()
                 .hasFirstName(TEST_FIRST_NAME)
