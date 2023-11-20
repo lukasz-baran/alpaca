@@ -29,7 +29,7 @@ public class RegistryNumbers {
     }
 
 
-    Numbers parseLine(String line) {
+    public Numbers parseLine(String line) {
         final Numbers numbers = getRegistryNumber(line);
         if (!numbers.isEmpty()) {
             numbers.getNumber().ifPresent(newNumber -> {

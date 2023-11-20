@@ -55,4 +55,19 @@ public class PersonAssertion extends AbstractAssert<PersonAssertion, Person> {
         assertThat(actual.getAuthorizedPersons()).contains(expected);
         return this;
     }
+
+    public PersonAssertion hasRegistryNumber(RegistryNumber registryNumber) {
+        assertThat(actual.getRegistryNumber()).isEqualTo(registryNumber);
+        return this;
+    }
+
+    public PersonAssertion hasNoOldRegistryNumber() {
+        assertThat(actual.getOldRegistryNumber()).isNull();
+        return this;
+    }
+
+    public PersonAssertion hasOldRegistryNumber(RegistryNumber oldRegistryNumber) {
+        assertThat(actual.getOldRegistryNumber()).isEqualTo(oldRegistryNumber);
+        return this;
+    }
 }

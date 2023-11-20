@@ -14,10 +14,7 @@ class PersonEditionValidatorShould {
     @Test
     void validatePerson() {
         // given
-        final Person person = new Person();
-
-        person.setFirstName("John");
-        person.setLastName("Doe");
+        final Person person = Person.builder().firstName("John").lastName("Doe").build();
 
         // when
         ValidationResult result = validator.validate(person);

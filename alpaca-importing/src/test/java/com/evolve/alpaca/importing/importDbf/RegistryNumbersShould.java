@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * TODO This test is only experimental - we wanted to isolate the problem
  */
@@ -19,6 +21,25 @@ public class RegistryNumbersShould {
         RegistryNumbers.RegistryNumbersLoader registryNumbers = RegistryNumbers.usingLoader(resource);
 
         registryNumbers.loadNumbers();
+    }
 
+    @Test
+    void loadDataForSingleRecord() {
+        // given
+        final RegistryNumbers registryNumbers = new RegistryNumbers();
+
+        // when
+        final RegistryNumbers.Numbers halina = registryNumbers.parseLine("   100  1246"); // correct 100
+
+        // then
+        assertThat(halina.getNumber()).hasValue(1246);
+        assertThat(halina.getOldNumber()).hasValue(100);
+
+        // when
+        final RegistryNumbers.Numbers jadwiga = registryNumbers.parseLine("1 069  0100"); // correct 1069
+
+        // then
+        assertThat(jadwiga.getNumber()).hasValue(100);
+        assertThat(jadwiga.getOldNumber()).hasValue(1069);
     }
 }

@@ -18,8 +18,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -47,35 +45,9 @@ public class ImportDbfService {
         final PersonsWrapper wrapper = new PersonsWrapper(new ImportPeople(false).processFile());
 
         persons.forEach(person -> {
-                final String personId = person.getPersonId();
+                final RegistryNumber kartotekaId = wrapper.findByPersonId(person.getPersonId());
 
-                final RegistryNumber kartotekaId = wrapper.findByPersonId(personId);
-                if (kartotekaId.getNumber().isPresent()) {
-                    final String registryNumber = Optional.ofNullable(person.getRegistryNumber())
-                            .map(RegistryNumber::getRegistryNum)
-                            .map(Objects::toString)
-                            .orElse("");
-
-                    final String oldRegistryNumber = Optional.ofNullable(person.getOldRegistryNumber())
-                            .map(RegistryNumber::getRegistryNum)
-                            .map(Objects::toString)
-                            .orElse("");
-
-                    if (StringUtils.equals(kartotekaId.getRegistryNum().toString(), registryNumber)) {
-                        log.info("personId " + personId + " has correct registry number");
-                    } else {
-                        log.info("personId " + personId +
-                                " has INVALID registry number: " + kartotekaId.getRegistryNum().toString() + " " +
-                                registryNumber + " old: " + oldRegistryNumber);
-
-                        if (StringUtils.equals(kartotekaId.getRegistryNum().toString(), oldRegistryNumber)) {
-                            person.setRegistryNumber(RegistryNumber.fromText(oldRegistryNumber));
-                            person.setOldRegistryNumber(RegistryNumber.fromText(registryNumber));
-                        }
-
-                    }
-                }
-
+                RegistryNumberFixer.fixPersonRegistryNumbers(person, kartotekaId);
         });
 
         personsService.insertPersons(persons);

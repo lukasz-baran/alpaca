@@ -1,5 +1,6 @@
 package com.evolve.alpaca.importing.importDbf.deducers;
 
+import com.evolve.alpaca.importing.importDbf.RegistryNumbers;
 import com.evolve.domain.Address;
 import com.evolve.domain.Person;
 import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
@@ -14,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class SmartAddressPersonDeducerShould {
 
     final IssuesLogger issuesLogger = new IssuesLogger();
+    final RegistryNumbers registryNumbers = new RegistryNumbers();
 
     @Test
     void deduceAddress() {
@@ -30,7 +32,7 @@ class SmartAddressPersonDeducerShould {
                 .build();
 
         Optional<Person.PersonAddress> address =
-            new PersonDataDeducer(person, issuesLogger).deduce().orElseThrow().getAddresses()
+            new PersonDataDeducer(person, issuesLogger, registryNumbers).deduce().orElseThrow().getAddresses()
                     .stream().findFirst();
 
         assertThat(address)
@@ -52,7 +54,7 @@ class SmartAddressPersonDeducerShould {
                 .build();
 
         Optional<Person.PersonAddress> address =
-                new PersonDataDeducer(person, issuesLogger).deduce().orElseThrow().getAddresses()
+                new PersonDataDeducer(person, issuesLogger, registryNumbers).deduce().orElseThrow().getAddresses()
                         .stream().findFirst();
 
         assertThat(address)

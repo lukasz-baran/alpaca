@@ -16,8 +16,10 @@ public class PersonsFactory {
 
     @Getter
     private final IssuesLogger issuesLogger = new IssuesLogger();
+    private final RegistryNumbers registryNumbers = new RegistryNumbers();
 
     public List<Person> from(List<DbfPerson> dbfPeople) {
+
         final List<Person> result = dbfPeople.stream()
                 .map(this::from)
                 .filter(Optional::isPresent)
@@ -29,7 +31,7 @@ public class PersonsFactory {
     }
 
     Optional<Person> from(DbfPerson dbfPerson) {
-        return new PersonDataDeducer(dbfPerson, issuesLogger).deduce();
+        return new PersonDataDeducer(dbfPerson, issuesLogger, registryNumbers).deduce();
     }
 
 }

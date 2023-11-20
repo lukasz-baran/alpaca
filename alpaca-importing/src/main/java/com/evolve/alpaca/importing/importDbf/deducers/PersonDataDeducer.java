@@ -1,5 +1,6 @@
 package com.evolve.alpaca.importing.importDbf.deducers;
 
+import com.evolve.alpaca.importing.importDbf.RegistryNumbers;
 import com.evolve.domain.*;
 import com.evolve.alpaca.importing.DateParser;
 import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
@@ -18,9 +19,10 @@ import java.util.Optional;
 public class PersonDataDeducer {
     private final DbfPerson person;
     private final IssuesLogger issuesLogger;
+    private final RegistryNumbers registryNumbers;
     private List<String> guesses;
 
-    public PersonDataDeducer(DbfPerson person, IssuesLogger issuesLogger) {
+    public PersonDataDeducer(DbfPerson person, IssuesLogger issuesLogger, RegistryNumbers registryNumbers) {
         this.person = person;
         this.issuesLogger = issuesLogger;
         this.guesses = Lists.newArrayList(
@@ -31,6 +33,7 @@ public class PersonDataDeducer {
                 StringUtils.trim(person.getNAZ_ODB7()),
                 StringUtils.trim(person.getINFO()));
 
+        this.registryNumbers = registryNumbers;
     }
 
     public Optional<Person> deduce() {
@@ -86,12 +89,9 @@ public class PersonDataDeducer {
         final Optional<List<String>> maybePhoneNumbers = phoneNumbersDeducer.deduceFrom(Lists.newArrayList(person.getTEL0(), person.getTEL1()));
 
         // ustalmy numery w kartotekach
-        final Optional<RegistryNumber> registryNumber =
-                new RegistryNumbersDeducer(issues, RegistryNumbersDeducer.RegistryNumberType.NEW)
-                        .deduceFrom(Lists.newArrayList(person.getNR_IDENT()));
-        final Optional<RegistryNumber> oldRegistryNumber =
-                new RegistryNumbersDeducer(issues, RegistryNumbersDeducer.RegistryNumberType.OLD)
-                        .deduceFrom(Lists.newArrayList(person.getNR_IDENT()));
+        final RegistryNumbers.Numbers numbers = registryNumbers.parseLine(person.getNR_IDENT());
+        final Optional<RegistryNumber> registryNumber = numbers.getNumber().map(RegistryNumber::of);
+        final Optional<RegistryNumber> oldRegistryNumber = numbers.getOldNumber().map(RegistryNumber::of);
 
         // numer jednostki
         final UnitNumberDeducer unitNumberDeducer = new UnitNumberDeducer(issues);

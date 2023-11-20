@@ -17,7 +17,7 @@ import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 
 @Builder
 @Data
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
 public class Person implements Serializable {

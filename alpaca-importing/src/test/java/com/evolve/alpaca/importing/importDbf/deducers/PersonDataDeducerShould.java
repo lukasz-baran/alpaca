@@ -1,10 +1,12 @@
 package com.evolve.alpaca.importing.importDbf.deducers;
 
+import com.evolve.alpaca.importing.importDbf.RegistryNumbers;
 import com.evolve.domain.Address;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonId;
 import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -14,6 +16,8 @@ import static com.evolve.domain.PersonAssertion.assertPerson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PersonDataDeducerShould {
+
+    final RegistryNumbers registryNumbers = new RegistryNumbers();
 
     @Test
     void deducePersonData() {
@@ -27,7 +31,7 @@ class PersonDataDeducerShould {
                 .NAZ_ODB6("35-020 Rzeszów")
                 .NAZ_ODB7("ż.Alicja Einstein")
                 .build();
-        final Person person = new PersonDataDeducer(PERSON_DBF, new IssuesLogger()).deduce().orElseThrow();
+        final Person person = new PersonDataDeducer(PERSON_DBF, new IssuesLogger(), registryNumbers).deduce().orElseThrow();
 
         assertPerson(person)
                 .hasPersonId(new PersonId("22", "095"))
@@ -54,7 +58,7 @@ class PersonDataDeducerShould {
                 .NAZ_ODB6("25.08.69 08.00")
                 .NAZ_ODB7("m.Zygmunt Madera")
                 .build();
-        final Person person = new PersonDataDeducer(PERSON_DBF, new IssuesLogger()).deduce().orElseThrow();
+        final Person person = new PersonDataDeducer(PERSON_DBF, new IssuesLogger(), registryNumbers).deduce().orElseThrow();
 
         assertPerson(person)
                 .hasPersonId(new PersonId("12", "067"))
@@ -77,7 +81,7 @@ class PersonDataDeducerShould {
                 .build();
 
         // when
-        final Optional<Person> person = new PersonDataDeducer(invalidPersonData, new IssuesLogger()).deduce();
+        final Optional<Person> person = new PersonDataDeducer(invalidPersonData, new IssuesLogger(), registryNumbers).deduce();
 
         // then
         assertThat(person).isEmpty();
