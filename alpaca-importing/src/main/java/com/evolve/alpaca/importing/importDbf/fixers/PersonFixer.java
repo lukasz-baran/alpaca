@@ -4,6 +4,7 @@ import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatusChange;
 import com.evolve.alpaca.importing.DateParser;
 import com.evolve.domain.PersonGenderDeducer;
+import com.evolve.domain.RegistryNumber;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
@@ -91,6 +92,8 @@ public class PersonFixer implements InitializingBean {
             case "joinedDate" -> DateParser.parse(newValue).ifPresent(doa -> addPersonJoinedDate(person, doa));
             case "resignedDate" -> DateParser.parse(newValue).ifPresent(dor -> addPersonResignedDate(person, dor));
             case "previousName" -> addPreviousLastName(person, newValue);
+            case "registryNumber" -> person.setRegistryNumber(RegistryNumber.of(newValue));
+            case "oldRegistryNumber" -> person.setOldRegistryNumber(RegistryNumber.of(newValue));
             default -> {}
         }
     }

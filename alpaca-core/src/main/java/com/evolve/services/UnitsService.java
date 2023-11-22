@@ -64,7 +64,7 @@ public class UnitsService {
             Unit.of("46 – ZOZ Opatów"),
             Unit.of("47 – ZOZ Poddęb. Przem, Olk, P.R. ST San"),
             Unit.of("48 – ?"),
-            Unit.of("49 – Szpotal Woj Tarnów"),
+            Unit.of("49 – Szpital Woj Tarnów"),
             Unit.of("50 – Warszawa- Żoliborz"),
             Unit.of("51 – Brzozów-sami"),
             Unit.of("52 – Dębica sami"),
@@ -89,6 +89,8 @@ public class UnitsService {
             Unit.of("71 – Uzdrowisko Rymanów Zdrój"),
             Unit.of("95 – zwolnieni"),
             Unit.of("96 – inni"),
+            Unit.of("97 – rezygnacja"),
+            Unit.of("98 – skreślenie"),
             Unit.of("99 – zmarli"));
 
     private final UnitRepository unitRepository;

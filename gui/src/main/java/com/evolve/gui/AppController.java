@@ -1,5 +1,6 @@
 package com.evolve.gui;
 
+import com.evolve.alpaca.conf.LocalUserConfiguration;
 import com.evolve.alpaca.importing.importDbf.ImportDbfService;
 import com.evolve.alpaca.importing.importDoc.ImportAlphanumeric;
 import com.evolve.alpaca.importing.importDoc.ImportPeople;
@@ -57,6 +58,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     private final UnitsService unitsService;
     private final FxWeaver fxWeaver;
     private final StageManager stageManager;
+    private final LocalUserConfiguration localUserConfiguration;
 
     private final FxControllerAndView<UnitsController, VBox> unitsDialogController;
 
@@ -148,7 +150,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     }
 
     public void importDbfClicked(ActionEvent actionEvent) {
-        new ImportDbfDialog(stageManager)
+        new ImportDbfDialog(stageManager, localUserConfiguration)
                 .showDialog(stageManager.getWindow())
                 .ifPresent(dbFiles -> {
                     log.info("Opened dbf file {}", dbFiles);

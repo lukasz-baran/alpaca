@@ -1,5 +1,6 @@
 package com.evolve.gui.admin.importDbf;
 
+import com.evolve.alpaca.conf.LocalUserConfiguration;
 import com.evolve.gui.DialogWindow;
 import com.evolve.gui.StageManager;
 import javafx.scene.control.Button;
@@ -21,10 +22,12 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
             new FileChooser.ExtensionFilter("documents", "*.dbf");
 
     private final StageManager stageManager;
+    private final LocalUserConfiguration localUserConfiguration;
 
-    public ImportDbfDialog(StageManager stageManager) {
+    public ImportDbfDialog(StageManager stageManager, LocalUserConfiguration localUserConfiguration) {
         super("Nowy document", "Wybierz pliki DBF ze starej aplikacji");
         this.stageManager = stageManager;
+        this.localUserConfiguration = localUserConfiguration;
     }
 
     @Override
@@ -50,6 +53,9 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType && dbfFiles.isReady()) {
+                localUserConfiguration.setConfigurationProperty(LocalUserConfiguration.Z_B_KO_DBF_LOCATION, dbfFiles.getMainFile().getPath());
+                localUserConfiguration.setConfigurationProperty(LocalUserConfiguration.PLAN_DBF_LOCATION, dbfFiles.getPlanAccountsFile().getPath());
+
                 return dbfFiles;
             }
             return null;
@@ -79,8 +85,16 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
         group.getChildren().add(filePathTextField);
         group.getChildren().add(chooseFileButton);
 
+        localUserConfiguration.loadProperty(LocalUserConfiguration.Z_B_KO_DBF_LOCATION)
+                .ifPresent(filePath -> {
+                    filePathTextField.setText(filePath);
+                    dbfFiles.setMainFile(new File(filePath));
+                });
+
+        updateSaveButtonState(saveButton, filePathTextField.getText());
+
         filePathTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            saveButton.setDisable(newValue.trim().isEmpty());
+            updateSaveButtonState(saveButton, newValue);
         });
 
         return group;
@@ -107,11 +121,22 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
         group.getChildren().add(filePathTextField);
         group.getChildren().add(chooseFileButton);
 
+        localUserConfiguration.loadProperty(LocalUserConfiguration.PLAN_DBF_LOCATION)
+                .ifPresent(filePath -> {
+                    filePathTextField.setText(filePath);
+                    dbfFiles.setPlanAccountsFile(new File(filePath));
+                });
+        updateSaveButtonState(saveButton, filePathTextField.getText());
+
         filePathTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            saveButton.setDisable(newValue.trim().isEmpty());
+            updateSaveButtonState(saveButton, newValue);
         });
 
         return group;
+    }
+
+    private void updateSaveButtonState(Button saveButton, String newValue) {
+        saveButton.setDisable(newValue.trim().isEmpty());
     }
 
 }
