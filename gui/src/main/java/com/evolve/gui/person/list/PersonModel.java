@@ -2,13 +2,14 @@ package com.evolve.gui.person.list;
 
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import com.evolve.domain.PersonStatus;
+import com.evolve.domain.PersonStatusDetails;
+import javafx.beans.property.*;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.Period;
+import java.util.Optional;
 
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
@@ -21,23 +22,25 @@ public class PersonModel {
     private final SimpleStringProperty lastName;
     private final SimpleStringProperty email;
     private final ObjectProperty<LocalDate> dob;
+    private final SimpleLongProperty age;
     private final SimpleStringProperty status;
     private final SimpleLongProperty registryNumber;
 
-    PersonModel(String id, String fName, String lName, String email, LocalDate dob,
-            String status, Long registryNumber) {
+    PersonModel(String id, String firstName, String lastName, String email, LocalDate dob,
+                PersonStatus status, Long registryNumber) {
         this.id = new SimpleStringProperty(id);
-        this.firstName = new SimpleStringProperty(fName);
-        this.lastName = new SimpleStringProperty(lName);
+        this.firstName = new SimpleStringProperty(firstName);
+        this.lastName = new SimpleStringProperty(lastName);
         this.email = new SimpleStringProperty(email);
         this.dob = new SimpleObjectProperty<>(dob);
-        this.status = new SimpleStringProperty(status);
+        this.age = new SimpleLongProperty(calculateAge(dob, status));
+        this.status = new SimpleStringProperty(status.toString());
         this.registryNumber = new SimpleLongProperty(registryNumber);
     }
 
     PersonModel(PersonListView person) {
         this(person.personId(), person.firstName(), person.lastName(), person.email(),
-                person.dob(), person.status().toString(), person.getRegistryNumber().orElse(0L));
+                person.dob(), person.status(), person.getRegistryNumber().orElse(0L));
     }
 
     public String getId() {
@@ -75,6 +78,13 @@ public class PersonModel {
         this.dob.set(dob);
     }
 
+    public Long getAge() {
+        return age.get();
+    }
+    public void setAge(Long age) {
+        this.age.set(age);
+    }
+
     public String getStatus() {
         return status.get();
     }
@@ -85,7 +95,6 @@ public class PersonModel {
     public Long getRegistryNumber() {
         return registryNumber.get();
     }
-
     public void setRegistryNumber(Long registryNumber) {
         this.registryNumber.set(registryNumber);
     }
@@ -96,9 +105,9 @@ public class PersonModel {
         this.email.set(updatedPerson.getEmail());
         this.dob.set(updatedPerson.getDob());
 
-        if (updatedPerson.getStatus() != null && updatedPerson.getStatus().getStatus() != null) {
-            this.status.set(updatedPerson.getStatus().getStatus().name());
-        }
+        final Optional<PersonStatus> maybePersonStatus = Optional.ofNullable(updatedPerson.getStatus()).map(PersonStatusDetails::getStatus);
+        this.age.set(calculateAge(updatedPerson.getDob(), maybePersonStatus.orElse(null)));
+        maybePersonStatus.ifPresent(status -> this.status.set(status.name()));
     }
 
     public boolean matches(String filteredText) {
@@ -116,5 +125,13 @@ public class PersonModel {
         }
 
         return trimToEmpty(getId()).toLowerCase().contains(lowerCaseFilter);
+    }
+
+    private static Long calculateAge(LocalDate dob, PersonStatus status) {
+        if (status != PersonStatus.ACTIVE) {
+            return -1L;
+        }
+
+        return dob != null ? Period.between(dob, LocalDate.now()).getYears() : 0L;
     }
 }

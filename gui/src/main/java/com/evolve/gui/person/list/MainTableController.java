@@ -50,6 +50,7 @@ public class MainTableController implements Initializable, ApplicationListener<P
     @FXML TableColumn<PersonModel, String> firstNameColumn;
     @FXML TableColumn<PersonModel, String> lastNameColumn;
     @FXML TableColumn<PersonModel, LocalDate> dobColumn;
+    @FXML TableColumn<PersonModel, Long> ageColumn;
     @FXML TableColumn<PersonModel, String> statusColumn;
     @FXML TableColumn<PersonModel, Long> registryNumberColumn;
 
@@ -69,6 +70,7 @@ public class MainTableController implements Initializable, ApplicationListener<P
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         dobColumn.setCellValueFactory(new PropertyValueFactory<>("dob"));
+        ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         registryNumberColumn.setCellValueFactory(new PropertyValueFactory<>("registryNumber"));
         // the following handler prevents from showing 0 in registry number cells
@@ -79,6 +81,20 @@ public class MainTableController implements Initializable, ApplicationListener<P
                 super.updateItem(itemQuantity, empty);
                 if (empty || itemQuantity.equals(0L)) {
                     setText(null);
+                } else {
+                    setText(itemQuantity.toString());
+                }
+            }
+        });
+
+        ageColumn.setCellFactory(param -> new TableCell<>() {
+            @Override
+            protected void updateItem(Long itemQuantity, boolean empty) {
+                super.updateItem(itemQuantity, empty);
+                if (empty || itemQuantity.equals(0L)) {
+                    setText(null);
+                } else if (itemQuantity < 0L) {
+                    setText("-");
                 } else {
                     setText(itemQuantity.toString());
                 }

@@ -9,6 +9,7 @@ import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
 import com.evolve.gui.admin.importDbf.ImportDbfDialog;
 import com.evolve.gui.components.NewPersonDialog;
 import com.evolve.gui.dictionaries.UnitsController;
+import com.evolve.gui.documents.DocumentEntry;
 import com.evolve.gui.documents.DocumentsController;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.accounts.PersonAccountsController;
@@ -20,6 +21,7 @@ import com.evolve.gui.person.problemsExplorer.ProblemsExplorerController;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
 import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -66,6 +68,8 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     private final MainTableController mainTableController;
 
     private final FxControllerAndView<ProblemsExplorerController, VBox> problemsExplorerController;
+    private final FxControllerAndView<PersonAccountsController, VBox> personAccountsController;
+    private final FxControllerAndView<DocumentsController, VBox> documentsController;
 
     public Button btnNew;
     public Button btnEdit;
@@ -91,13 +95,24 @@ public class AppController implements Initializable, ApplicationListener<PersonE
         Locale.setDefault(new Locale("pl"));
         tabPersonDetails.setContent(fxWeaver.loadView(PersonDetailsController.class));
         tabOriginalDetails.setContent(fxWeaver.loadView(OriginalDetailsController.class));
-        tabPersonAdditionalData.setContent(fxWeaver.loadView(PersonAccountsController.class));
-        tabDocuments.setContent(fxWeaver.loadView(DocumentsController.class));
+
+        personAccountsController.getView()
+                        .ifPresent(vBox -> tabPersonAdditionalData.setContent(vBox));
+        documentsController.getView()
+                        .ifPresent(vBox -> tabDocuments.setContent(vBox));
 
         quitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
 
         unitsMenuItem.setOnAction(event -> unitsDialogController.getController().show());
+
+        personAccountsController.getController()
+                .getAccountsList()
+                        .addListener((ListChangeListener<? super PersonAccountsController.AccountEntry>) change ->
+                                tabPersonAdditionalData.textProperty().setValue("Konta (" + change.getList().size() + ")"));
+        documentsController.getController()
+                .getDocumentsList()
+                    .addListener((ListChangeListener<? super DocumentEntry>) change -> tabDocuments.textProperty().setValue("Documenty (" + change.getList().size() + ")"));
     }
 
     public void quitClicked(ActionEvent actionEvent) {
@@ -143,10 +158,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
     public void searchButtonClicked(ActionEvent actionEvent) {
         new SearchPersonDialog(unitsService)
                 .showDialog(stageManager.getWindow())
-                .ifPresent(personSearchCriteria -> {
-                    System.out.println(personSearchCriteria);
-                    mainTableController.showSearchCriteria(personSearchCriteria);
-                });
+                .ifPresent(mainTableController::showSearchCriteria);
     }
 
     public void importDbfClicked(ActionEvent actionEvent) {

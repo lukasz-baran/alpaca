@@ -25,18 +25,13 @@
                AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0"
                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
         <columns>
-            <TableColumn fx:id="idColumn" editable="false" minWidth="45"
-                         maxWidth="50.0" text="ID"/>
-            <TableColumn fx:id="firstNameColumn" editable="false"
-                         minWidth="100" text="Imię"/>
-            <TableColumn fx:id="lastNameColumn" editable="false"
-                         minWidth="120" text="Nazwisko"/>
-            <TableColumn fx:id="dobColumn" editable="false" minWidth="75"
-                         maxWidth="75" text="Data ur."/>
-            <TableColumn fx:id="statusColumn" editable="false" minWidth="50"
-                         text="Status"/>
-            <TableColumn fx:id="registryNumberColumn" editable="false" minWidth="50"
-                         text="Kartoteka"/>
+            <TableColumn fx:id="idColumn" editable="false" minWidth="45" maxWidth="50.0" text="ID"/>
+            <TableColumn fx:id="firstNameColumn" editable="false" minWidth="100" text="Imię"/>
+            <TableColumn fx:id="lastNameColumn" editable="false" minWidth="120" text="Nazwisko"/>
+            <TableColumn fx:id="dobColumn" editable="false" minWidth="75" maxWidth="75" text="Data ur."/>
+            <TableColumn fx:id="ageColumn" editable="false" minWidth="75" maxWidth="75" text="Wiek"/>
+            <TableColumn fx:id="statusColumn" editable="false" minWidth="50" maxWidth="100" text="Status"/>
+            <TableColumn fx:id="registryNumberColumn" editable="false" minWidth="50" text="Kartoteka"/>
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>

@@ -91,6 +91,7 @@ public class PersonFixer implements InitializingBean {
             case "dob" -> DateParser.parse(newValue).ifPresent(dob -> addPersonDateOfBirth(person, dob));
             case "joinedDate" -> DateParser.parse(newValue).ifPresent(doa -> addPersonJoinedDate(person, doa));
             case "resignedDate" -> DateParser.parse(newValue).ifPresent(dor -> addPersonResignedDate(person, dor));
+            case "deathDate" -> DateParser.parse(newValue).ifPresent(dateOfDeath -> addPersonDeathDate(person, dateOfDeath));
             case "previousName" -> addPreviousLastName(person, newValue);
             case "registryNumber" -> person.setRegistryNumber(RegistryNumber.of(newValue));
             case "oldRegistryNumber" -> person.setOldRegistryNumber(RegistryNumber.of(newValue));
@@ -114,6 +115,10 @@ public class PersonFixer implements InitializingBean {
     public void addPersonDateOfBirth(Person person, LocalDate actualPersonDob) {
         person.setDob(actualPersonDob);
         person.addOrUpdateStatusChange(PersonStatusChange.EventType.BORN, actualPersonDob);
+    }
+
+    private void addPersonDeathDate(Person person, LocalDate dateOfDeath) {
+        person.addOrUpdateStatusChange(PersonStatusChange.EventType.DIED, dateOfDeath);
     }
 
     public void addPreviousLastName(Person person, String previousLastName) {

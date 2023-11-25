@@ -15,7 +15,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.stereotype.Component;
@@ -32,7 +35,8 @@ public class PersonAccountsController implements Initializable {
     private final AccountsService accountsService;
     private final AccountTooltipService accountTooltipService;
 
-    private final ObservableList<AccountEntry> data = FXCollections.observableArrayList();
+    @Getter
+    private final ObservableList<AccountEntry> accountsList = FXCollections.observableArrayList();
 
     @FXML TableColumn<AccountEntry, String> accountIdColumn;
     @FXML TableColumn<AccountEntry, Account.AccountType> accountTypeColumn;
@@ -71,20 +75,21 @@ public class PersonAccountsController implements Initializable {
                 (ObservableValue<? extends PersonModel> obs, PersonModel oldUser, PersonModel newUser) -> populatePersonAccounts(newUser));
     }
 
-    public void populatePersonAccounts(PersonModel personModel) {
+    public List<Account> populatePersonAccounts(PersonModel personModel) {
         if (personModel == null || personModel.getId() == null) {
-            return;
+            return List.of();
         }
 
         final List<Account> accounts = accountsService.findByPersonId(personModel.getId());
         log.info("Person accounts: {}", accounts);
 
-        data.clear();
+        accountsList.clear();
 
-        accounts.forEach(account -> data.add(AccountEntry.of(account)));
+        accountsList.addAll(accounts.stream().map(AccountEntry::of).toList());
 
-        accountsTable.setItems(data);
+        accountsTable.setItems(accountsList);
         accountsTable.refresh(); // refresh is called to clear tooltips attached to emptied cells
+        return accounts;
     }
 
     @Getter

@@ -18,6 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxControllerAndView;
@@ -41,7 +42,8 @@ import java.util.ResourceBundle;
 public class DocumentsController implements Initializable {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
 
-    private final ObservableList<DocumentEntry> list = FXCollections.observableArrayList();
+    @Getter
+    private final ObservableList<DocumentEntry> documentsList = FXCollections.observableArrayList();
 
     private final StageManager stageManager;
     private final PersonListModel personListModel;
@@ -181,7 +183,7 @@ public class DocumentsController implements Initializable {
                 log.info("Content file added: {}", contentFile);
 
                 final DocumentEntry documentEntry = DocumentEntry.of(contentFile);
-                list.add(documentEntry);
+                documentsList.add(documentEntry);
         });
     }
 
@@ -189,12 +191,13 @@ public class DocumentsController implements Initializable {
         if (personModel != null) {
             String personId = personModel.getId();
 
-            list.clear();
-            fileRepository.findByPersonId(personId).forEach(file -> {
-                log.info("Found file: {}", file);
-                list.add(DocumentEntry.of(file));
-            });
-            documentsTable.setItems(list);
+            documentsList.clear();
+            documentsList.setAll(fileRepository.findByPersonId(personId).stream().map(DocumentEntry::of).toList());
+//            fileRepository.findByPersonId(personId).forEach(file -> {
+//                log.info("Found file: {}", file);
+//                documentsList.add(DocumentEntry.of(file));
+//            });
+            documentsTable.setItems(documentsList);
         }
     }
 
