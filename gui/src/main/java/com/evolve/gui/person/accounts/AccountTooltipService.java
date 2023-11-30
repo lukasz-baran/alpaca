@@ -24,9 +24,15 @@ public class AccountTooltipService {
         final String unitNumber = Account.getUnitNumber(accountId);
         final Optional<Unit> maybeUnit = unitsService.getByUnitNumber(unitNumber);
 
-        final String toolTipText =
-                accountType.getCode() + ": " + accountType + Strings.LINE_SEPARATOR +
-                        unitNumber + ": " + maybeUnit.map(Unit::getName).orElse("UNKNOWN");
+        final String toolTipText;
+        if (accountType != null) {
+            toolTipText = accountType.getCode() + ": " + accountType + Strings.LINE_SEPARATOR +
+                            unitNumber + ": " + maybeUnit.map(Unit::getName).orElse("UNKNOWN");
+        } else {
+            final String unknownCode = accountId.substring(0, 3);
+            toolTipText = "Unknown code: " + unknownCode + " " + Strings.LINE_SEPARATOR +
+                    unitNumber + ": " + maybeUnit.map(Unit::getName).orElse("UNKNOWN");
+        }
 
         return Optional.of(toolTipText);
     }

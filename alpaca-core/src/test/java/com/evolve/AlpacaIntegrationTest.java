@@ -1,6 +1,5 @@
 package com.evolve;
 
-import com.evolve.conf.AlpacaEntityConfiguration;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonAssertion;
 import com.evolve.domain.PersonLookupCriteria;
@@ -14,8 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static com.evolve.domain.PersonAssertion.assertPerson;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK,
-        classes = {TestConfig.class, AlpacaEntityConfiguration.class })
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ExtendWith(SpringExtension.class)
 public class AlpacaIntegrationTest {
 

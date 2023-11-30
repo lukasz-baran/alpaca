@@ -16,6 +16,7 @@
         <module>gui</module>
         <module>alpaca-export</module>
         <module>alpaca-importing</module>
+        <module>alpaca-rest</module>
     </modules>
 
     <repositories>
