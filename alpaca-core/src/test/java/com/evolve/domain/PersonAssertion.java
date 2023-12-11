@@ -41,6 +41,11 @@ public class PersonAssertion extends AbstractAssert<PersonAssertion, Person> {
         return this;
     }
 
+    public PersonAssertion hasEmail(String expectedEmail) {
+        assertThat(actual.getEmail()).isEqualTo(expectedEmail);
+        return this;
+    }
+
     public PersonAssertion wasBornOn(LocalDate expectedDob) {
         assertThat(actual.getDob()).isEqualTo(expectedDob);
         return this;

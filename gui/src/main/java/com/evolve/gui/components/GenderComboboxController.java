@@ -43,7 +43,6 @@ public class GenderComboboxController extends EditableGuiElement implements Init
 
     @Override
     public void setEditable(boolean editable) {
-        System.out.println("EDIT gender " + editable);
 //        if (editable) {
 //            genderCombo.setOnShown(null);
 //        } else {

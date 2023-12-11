@@ -1,5 +1,6 @@
 package com.evolve;
 
+import com.evolve.alpaca.ddd.Command;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatusChange;
 
@@ -13,6 +14,6 @@ public record EditPersonDataCommand(String id,
                                     List<String> phoneNumbers,
                                     List<Person.PersonAddress> addresses,
                                     List<Person.AuthorizedPerson> authorizedPersons,
-                                    List<PersonStatusChange> personStatusChanges) {
+                                    List<PersonStatusChange> personStatusChanges) implements Command {
 
 }

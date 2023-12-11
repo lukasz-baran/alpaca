@@ -1,12 +1,12 @@
 package com.evolve.gui.person.list;
 
+import com.evolve.alpaca.importing.event.DbfImportCompletedEvent;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.list.search.PersonSearchCriteria;
-import com.evolve.alpaca.importing.event.DbfImportCompletedEvent;
 import com.evolve.services.PersonsService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -22,7 +22,7 @@ import javafx.scene.text.Text;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.springframework.context.ApplicationListener;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -35,12 +35,13 @@ import java.util.ResourceBundle;
 @FxmlView("main-table.fxml")
 @RequiredArgsConstructor
 @Slf4j
-public class MainTableController implements Initializable, ApplicationListener<PersonEditionFinishedEvent> {
+public class MainTableController implements Initializable {
 
     private final BooleanProperty disabledProperty = new SimpleBooleanProperty(false);
     private final PersonListModel personListModel;
     private final PersonsService personsService;
     private final StageManager stageManager;
+    private final ApplicationEventPublisher publisher;
 
     @FXML AnchorPane personTableAnchorPane;
 
@@ -109,6 +110,17 @@ public class MainTableController implements Initializable, ApplicationListener<P
             personListModel.getCurrentPersonProperty().setValue(newValue);
         });
 
+        personTable.setRowFactory( tv -> {
+            final TableRow<PersonModel> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    final PersonModel rowData = row.getItem();
+                    publisher.publishEvent(new PersonListDoubleClickEvent(rowData));
+                }
+            });
+            return row ;
+        });
+
         resetSearchHyperlink.setOnAction(event -> showSearchCriteria(PersonSearchCriteria.empty()));
     }
 
@@ -146,7 +158,7 @@ public class MainTableController implements Initializable, ApplicationListener<P
         populateTable("id", true, PersonSearchCriteria.empty());
     }
 
-    @Override
+    @EventListener
     public void onApplicationEvent(PersonEditionFinishedEvent event) {
         event.getEditedPerson().ifPresent(updatedPerson -> {
             log.info("Edition successful");

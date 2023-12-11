@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
+@TestPropertySource("classpath:test.properties")
 public class ImportAndFixDataTest {
 
     @Autowired

@@ -3,25 +3,38 @@ package com.evolve;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonAssertion;
 import com.evolve.domain.PersonLookupCriteria;
+import com.evolve.domain.RegistryNumber;
+import com.evolve.services.PersonEditService;
 import com.evolve.services.PersonsService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.List;
+import java.util.Optional;
 
 import static com.evolve.domain.PersonAssertion.assertPerson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ExtendWith(SpringExtension.class)
+@TestPropertySource("classpath:test.properties")
 public class AlpacaIntegrationTest {
 
     public static final String TEST_FIRST_NAME = "Jan";
     public static final String TEST_LAST_NAME = "Barabasz";
     public static final String TEST_UNIT_NAME = "02";
 
+    public static final String NEW_FIRST_NAME = "Patrick";
+    public static final String NEW_LAST_NAME = "Swayze";
+    public static final String NEW_EMAIL = "patrick.swayze@none.com";
+
+
     @Autowired PersonsService personsService;
+    @Autowired PersonEditService personEditService;
 
     @Test
     void testApp() {
@@ -31,7 +44,7 @@ public class AlpacaIntegrationTest {
                 .isEmpty();
 
         // when
-        var nextId = personsService.findNextPersonId("Barabasz");
+        final Optional<String> nextId = personsService.findNextPersonId("Barabasz");
 
         // then
         assertThat(nextId)
@@ -61,6 +74,20 @@ public class AlpacaIntegrationTest {
                 .hasLastName(TEST_LAST_NAME)
                 .hasUnitNumber(TEST_UNIT_NAME)
                 .hasPersonId(personId);
+
+        // when -- person is edited
+        personEditService.editPerson(new EditPersonDataCommand(personId, NEW_FIRST_NAME, NEW_LAST_NAME,
+                null, NEW_EMAIL, List.of(), List.of(), List.of(), List.of()));
+
+        // then -- changes are persisted in db
+        assertPerson(personsService.findById(personId))
+                .hasFirstName(NEW_FIRST_NAME)
+                .hasLastName(NEW_LAST_NAME)
+                .hasUnitNumber(TEST_UNIT_NAME)
+                .hasEmail(NEW_EMAIL)
+                .hasPersonId(personId);
+
+        // then --
     }
 
 }

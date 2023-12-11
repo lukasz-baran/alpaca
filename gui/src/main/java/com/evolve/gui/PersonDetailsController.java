@@ -2,10 +2,11 @@ package com.evolve.gui;
 
 import com.evolve.EditPersonDataCommand;
 import com.evolve.alpaca.util.LocalDateStringConverter;
+import com.evolve.alpaca.validation.ValidationException;
 import com.evolve.domain.Person;
+import com.evolve.domain.RegistryNumber;
 import com.evolve.domain.Unit;
 import com.evolve.gui.components.GenderComboboxController;
-import com.evolve.gui.components.RegistryNumbersController;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.address.PersonAddressesController;
 import com.evolve.gui.person.authorizedPerson.AuthorizedPersonsController;
@@ -16,7 +17,6 @@ import com.evolve.gui.person.status.PersonStatusController;
 import com.evolve.services.PersonEditService;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
-import com.evolve.alpaca.validation.ValidationException;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -62,8 +62,7 @@ public class PersonDetailsController extends EditableGuiElement
 
     @FXML
     private final FxControllerAndView<PersonAddressesController, AnchorPane> personAddresses;
-    @FXML
-    private final FxControllerAndView<RegistryNumbersController, HBox> registryNumbers;
+
     @FXML
     private final FxControllerAndView<PersonStatusController, VBox> personStatusController;
 
@@ -77,6 +76,9 @@ public class PersonDetailsController extends EditableGuiElement
     @FXML TextField secondNameTextField;
     @FXML TextField lastNameTextField;
     @FXML TextField dobTextField;
+
+    @FXML TextField registryNumberTextField;
+    @FXML TextField oldRegistryNumberTextField;
 
     @FXML TextField emailTextField;
     @FXML TextField unitNumberTextField;
@@ -109,7 +111,14 @@ public class PersonDetailsController extends EditableGuiElement
 
         phoneNumbersController.getController().setPhoneNumbers(person.getPhoneNumbers());
 
-        registryNumbers.getController().setPerson(person);
+        registryNumberTextField.setText(
+                Optional.ofNullable(person.getRegistryNumber())
+                        .map(RegistryNumber::getRegistryNum)
+                        .map(Object::toString).orElse(null));
+        oldRegistryNumberTextField.setText(
+                Optional.ofNullable(person.getOldRegistryNumber())
+                        .flatMap(RegistryNumber::getNumber)
+                        .map(Object::toString).orElse(null));
 
         personGender.getController().setPersonGender(person);
 
@@ -127,6 +136,8 @@ public class PersonDetailsController extends EditableGuiElement
         authorizedController.getController().setAuthorizedPersons(person.getAuthorizedPersons());
 
         personStatusController.getController().setPerson(person);
+
+        btnCancel.setCancelButton(true);
     }
 
     private String getUnitNumber(String unitNumber) {

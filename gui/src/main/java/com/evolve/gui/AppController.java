@@ -14,6 +14,7 @@ import com.evolve.gui.documents.DocumentsController;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.accounts.PersonAccountsController;
 import com.evolve.gui.person.list.MainTableController;
+import com.evolve.gui.person.list.PersonListDoubleClickEvent;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.search.SearchPersonDialog;
 import com.evolve.gui.person.originalDetails.OriginalDetailsController;
@@ -38,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -51,7 +52,7 @@ import java.util.ResourceBundle;
 @FxmlView("main-view.fxml")
 @RequiredArgsConstructor
 @Slf4j
-public class AppController implements Initializable, ApplicationListener<PersonEditionFinishedEvent> {
+public class AppController implements Initializable {
 
     private final PersonListModel personListModel;
 
@@ -142,7 +143,7 @@ public class AppController implements Initializable, ApplicationListener<PersonE
             });
     }
 
-    public void editButtonClicked(ActionEvent actionEvent) {
+    public void editButtonClicked() {
         if (this.personListModel.getCurrentPersonProperty().getValue() == null) {
             log.warn("No person is selected - cannot edit");
 
@@ -180,7 +181,13 @@ public class AppController implements Initializable, ApplicationListener<PersonE
                 .processFile();
     }
 
-    @Override
+    @EventListener
+    public void onApplicationEvent(PersonListDoubleClickEvent event) {
+        // we pass null because the person is already set in the model
+        editButtonClicked();
+    }
+
+    @EventListener
     public void onApplicationEvent(PersonEditionFinishedEvent event) {
         disableControls(false);
     }

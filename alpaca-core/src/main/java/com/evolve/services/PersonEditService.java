@@ -1,6 +1,7 @@
 package com.evolve.services;
 
 import com.evolve.EditPersonDataCommand;
+import com.evolve.alpaca.ddd.CommandCollector;
 import com.evolve.alpaca.validation.ValidationException;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonGenderDeducer;
@@ -9,11 +10,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
 @Slf4j
 @Service
-public class PersonEditService {
+public class PersonEditService extends ApplicationService {
     private final PersonRepository personRepository;
+
+    public PersonEditService(PersonRepository personRepository, CommandCollector commandCollector) {
+        super(commandCollector);
+        this.personRepository = personRepository;
+    }
 
     /**
      * TODO maybe it should handle adding new person to the database
@@ -37,6 +42,10 @@ public class PersonEditService {
                 .validate(person)
                 .throwException(ValidationException::new);
 
-        return personRepository.save(person);
+        final Person result = personRepository.save(person);
+
+        persistCommand(command);
+
+        return result;
     }
 }

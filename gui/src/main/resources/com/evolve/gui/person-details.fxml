@@ -22,16 +22,16 @@
 
         <columnConstraints>
             <ColumnConstraints maxWidth="93.0" minWidth="80.0" prefWidth="67.0" /> <!-- hgrow="NEVER"  -->
-            <ColumnConstraints maxWidth="320.0" minWidth="100.0" prefWidth="320.0" /> <!-- hgrow="ALWAYS" -->
+            <ColumnConstraints maxWidth="130.0" minWidth="100.0" prefWidth="130.0" /> <!-- hgrow="ALWAYS" -->
+            <ColumnConstraints maxWidth="60.0" minWidth="60.0" prefWidth="60.0" />
+            <ColumnConstraints maxWidth="110.0" minWidth="100.0" prefWidth="110.0" />
         </columnConstraints>
         <rowConstraints >
             <RowConstraints minHeight="30" prefHeight="30.0" /> <!-- 0 -->
             <RowConstraints minHeight="30" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" /> <!-- 2 -->
-            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" /> <!-- 4 -->
+            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" /> <!-- 3 -->
 
-            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" /> <!-- 5 -->
             <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" /> <!-- 6 -->
 
             <RowConstraints vgrow="SOMETIMES" /> <!-- prefHeight="30.0"  -->
@@ -45,43 +45,51 @@
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="ID" GridPane.rowIndex="0" />
         <TextField fx:id="idTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"
-                   styleClass="non-editable" />
+                   styleClass="non-editable" maxWidth="110" />
+
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Data ur." wrappingWidth="102.625" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+        <TextField fx:id="dobTextField" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="0" styleClass="non-editable"
+                   maxWidth="100" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Imię" GridPane.rowIndex="1" />
-        <TextField fx:id="firstNameTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <TextField fx:id="firstNameTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="3" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwisko" GridPane.rowIndex="2" />
-        <TextField fx:id="lastNameTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <TextField fx:id="lastNameTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="3" />
 
+        <!--  4 wiersz  -->
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Drugie imię" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <TextField fx:id="secondNameTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <TextField fx:id="secondNameTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" maxWidth="110" />
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Płeć" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-        <fx:include fx:id="personGender" source="components/gender-select.fxml" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Płeć" wrappingWidth="102.625" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+        <fx:include fx:id="personGender" source="components/gender-select.fxml" GridPane.columnIndex="3" GridPane.rowIndex="3"  />
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Data ur." wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-        <TextField fx:id="dobTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="5" styleClass="non-editable" />
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Kartoteka" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-        <fx:include fx:id="registryNumbers" source="components/registry-numbers-input.fxml" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        <!--  5 wiersz  -->
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Kartoteka" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <TextField fx:id="registryNumberTextField" editable="false"  GridPane.columnIndex="1" GridPane.rowIndex="4" maxWidth="110" />
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Telefony" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-        <fx:include fx:id="phoneNumbersController" source="person/phoneNumber/phone-numbers.fxml" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Stara:" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+        <TextField fx:id="oldRegistryNumberTextField" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="4" />
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="8" />
-        <TextField fx:id="emailTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+        <!--  6 wiersz  -->
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Telefony" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <fx:include fx:id="phoneNumbersController" source="person/phoneNumber/phone-numbers.fxml" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.columnSpan="3" />
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Jednostka" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="9" />
-        <TextField fx:id="unitNumberTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+        <TextField fx:id="emailTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.columnSpan="3" />
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Adresy" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="10" />
-        <fx:include fx:id="personAddresses" source="person/address/person-addresses-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Jednostka" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+        <TextField fx:id="unitNumberTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.columnSpan="3" />
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Upoważnieni" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="11" />
-        <fx:include fx:id="authorizedController" source="person/authorizedPerson/authorized-persons-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Adresy" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+        <fx:include fx:id="personAddresses" source="person/address/person-addresses-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.columnSpan="3" />
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="12" />
-        <fx:include fx:id="personStatusController" source="person/status/person-status.fxml" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Upoważnieni" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+        <fx:include fx:id="authorizedController" source="person/authorizedPerson/authorized-persons-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="9" GridPane.columnSpan="3" />
+
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+        <fx:include fx:id="personStatusController" source="person/status/person-status.fxml" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.columnSpan="3" />
 
     </GridPane>
     <padding>

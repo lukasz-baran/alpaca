@@ -20,7 +20,7 @@ public class LocalDateStringConverter extends StringConverter<LocalDate> {
     }
 
     public static String localDateToString(LocalDate localDate) {
-        log.info("toString called {}", localDate);
+        log.debug("toString called {}", localDate);
         if (localDate == null) {
             return "";
         }
@@ -34,7 +34,7 @@ public class LocalDateStringConverter extends StringConverter<LocalDate> {
 
     @Override
     public LocalDate fromString(String formattedString) {
-        log.info("fromString called {}", formattedString);
+        log.debug("fromString called {}", formattedString);
         if (StringUtils.isBlank(formattedString)) {
             hasParseError = false;
             return null;
