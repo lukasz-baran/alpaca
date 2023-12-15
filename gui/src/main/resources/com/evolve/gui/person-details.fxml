@@ -80,7 +80,7 @@
         <TextField fx:id="emailTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.columnSpan="3" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Jednostka" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-        <TextField fx:id="unitNumberTextField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.columnSpan="3" />
+        <ComboBox fx:id="unitNumberComboBox" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.columnSpan="3" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Adresy" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="8" />
         <fx:include fx:id="personAddresses" source="person/address/person-addresses-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.columnSpan="3" />

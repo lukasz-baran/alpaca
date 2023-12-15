@@ -6,7 +6,6 @@ import com.evolve.alpaca.validation.ValidationException;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonGenderDeducer;
 import com.evolve.repo.jpa.PersonRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +33,7 @@ public class PersonEditService extends ApplicationService {
         person.setAddresses(command.addresses());
         person.setAuthorizedPersons(command.authorizedPersons());
         person.setStatusChanges(command.personStatusChanges());
+        person.setUnitNumber(command.unitNumber());
 
         final Person.Gender gender = PersonGenderDeducer.getGender(command.firstName());
         person.setGender(gender);

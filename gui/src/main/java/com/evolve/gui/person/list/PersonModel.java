@@ -107,7 +107,7 @@ public class PersonModel {
 
         final Optional<PersonStatus> maybePersonStatus = Optional.ofNullable(updatedPerson.getStatus()).map(PersonStatusDetails::getStatus);
         this.age.set(calculateAge(updatedPerson.getDob(), maybePersonStatus.orElse(null)));
-        maybePersonStatus.ifPresent(status -> this.status.set(status.name()));
+        maybePersonStatus.ifPresent(status -> this.status.set(status.getName()));
     }
 
     public boolean matches(String filteredText) {

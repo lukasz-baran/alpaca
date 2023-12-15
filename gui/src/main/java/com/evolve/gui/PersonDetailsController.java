@@ -8,6 +8,7 @@ import com.evolve.domain.RegistryNumber;
 import com.evolve.domain.Unit;
 import com.evolve.gui.components.GenderComboboxController;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
+import com.evolve.gui.person.UnitNumberItem;
 import com.evolve.gui.person.address.PersonAddressesController;
 import com.evolve.gui.person.authorizedPerson.AuthorizedPersonsController;
 import com.evolve.gui.person.list.PersonListModel;
@@ -18,10 +19,13 @@ import com.evolve.services.PersonEditService;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
@@ -35,7 +39,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -69,8 +72,6 @@ public class PersonDetailsController extends EditableGuiElement
     public Button btnSave;
     public Button btnCancel;
 
-    private Map<String, Unit> units;
-
     @FXML TextField idTextField;
     @FXML TextField firstNameTextField;
     @FXML TextField secondNameTextField;
@@ -81,13 +82,18 @@ public class PersonDetailsController extends EditableGuiElement
     @FXML TextField oldRegistryNumberTextField;
 
     @FXML TextField emailTextField;
-    @FXML TextField unitNumberTextField;
+    @FXML ComboBox<UnitNumberItem> unitNumberComboBox;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         log.info("initialized - PersonDetails");
 
-        this.units = unitsService.fetchMap();
+        final ObservableList<UnitNumberItem> units = FXCollections.observableArrayList();
+        for (Unit unit : unitsService.fetchList()) {
+            units.add(new UnitNumberItem(unit.getId(), unit.getName()));
+        }
+        unitNumberComboBox.setItems(units);
 
         personListModel.getCurrentPersonProperty().addListener(
                 (ObservableValue<? extends PersonModel> obs, PersonModel oldUser, PersonModel newUser) -> {
@@ -126,10 +132,15 @@ public class PersonDetailsController extends EditableGuiElement
         dobTextField.setEditable(false); // DOB is not editable using during person details edition
         dobTextField.setTooltip(new Tooltip("Data urodzenia jest ustalana na podstawie listy statusów."));
 
-        Optional.ofNullable(person.getUnitNumber())
-                .ifPresentOrElse(unitNumber -> this.unitNumberTextField.setText(
-                        getUnitNumber(unitNumber)),
-                        () -> this.unitNumberTextField.clear());
+        unitsService.fetchList()
+            .stream()
+            .filter(unit -> unit.getId().equals(person.getUnitNumber()))
+            .findFirst()
+            .map(unit -> new UnitNumberItem(unit.getId(), unit.getName()))
+            .ifPresentOrElse(unitNumber -> this.unitNumberComboBox.getSelectionModel().select(unitNumber),
+                    () -> this.unitNumberComboBox.getSelectionModel().clearSelection());
+        unitNumberComboBox.setDisable(true);
+
 
         personAddresses.getController().setPersonAddresses(person.getAddresses());
 
@@ -139,14 +150,6 @@ public class PersonDetailsController extends EditableGuiElement
 
         btnCancel.setCancelButton(true);
     }
-
-    private String getUnitNumber(String unitNumber) {
-        if (units.containsKey(unitNumber)) {
-            return unitNumber + " - " + units.get(unitNumber).getName();
-        }
-        return unitNumber + " - ???";
-    }
-
 
     @Override
     public void setEditable(boolean editable) {
@@ -160,6 +163,8 @@ public class PersonDetailsController extends EditableGuiElement
 
         // FIXME person gender cannot be edited!
         personGender.getController().setEditable(editable);
+
+        unitNumberComboBox.setDisable(!editable);
 
         personAddresses.getController().setEditable(editable);
         authorizedController.getController().setEditable(editable);
@@ -192,7 +197,8 @@ public class PersonDetailsController extends EditableGuiElement
                 phoneNumbersController.getController().getNumbers(),
                 personAddresses.getController().getPersonAddresses(),
                 authorizedController.getController().getAuthorizedPersons(),
-                personStatusController.getController().getStatusChanges()
+                personStatusController.getController().getStatusChanges(),
+                unitNumberComboBox.getSelectionModel().getSelectedItem().unitNumber()
                 );
 
         log.info("Update person data: {}", command);
