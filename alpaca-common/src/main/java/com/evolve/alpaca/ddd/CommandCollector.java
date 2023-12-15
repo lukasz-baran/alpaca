@@ -2,7 +2,6 @@ package com.evolve.alpaca.ddd;
 
 import com.evolve.alpaca.utils.LogUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,8 +13,6 @@ import java.nio.file.Path;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -24,14 +21,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class CommandCollector {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
             .ofPattern("uuuu-MM-dd-HH-mm-ss-SSS", Locale.ENGLISH);
-
+    private final ObjectMapper objectMapper = LogUtil.OBJECT_MAPPER;
 
     private final Path pathToCommandsDir;
-
-    @Getter
-    private final List<PersistedCommand> commands = new ArrayList<>();
-
-    private final ObjectMapper objectMapper = LogUtil.OBJECT_MAPPER;
     private final Clock clock;
 
     /**
@@ -46,6 +38,10 @@ public class CommandCollector {
 
     @SneakyThrows
     public PersistedCommand addCommand(Command command) {
+        if (!isRecording.get()) {
+            return null;
+        }
+
         final String type = command.getClass().getName();
         final LocalDateTime now = LocalDateTime.now(clock);
         final PersistedCommand persistedCommand = new PersistedCommand(type, now, command);
@@ -75,4 +71,11 @@ public class CommandCollector {
         }
     }
 
+    public void stopRecording() {
+        isRecording.set(false);
+    }
+
+    public void startRecording() {
+        isRecording.set(true);
+    }
 }

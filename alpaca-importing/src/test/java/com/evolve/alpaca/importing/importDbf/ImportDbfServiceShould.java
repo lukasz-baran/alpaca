@@ -1,8 +1,11 @@
 package com.evolve.alpaca.importing.importDbf;
 
+import com.evolve.alpaca.ddd.CommandCollector;
+import com.evolve.alpaca.ddd.CommandsApplier;
 import com.evolve.alpaca.importing.importDbf.fixers.PersonFixer;
 import com.evolve.domain.Person;
 import com.evolve.services.AccountsService;
+import com.evolve.services.PersonEditService;
 import com.evolve.services.PersonsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -29,13 +32,18 @@ class ImportDbfServiceShould {
     @Mock PersonFixer personFixer;
     @Mock PersonsService personsService;
 
+    @Mock CommandsApplier commandsApplier;
+    @Mock CommandCollector commandCollector;
+    @Mock PersonEditService personEditService;
+
     ImportDbfService importDbfService;
 
     @BeforeEach
     public void setUp() {
         when(personFixer.fixData(any(Person.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
-        importDbfService = new ImportDbfService(applicationEventPublisher, personsService, personFixer, accountsService);
+        importDbfService = new ImportDbfService(applicationEventPublisher, personsService, personFixer, accountsService,
+                commandsApplier, commandCollector, personEditService);
     }
 
     @Test
