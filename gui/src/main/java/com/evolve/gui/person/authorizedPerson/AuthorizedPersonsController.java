@@ -6,12 +6,12 @@ import com.evolve.gui.StageManager;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.stereotype.Component;
@@ -58,15 +58,22 @@ public class AuthorizedPersonsController extends EditableGuiElement implements I
                 final ContextMenu contextMenu = new ContextMenu();
 
                 final MenuItem editMenuItem = new MenuItem("Edytuj");
-                editMenuItem.setOnAction(event -> {
-                    new AuthorizedPersonDialog(row.getItem().getAuthorizedPerson())
-                        .showDialog(stageManager.getWindow())
-                        .ifPresent(person -> {
-                            row.getItem().setAuthorizedPerson(person);
-                            tableView.refresh();
-                        });
-                });
+                editMenuItem.setOnAction(event -> editAuthorizedPerson(tableView, row));
                 editMenuItem.disableProperty().bind(disabledProperty);
+
+                row.setOnMouseClicked(event -> {
+                    if (disabledProperty.get()) {
+                        return;
+                    }
+
+                    if (event.getClickCount() == 2) {
+                        if (row.isEmpty()) {
+                            addAuthorizedPerson(event);
+                        } else {
+                            editAuthorizedPerson(tableView, row);
+                        }
+                    }
+                });
 
                 final MenuItem removeMenuItem = new MenuItem("Usuń");
                 removeMenuItem.setOnAction(event -> {
@@ -85,13 +92,22 @@ public class AuthorizedPersonsController extends EditableGuiElement implements I
             });
     }
 
-    void addAuthorizedPerson(ActionEvent actionEvent) {
+    private void addAuthorizedPerson(Event actionEvent) {
         new AuthorizedPersonDialog(null)
             .showDialog(stageManager.getWindow())
             .ifPresent(person -> {
                 list.add(new AuthorizedPersonEntry(person));
                 authorizedPersonsTable.refresh();
             });
+    }
+
+    private void editAuthorizedPerson(TableView<AuthorizedPersonEntry> tableView, TableRow<AuthorizedPersonEntry> row) {
+        new AuthorizedPersonDialog(row.getItem().getAuthorizedPerson())
+                .showDialog(stageManager.getWindow())
+                .ifPresent(person -> {
+                    row.getItem().setAuthorizedPerson(person);
+                    tableView.refresh();
+                });
     }
 
     public void setAuthorizedPersons(List<Person.AuthorizedPerson> authorizedPersons) {
