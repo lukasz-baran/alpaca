@@ -130,6 +130,7 @@ public class MainTableController implements Initializable {
                         .sortBy(sortBy)
                         .upDown(upDown)
                         .unitNumber(criteria.unitNumber())
+                        .hasDocuments(criteria.hasDocuments())
                         .build());
 
         log.info("total person number {}", persons.size());

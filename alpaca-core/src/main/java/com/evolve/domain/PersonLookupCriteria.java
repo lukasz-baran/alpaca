@@ -22,6 +22,7 @@ public class PersonLookupCriteria {
     private Boolean upDown;
 
     private String unitNumber;
+    private Boolean hasDocuments;
 
     @JsonIgnore
     public Sort getSort() {

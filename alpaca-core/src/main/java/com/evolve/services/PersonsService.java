@@ -1,12 +1,13 @@
 package com.evolve.services;
 
 import com.evolve.FindPerson;
+import com.evolve.content.ContentFile;
+import com.evolve.content.FileRepository;
 import com.evolve.domain.*;
 import com.evolve.repo.jpa.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class PersonsService implements InitializingBean, FindPerson {
+public class PersonsService implements FindPerson {
     private final PersonRepository personRepository;
+    private final FileRepository fileRepository;
 
     @Override
     public List<PersonListView> fetchList(PersonLookupCriteria criteria) {
@@ -29,13 +31,23 @@ public class PersonsService implements InitializingBean, FindPerson {
 
     @Override
     public List<Person> fetch(PersonLookupCriteria criteria) {
-        if (StringUtils.isNotEmpty(criteria.getUnitNumber())) {
-            return personRepository.findAll(
+        var filteredByUnit =  StringUtils.isNotEmpty(criteria.getUnitNumber()) ?
+                personRepository.findAll(
                     Example.of(Person.builder().unitNumber(criteria.getUnitNumber()).build()),
-                    criteria.getSort());
+                    criteria.getSort()) :
+                 personRepository.findAll(criteria.getSort());
+
+        if (criteria.getHasDocuments() != null) {
+            var listOfIds = fileRepository.findAll().stream().map(ContentFile::getPersonId).collect(Collectors.toSet());
+
+            if (criteria.getHasDocuments()) {
+                return filteredByUnit.stream().filter(p -> listOfIds.contains(p.getPersonId())).collect(Collectors.toList());
+            } else {
+                return filteredByUnit.stream().filter(p -> !listOfIds.contains(p.getPersonId())).collect(Collectors.toList());
+            }
         }
 
-        return personRepository.findAll(criteria.getSort());
+        return filteredByUnit;
     }
 
     @Override
@@ -92,11 +104,6 @@ public class PersonsService implements InitializingBean, FindPerson {
 
         personRepository.deleteAll();
         personRepository.saveAll(personList);
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        log.info("LIST persons: ");
     }
 
     void validatePerson(List<Person> personList) {
