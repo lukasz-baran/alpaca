@@ -113,7 +113,8 @@ public class AppController implements Initializable {
                                 tabPersonAdditionalData.textProperty().setValue("Konta (" + change.getList().size() + ")"));
         documentsController.getController()
                 .getDocumentsList()
-                    .addListener((ListChangeListener<? super DocumentEntry>) change -> tabDocuments.textProperty().setValue("Documenty (" + change.getList().size() + ")"));
+                    .addListener((ListChangeListener<? super DocumentEntry>) change -> tabDocuments.textProperty()
+                            .setValue("Dokumenty (" + change.getList().size() + ")"));
     }
 
     public void quitClicked(ActionEvent actionEvent) {

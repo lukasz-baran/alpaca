@@ -14,6 +14,18 @@ public record PersonSearchCriteria(String unitNumber, Boolean hasDocuments) {
 
     @Override
     public String toString() {
-        return "Jednostka: " + unitNumber;
+        String result = "";
+
+        if (StringUtils.isNotEmpty(unitNumber)) {
+            result += "Jednostka: " + unitNumber;
+        }
+
+        if (hasDocuments != null) {
+            final String yesNo = hasDocuments ? "Tak" : "Nie";
+
+            result += " Załączniki: " + yesNo;
+        }
+
+        return result;
     }
 }
