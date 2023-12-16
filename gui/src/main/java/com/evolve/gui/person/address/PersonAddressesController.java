@@ -6,14 +6,14 @@ import com.evolve.gui.StageManager;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.stereotype.Component;
@@ -72,14 +72,22 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
             });
 
             final MenuItem editMenuItem = new MenuItem("Edytuj");
-            editMenuItem.setOnAction(event -> {
-                new PersonAddressDialog(row.getItem().getPersonAddress()).showDialog(stageManager.getWindow())
-                    .ifPresent(person -> {
-                        row.getItem().setPersonAddress(person);
-                        tableView.refresh();
-                    });
-            });
+            editMenuItem.setOnAction(event -> editPersonAddress(tableView, row));
             editMenuItem.disableProperty().bind(disabledProperty);
+
+            row.setOnMouseClicked(event -> {
+                if (disabledProperty.get()) {
+                    return;
+                }
+
+                if (event.getClickCount() == 2) {
+                    if (row.isEmpty()) {
+                        addPersonAddress(event);
+                    } else {
+                        editPersonAddress(tableView, row);
+                    }
+                }
+            });
 
             final MenuItem removeMenuItem = new MenuItem("Usuń");
             removeMenuItem.setOnAction(event -> {
@@ -107,12 +115,20 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
         addressesTable.setItems(list);
     }
 
-    void addPersonAddress(ActionEvent actionEvent) {
+    private void addPersonAddress(Event actionEvent) {
          new PersonAddressDialog(null).showDialog(stageManager.getWindow())
              .ifPresent(person -> {
                 list.add(new AddressEntry(person));
                 addressesTable.refresh();
             });
+    }
+
+    private void editPersonAddress(TableView<AddressEntry> tableView, TableRow<AddressEntry> row) {
+        new PersonAddressDialog(row.getItem().getPersonAddress()).showDialog(stageManager.getWindow())
+                .ifPresent(person -> {
+                    row.getItem().setPersonAddress(person);
+                    tableView.refresh();
+                });
     }
 
     public List<Person.PersonAddress> getPersonAddresses() {

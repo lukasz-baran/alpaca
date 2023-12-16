@@ -11,7 +11,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -67,24 +67,28 @@ public class PersonStatusController extends EditableGuiElement implements Initia
             final TableRow<PersonHistoryStatusEntry> row = new TableRow<>();
             final ContextMenu contextMenu = new ContextMenu();
 
-            // Dodaj
             final MenuItem newStatusMenuItem = new MenuItem("Nowy");
             newStatusMenuItem.setOnAction(this::addNewStatus);
             newStatusMenuItem.disableProperty().bind(disabledProperty);
 
-            // Edytuj
             final MenuItem editStatusMenuItem = new MenuItem("Edytuj");
-            editStatusMenuItem.setOnAction(event -> {
-                new PersonStatusEditDialog(row.getItem().getPersonStatusChange())
-                        .showDialog(stageManager.getWindow())
-                        .ifPresent(personStatusChange -> {
-                            row.getItem().setPersonStatusChange(personStatusChange);
-                            tableView.refresh();
-                        });
-            });
+            editStatusMenuItem.setOnAction(event -> editPhoneNumber(tableView, row));
             editStatusMenuItem.disableProperty().bind(disabledProperty);
 
-            // Usuń
+            row.setOnMouseClicked(event -> {
+                if (disabledProperty.get()) {
+                    return;
+                }
+
+                if (event.getClickCount() == 2) {
+                    if (row.isEmpty()) {
+                        addNewStatus(event);
+                    } else {
+                        editPhoneNumber(tableView, row);
+                    }
+                }
+            });
+
             final MenuItem removeStatusMenuItem = new MenuItem("Usuń");
             removeStatusMenuItem.setOnAction(event -> {
                 row.getItem().getEventType();
@@ -124,11 +128,19 @@ public class PersonStatusController extends EditableGuiElement implements Initia
         statusHistoryTable.setItems(statusChanges);
     }
 
-    private void addNewStatus(ActionEvent actionEvent) {
+    private void addNewStatus(Event actionEvent) {
         PersonStatusEditDialog.newStatus(getStatusChanges()).showDialog(stageManager.getWindow())
                 .ifPresent(personStatus -> {
                     statusChanges.add(new PersonHistoryStatusEntry(personStatus));
                     statusHistoryTable.refresh();
+                });
+    }
+
+    private void editPhoneNumber(TableView<PersonHistoryStatusEntry> tableView, TableRow<PersonHistoryStatusEntry> row) {
+        new PersonStatusEditDialog(row.getItem().getPersonStatusChange()).showDialog(stageManager.getWindow())
+                .ifPresent(personStatusChange -> {
+                    row.getItem().setPersonStatusChange(personStatusChange);
+                    tableView.refresh();
                 });
     }
 

@@ -53,8 +53,8 @@ public class PhoneNumbersController extends EditableGuiElement implements Initia
             final TableRow<PhoneNumberEntry> row = new TableRow<>();
             final ContextMenu contextMenu = new ContextMenu();
 
-            final MenuItem copyAddress = new MenuItem("Kopiuj");
-            copyAddress.setOnAction(event -> {
+            final MenuItem copyNumber = new MenuItem("Kopiuj");
+            copyNumber.setOnAction(event -> {
                 final String text = trimToEmpty(row.getItem().getNumber());
 
                 final ClipboardContent clipboardContent = new ClipboardContent();
@@ -87,7 +87,7 @@ public class PhoneNumbersController extends EditableGuiElement implements Initia
             });
             removeMenuItem.disableProperty().bind(disabledProperty);
 
-            contextMenu.getItems().add(copyAddress);
+            contextMenu.getItems().add(copyNumber);
             contextMenu.getItems().add(editMenuItem);
             contextMenu.getItems().add(removeMenuItem);
 
