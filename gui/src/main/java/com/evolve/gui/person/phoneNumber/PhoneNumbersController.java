@@ -5,14 +5,14 @@ import com.evolve.gui.StageManager;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.stereotype.Component;
@@ -63,14 +63,22 @@ public class PhoneNumbersController extends EditableGuiElement implements Initia
             });
 
             final MenuItem editMenuItem = new MenuItem("Edytuj");
-            editMenuItem.setOnAction(event -> {
-                new PhoneNumberDialog(row.getItem().getNumber()).showDialog(stageManager.getWindow())
-                        .ifPresent(number -> {
-                            row.getItem().setNumber(number);
-                            tableView.refresh();
-                        });
-            });
+            editMenuItem.setOnAction(event -> editPhoneNumber(tableView, row));
             editMenuItem.disableProperty().bind(disabledProperty);
+
+            row.setOnMouseClicked(event -> {
+                if (disabledProperty.get()) {
+                    return;
+                }
+
+                if (event.getClickCount() == 2) {
+                    if (row.isEmpty()) {
+                        addPhoneNumber(event);
+                    } else {
+                        editPhoneNumber(tableView, row);
+                    }
+                }
+            });
 
             final MenuItem removeMenuItem = new MenuItem("Usuń");
             removeMenuItem.setOnAction(event -> {
@@ -106,12 +114,21 @@ public class PhoneNumbersController extends EditableGuiElement implements Initia
     }
 
 
-    void addPhoneNumber(ActionEvent actionEvent) {
+    private void addPhoneNumber(Event actionEvent) {
         new PhoneNumberDialog(null).showDialog(stageManager.getWindow())
                 .ifPresent(number -> {
                     list.add(new PhoneNumberEntry(number));
                     phoneNumbersTable.refresh();
                 });
     }
+
+    private void editPhoneNumber(TableView<PhoneNumberEntry> tableView, TableRow<PhoneNumberEntry> row) {
+        new PhoneNumberDialog(row.getItem().getNumber()).showDialog(stageManager.getWindow())
+                .ifPresent(number -> {
+                    row.getItem().setNumber(number);
+                    tableView.refresh();
+                });
+    }
+
 
 }
