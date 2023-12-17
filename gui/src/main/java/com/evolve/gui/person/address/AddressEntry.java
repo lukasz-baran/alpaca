@@ -27,4 +27,8 @@ public class AddressEntry {
         return personAddress.getCity();
     }
 
+    public Person.AddressType getType() {
+        return personAddress.getType();
+    }
+
 }

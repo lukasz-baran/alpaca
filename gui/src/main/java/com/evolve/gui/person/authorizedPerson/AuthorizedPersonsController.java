@@ -112,7 +112,6 @@ public class AuthorizedPersonsController extends EditableGuiElement implements I
 
     public void setAuthorizedPersons(List<Person.AuthorizedPerson> authorizedPersons) {
         list.clear();
-        log.info("setting {}", authorizedPersons);
         emptyIfNull(authorizedPersons)
                 .forEach(authorizedPerson ->
                         list.add(new AuthorizedPersonEntry(authorizedPerson)));

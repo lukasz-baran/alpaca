@@ -132,10 +132,19 @@ public class Person implements Serializable {
         }
     }
 
+    @Getter
+    @RequiredArgsConstructor
     public enum AddressType {
-        HOME,
-        MAILING,
-        OTHER
+        HOME("Domowy"),
+        MAILING("Korespondencyjny"),
+        OTHER("Inny");
+
+        private final String name;
+
+        @Override
+        public String toString() {
+            return this.name;
+        }
     }
 
 

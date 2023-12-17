@@ -40,6 +40,7 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
     @FXML TableColumn<AddressEntry, String> streetColumn;
     @FXML TableColumn<AddressEntry, String> postalCodeColumn;
     @FXML TableColumn<AddressEntry, String> cityColumn;
+    @FXML TableColumn<AddressEntry, String> addressTypeColumn;
 
     @FXML MenuItem addAddress;
 
@@ -48,6 +49,7 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
         streetColumn.setCellValueFactory(new PropertyValueFactory<>("street"));
         postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
+        addressTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
 
         setPersonAddresses(Collections.emptyList()); // it's needed, without this initial call the table won't be populated with real data
 
