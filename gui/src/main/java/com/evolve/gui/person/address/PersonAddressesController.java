@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -47,6 +48,15 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         streetColumn.setCellValueFactory(new PropertyValueFactory<>("street"));
+        streetColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String streetText, boolean empty) {
+                super.updateItem(streetText, empty);
+                setText(streetText);
+                setTooltip(new Tooltip(streetText));
+            }
+        });
+
         postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
         addressTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
@@ -63,13 +73,16 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
 
             final MenuItem copyAddress = new MenuItem("Kopiuj");
             copyAddress.setOnAction(event -> {
-                final String copiedAddress = String.join(" ",
-                        trimToEmpty(row.getItem().getPersonAddress().getStreet()),
-                        trimToEmpty(row.getItem().getPersonAddress().getPostalCode()),
-                        trimToEmpty(row.getItem().getPersonAddress().getCity())
-                );
                 final ClipboardContent clipboardContent = new ClipboardContent();
-                clipboardContent.putString(copiedAddress);
+                final Optional<String> addressAsText =
+                        Optional.ofNullable(row.getItem())
+                                .map(AddressEntry::getPersonAddress)
+                                .map(address -> String.join(" ",
+                                        trimToEmpty(address.getStreet()),
+                                        trimToEmpty(address.getPostalCode()),
+                                        trimToEmpty(address.getCity())));
+
+                addressAsText.ifPresent(clipboardContent::putString);
                 Clipboard.getSystemClipboard().setContent(clipboardContent);
             });
 
@@ -108,6 +121,8 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
             return row;
         });
     }
+
+
 
     public void setPersonAddresses(List<Person.PersonAddress> personAddresses) {
         list.clear();
