@@ -1,9 +1,6 @@
 package com.evolve.gui.person.list;
 
-import com.evolve.domain.Person;
-import com.evolve.domain.PersonListView;
-import com.evolve.domain.PersonStatus;
-import com.evolve.domain.PersonStatusDetails;
+import com.evolve.domain.*;
 import javafx.beans.property.*;
 import lombok.ToString;
 
@@ -108,6 +105,11 @@ public class PersonModel {
         final Optional<PersonStatus> maybePersonStatus = Optional.ofNullable(updatedPerson.getStatus()).map(PersonStatusDetails::getStatus);
         this.age.set(calculateAge(updatedPerson.getDob(), maybePersonStatus.orElse(null)));
         maybePersonStatus.ifPresent(status -> this.status.set(status.getName()));
+
+        final Optional<Integer> maybeRegistryNumber = Optional.ofNullable(updatedPerson.getRegistryNumber())
+                .map(RegistryNumber::getRegistryNum);
+        maybeRegistryNumber.ifPresentOrElse(this.registryNumber::set,
+                () -> this.registryNumber.set(0L));
     }
 
     public boolean matches(String filteredText) {
