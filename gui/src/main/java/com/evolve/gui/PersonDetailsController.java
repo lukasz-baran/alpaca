@@ -166,6 +166,9 @@ public class PersonDetailsController extends EditableGuiElement
 
         unitNumberComboBox.setDisable(!editable);
 
+        registryNumberTextField.setEditable(editable);
+        oldRegistryNumberTextField.setEditable(editable);
+
         personAddresses.getController().setEditable(editable);
         authorizedController.getController().setEditable(editable);
         phoneNumbersController.getController().setEditable(editable);
@@ -198,7 +201,9 @@ public class PersonDetailsController extends EditableGuiElement
                 personAddresses.getController().getPersonAddresses(),
                 authorizedController.getController().getAuthorizedPersons(),
                 personStatusController.getController().getStatusChanges(),
-                unitNumberComboBox.getSelectionModel().getSelectedItem().unitNumber()
+                unitNumberComboBox.getSelectionModel().getSelectedItem().unitNumber(),
+                registryNumberTextField.getText(),
+                oldRegistryNumberTextField.getText()
                 );
 
         log.info("Update person data: {}", command);

@@ -42,7 +42,7 @@ public class Person implements Serializable {
 
     private Gender gender;
 
-    @ElementCollection(targetClass = String.class) //, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = String.class) //, fetch = FetchType.EAGER
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<String> previousLastNames; // poprzednie nazwiska (panieńskie, przed zmianą nazwiska)
 

@@ -1,21 +1,25 @@
 package com.evolve.alpaca.importing.importDbf.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.linuxense.javadbf.DBFField;
-import com.linuxense.javadbf.DBFReader;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.io.FileInputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+/**
+ *      1  KS           Character     16               symbol konta księgowego
+ *      2  NA           Character     32               nazwa konta księgowego
+ *      3  SR           Character      1-5             wyróżnik konta
+ *      4  WYJATEK      Character      4               struktura kont analitycznych
+ *                                                     (dotyczy tylko kont syntetycznych)
+ *      5  DA           Date           8               data założenia konta lub
+ *      6  UZ           Character      8               użytkownik dokonujący zmian
+ *      7  ROZR         Logical        1               znacznik kont rozrachunkowych
+ *      8  NA1          Character     32               nazwa druga np. obcojęzyczna
+ */
 @AllArgsConstructor
 @Builder
 @Getter
@@ -25,8 +29,8 @@ public class DbfAccount {
     @JsonIgnore
     private final Map<String, Object> data;
 
-    private String KS;
-    private String NA;
+    private String KS; // symbol konta księgowego (16 znaków)
+    private String NA; // nazwa konta księgowego (32 znaki)
     private String SR; // probably ignore - always empty or .
     private String WYJATEK; // ignore - always empty
     private String ROZRA;

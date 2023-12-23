@@ -3,6 +3,7 @@ package com.evolve;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonAssertion;
 import com.evolve.domain.PersonLookupCriteria;
+import com.evolve.domain.RegistryNumber;
 import com.evolve.services.PersonEditService;
 import com.evolve.services.PersonsService;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ public class AlpacaIntegrationTest {
     public static final String NEW_FIRST_NAME = "Patrick";
     public static final String NEW_LAST_NAME = "Swayze";
     public static final String NEW_EMAIL = "patrick.swayze@none.com";
-
+    public static final String NEW_REGISTRY_NUMBER = "1234";
 
     @Autowired PersonsService personsService;
     @Autowired PersonEditService personEditService;
@@ -76,7 +77,7 @@ public class AlpacaIntegrationTest {
 
         // when -- person is edited
         personEditService.editPerson(new EditPersonDataCommand(personId, NEW_FIRST_NAME, NEW_LAST_NAME,
-                null, NEW_EMAIL, List.of(), List.of(), List.of(), List.of(), TEST_UNIT_NAME));
+                null, NEW_EMAIL, List.of(), List.of(), List.of(), List.of(), TEST_UNIT_NAME, NEW_REGISTRY_NUMBER, null));
 
         // then -- changes are persisted in db
         assertPerson(personsService.findById(personId))
@@ -84,7 +85,8 @@ public class AlpacaIntegrationTest {
                 .hasLastName(NEW_LAST_NAME)
                 .hasUnitNumber(TEST_UNIT_NAME)
                 .hasEmail(NEW_EMAIL)
-                .hasPersonId(personId);
+                .hasPersonId(personId)
+                .hasRegistryNumber(RegistryNumber.of(NEW_REGISTRY_NUMBER));
 
         // then --
     }

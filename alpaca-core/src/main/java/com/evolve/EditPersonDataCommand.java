@@ -15,6 +15,8 @@ public record EditPersonDataCommand(String id,
                                     List<Person.PersonAddress> addresses,
                                     List<Person.AuthorizedPerson> authorizedPersons,
                                     List<PersonStatusChange> personStatusChanges,
-                                    String unitNumber) implements Command {
+                                    String unitNumber,
+                                    String registryNumber,
+                                    String oldRegistryNumber) implements Command {
 
 }

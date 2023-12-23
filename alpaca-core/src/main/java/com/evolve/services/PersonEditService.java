@@ -5,6 +5,7 @@ import com.evolve.alpaca.ddd.CommandCollector;
 import com.evolve.alpaca.validation.ValidationException;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonGenderDeducer;
+import com.evolve.domain.RegistryNumber;
 import com.evolve.repo.jpa.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,10 @@ public class PersonEditService extends ApplicationService {
      * TODO maybe it should handle adding new person to the database
      */
     public Person editPerson(EditPersonDataCommand command) {
+        new PersonEditionValidator()
+                .validate(command)
+                .throwException(ValidationException::new);
+
         final Person person = personRepository.findByPersonId(command.id());
 
         person.setFirstName(command.firstName());
@@ -34,13 +39,11 @@ public class PersonEditService extends ApplicationService {
         person.setAuthorizedPersons(command.authorizedPersons());
         person.setStatusChanges(command.personStatusChanges());
         person.setUnitNumber(command.unitNumber());
+        person.setRegistryNumber(RegistryNumber.of(command.registryNumber()));
+        person.setOldRegistryNumber(RegistryNumber.of(command.oldRegistryNumber()));
 
         final Person.Gender gender = PersonGenderDeducer.getGender(command.firstName());
         person.setGender(gender);
-
-        new PersonEditionValidator()
-                .validate(person)
-                .throwException(ValidationException::new);
 
         final Person result = personRepository.save(person);
 
