@@ -91,6 +91,10 @@
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="10" />
         <fx:include fx:id="personStatusController" source="person/status/person-status.fxml" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.columnSpan="3" />
 
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Konta bankowe" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="11" />
+        <fx:include fx:id="personBankAccountsController" source="person/bankAccounts/person-bank-accounts.fxml"
+                    GridPane.columnIndex="1" GridPane.rowIndex="11" GridPane.columnSpan="3" />
+
     </GridPane>
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

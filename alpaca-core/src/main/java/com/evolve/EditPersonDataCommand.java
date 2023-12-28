@@ -1,6 +1,7 @@
 package com.evolve;
 
 import com.evolve.alpaca.ddd.Command;
+import com.evolve.domain.BankAccount;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatusChange;
 
@@ -17,6 +18,7 @@ public record EditPersonDataCommand(String id,
                                     List<PersonStatusChange> personStatusChanges,
                                     String unitNumber,
                                     String registryNumber,
-                                    String oldRegistryNumber) implements Command {
+                                    String oldRegistryNumber,
+                                    List<BankAccount> bankAccounts) implements Command {
 
 }

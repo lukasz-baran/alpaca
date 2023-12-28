@@ -19,6 +19,10 @@ public class BankAccount {
 
     private String number;
 
+    public static BankAccount of(String number) {
+        return new BankAccount(number);
+    }
+
 //    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
 //    private List<String> notes;
 

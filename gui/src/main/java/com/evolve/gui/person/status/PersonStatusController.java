@@ -72,7 +72,7 @@ public class PersonStatusController extends EditableGuiElement implements Initia
             newStatusMenuItem.disableProperty().bind(disabledProperty);
 
             final MenuItem editStatusMenuItem = new MenuItem("Edytuj");
-            editStatusMenuItem.setOnAction(event -> editPhoneNumber(tableView, row));
+            editStatusMenuItem.setOnAction(event -> editStatusNumber(tableView, row));
             editStatusMenuItem.disableProperty().bind(disabledProperty);
 
             row.setOnMouseClicked(event -> {
@@ -84,7 +84,7 @@ public class PersonStatusController extends EditableGuiElement implements Initia
                     if (row.isEmpty()) {
                         addNewStatus(event);
                     } else {
-                        editPhoneNumber(tableView, row);
+                        editStatusNumber(tableView, row);
                     }
                 }
             });
@@ -136,7 +136,7 @@ public class PersonStatusController extends EditableGuiElement implements Initia
                 });
     }
 
-    private void editPhoneNumber(TableView<PersonHistoryStatusEntry> tableView, TableRow<PersonHistoryStatusEntry> row) {
+    private void editStatusNumber(TableView<PersonHistoryStatusEntry> tableView, TableRow<PersonHistoryStatusEntry> row) {
         new PersonStatusEditDialog(row.getItem().getPersonStatusChange()).showDialog(stageManager.getWindow())
                 .ifPresent(personStatusChange -> {
                     row.getItem().setPersonStatusChange(personStatusChange);

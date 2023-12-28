@@ -11,6 +11,7 @@ import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.UnitNumberItem;
 import com.evolve.gui.person.address.PersonAddressesController;
 import com.evolve.gui.person.authorizedPerson.AuthorizedPersonsController;
+import com.evolve.gui.person.bankAccounts.PersonBankAccountsController;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
 import com.evolve.gui.person.phoneNumber.PhoneNumbersController;
@@ -68,6 +69,10 @@ public class PersonDetailsController extends EditableGuiElement
 
     @FXML
     private final FxControllerAndView<PersonStatusController, VBox> personStatusController;
+
+    @FXML
+    private final FxControllerAndView<PersonBankAccountsController, VBox> personBankAccountsController;
+
 
     public Button btnSave;
     public Button btnCancel;
@@ -148,6 +153,8 @@ public class PersonDetailsController extends EditableGuiElement
 
         personStatusController.getController().setPerson(person);
 
+        personBankAccountsController.getController().setPersonBankAccounts(person.getBankAccounts());
+
         btnCancel.setCancelButton(true);
     }
 
@@ -173,6 +180,7 @@ public class PersonDetailsController extends EditableGuiElement
         authorizedController.getController().setEditable(editable);
         phoneNumbersController.getController().setEditable(editable);
         personStatusController.getController().setEditable(editable);
+        personBankAccountsController.getController().setEditable(editable);
     }
 
 
@@ -203,7 +211,8 @@ public class PersonDetailsController extends EditableGuiElement
                 personStatusController.getController().getStatusChanges(),
                 unitNumberComboBox.getSelectionModel().getSelectedItem().unitNumber(),
                 registryNumberTextField.getText(),
-                oldRegistryNumberTextField.getText()
+                oldRegistryNumberTextField.getText(),
+                personBankAccountsController.getController().getAccounts()
                 );
 
         log.info("Update person data: {}", command);

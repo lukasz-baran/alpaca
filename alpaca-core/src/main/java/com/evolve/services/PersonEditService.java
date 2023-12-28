@@ -21,7 +21,7 @@ public class PersonEditService extends ApplicationService {
     }
 
     /**
-     * TODO maybe it should handle adding new person to the database
+     * TODO maybe it should also handle adding new person to the database
      */
     public Person editPerson(EditPersonDataCommand command) {
         new PersonEditionValidator()
@@ -41,6 +41,7 @@ public class PersonEditService extends ApplicationService {
         person.setUnitNumber(command.unitNumber());
         person.setRegistryNumber(RegistryNumber.of(command.registryNumber()));
         person.setOldRegistryNumber(RegistryNumber.of(command.oldRegistryNumber()));
+        person.setBankAccounts(command.bankAccounts());
 
         final Person.Gender gender = PersonGenderDeducer.getGender(command.firstName());
         person.setGender(gender);

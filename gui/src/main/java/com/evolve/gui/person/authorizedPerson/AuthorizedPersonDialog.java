@@ -28,13 +28,6 @@ public class AuthorizedPersonDialog extends DialogWindow<Person.AuthorizedPerson
 
         final GridPane grid = createGridPane();
 
-//        private String firstName;
-//        private String lastName;
-//        private String relation; // żona, mąż, syn, matka, córka, synowie
-//        private String phone;
-//        private Address address;
-//        private String comment;
-
         final TextField firstNameTextField = new TextField();
         firstNameTextField.setPromptText("Imię");
         final TextField lastNameTextField = new TextField();
