@@ -1,7 +1,5 @@
 package com.evolve.gui.person.bankAccounts;
 
-import com.evolve.domain.BankAccount;
-import com.evolve.domain.Person;
 import com.evolve.gui.DialogWindow;
 import javafx.application.Platform;
 import javafx.scene.Node;
