@@ -21,7 +21,8 @@ class PersonEditionValidatorShould {
                 List.of(),
                 "unitNumber",
                 "123",
-                null);
+                null,
+                List.of());
 
         // when
         ValidationResult result = validator.validate(person);
@@ -36,7 +37,8 @@ class PersonEditionValidatorShould {
                 List.of(),
                 "unitNumber",
                 "registryNumber",
-                "oldRegistryNumber");
+                "oldRegistryNumber",
+                List.of());
 
         result = validator.validate(invalidCommand);
 

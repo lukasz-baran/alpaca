@@ -77,7 +77,7 @@ public class AlpacaIntegrationTest {
 
         // when -- person is edited
         personEditService.editPerson(new EditPersonDataCommand(personId, NEW_FIRST_NAME, NEW_LAST_NAME,
-                null, NEW_EMAIL, List.of(), List.of(), List.of(), List.of(), TEST_UNIT_NAME, NEW_REGISTRY_NUMBER, null));
+                null, NEW_EMAIL, List.of(), List.of(), List.of(), List.of(), TEST_UNIT_NAME, NEW_REGISTRY_NUMBER, null, List.of()));
 
         // then -- changes are persisted in db
         assertPerson(personsService.findById(personId))
