@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.validator.routines.IBANValidator;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
@@ -16,6 +17,8 @@ import java.util.List;
 @EqualsAndHashCode
 @Embeddable
 public class BankAccount {
+    public static final IBANValidator IBAN_VALIDATOR = new IBANValidator(
+            new IBANValidator.Validator[]{IBANValidator.getInstance().getValidator("PL")});
 
     private String number;
 
@@ -25,5 +28,9 @@ public class BankAccount {
 
 //    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
 //    private List<String> notes;
+
+    public static boolean isValid(String input) {
+        return IBAN_VALIDATOR.isValid("PL" + input);
+    }
 
 }

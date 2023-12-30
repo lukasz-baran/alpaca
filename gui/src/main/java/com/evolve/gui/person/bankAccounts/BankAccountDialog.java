@@ -1,5 +1,6 @@
 package com.evolve.gui.person.bankAccounts;
 
+import com.evolve.domain.BankAccount;
 import com.evolve.gui.DialogWindow;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -28,6 +29,14 @@ public class BankAccountDialog extends DialogWindow<BankAccountEntry>  {
 
         final TextField bankAccountNumberTextField = new TextField();
         bankAccountNumberTextField.setPromptText("Numer konta");
+        bankAccountNumberTextField.textProperty().addListener(event -> {
+                    bankAccountNumberTextField.setStyle("");
+                    final String input = bankAccountNumberTextField.getText();
+
+                    if (!input.isEmpty() && !BankAccount.isValid(input)) {
+                        bankAccountNumberTextField.setStyle("-fx-border-color: red");
+                    }
+                });
 
         Optional.ofNullable(bankAccountEntry).ifPresent(bankAccountEntry -> {
             bankAccountNumberTextField.setText(bankAccountEntry.getNumber());
