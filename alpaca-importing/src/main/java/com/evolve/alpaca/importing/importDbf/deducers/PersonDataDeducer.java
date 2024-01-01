@@ -12,7 +12,9 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 
 @Slf4j
@@ -98,13 +100,7 @@ public class PersonDataDeducer {
         final Optional<String> unitNumber = unitNumberDeducer.deduceFrom(Lists.newArrayList(person.getKONTO_WNP()));
 
         // konto bankowe
-        final BankAccountDeducer bankAccountDeducer = new BankAccountDeducer(issues);
-        final Optional<BankAccount> bankAccount = bankAccountDeducer.deduceFrom(List.of(
-                person.getBANK0(),
-                person.getBANK1(),
-                person.getBANK2(),
-                person.getBANK3(),
-                person.getBANK4()));
+        final List<BankAccount> bankAccounts = deduceBankAccount(issues);
 
         final List<PersonStatusChange> statusChanges = deduceStatusChanges(maybeDob, maybeJoiningDate, personStatusDetails);
 
@@ -125,9 +121,22 @@ public class PersonDataDeducer {
                 .phoneNumbers(maybePhoneNumbers.orElse(List.of()))
                 .unitNumber(unitNumber.orElse(null))
                 .rawData(person.getData())
-                .bankAccounts(bankAccount.stream().toList())
+                .bankAccounts(bankAccounts)
                 .build();
         return Optional.of(personData);
+    }
+
+    List<BankAccount> deduceBankAccount(final IssuesLogger.ImportIssues issues) {
+        final BankAccountDeducer bankAccountDeducer = new BankAccountDeducer(issues);
+        final Optional<BankAccount> bankAccount = bankAccountDeducer.deduceFrom(
+                Stream.of(person.getBANK0(),
+                                person.getBANK1(),
+                                person.getBANK2(),
+                                person.getBANK3(),
+                                person.getBANK4())
+                        .filter(Objects::nonNull)
+                        .toList());
+        return bankAccount.stream().toList();
     }
 
     List<PersonStatusChange> deduceStatusChanges(Optional<LocalDate> maybeDob,
