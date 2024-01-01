@@ -2,18 +2,24 @@ package com.evolve;
 
 import com.evolve.alpaca.importing.importDbf.ImportAccountDbf;
 import com.evolve.alpaca.importing.importDbf.ImportPersonDbf;
+import com.evolve.alpaca.importing.importDbf.PersonsFactory;
 import com.evolve.alpaca.importing.importDbf.domain.DbfAccount;
 import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
 import com.evolve.alpaca.importing.importDoc.ImportAlphanumeric;
 import com.evolve.alpaca.importing.importDoc.ImportPeople;
 import com.evolve.alpaca.importing.importDoc.group.GrupyAlfabetyczne;
 import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.net.URL;
 import java.util.List;
+
+import static com.evolve.alpaca.importing.importDoc.ImportAlphanumeric.FILENAME_BY_ALPHA;
+import static com.evolve.alpaca.importing.importDoc.ImportPeople.FILENAME_BY_NUMBERS;
 
 @Slf4j
 public class AppMain {
@@ -52,20 +58,20 @@ public class AppMain {
         });
         //System.out.println(numery);
 
-//        final List<com.evolve.domain.Person> persons = new PersonsFactory().from(osobyDbf);
-//
-//        log.info("Wczytano " + people.size() + " z indeksu " + FILENAME_BY_NUMBERS);
-//        log.info("Wczytano " + grupyAlfabetyczne.getSize() + " z grup alfabetycznych " + FILENAME_BY_ALPHA);
-//        log.info("Wczytano " + osobyDbf.size());
-//
+        final List<com.evolve.domain.Person> persons = new PersonsFactory().from(osobyDbf);
+
+        log.info("Wczytano " + people.size() + " z indeksu " + FILENAME_BY_NUMBERS);
+        log.info("Wczytano " + grupyAlfabetyczne.getSize() + " z grup alfabetycznych " + FILENAME_BY_ALPHA);
+        log.info("Wczytano " + osobyDbf.size());
+
 //        persons.forEach(person -> {
 //           verifyData(person, people, grupyAlfabetyczne);
 //        });
-//
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.writeValue(new File("osobyDbf.json"), osobyDbf);
-//
-//        List<com.evolve.domain.Person> osoby =new PersonsFactory().from(osobyDbf);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(new File("osobyDbf.json"), osobyDbf);
+
+        //List<com.evolve.domain.Person> osoby =new PersonsFactory().from(osobyDbf);
 
         //System.out.println(osoby);
 

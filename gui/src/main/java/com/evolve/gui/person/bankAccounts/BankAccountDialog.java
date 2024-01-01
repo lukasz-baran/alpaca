@@ -28,6 +28,8 @@ public class BankAccountDialog extends DialogWindow<BankAccountEntry>  {
         final GridPane grid = createGridPane();
 
         final TextField bankAccountNumberTextField = new TextField();
+        bankAccountNumberTextField.setMaxWidth(300);
+        bankAccountNumberTextField.setPrefWidth(300);
         bankAccountNumberTextField.setPromptText("Numer konta");
         bankAccountNumberTextField.textProperty().addListener(event -> {
                     bankAccountNumberTextField.setStyle("");

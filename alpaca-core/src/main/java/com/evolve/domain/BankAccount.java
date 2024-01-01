@@ -1,9 +1,6 @@
 package com.evolve.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.apache.commons.validator.routines.IBANValidator;
 
 import javax.persistence.ElementCollection;
@@ -16,6 +13,7 @@ import java.util.List;
 @Getter
 @EqualsAndHashCode
 @Embeddable
+@ToString
 public class BankAccount {
     public static final IBANValidator IBAN_VALIDATOR = new IBANValidator(
             new IBANValidator.Validator[]{IBANValidator.getInstance().getValidator("PL")});

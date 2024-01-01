@@ -97,6 +97,15 @@ public class PersonDataDeducer {
         final UnitNumberDeducer unitNumberDeducer = new UnitNumberDeducer(issues);
         final Optional<String> unitNumber = unitNumberDeducer.deduceFrom(Lists.newArrayList(person.getKONTO_WNP()));
 
+        // konto bankowe
+        final BankAccountDeducer bankAccountDeducer = new BankAccountDeducer(issues);
+        final Optional<BankAccount> bankAccount = bankAccountDeducer.deduceFrom(List.of(
+                person.getBANK0(),
+                person.getBANK1(),
+                person.getBANK2(),
+                person.getBANK3(),
+                person.getBANK4()));
+
         final List<PersonStatusChange> statusChanges = deduceStatusChanges(maybeDob, maybeJoiningDate, personStatusDetails);
 
         final Person personData = Person.builder()
@@ -116,6 +125,7 @@ public class PersonDataDeducer {
                 .phoneNumbers(maybePhoneNumbers.orElse(List.of()))
                 .unitNumber(unitNumber.orElse(null))
                 .rawData(person.getData())
+                .bankAccounts(bankAccount.stream().toList())
                 .build();
         return Optional.of(personData);
     }
