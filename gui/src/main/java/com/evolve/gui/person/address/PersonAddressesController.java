@@ -16,6 +16,7 @@ import javafx.scene.input.ClipboardContent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -53,7 +54,9 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
             protected void updateItem(String streetText, boolean empty) {
                 super.updateItem(streetText, empty);
                 setText(streetText);
-                setTooltip(StageManager.newTooltip(streetText));
+                if (StringUtils.isNotBlank(streetText)) {
+                    setTooltip(StageManager.newTooltip(streetText));
+                }
             }
         });
 
