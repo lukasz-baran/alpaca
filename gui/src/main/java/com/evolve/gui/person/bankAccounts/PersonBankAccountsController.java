@@ -6,6 +6,7 @@ import com.evolve.gui.StageManager;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,9 +14,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -31,7 +34,10 @@ import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 @Slf4j
 @RequiredArgsConstructor
 public class PersonBankAccountsController extends EditableGuiElement implements Initializable {
+    private static final PseudoClass INVALID_BANK_ACCOUNT_NUMBER_STYLE = PseudoClass.getPseudoClass("invalid");
+
     private final StageManager stageManager;
+    private final BankAccountTooltip bankAccountTooltip;
 
     private final ObservableList<BankAccountEntry> list = FXCollections.observableArrayList();
 
@@ -43,6 +49,27 @@ public class PersonBankAccountsController extends EditableGuiElement implements 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         bankAccountNumberColumn.setCellValueFactory(new PropertyValueFactory<>("number"));
+        bankAccountNumberColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String bankAccountNumberText, boolean empty) {
+                super.updateItem(bankAccountNumberText, empty);
+                setText(bankAccountNumberText);
+
+                if (StringUtils.isNotBlank(bankAccountNumberText)) {
+                    final Tooltip bankTooltip = new Tooltip("bankAccountNumberText");
+                    bankTooltip.setShowDelay(Duration.ZERO);
+                    setTooltip(bankTooltip);
+
+                    bankTooltip.setOnShowing(event -> {
+                        if (event.getSource() instanceof Tooltip tooltip) {
+                            if (StringUtils.isNotBlank(bankAccountNumberText)) {
+                                tooltip.setText(bankAccountTooltip.buildTooltipText(bankAccountNumberText));
+                            }
+                        }
+                    });
+                }
+            }
+        });
 
         personBankAccountsTable.setItems(list);
 
@@ -54,6 +81,13 @@ public class PersonBankAccountsController extends EditableGuiElement implements 
             final TableRow<BankAccountEntry> row = new TableRow<>();
 
             final ContextMenu contextMenu = createContextMenu(tableView, row);
+
+            row.itemProperty()
+                    .flatMap(BankAccountEntry::invalidProperty)
+                    .orElse(false)
+                    .addListener((obs, wasAnalyzed, isNowAnalyzed) -> {
+                        row.pseudoClassStateChanged(INVALID_BANK_ACCOUNT_NUMBER_STYLE, isNowAnalyzed);
+                    });
 
             // Set context menu on row, but use a binding to make it only show for non-empty rows:
             row.contextMenuProperty().bind(Bindings.when(row.emptyProperty()).then((ContextMenu) null)

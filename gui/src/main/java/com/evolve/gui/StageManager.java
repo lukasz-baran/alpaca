@@ -6,10 +6,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.util.Duration;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -123,5 +125,11 @@ public class StageManager {
         alert.setHeaderText(null);
         alert.initOwner(window);
         alert.show();
+    }
+
+    public static Tooltip newTooltip(String tooltipText) {
+        var tooltip = new Tooltip(tooltipText);
+        tooltip.setShowDelay(Duration.ZERO);
+        return tooltip;
     }
 }

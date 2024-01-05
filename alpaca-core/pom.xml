@@ -25,6 +25,32 @@
             <version>3.0.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+            <version>2.7.5</version>
+        </dependency>
+
+<!--
+        testImplementation 'io.netty:netty-tcnative-boringssl-static:2.0.7.Final:windows-x86_64'
+        testImplementation 'io.netty:netty-tcnative:2.0.7.Final:windows-x86_64'
+-->
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-tcnative-boringssl-static</artifactId>
+            <version>2.0.36.Final</version>
+            <classifier>windows-x86_64</classifier>
+            <scope>runtime</scope>
+        </dependency>
+
+<!--        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-tcnative</artifactId>
+            <version>2.0.36.Final</version>
+            <classifier>windows-x86_64</classifier>
+        </dependency>-->
+
         <!-- for javax validation -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

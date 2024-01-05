@@ -1,6 +1,7 @@
 package com.evolve.gui.person.accounts;
 
 import com.evolve.domain.Account;
+import com.evolve.gui.StageManager;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
 import com.evolve.services.AccountsService;
@@ -13,7 +14,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -60,7 +60,7 @@ public class PersonAccountsController implements Initializable {
                 setText(accountId);
 
                 accountTooltipService.forAccountNumber(accountId)
-                        .map(Tooltip::new)
+                        .map(StageManager::newTooltip)
                         .ifPresent(this::setTooltip);
             }
         });

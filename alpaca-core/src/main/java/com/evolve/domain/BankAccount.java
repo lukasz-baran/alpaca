@@ -1,12 +1,11 @@
 package com.evolve.domain;
 
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.IBANValidator;
 
-import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
-import javax.persistence.FetchType;
-import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,6 +28,13 @@ public class BankAccount {
 
     public static boolean isValid(String input) {
         return IBAN_VALIDATOR.isValid("PL" + input);
+    }
+
+    public Optional<String> extractBankId() {
+        if (isValid(number)) {
+            return Optional.of(StringUtils.substring(number, 2, 10));
+        }
+        return Optional.empty();
     }
 
 }

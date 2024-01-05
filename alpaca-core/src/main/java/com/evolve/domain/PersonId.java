@@ -17,7 +17,7 @@ import java.util.Optional;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class PersonId implements Comparable<PersonId>, Serializable{
+public class PersonId implements Comparable<PersonId>, Serializable {
     public static final String MAXIMUM_NUMBER_OF_PEOPLE_IN_GROUP = "999";
 
     private final String groupNumber; // number of the alphabetic group (01-24)

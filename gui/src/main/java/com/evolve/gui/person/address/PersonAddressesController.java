@@ -53,7 +53,7 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
             protected void updateItem(String streetText, boolean empty) {
                 super.updateItem(streetText, empty);
                 setText(streetText);
-                setTooltip(new Tooltip(streetText));
+                setTooltip(StageManager.newTooltip(streetText));
             }
         });
 

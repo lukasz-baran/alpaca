@@ -7,3 +7,8 @@
 .non-editable {
     -fx-control-inner-background: #EEEEEE;
 }
+
+/* invalid row in table row */
+.table-row-cell:invalid {
+   -fx-border-color: red;
+}

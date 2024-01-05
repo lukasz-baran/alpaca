@@ -1,0 +1,56 @@
+{
+  "listaWlascicieli": [
+    {
+      "numer": "249",
+      "nazwa": "Alior Bank Spółka Akcyjna",
+      "symbol": "ALIOR",
+      "typ": "bank krajowy",
+      "adresWWW": "www.aliorbank.pl",
+      "logo": "iVBORw0KGgoAAAANSUhEUgAAAEsAAAAyCAIAAACbAbG0AAAUyUlEQVR42u2ad1CUWbqHT+ec6JygoWlQEEQEEQEliKKoSM6iJEFRQAEJkpNkCQISBBQFBUUQyTmoY5wx74zuuqPujGGkGx1ndvePuacbxzAb7t69tdyqW1JvdZ3v8NF1nv698WvAL//ff8Bnws+Enwk/E/7nCf1xoNQeVG8ALVtA3x5Q6wzOR4EteJBiCKLEIFoD+OOBJwLcKEbaAnDcH5wKAnXOYCcf9O4Fzzuwj46hf+jCXisCDe7gqzLkj0O4O5XIoXjQEgDK7MHdKmSRNUheBCrXg6PeIJwDdhoiFgDsQkBYBIiGgGgESMaAZALIywDFDFDNAdUKMFYCNRvAsAXM1YDlANjrAWcD4GwEnE3/loFaN0KOJTZuASbNBOuFReRb40rscb2xlEZvQr0nwQuD2CNFH3YhOgOQb4O/mK/WE0u7Uc7s3kNLNsZ93cAe2s94M8obTaPfPqzmAIAPDtEeRu7cTb5RRvuigP7gKGMyk1a9mZC5HNfgRWwPJ9khiaZo9jI01xzNW4HiW6L5K1F8a7TABi2yQ4ntUSIHpMY6lGQjUmMjUtMJpemKlLojtT0R2l7/roEzO8hVmwinQklFdvjWIGLZOny6KXa3BjpChD7sTOiNpVZuIu0QoB0BmMxmdkbSat3Jvz/Ob99Bu1LM7tjFOOpPedbF79tHfzsmPOJNupTH2EpFXi6if9/JnM6hnouifFnOaN5CTNDH+JOQeatwpVtY800Ijx7MRIZxUSlLsNGa6CgJOoQFj4LNtcSF81GBDKQnGukKEN17GXdqeP2JzCvFvBvlvGdd6iVryalL8ScC6b3xzMMulP4EtdvVnCPe5OrNRCcANgKwSWVuABx2IQwlUZ+0MR+fZGZsVJtvwqsl9N44SmsQ6UYpvdGXeMST6E9CuCMQaaa4zOV4yBCtjSm0Iz08Lrxayn89pjkzqPldl0byEnzaMmKRPeVauaDRjx4hxqwHwBODzFpBSDTAbaOj9kixhzYSLubS3gxzZvrYr3pZP/SwftegluE474QtgUQYIadCSIc24kvX4hu8iTVuxEMbST54pC8BGcpBQTX6k9jXSgV9iZyX/dJEQ8JwKn86TzSeJTgbxQnjY3xwyEJ78tMOjds1guOB9OfdorcTojejAsUAb6ZXyaYy9h9bmJcLaAk2jPkmDKAgA+nIcB5qCxkZKUHvEKBSjXHVLuSWIFqNG7XamXrYjf6iVyvbijycJmgJYXthkQEU1MyQ7o0qSYwuHjoktP1GhOK11CQjwtspqXxIIh9UnxkQzfTzX/Xx5gT8pokxmUWDCWzPCvp8EyYZYuJ0MXEL0PsWYuIWYmN0MKFs9FYqKkoLk7QYDwNJPqQ9ni181KbdtZd3r1HaEsIN5WACGei7Ddq5K2nbuZhMc0qcHh5KffeIRD6sPTOkpYLUkCshBTN9PCjg92eZNw7SuyIpOxbT5psQppkgBjJCiNpKRQQzUaEcdJQmJlqKhbHkpswTiJcDupDtx2n9By06mSuoL/oNuveJnFXShQuw8QZE6KVwXe/Dej2xUD6iCyHlw1KFCnKmXwiVnOnjzvSx5H2s21WMpNXz7qWxumhYALPNsZVOxOQluJSl+D3aOCiRqyoN7hRiH7XL3kwbtEfwDzmzwvhYyLaFgg4X4t0RwAUoLYCKHsmUvJ4ymBldJB/5AKlSUqyChL7Kgb6qGGCXBbDnm7DABl9kB9Mmbr8Rrtie2ORPO7mdkW9LgTG2Q4C9WStVjC+q8+EkGZE3ABBvQN4hwqeY0toixGlmtKF0aZweaTxXKh8zko8ZzowZyCHk6BykbA5yZlDpq6/6uK9UWef/oB6WrMG3BpLORFBOhlJbg+knt6s1+NKPBzIb/ZmeaMSteu3+ZHUvZUkEMMf89Yb5t2eNb9YbVGzmno6UxBtQ+vZrfd9rrJgwkU8Yz04a/TBscL9J+4sS9YkcYcdu9kgq92Wv+u+OcOUD0Fdh2WDlujBN0Zx5JezZS6lxJSYY4HaK0GE8dNJiQowubo82AeaYEDbmZDi/KYDnogpI6J9H/ISt4RoVzvwqd4E3DtUZK33SbTo7bT47afZq1GS6SLszRpRgSDrkxDgdwS2yp25UuXGVM/lhM/dZJ6cnlhKiR51vDdvDSPsXY6udSbcPc5v86eUbKC2hrLiFBJhUNgPQtJV7MkyYYkKN1SN7Y1FQSW8cMtuKlbCYVriW2xmr/fjc8tlpi1ejZuO5OrnWjFg90sVirUZ/ToY5uWITPUoLBwnzbUl3azmKAf6DJrVE23nPNE2+xMlM+li6WkswvSeO1Z/ETTAg7F9CguUeHq5sI6snQfPYNmHJek6SMR3uJC2hR2qRg1n4ZBO1CweNng1ZyaetXl+wGMnSbdwimMrT8cUjk5eS4WcRzELDz8gNAWAb8E0TTz4g+LJCLWrZvNfDCkd8tgVswXBppvj0ZcRNKr9yBu/yJFTsYsmCmIXkkvXc3RKi21yCVSdtoWKGsgxfTtkpLtgppq0V01azUxaz08tfT5u+GDCayNPs3y8eThOWb6BXOFFv1woVwzCp8h82MyOM550wdgEmUoIJZqEiNTH79PDZluRiB3qhPT1Oj3gqXHjYjTuUoV24hu2BUsahmwr7+HZZ83ZZtafkh0n7mUurFdMqyClLxaS5YnLZ47OLL5VIx7I1RjNFz3tkbya0FUOwmxVDDS8XqW03mPeKX7WZ0BpC6d2n1hvP6ovn9CfxBpMFU/kaW6nolu2CwjWsP5xecuvI4n2LaMeCtKDXhbLxk8WmT/rXJhqpXa4ym728Rn5hteKCjVLGyRWQUDGxVDFuNDthODuuLx9ZAGujilAd1ozfN7N3Lf0toSWCtwrBt0UJ/lOE+Ta4QjtCqikeplDYXqaakOIXEWEjlraM0uDPrXDiXK/Wb9ulGSYgVLqJYOydjdV/Orj2VKT+w7OrT+1eOHvZQX7JXjENCVeqCM0U4yby8SVyWBvHPiaETZzwywpm8MJPcqn/YpsThZXNuWWrseoqQrEzXS9mpaszXjZH6AwkCctdw8VWc5CuQBxr6FjqFZm3IdgPt9ATSOFmkJpx2krvXIdtOQ7bImV2bkDyKaE1vmw9scyR3OBNOxvJ7Izi9iYKzsUKix3UYEQ1BvC/6zEpduCc26db4SLyJ6F/+srx6cAaSFjoIHrYYaP4Yq38ItTQVhWKKxQTZqra+LeEUEPhoxZ2tPnHccjzWbSyp7H1l19+yfaLsEOJ7JHiWBsPeBkoWaEi1FoPuPCyI6caEvrj9R5evfXtra9bE4t+d+E63M9Zu80TaBc4hcF1d1H9QNUJuDiVctADaH0grPck1rqTuqIY0we4Q8mc3njeyTBOvh0NanguVl0+blpgzwoT4CcL9U9Hy75qXP5sxO5YiKw70cAbi3w2av9izO71ZfvH3RYvhi3eXLSYnYKES+XjiyGhYlRfMao7RyhXET44yg4zhF7Keq+hCaDPPH95uX/swVd3LQETahhj7QZPuU1jjlATEv715z+fzqhwBZIbPWOP73zjDITw3M5AdOXsELzTA0jzNobCRTDLFG7eHJx6ev+hCxB9IJT3sxVD/I5dNB8cYhsDHamJLV1POxHMOR0l6IoRZ1kyRjJl5Zt4P15eOZSh92LU+us2iyp3dXcA/nzL8cEZyyuVS281md4/bjJ+YOHVSv3ngyaK8aWwg1NMGNyp1xpNF7we134zqsw0MA5fnOMmr/m4HvISXLddH72w3WwdPOLWhdb2aNF7wk3vCHlzhE5AoNQntdRL5ZnQMmz84E6SmescYeXWuJqQRLg4FBDr+es9SsLzMZQ7h1lVzqTJbHZXNKsjkn0yjH1os1qKKTl9ORW2MtFSIqwTBfbszhiZfMr6QfuKJGMGzKt/6re+ULbky3qT/tSFV6sW3z1qdL1K75tWg5eDi5/3GVyr0OyM5k3lCo8GqB1YRbp6kDM7zB9Lp7tzyO8JTQDj6cNHZdHJWw1sfnrztreh1Rbw/zlhz8GG9x6YutIb7sQYOM4RtiQWwde6sOSPXVRJeK2EXrmRuEOI9sIg4MQE+6wgJrrWU63el5W7igbHIpg/T4ar59uxxnMXxhvSnnSv8CWgIKF8yuZq1ZLRHP1LZYsG03Um8nTuNxvcb9a/Va87nqPRmyAczRB+e1qzJ44Nw9uXgEg2xsFR2wFHmiNcjuZF2Lm+ff2m+UD5qZLD0FHh+dag33mpL9d4LeCvU9o7L4X541J7319+/nkrdbE7kEBfvdo1/MOT71yA+hxhIMO4q6Du5x/f+hP0P9EQ9vvfdbAPu5DPRNAzzYmw896rgwvnYzxRCJhU6305cfqkVyMml0oXnNyhMTO+omA12wevbFZejFjcazaGztkcLO5P0b5YrDuQogUdu2uvaDBFfLNGIh/RgePFm3HNt5Ma0zmsCDHaj4iINH2XaZYCxpOHf6hLzbdEcK1RAhe+ITxlTVxmnK0nXLz67vmLb/8kf/7SCYjhZWd+jRdC5ofTuz18EV5e6x6RP3v56Mbd7bzlXgidIucdcDOEvQzyPLn7AH5qxe673kMqCWd62fIBZVc1O6LeFq4WqIbOtCCdjeKeieR3RAlh8x3Gw+6VEWGthwOUOwIB674jAC9Hll8u1x9IlcGm51iQsGwTq8GXdz5ePHFA41q55uMzcNiX3WsQpy0j7BBijvpTclfi3ZEILwHlnZdi+BYY/gok913FRwltEEKo4Vqk+jqU+gaExkaExAmprIduSKnHr4LAahFANow1WA9fP04n73lcgDhKZ/UWksEnGioh+7iKQf5AIrPckdIaqnY+jnMuhtfoz8qxovgRUfGLyHt1idu5WNWQoTTozNcq9e40LhpIkcJZcSBFcyBZ0hEtag3jd+4RfFEibg5kppoQ00yIJwJpNW7kLWQkbJvSTbC24JMnwhZovhWSvwr1255GSfhrxXdDakNCzw8wv138Zv3biv8rIVsxyDsWQMmxImaYEWrc6SEcOEkR/QjIwx7MviRxV4woQh0Pw8+PoHy6AdvX6QLZSJb00kFZS5iwOYjXES3sSRANp4lG0oVfFIufdmpB//xxXGOmXwSHw5/GeTcrGaeCSZsopPeE5ijeThNeXSC3IZibuZZnDURzhNCybIS+dMlmpBYkTDbWiBDC5CHzAjJ3IKveJHYFMg8gq3cXuwEZ3A9jSeHaQ7n+x4TvZXw7IfrLRUm+DSnbkrSNjj4fxx3LErWEcnyJqD0yQpQWvmA143gw3xODvHRQWufNuVmrM5WvVeXKPLCKVu/DPBfLv1QkulMnfn5eAgf8P54U9MczyhxJ1c7EktW4CBHKDvFBQ3Mkvz6UE2POW4UU9KdwU234sB5CvPVIDdjfHd0qcEJouSCkTX6ip+3sAAI8rswV6HxVznUCOhD10Qn2ZqCzWyi9W8PdSlT+9r8hVD5l6IPDuGBwvzK/51uTBlO4/Qnc/cZEPyKyylUtdyW1wI7mQ0DWebO740T3mnSulGvl2dBg5pzK0zgTyTviw6zzZBwPZE7n8R61iuRD4vtHeCOpDDhhF9rgMs1wCfqYDWSSKeoDYV0oJ9KEtwwIT0Vy95kLIOEahHp9AD9IKIaQjkBJ2BIsPGCpAbsFqJIb0LlSxN2sEvMPx9mRYq2LB3ieQOef9aUfESp99Ukb5+wuZeTA8phtSfTBI6O1cSeCWe07OXt18TAm4eAHc2yFk9pXNVr3mqSwN6jczOjay+vfz+tL4I5l8iDeg2PCX59B8Wf6ufJ+lnyA/byTVetG8FOnfKxhTRBnupDdncj5/Qn2biPBaqTYHqhfKOCuApL2Xfx4I405whCmtNhW/UohD4p2IYc3Rwg1fHqaHfCP1fs7hK/6WO3h5DJHYmcUDeoWvwh30IHcEqR2OoI5nMqD2SVjOQlGIKRVfhVlS301qNMewa71YORZk+u9Ga0hamd2Ma+VQgEFsM+ee444986zg+yblfS27aRQfeonXhrCiTbjWQAhzKXPu1jWQJznIJjO57Tv4vUn8kbTeJuA9ESQMFJdC8beySBRxw7hSAr/vYbhHOmfTrO34P91QuVRWN+fZSkGeMMpjMrNpKkcdls4o9aDCkt/6TrKqe1MSFi2gTo3Jb8akF6vEBXYkkscKPVetO69rL59zCPe1PMx9JtV7Men2C/Ps79uYFwrobVtJx/xJJbY4/0k1N/EoYpQsI4khPdbAPHdOo4tkKwFEjug+fAY2wOrJNyjqaUqFbLRFP73HeyP43Cfjua3J+ei9F8jVJVH1vVSek8sdTQNJglijhVhKxW1fwm+N47ZEsTwRCM6o1mbVL3OhXze0w718UxOgS0xXh8buwCXbYnvT2RMZDHGMmjTObSpbBrsmeC73apifFlOn86hRhjTPibMd+F2J7Hb9nAG0zl+YuFOfcFhH4EDUrIBzocIzbINotxV6lXO4jlC6I3uQOeLfKWXwpi8lMdzATqeQJa2RDKZwfMC/zIhtHu1jONb4cBBSTPFHVhJOGBFaPKjjqYzAyjIY1to45lsWPphQEK5np8TdUbSm3yppetJmWZ4eH/SYmzmclyOBbbamdDgQ2zyJdZ7EA5tIhSvwacvw/qKP5kPzRH85YC/AgisgLIe2iFE9uDDBLwRwJlb6gK03T86vRt4X/1l74uhC5D9DzScM8UA60UXazSVuk8P0xdPg6Vyhwh9xIvcn8AoWUMsXkPcKURnmOFfjwhvH2bXe5DjFmLgqAl5zuwk98SQz0VT+vdR4J+3BpEOrsVnmWPzV+FgpvnbGf8//hTjHxHOfeM3lkap3kzItcJ5oBBtYeSWQHK5IxGqBEfKHAt8hAj94xjvVhWz0YcIS0JLIAny1LkRq5wIFRsIVZsJte7EWlciZEtZgs0yw+Va4IJ0qSbzTPjTN/n/xF5cP3ClJaslOfV2Z/atzuwbbVkj1RmjNZl3z2eP12Wezkr7y6P813fz/jieO3Ukc6JeaVdbs748nX27K/ve+ZwHQznfDOTc78mBm9ONmZNHMjpKc2oy8msyCuoyCuvTC+szChvSCxvTi6A1pRcfTS9uTi+BdiIN2sGW9IMn00tPpZe2pZVBa/+37PP/03wm/Ez4mfAz4f/+578AfjLWLjVIn4wAAAAASUVORK5CYII=",
+      "siedziba": {
+        "numer": "A004231",
+        "nazwa": "Centrala",
+        "typ": "Centrala",
+        "miejscowosc": "Warszawa",
+        "ulicaNrBudynku": "ul. Łopuszańska 38D",
+        "kodPocztowy": "02-232",
+        "miejscowoscPoczta": "Warszawa",
+        "nrTelefonu1": "22 555 22 22",
+        "kraj": "POLSKA",
+        "wojewodztwo": "MAZOWIECKIE",
+        "powiat": "Warszawa"
+      },
+      "jednostki": [
+        {
+          "numer": "A000837",
+          "nazwa": "Centrum Rozliczeniowe",
+          "typ": "Wewnętrzna komórka Centrali",
+          "miejscowosc": "Warszawa",
+          "ulicaNrBudynku": "ul. Łopuszańska 38D",
+          "kodPocztowy": "02-232",
+          "miejscowoscPoczta": "Warszawa",
+          "nrTelefonu1": "22 555 22 22",
+          "kraj": "POLSKA",
+          "wojewodztwo": "MAZOWIECKIE",
+          "powiat": "Warszawa",
+          "numeryRozliczeniowe": [
+            {
+              "numer": "10600076",
+              "nazwa": "Centrum Rozliczeniowe",
+              "numeryBic": [
+                {
+                  "nazwa": "BIC",
+                  "numer": "ALBPPLPWXXX"
+                },
+                {
+                  "nazwa": "BIC SEPA",
+                  "numer": "ALBPPLPWXXX"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
