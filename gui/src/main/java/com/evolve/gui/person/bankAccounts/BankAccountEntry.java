@@ -13,10 +13,16 @@ import lombok.*;
 @ToString
 public class BankAccountEntry {
     private final StringProperty number = new SimpleStringProperty();
+    private final StringProperty notes = new SimpleStringProperty();
     private final BooleanProperty invalid = new SimpleBooleanProperty();
 
-    public BankAccountEntry(String number) {
+    public BankAccountEntry(BankAccount bankAccount) {
+        this(bankAccount.getNumber(), bankAccount.getNotes());
+    }
+
+    public BankAccountEntry(String number, String notes) {
         setNumber(number);
+        setNotes(notes);
         setInvalid(!BankAccount.isValid(number));
     }
 
@@ -32,6 +38,19 @@ public class BankAccountEntry {
         this.number.set(name);
     }
 
+    public String getNotes() {
+        return notes.get();
+    }
+
+    public StringProperty notesProperty() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes.set(notes);
+    }
+
+
     public boolean getInvalid() {
         return invalid.get();
     }
@@ -45,7 +64,7 @@ public class BankAccountEntry {
     }
 
     BankAccount toBankAccount() {
-        return BankAccount.of(getNumber());
+        return BankAccount.of(getNumber(), getNotes());
     }
 
 

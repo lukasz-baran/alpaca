@@ -75,4 +75,9 @@ public class PersonAssertion extends AbstractAssert<PersonAssertion, Person> {
         assertThat(actual.getOldRegistryNumber()).isEqualTo(oldRegistryNumber);
         return this;
     }
+
+    public PersonAssertion hasBankAccount(BankAccount... bankAccounts) {
+        assertThat(actual.getBankAccounts()).containsExactlyInAnyOrder(bankAccounts);
+        return this;
+    }
 }

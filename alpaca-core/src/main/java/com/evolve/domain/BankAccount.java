@@ -18,13 +18,15 @@ public class BankAccount {
             new IBANValidator.Validator[]{IBANValidator.getInstance().getValidator("PL")});
 
     private String number;
+    private String notes;
 
     public static BankAccount of(String number) {
-        return new BankAccount(number);
+        return of(number, null);
     }
 
-//    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
-//    private List<String> notes;
+    public static BankAccount of(String number, String notes) {
+        return new BankAccount(number, notes);
+    }
 
     public static boolean isValid(String input) {
         return IBAN_VALIDATOR.isValid("PL" + input);

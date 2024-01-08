@@ -1,9 +1,6 @@
 package com.evolve;
 
-import com.evolve.domain.Person;
-import com.evolve.domain.PersonAssertion;
-import com.evolve.domain.PersonLookupCriteria;
-import com.evolve.domain.RegistryNumber;
+import com.evolve.domain.*;
 import com.evolve.services.PersonEditService;
 import com.evolve.services.PersonsService;
 import org.junit.jupiter.api.Test;
@@ -76,8 +73,11 @@ public class AlpacaIntegrationTest {
                 .hasPersonId(personId);
 
         // when -- person is edited
+        final BankAccount bankAccount = BankAccount.of("1234", "bank account description");
+
         personEditService.editPerson(new EditPersonDataCommand(personId, NEW_FIRST_NAME, NEW_LAST_NAME,
-                null, NEW_EMAIL, List.of(), List.of(), List.of(), List.of(), TEST_UNIT_NAME, NEW_REGISTRY_NUMBER, null, List.of()));
+                null, NEW_EMAIL, List.of(), List.of(), List.of(), List.of(), TEST_UNIT_NAME, NEW_REGISTRY_NUMBER, null,
+                List.of(bankAccount)));
 
         // then -- changes are persisted in db
         assertPerson(personsService.findById(personId))
@@ -86,7 +86,8 @@ public class AlpacaIntegrationTest {
                 .hasUnitNumber(TEST_UNIT_NAME)
                 .hasEmail(NEW_EMAIL)
                 .hasPersonId(personId)
-                .hasRegistryNumber(RegistryNumber.of(NEW_REGISTRY_NUMBER));
+                .hasRegistryNumber(RegistryNumber.of(NEW_REGISTRY_NUMBER))
+                .hasBankAccount(bankAccount);
 
         // then --
     }

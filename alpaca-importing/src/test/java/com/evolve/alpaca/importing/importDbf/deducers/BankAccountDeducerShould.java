@@ -29,7 +29,7 @@ class BankAccountDeducerShould {
                  "10600076 0000 3000",
                  "0251 6937"));
 
-        assertThat(result).hasValue(BankAccount.of("78106000760000300002516937"));
+        assertThat(result).hasValue(BankAccount.of("78106000760000300002516937", "BPH III/O RZESZÓW"));
     }
 
 

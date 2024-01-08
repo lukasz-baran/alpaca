@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.function.Predicate.not;
+
 public class BankAccountDeducer extends AbstractSmartDeducer<BankAccount> {
     public BankAccountDeducer(IssuesLogger.ImportIssues issues) {
         super(issues);
@@ -18,8 +20,13 @@ public class BankAccountDeducer extends AbstractSmartDeducer<BankAccount> {
                 .filter(this::containsOnlyCiphersAndLegalChars)
                 .map(this::removeNonNumericCharacters)
                 .collect(Collectors.joining());
-        if (!result.isBlank()) {
-            return Optional.of(BankAccount.of(result));
+
+        final String notes = guesses.stream()
+                .filter(not(this::containsOnlyCiphersAndLegalChars))
+                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.joining(" "));
+        if (StringUtils.isNotBlank(result) || StringUtils.isNotBlank(notes)) {
+            return Optional.of(BankAccount.of(result, StringUtils.stripToNull(notes)));
         }
         return Optional.empty();
     }

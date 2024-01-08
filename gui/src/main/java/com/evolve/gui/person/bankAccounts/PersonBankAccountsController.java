@@ -56,7 +56,7 @@ public class PersonBankAccountsController extends EditableGuiElement implements 
                 setText(bankAccountNumberText);
 
                 if (StringUtils.isNotBlank(bankAccountNumberText)) {
-                    final Tooltip bankTooltip = new Tooltip("bankAccountNumberText");
+                    final Tooltip bankTooltip = new Tooltip(bankAccountNumberText);
                     bankTooltip.setShowDelay(Duration.ZERO);
                     setTooltip(bankTooltip);
 
@@ -98,10 +98,9 @@ public class PersonBankAccountsController extends EditableGuiElement implements 
 
     public void setPersonBankAccounts(List<BankAccount> bankAccounts) {
         list.clear();
-        emptyIfNull(bankAccounts)
-                .forEach(bankAccount -> list.add(new BankAccountEntry(bankAccount.getNumber())));
-
-        personBankAccountsTable.setItems(list);
+        list.addAll(emptyIfNull(bankAccounts).stream()
+                .map(bankAccount -> new BankAccountEntry(bankAccount.getNumber(), bankAccount.getNotes()))
+                .toList());
     }
 
     private ContextMenu createContextMenu(TableView<BankAccountEntry> tableView, TableRow<BankAccountEntry> row) {
@@ -150,17 +149,16 @@ public class PersonBankAccountsController extends EditableGuiElement implements 
     private void addNewBankAccount(Event actionEvent) {
         new BankAccountDialog(null).showDialog(stageManager.getWindow())
                 .ifPresent(number -> {
-                    System.out.println(number);
-                    list.add(number);
+                    list.add(new BankAccountEntry(number));
                     personBankAccountsTable.refresh();
                 });
     }
 
     private void editBankAccount(TableView<BankAccountEntry> tableView, TableRow<BankAccountEntry> row) {
-        new BankAccountDialog(row.getItem()).showDialog(stageManager.getWindow())
+        new BankAccountDialog(row.getItem().toBankAccount()).showDialog(stageManager.getWindow())
                 .ifPresent(item -> {
-                    System.out.println(item);
                     row.getItem().setNumber(item.getNumber());
+                    row.getItem().setNotes(item.getNotes());
                     tableView.refresh();
                 });
     }

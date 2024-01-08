@@ -16,7 +16,7 @@ public class BankAccountTooltip {
 
     String buildTooltipText(String accountNumber) {
         if (!BankAccount.isValid(accountNumber)) {
-            return accountNumber + " jest niepoprawny";
+            return "Numer konta " + accountNumber + " jest niepoprawny";
         }
 
         final BankAccount bankAccount = BankAccount.of(accountNumber);
