@@ -12,6 +12,7 @@ import com.evolve.gui.dictionaries.UnitsController;
 import com.evolve.gui.documents.DocumentEntry;
 import com.evolve.gui.documents.DocumentsController;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
+import com.evolve.gui.help.AboutDialogWindow;
 import com.evolve.gui.person.accounts.PersonAccountsController;
 import com.evolve.gui.person.list.MainTableController;
 import com.evolve.gui.person.list.PersonListDoubleClickEvent;
@@ -32,6 +33,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +65,7 @@ public class AppController implements Initializable {
     private final StageManager stageManager;
     private final LocalUserConfiguration localUserConfiguration;
 
+    private final FxControllerAndView<AboutDialogWindow, AnchorPane> aboutDialogController;
     private final FxControllerAndView<UnitsController, VBox> unitsDialogController;
 
     private final PersonDetailsController personDetailsController;
@@ -90,6 +93,7 @@ public class AppController implements Initializable {
     @FXML MenuItem importDbfMenuItem;
     @FXML MenuItem unitsMenuItem;
     @FXML MenuItem importPeopleMenuItem;
+    @FXML MenuItem aboutMenuItem;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -106,6 +110,8 @@ public class AppController implements Initializable {
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
 
         unitsMenuItem.setOnAction(event -> unitsDialogController.getController().show());
+
+        aboutMenuItem.setOnAction(event -> aboutDialogController.getController().show());
 
         personAccountsController.getController()
                 .getAccountsList()

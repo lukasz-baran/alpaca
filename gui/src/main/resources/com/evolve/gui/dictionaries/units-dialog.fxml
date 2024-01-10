@@ -8,33 +8,31 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="unitsDialog" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.dictionaries.UnitsController">
-   <children>
-        <AnchorPane minHeight="0.0" minWidth="0.0">
-            <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-            </padding>
-            <children>
-                <TableView fx:id="unitsTable" layoutX="10.0" layoutY="10.0" prefHeight="520.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
-                    <columns>
-                        <TableColumn fx:id="unitNumberColumn" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Numer" />
-                        <TableColumn fx:id="unitDescriptionColumn" prefWidth="220.0" text="Opis" />
-                    </columns>
-                    <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                    </columnResizePolicy>
-                </TableView>
-            </children>
-        </AnchorPane>
-        <VBox prefHeight="508.0" prefWidth="171.0" spacing="10.0">
-            <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-            </padding>
-            <children>
-                <Button fx:id="btnAddUnit" text="Nowa jednostka" onAction="#onAddUnit" />
-                <Button fx:id="btnReloadUnits" text="Przywróć domyślne" onAction="#resetToDefaults"/>
-                <Button fx:id="btnSaveUnits" text="Zapisz i zamknij" disable="true" onAction="#saveUnits"/>
-            </children>
-        </VBox>
-   </children>
+<HBox fx:id="unitsDialog" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.evolve.gui.dictionaries.UnitsController">
+    <AnchorPane minHeight="0.0" minWidth="0.0">
+        <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        </padding>
+        <TableView fx:id="unitsTable" layoutX="10.0" layoutY="10.0" prefHeight="520.0" prefWidth="300.0"
+                   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
+                   AnchorPane.topAnchor="0.0">
+            <columns>
+                <TableColumn fx:id="unitNumberColumn" maxWidth="90.0" minWidth="90.0" prefWidth="90.0"
+                             resizable="false" text="Numer"/>
+                <TableColumn fx:id="unitDescriptionColumn" prefWidth="220.0" text="Opis"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+    </AnchorPane>
+    <VBox prefHeight="508.0" prefWidth="171.0" spacing="10.0">
+        <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        </padding>
+        <Button fx:id="btnAddUnit" text="Nowa jednostka" onAction="#onAddUnit"/>
+        <Button fx:id="btnReloadUnits" text="Przywróć domyślne" onAction="#resetToDefaults"/>
+        <Button fx:id="btnSaveUnits" text="Zapisz i zamknij" disable="true" onAction="#saveUnits"/>
+    </VBox>
 </HBox>

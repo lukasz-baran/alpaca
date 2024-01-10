@@ -6,23 +6,24 @@
 <VBox prefHeight="494.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/19"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.AppController">
     <MenuBar prefWidth="626.0" VBox.vgrow="NEVER">
-        <menus>
-            <Menu mnemonicParsing="false" text="File">
-                <MenuItem fx:id="newMenuItem" mnemonicParsing="false" text="Nowy"
-                          onAction="#newPersonButtonClicked"/>
-                <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit"
-                          onAction="#quitClicked"/>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Admin">
-                <MenuItem fx:id="importDbfMenuItem" mnemonicParsing="false" text="Import DBF"
-                          onAction="#importDbfClicked"/>
-                <MenuItem fx:id="importPeopleMenuItem" mnemonicParsing="false" text="Import People"
-                          onAction="#importPeopleClicked"/>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Słowniki">
-                <MenuItem fx:id="unitsMenuItem" mnemonicParsing="false" text="Lista jednostek"/>
-            </Menu>
-        </menus>
+        <Menu mnemonicParsing="false" text="Plik">
+            <MenuItem fx:id="newMenuItem" mnemonicParsing="false" text="Nowy"
+                      onAction="#newPersonButtonClicked"/>
+            <MenuItem fx:id="quitMenuItem" mnemonicParsing="false" text="Quit"
+                      onAction="#quitClicked"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Admin">
+            <MenuItem fx:id="importDbfMenuItem" mnemonicParsing="false" text="Import DBF"
+                      onAction="#importDbfClicked"/>
+            <MenuItem fx:id="importPeopleMenuItem" mnemonicParsing="false" text="Import People"
+                      onAction="#importPeopleClicked"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Słowniki">
+            <MenuItem fx:id="unitsMenuItem" mnemonicParsing="false" text="Lista jednostek"/>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Pomoc">
+            <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" text="O programie"/>
+        </Menu>
     </MenuBar>
 
     <HBox id="quickMenu" alignment="BASELINE_LEFT" prefHeight="18.0"
