@@ -19,7 +19,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -116,15 +115,12 @@ public class UnitsController implements Initializable {
             final ContextMenu contextMenu = new ContextMenu();
 
             final MenuItem editMenuItem = new MenuItem("Edytuj");
-            editMenuItem.setOnAction(event -> {
-//                new AuthorizedPersonDialog(row.getItem().getAuthorizedPerson())
-//                        .showDialog(stageManager.getWindow())
-//                        .ifPresent(person -> {
-//                            row.getItem().setAuthorizedPerson(person);
-//                            tableView.refresh();
-//                        });
+            editMenuItem.setOnAction(event -> onEditUnit(row.getItem()));
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) {
+                    onEditUnit(row.getItem());
+                }
             });
-            //editMenuItem.disableProperty().bind(disabledProperty);
 
             final MenuItem removeMenuItem = new MenuItem("Usuń");
             removeMenuItem.setOnAction(event -> {
@@ -139,7 +135,6 @@ public class UnitsController implements Initializable {
                 tableView.refresh();
                 listWasModifiedProperty.set(true);
             });
-//            removeMenuItem.disableProperty().bind(disabledProperty);
 
             contextMenu.getItems().add(editMenuItem);
             contextMenu.getItems().add(removeMenuItem);
@@ -164,8 +159,21 @@ public class UnitsController implements Initializable {
         loadUnits();
     }
 
+    public void onEditUnit(UnitEntry unitEntry) {
+        new UnitDialog(units, unitEntry)
+                .showDialog(stage.getOwner())
+                .ifPresent(editedValue -> {
+                    units.stream()
+                        .filter(entry -> entry.getUnitNumber().equals(editedValue.getId()))
+                        .findFirst()
+                                .ifPresent(entry -> entry.setUnitDescription(editedValue.getName()));
+                    unitsTable.refresh();
+                    listWasModifiedProperty.set(true);
+                });
+    }
+
     public void onAddUnit(ActionEvent actionEvent) {
-        new NewUnitDialog(units)
+        new UnitDialog(units, null)
                 .showDialog(stage.getOwner())
                 .ifPresent(newUnit -> {
                     final UnitEntry newEntry = new UnitEntry(newUnit.getId(), newUnit.getName());
@@ -193,10 +201,4 @@ public class UnitsController implements Initializable {
         }
     }
 
-    @AllArgsConstructor
-    @Getter
-    public static class UnitEntry {
-        private String unitNumber;
-        private String unitDescription;
-    }
 }

@@ -16,12 +16,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-public class NewUnitDialog extends DialogWindow<Unit> {
-    private final List<UnitsController.UnitEntry> units;
+public class UnitDialog extends DialogWindow<Unit> {
+    private final List<UnitEntry> units;
+    private final UnitEntry unitEntry;
+    private final ComboBox<String> unitIdComboBox;
+    private final TextField unitNameTextField;
 
-    public NewUnitDialog(List<UnitsController.UnitEntry> units) {
-        super("Nowa jednostka", "Dodaj nową jednostkę. Numer ID zostanie wygenerowany automatycznie");
+    /**
+     *
+     * @param units already existing units in the system
+     * @param unitEntry new or edited unit
+     */
+    public UnitDialog(List<UnitEntry> units, UnitEntry unitEntry) {
+        super(isInEdition(unitEntry) ? "Edycja jednostki: " + unitEntry.getUnitNumber() : "Nowa jednostka" ,
+            isInEdition(unitEntry) ? "Edytuj dane jednostki. Numer ID jest tylko do odczytu" :
+                "Dodaj nową jednostkę. Numer ID zostanie wygenerowany automatycznie");
         this.units = units;
+        this.unitEntry = unitEntry;
+        this.unitIdComboBox = new ComboBox<>();
+        this.unitNameTextField = new TextField();
     }
 
     @Override
@@ -36,16 +49,22 @@ public class NewUnitDialog extends DialogWindow<Unit> {
                 .filter(i -> units.stream().noneMatch(unit -> StringUtils.equals(unit.getUnitNumber(), i)))
                 .toList();
 
-        final ComboBox<String> unitIdComboBox = new ComboBox<>();
         unitIdComboBox.getItems().addAll(unitIds);
 
-        final TextField unitNameTextField = new TextField();
         unitNameTextField.setPromptText("Nazwa jednostki");
+        unitNameTextField.setPrefWidth(300);
 
         grid.add(new Label("Numer:"), 0, 0);
         grid.add(unitIdComboBox, 1, 0);
         grid.add(new Label("Nazwa:"), 0, 1);
         grid.add(unitNameTextField, 1, 1);
+
+        if (isInEdition(this.unitEntry)) {
+            unitIdComboBox.getSelectionModel().select(this.unitEntry.getUnitNumber());
+            unitIdComboBox.setEditable(false);
+            unitIdComboBox.setDisable(true);
+            unitNameTextField.setText(this.unitEntry.getUnitDescription());
+        }
 
         final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
@@ -55,10 +74,10 @@ public class NewUnitDialog extends DialogWindow<Unit> {
         Platform.runLater(unitIdComboBox::requestFocus);
 
         unitIdComboBox.selectionModelProperty().addListener((observable, oldValue, newValue) -> {
-            validateSaveButton(saveButton, unitIdComboBox, unitNameTextField);
+            validateSaveButton(saveButton);
         });
         unitNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            validateSaveButton(saveButton, unitIdComboBox, unitNameTextField);
+            validateSaveButton(saveButton);
         });
 
 
@@ -74,12 +93,20 @@ public class NewUnitDialog extends DialogWindow<Unit> {
         return dialog.showAndWait();
     }
 
-    void validateSaveButton(
-            Node saveButton, ComboBox<String> unitIdComboBox, TextField unitNameTextField) {
-        final boolean disable = unitIdComboBox.getValue().isEmpty()
-                || unitNameTextField.getText().trim().isEmpty();
+    void validateSaveButton(Node saveButton) {
+
+        final String description = unitNameTextField.getText().trim();
+        boolean disable = unitIdComboBox.getValue().isEmpty() || description.isEmpty();
+
+        if (isInEdition(this.unitEntry) && StringUtils.isNotEmpty(description)) {
+            disable = StringUtils.equals(this.unitEntry.getUnitDescription(), description);
+        }
 
         saveButton.setDisable(disable);
+    }
+
+    static boolean isInEdition(UnitEntry unitEntry) {
+        return unitEntry != null;
     }
 
 }
