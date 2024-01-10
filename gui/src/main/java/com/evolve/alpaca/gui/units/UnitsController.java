@@ -1,4 +1,4 @@
-package com.evolve.gui.dictionaries;
+package com.evolve.alpaca.gui.units;
 
 import com.evolve.FindPerson;
 import com.evolve.domain.Person;
@@ -94,6 +94,17 @@ public class UnitsController implements Initializable {
 
         unitNumberColumn.setCellValueFactory(new PropertyValueFactory<>("unitNumber"));
         unitDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("unitDescription"));
+        unitDescriptionColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String unitDescription, boolean empty) {
+                super.updateItem(unitDescription, empty);
+                setText(unitDescription);
+
+                if (StringUtils.isNotBlank(unitDescription)) {
+                    setTooltip(new Tooltip(unitDescription));
+                }
+            }
+        });
 
         listWasModifiedProperty.addListener((observableValue, oldValue, newValue) -> {
             stage.setTitle(UNITS_DIALOG_TITLE + (newValue ? " *" : ""));

@@ -8,7 +8,7 @@ import com.evolve.alpaca.importing.importDoc.group.GrupyAlfabetyczne;
 import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
 import com.evolve.gui.admin.importDbf.ImportDbfDialog;
 import com.evolve.gui.components.NewPersonDialog;
-import com.evolve.gui.dictionaries.UnitsController;
+import com.evolve.alpaca.gui.units.UnitsController;
 import com.evolve.gui.documents.DocumentEntry;
 import com.evolve.gui.documents.DocumentsController;
 import com.evolve.gui.events.PersonEditionFinishedEvent;

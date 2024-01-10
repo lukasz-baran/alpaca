@@ -1,4 +1,4 @@
-package com.evolve.gui.dictionaries;
+package com.evolve.alpaca.gui.units;
 
 import com.evolve.domain.Unit;
 import com.evolve.gui.DialogWindow;

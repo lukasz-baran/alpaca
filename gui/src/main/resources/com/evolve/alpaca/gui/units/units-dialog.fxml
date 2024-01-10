@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <HBox fx:id="unitsDialog" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.evolve.gui.dictionaries.UnitsController">
+      fx:controller="com.evolve.alpaca.gui.units.UnitsController">
     <AnchorPane minHeight="0.0" minWidth="0.0">
         <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
