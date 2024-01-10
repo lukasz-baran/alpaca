@@ -1,2 +1,2 @@
-alpaca-core/src/main/resources/
 **/*.DBF
+/alpaca-core/src/main/resources/
