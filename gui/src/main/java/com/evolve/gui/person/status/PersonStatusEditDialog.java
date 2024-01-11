@@ -1,12 +1,12 @@
 package com.evolve.gui.person.status;
 
 import com.evolve.alpaca.util.DatePickerKeyEventHandler;
+import com.evolve.alpaca.util.LocalDateStringConverter;
+import com.evolve.alpaca.validation.ValidationResult;
+import com.evolve.alpaca.validation.Validator;
 import com.evolve.domain.PersonStatusChange;
 import com.evolve.gui.DialogWindow;
 import com.evolve.gui.StageManager;
-import com.evolve.alpaca.util.LocalDateStringConverter;
-import com.evolve.alpaca.validation.Validator;
-import com.evolve.alpaca.validation.ValidationResult;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -29,6 +29,9 @@ public class PersonStatusEditDialog extends DialogWindow<PersonStatusChange> {
     private final PersonStatusChange editedValue;
     private final boolean isNewStatus;
     private final Validator<PersonStatusChange> addingNewStatusValidator;
+    private final ComboBox<PersonStatusChange.EventType> eventTypeComboBox;
+    private final TextField originalValueTextField;
+    private final DatePicker whenDatePicker;
 
     @Getter
     Dialog<PersonStatusChange> dialog;
@@ -37,8 +40,8 @@ public class PersonStatusEditDialog extends DialogWindow<PersonStatusChange> {
         return new PersonStatusEditDialog(null, new AddingNewStatusValidator(existingStatuses), false);
     }
 
-    public PersonStatusEditDialog(PersonStatusChange editedValue) {
-        this(editedValue, new AcceptAnyValidator(), false);
+    public static PersonStatusEditDialog editStatus(PersonStatusChange editedValue) {
+        return new PersonStatusEditDialog(editedValue, new AcceptAnyValidator(), false);
     }
 
     PersonStatusEditDialog(PersonStatusChange editedValue,
@@ -48,6 +51,9 @@ public class PersonStatusEditDialog extends DialogWindow<PersonStatusChange> {
         this.editedValue = editedValue;
         this.addingNewStatusValidator = validator;
         this.isNewStatus = editedValue == null;
+        this.eventTypeComboBox = new ComboBox<>();
+        this.originalValueTextField = new TextField();
+        this.whenDatePicker = new DatePicker();
     }
 
     @Override
@@ -56,18 +62,15 @@ public class PersonStatusEditDialog extends DialogWindow<PersonStatusChange> {
 
         final GridPane grid = createGridPane();
 
-        final ComboBox<PersonStatusChange.EventType> eventTypeComboBox = new ComboBox<>();
         eventTypeComboBox.setId(EVENT_TYPE_COMBO_BOX_ID);
         eventTypeComboBox.getItems().addAll(PersonStatusChange.EventType.values());
 
         final LocalDateStringConverter whenConverter = new LocalDateStringConverter();
-        final DatePicker whenDatePicker = new DatePicker();
         whenDatePicker.setId(WHEN_DATE_PICKER_ID);
         whenDatePicker.setConverter(whenConverter);
         whenDatePicker.setPromptText("Data");
         whenDatePicker.getEditor().setOnKeyTyped(new DatePickerKeyEventHandler(whenConverter, whenDatePicker));
 
-        final TextField originalValueTextField = new TextField();
         originalValueTextField.setId(ORIGINAL_VALUE_TEXT_ID);
         originalValueTextField.setPromptText("Oryginalna wartość");
 
@@ -88,7 +91,7 @@ public class PersonStatusEditDialog extends DialogWindow<PersonStatusChange> {
         final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
 
-        registerEventHandlers(window, saveButton, eventTypeComboBox, whenDatePicker, originalValueTextField);
+        registerEventHandlers(window, saveButton);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -118,12 +121,7 @@ public class PersonStatusEditDialog extends DialogWindow<PersonStatusChange> {
         return dialog.showAndWait();
     }
 
-    void registerEventHandlers(
-            Window window,
-            Node saveButton,
-            ComboBox<PersonStatusChange.EventType> eventTypeComboBox,
-            DatePicker whenDatePicker,
-            TextField originalValueTextField) {
+    void registerEventHandlers(Window window, Node saveButton) {
         saveButton.addEventFilter(ActionEvent.ACTION,
             new SaveButtonEventHandler(eventTypeComboBox, whenDatePicker, originalValueTextField, addingNewStatusValidator, window));
 

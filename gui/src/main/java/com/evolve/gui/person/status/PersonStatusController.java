@@ -107,7 +107,7 @@ public class PersonStatusController extends EditableGuiElement implements Initia
 
             return row;
         });
-        setPersonStatusHistory(Collections.emptyList()); // it's needed, without this initial call the table won't be populated with real data
+        setPersonStatusHistory(Collections.emptyList());
     }
 
     public void setPerson(Person person) {
@@ -137,7 +137,7 @@ public class PersonStatusController extends EditableGuiElement implements Initia
     }
 
     private void editStatusNumber(TableView<PersonHistoryStatusEntry> tableView, TableRow<PersonHistoryStatusEntry> row) {
-        new PersonStatusEditDialog(row.getItem().getPersonStatusChange()).showDialog(stageManager.getWindow())
+        PersonStatusEditDialog.editStatus(row.getItem().getPersonStatusChange()).showDialog(stageManager.getWindow())
                 .ifPresent(personStatusChange -> {
                     row.getItem().setPersonStatusChange(personStatusChange);
                     tableView.refresh();
