@@ -6,6 +6,7 @@ import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
+import com.evolve.gui.person.event.PersonListDoubleClickEvent;
 import com.evolve.gui.person.list.search.PersonSearchCriteria;
 import com.evolve.services.PersonsService;
 import javafx.beans.property.BooleanProperty;
