@@ -1,4 +1,4 @@
-package com.evolve.gui.help;
+package com.evolve.alpaca.gui.help;
 
 import com.evolve.gui.StageManager;
 import javafx.event.ActionEvent;

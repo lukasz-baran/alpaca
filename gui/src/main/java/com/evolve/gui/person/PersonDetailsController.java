@@ -1,4 +1,4 @@
-package com.evolve.gui;
+package com.evolve.gui.person;
 
 import com.evolve.EditPersonDataCommand;
 import com.evolve.alpaca.util.LocalDateStringConverter;
@@ -6,6 +6,8 @@ import com.evolve.alpaca.validation.ValidationException;
 import com.evolve.domain.Person;
 import com.evolve.domain.RegistryNumber;
 import com.evolve.domain.Unit;
+import com.evolve.gui.EditableGuiElement;
+import com.evolve.gui.StageManager;
 import com.evolve.gui.components.GenderComboboxController;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.UnitNumberItem;

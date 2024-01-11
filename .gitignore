@@ -1,2 +1,3 @@
 **/*.DBF
 /alpaca-core/src/main/resources/
+/gui/src/main/resources/about-content.html
