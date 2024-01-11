@@ -31,22 +31,6 @@
             <version>2.7.5</version>
         </dependency>
 
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-tcnative-boringssl-static</artifactId>
-            <version>2.0.36.Final</version>
-            <classifier>windows-x86_64</classifier>
-            <scope>runtime</scope>
-        </dependency>
-
-<!-- the following dependency may be needed for webclient -->
-<!--        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-tcnative</artifactId>
-            <version>2.0.36.Final</version>
-            <classifier>windows-x86_64</classifier>
-        </dependency>-->
-
         <!-- for javax validation -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

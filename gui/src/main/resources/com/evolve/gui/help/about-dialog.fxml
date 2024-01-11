@@ -5,7 +5,8 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
-<VBox fx:id="aboutDialog" prefHeight="254.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.help.AboutDialogWindow">
+<VBox fx:id="aboutDialog" prefHeight="254.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.help.AboutDialogWindow">
     <Pane prefHeight="200.0" prefWidth="200.0">
         <WebView fx:id="webViewAbout" prefHeight="200.0" prefWidth="600.0" />
     </Pane>

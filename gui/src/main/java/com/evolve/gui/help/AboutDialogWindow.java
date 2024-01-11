@@ -32,7 +32,7 @@ import static com.evolve.gui.StageManager.APPLICATION_ICON;
 @Slf4j
 public class AboutDialogWindow implements Initializable {
     private static final String WINDOW_ABOUT_DIALOG_TITLE = "O programie";
-    final Resource resourceAbout = new DefaultResourceLoader().getResource("about-content.html");
+    final Resource resourceAbout = new DefaultResourceLoader().getResource("classpath:/about-content.html");
     private final StageManager stageManager;
     private Stage stage;
 
