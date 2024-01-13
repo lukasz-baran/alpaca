@@ -1,6 +1,8 @@
 package com.evolve.alpaca.gui.help;
 
 import com.evolve.gui.StageManager;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,13 +16,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.ResourceBundle;
 
 import static com.evolve.gui.StageManager.APPLICATION_ICON;
@@ -31,8 +30,8 @@ import static com.evolve.gui.StageManager.APPLICATION_ICON;
 @RequiredArgsConstructor
 @Slf4j
 public class AboutDialogWindow implements Initializable {
+    private static final String ABOUT_CONTENT_HTML_FILE = "about-content.html";
     private static final String WINDOW_ABOUT_DIALOG_TITLE = "O programie";
-    final Resource resourceAbout = new DefaultResourceLoader().getResource("classpath:/about-content.html");
     private final StageManager stageManager;
     private Stage stage;
 
@@ -54,11 +53,12 @@ public class AboutDialogWindow implements Initializable {
     public void show() {
         stage.show();
         try {
-            final String textAbout = new String(Files.readAllBytes(resourceAbout.getFile().toPath()));
-            webViewAbout.getEngine().loadContent(textAbout);
+            final URL url = Resources.getResource(ABOUT_CONTENT_HTML_FILE);
+            final String aboutContent = Resources.toString(url, Charsets.UTF_8);
+            webViewAbout.getEngine().loadContent(aboutContent);
 
         } catch (IOException e) {
-            log.error("Unable to load file with about text");
+            log.error("Unable to load file with about content {}", ABOUT_CONTENT_HTML_FILE);
         }
 
     }

@@ -2,12 +2,12 @@ package com.evolve.alpaca.importing.importDoc;
 
 import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
 import com.evolve.alpaca.importing.importDoc.person.PersonReader;
+import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,22 +17,21 @@ import java.util.Scanner;
 @Slf4j
 public class ImportPeople {
     public static final String FILENAME_BY_NUMBERS = "ludzie-numerami.txt";
-    public static final URL FILE_BY_NUMBERS = Resources.getResource(FILENAME_BY_NUMBERS);
 
     private static final String INCORRECT_SEPARATOR = "–";
 
-    private final File fileByNumbers;
     private final boolean logging;
 
     public ImportPeople(boolean logging) {
-        this.fileByNumbers = new File(FILE_BY_NUMBERS.getFile());
         this.logging = logging;
     }
 
     @SneakyThrows
     public List<PersonFromDoc> processFile() {
         final List<PersonFromDoc> personList = new ArrayList<>();
-        try (final Scanner scanner = new Scanner(fileByNumbers)) {
+        final URL url = Resources.getResource(FILENAME_BY_NUMBERS);
+        final String content = Resources.toString(url, Charsets.UTF_8);
+        try (final Scanner scanner = new Scanner(content)) {
             while (scanner.hasNextLine()) {
                 final String line = scanner.nextLine().replaceAll(INCORRECT_SEPARATOR, "-");
                 if (skipLine(line)) {
