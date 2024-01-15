@@ -1,11 +1,12 @@
 package com.evolve.gui.documents;
 
+import com.evolve.alpaca.gui.viewer.ImageViewWindowController;
 import com.evolve.content.ContentFile;
 import com.evolve.content.ContentStoreService;
 import com.evolve.content.FileRepository;
+import com.evolve.gui.StageManager;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
-import com.evolve.gui.StageManager;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -16,7 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +51,7 @@ public class DocumentsController implements Initializable {
     private final ContentStoreService contentStoreService;
     private final FileRepository fileRepository;
 
-    private final FxControllerAndView<DocumentViewer, VBox> documentViewerController;
+    private final FxControllerAndView<ImageViewWindowController, BorderPane> mainWindowController;
 
     @FXML TableView<DocumentEntry> documentsTable;
     @FXML TableColumn<DocumentEntry, Long> idColumn;
@@ -159,7 +160,9 @@ public class DocumentsController implements Initializable {
 
     private void openDocument(DocumentEntry documentEntry) {
         if (StringUtils.contains(documentEntry.getMimeType(), "image")) {
-            documentViewerController.getController().showDocument(documentEntry);
+
+            mainWindowController.getController().openImage(documentEntry);
+
         } else {
             stageManager.displayWarning("Można przeglądać jedynie dokumenty graficzne");
         }

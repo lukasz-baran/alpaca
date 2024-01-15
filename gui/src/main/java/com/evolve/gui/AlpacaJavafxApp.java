@@ -21,6 +21,7 @@ public class AlpacaJavafxApp extends Application {
         String[] args = getParameters().getRaw().toArray(new String[0]);
         this.applicationContext = new SpringApplicationBuilder()
                 .sources(AlpacaSpringApp.class)
+                .headless(false) // needed because of Toolkit.getDefaultToolkit().getScreenSize()
                 .run(args);
     }
 

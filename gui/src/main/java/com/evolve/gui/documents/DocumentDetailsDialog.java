@@ -17,7 +17,7 @@ import java.util.Optional;
 @Slf4j
 public class DocumentDetailsDialog extends DialogWindow<FilePathAndDescription> {
     public static final FileChooser.ExtensionFilter DOCUMENTS_EXTENSION_FILTER = new FileChooser.ExtensionFilter("documents",
-            "*.doc", "*.docx", "*.odt", "*.pdf", "*.rtf", "*.txt", "*.png", ".jpg", "*.jpeg", "*.gif", "*.bmp");
+            "*.doc", "*.docx", "*.odt", "*.pdf", "*.rtf", "*.txt", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp");
 
     private final FilePathAndDescription filePathAndDescription;
     private final StageManager stageManager;
