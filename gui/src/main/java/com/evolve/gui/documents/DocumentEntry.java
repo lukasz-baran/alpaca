@@ -16,10 +16,11 @@ public class DocumentEntry {
     private final LocalDateTime dateAdded;
     private final String summary;
     private final String mimeType;
+    private final Long length;
 
     static DocumentEntry of(ContentFile contentFile) {
         return new DocumentEntry(contentFile.getId(), contentFile.getName(), contentFile.getCreated(),
-                contentFile.getSummary(), contentFile.getContentMimeType());
+                contentFile.getSummary(), contentFile.getContentMimeType(), contentFile.getContentLength());
     }
 
 }
