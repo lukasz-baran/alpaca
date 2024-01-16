@@ -126,15 +126,18 @@ public class PersonStatusEditDialog extends DialogWindow<PersonStatusChange> {
             new SaveButtonEventHandler(eventTypeComboBox, whenDatePicker, originalValueTextField, addingNewStatusValidator, window));
 
         eventTypeComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            setButtonsState(eventTypeComboBox, whenDatePicker, originalValueTextField);
+            //setButtonsState(eventTypeComboBox, whenDatePicker, originalValueTextField);
+            validateSaveButton(saveButton);
         });
 
         whenDatePicker.valueProperty().addListener((options, oldValue, newValue) -> {
-            setButtonsState(eventTypeComboBox, whenDatePicker, originalValueTextField);
+            //setButtonsState(eventTypeComboBox, whenDatePicker, originalValueTextField);
+            validateSaveButton(saveButton);
         });
 
         originalValueTextField.textProperty().addListener(value -> {
-            setButtonsState(eventTypeComboBox, whenDatePicker, originalValueTextField);
+            validateSaveButton(saveButton);
+//            setButtonsState(eventTypeComboBox, whenDatePicker, originalValueTextField);
         });
     }
 
@@ -152,6 +155,18 @@ public class PersonStatusEditDialog extends DialogWindow<PersonStatusChange> {
             saveButton.setDisable(actualEntry.equals(editedValue));
         }
 
+    }
+
+    @Override
+    protected void validateSaveButton(Node saveButton) {
+        // we should check whether we edit the value or add new one
+        if (isNewStatus) {
+            saveButton.setDisable(eventTypeComboBox.getValue() == null || whenDatePicker.getValue() == null);
+        } else {
+            final PersonStatusChange actualEntry = new PersonStatusChange(eventTypeComboBox.getValue(),
+                    whenDatePicker.getValue(), originalValueTextField.getText());
+            saveButton.setDisable(actualEntry.equals(editedValue));
+        }
     }
 
     static String createHeader(PersonStatusChange personHistoryStatusEntry) {

@@ -13,6 +13,7 @@ import java.util.Optional;
 
 public class PhoneNumberDialog extends DialogWindow<String> {
     private final String phoneNumber;
+    private final TextField phoneNumberTextField = new TextField();
 
     public PhoneNumberDialog(String phoneNumber) {
         super("Telefon", "Podaj numer telefonu");
@@ -25,7 +26,6 @@ public class PhoneNumberDialog extends DialogWindow<String> {
 
         final GridPane grid = createGridPane();
 
-        final TextField phoneNumberTextField = new TextField();
         phoneNumberTextField.setPromptText("Numer telefonu");
 
         Optional.ofNullable(phoneNumber).ifPresent(phoneNumberTextField::setText);
@@ -33,11 +33,11 @@ public class PhoneNumberDialog extends DialogWindow<String> {
         grid.add(new Label("Numer:"), 0, 0);
         grid.add(phoneNumberTextField, 1, 0);
 
-        Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
+        final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
 
         phoneNumberTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            saveButton.setDisable(newValue.trim().isEmpty());
+            validateSaveButton(saveButton);
         });
 
         dialog.getDialogPane().setContent(grid);
@@ -52,5 +52,10 @@ public class PhoneNumberDialog extends DialogWindow<String> {
 
         return dialog.showAndWait();
 
+    }
+
+    @Override
+    protected void validateSaveButton(Node saveButton) {
+        saveButton.setDisable(phoneNumberTextField.getText().trim().isEmpty());
     }
 }

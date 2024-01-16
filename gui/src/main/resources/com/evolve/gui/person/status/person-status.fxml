@@ -11,8 +11,9 @@
       stylesheets="@../../../../../styles/style.css"
       xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" prefWidth="255.0" spacing="5.0"
       GridPane.columnIndex="1" GridPane.rowIndex="4" fx:controller="com.evolve.gui.person.status.PersonStatusController">
+    <!--
     <ComboBox fx:id="personStatusCombo" GridPane.columnIndex="1" GridPane.rowIndex="4" >
-    </ComboBox>
+    </ComboBox>-->
 
     <TableView fx:id="statusHistoryTable" layoutY="19.0" prefHeight="120.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
         <columns>
@@ -34,6 +35,6 @@
     </TableView>
 
     <padding>
-        <Insets bottom="10.0" left="0.0" right="0.0" top="10.0" />
+        <Insets bottom="5.0" top="5.0" />
     </padding>
 </VBox>

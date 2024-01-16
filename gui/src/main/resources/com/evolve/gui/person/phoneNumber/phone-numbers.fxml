@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.geometry.Insets?>
 <AnchorPane minHeight="0.0" minWidth="0.0" xmlns="http://javafx.com/javafx/19"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.phoneNumber.PhoneNumbersController">
     <TableView fx:id="phoneNumbersTable" layoutY="19.0" prefHeight="120.0" prefWidth="300.0"
@@ -24,5 +25,7 @@
             </ContextMenu>
         </contextMenu>
     </TableView>
-
+    <padding>
+        <Insets bottom="5.0" top="5.0" />
+    </padding>
 </AnchorPane>

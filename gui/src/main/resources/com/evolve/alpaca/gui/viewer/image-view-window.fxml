@@ -24,14 +24,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" id="borderPaneWindow" fx:id="borderPaneWindow" prefHeight="400.0"
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="borderPaneWindow" prefHeight="400.0"
             prefWidth="854.0" xmlns="http://javafx.com/javafx/19"
             fx:controller="com.evolve.alpaca.gui.viewer.ImageViewWindowController">
     <top>
         <VBox BorderPane.alignment="CENTER">
             <MenuBar fx:id="menuBar">
                 <Menu text="_File">
-                    <MenuItem id="menuExit" fx:id="menuClose" onAction="#menuClose_onAction" text="E_xit">
+                    <MenuItem fx:id="menuClose" onAction="#menuClose_onAction" text="E_xit">
                         <accelerator>
                             <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP"
                                                 shortcut="UP"/>
@@ -94,8 +94,7 @@
                 </Menu>
             </MenuBar>
             <ToolBar fx:id="toolBar" prefHeight="40.0" prefWidth="200.0">
-                <Button id="buttonZoomIn" fx:id="buttonZoomIn" mnemonicParsing="false"
-                        onAction="#buttonZoomIn_onAction">
+                <Button fx:id="buttonZoomIn" mnemonicParsing="false" onAction="#buttonZoomIn_onAction">
                     <tooltip>
                         <Tooltip text="Zoom In"/>
                     </tooltip>
@@ -105,8 +104,7 @@
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button id="buttonZoomOut" fx:id="buttonZoomOut" mnemonicParsing="false"
-                        onAction="#buttonZoomOut_onAction">
+                <Button fx:id="buttonZoomOut" mnemonicParsing="false" onAction="#buttonZoomOut_onAction">
                     <tooltip>
                         <Tooltip text="Zoom Out"/>
                     </tooltip>
@@ -116,8 +114,7 @@
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button id="buttonResetZoom" fx:id="buttonResetZoom" mnemonicParsing="false"
-                        onAction="#buttonResetZoom_onAction">
+                <Button fx:id="buttonResetZoom" mnemonicParsing="false" onAction="#buttonResetZoom_onAction">
                     <tooltip>
                         <Tooltip text="Best Fit"/>
                     </tooltip>
@@ -158,7 +155,7 @@
                     </font>
                 </Label>
             </GridPane>
-            <ScrollPane id="scrollPaneMain" fx:id="scrollPaneMain" fitToHeight="true" fitToWidth="true"
+            <ScrollPane fx:id="scrollPaneMain" fitToHeight="true" fitToWidth="true"
                         onKeyPressed="#scrollPaneMain_onKeyPress" onKeyReleased="#scrollPaneMain_onKeyRelease"
                         onMouseClicked="#scrollPaneMain_onClick" onScroll="#scrollPaneMain_onScroll"
                         styleClass="no-border" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"

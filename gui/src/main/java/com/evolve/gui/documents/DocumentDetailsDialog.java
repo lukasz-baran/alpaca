@@ -12,20 +12,28 @@ import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class DocumentDetailsDialog extends DialogWindow<FilePathAndDescription> {
+    public static final List<String> ACCEPTED_EXTENSION =
+            List.of("*.doc", "*.docx", "*.odt", "*.pdf", "*.rtf", "*.txt", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp");
+
     public static final FileChooser.ExtensionFilter DOCUMENTS_EXTENSION_FILTER = new FileChooser.ExtensionFilter("documents",
-            "*.doc", "*.docx", "*.odt", "*.pdf", "*.rtf", "*.txt", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp");
+            ACCEPTED_EXTENSION);
 
     private final FilePathAndDescription filePathAndDescription;
     private final StageManager stageManager;
+    private final TextField filePathTextField;
+
 
     public DocumentDetailsDialog(StageManager stageManager) {
-        super("Nowy document", "Wybierz plik - dozwolone formaty to pliki z obrazami oraz tekstowe");
+        super("Nowy document", "Wybierz plik - dozwolone formaty: " + String.join(", ", ACCEPTED_EXTENSION));
         this.filePathAndDescription = new FilePathAndDescription();
         this.stageManager = stageManager;
+        this.filePathTextField = new TextField();
     }
 
     @Override
@@ -35,7 +43,6 @@ public class DocumentDetailsDialog extends DialogWindow<FilePathAndDescription> 
         final GridPane grid = createGridPane();
 
         final HBox group = new HBox();
-        final TextField filePathTextField = new TextField();
         filePathTextField.setPromptText("Plik");
 
         final Button chooseFileButton = new Button("Wybierz plik");
@@ -65,7 +72,7 @@ public class DocumentDetailsDialog extends DialogWindow<FilePathAndDescription> 
         saveButton.setDisable(true);
 
         filePathTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            saveButton.setDisable(newValue.trim().isEmpty());
+            validateSaveButton(saveButton);
         });
 
         dialog.getDialogPane().setContent(grid);
@@ -80,6 +87,11 @@ public class DocumentDetailsDialog extends DialogWindow<FilePathAndDescription> 
         });
 
         return dialog.showAndWait();
+    }
+
+    @Override
+    protected void validateSaveButton(Node saveButton) {
+        saveButton.setDisable(filePathTextField.getText().trim().isEmpty());
     }
 
 }

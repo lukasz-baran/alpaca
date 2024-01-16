@@ -20,7 +20,7 @@ public class PersonListModel {
     private final ObjectProperty<PersonModel> currentPersonProperty = new SimpleObjectProperty<>(null);
 
 
-    public FilteredList<PersonModel>  feed(List<PersonListView> persons) {
+    public FilteredList<PersonModel> feed(List<PersonListView> persons) {
         data.clear();
         persons.stream()
                 .map(PersonModel::new)

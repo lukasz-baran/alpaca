@@ -16,6 +16,10 @@ import java.util.Optional;
 public class AuthorizedPersonDialog extends DialogWindow<Person.AuthorizedPerson> {
 
     private final Person.AuthorizedPerson authorizedPerson;
+    private final TextField firstNameTextField = new TextField();
+    private final TextField lastNameTextField = new TextField();
+    private final TextField relationTextField = new TextField();
+    private final TextArea commentTextArea = new TextArea();
 
     public AuthorizedPersonDialog(Person.AuthorizedPerson authorizedPerson) {
         super("Osoba upoważniona", "Wprowadź dane osoby upoważnionej");
@@ -28,14 +32,9 @@ public class AuthorizedPersonDialog extends DialogWindow<Person.AuthorizedPerson
 
         final GridPane grid = createGridPane();
 
-        final TextField firstNameTextField = new TextField();
         firstNameTextField.setPromptText("Imię");
-        final TextField lastNameTextField = new TextField();
         lastNameTextField.setPromptText("Nazwisko");
-        final TextField relationTextField = new TextField();
         relationTextField.setPromptText("Relacja");
-
-        final TextArea commentTextArea = new TextArea();
         commentTextArea.setPrefRowCount(3);
         commentTextArea.setPromptText("Komentarz");
 
@@ -71,17 +70,26 @@ public class AuthorizedPersonDialog extends DialogWindow<Person.AuthorizedPerson
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
-                return new Person.AuthorizedPerson(
-                        firstNameTextField.getText(),
-                        lastNameTextField.getText(),
-                        relationTextField.getText(),
-                        null, null,
-                        commentTextArea.getText());
+                return getAuthorizedPerson();
             }
             return null;
         });
 
         return dialog.showAndWait();
+    }
+
+    @Override
+    protected void validateSaveButton(Node saveButton) {
+        saveButton.setDisable(getAuthorizedPerson().equals(this.authorizedPerson));
+    }
+
+    private Person.AuthorizedPerson getAuthorizedPerson() {
+        return new Person.AuthorizedPerson(
+                firstNameTextField.getText().trim(),
+                lastNameTextField.getText().trim(),
+                relationTextField.getText().trim(),
+                null, null,
+                commentTextArea.getText());
     }
 
 }

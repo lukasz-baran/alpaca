@@ -88,7 +88,10 @@
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Upoważnieni" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="9" />
         <fx:include fx:id="authorizedController" source="authorizedPerson/authorized-persons-list.fxml" GridPane.columnIndex="1" GridPane.rowIndex="9" GridPane.columnSpan="3" />
 
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+        <TextFlow GridPane.columnIndex="0" GridPane.rowIndex="10">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status: " wrappingWidth="70.625" />
+            <Text fx:id="textPersonStatus" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="70.625" style="-fx-font-weight: bold" />
+        </TextFlow>
         <fx:include fx:id="personStatusController" source="status/person-status.fxml" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.columnSpan="3" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Konta bankowe" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="11" />
