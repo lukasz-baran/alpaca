@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
@@ -36,14 +37,13 @@ class ImportDbfServiceShould {
     @Mock CommandCollector commandCollector;
     @Mock PersonEditService personEditService;
 
+    @InjectMocks
     ImportDbfService importDbfService;
 
     @BeforeEach
     public void setUp() {
         when(personFixer.fixData(any(Person.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
-        importDbfService = new ImportDbfService(applicationEventPublisher, personsService, personFixer, accountsService,
-                commandsApplier, commandCollector, personEditService);
     }
 
     @Test

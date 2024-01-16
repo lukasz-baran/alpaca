@@ -44,6 +44,8 @@ public class ImportDbfService {
     private final CommandCollector commandCollector;
     private final PersonEditService personEditService;
 
+    private final PostImportStepService postImportStepService;
+
     public List<Person> startImport(String personsFilePath, String accountsFilePath) {
         final List<DbfPerson> osobyDbf = new ImportPersonDbf()
                 .performImport(personsFilePath)
@@ -68,6 +70,9 @@ public class ImportDbfService {
             importAccounts(accountsFilePath);
         }
 
+        // post import handles re-setting person status
+        postImportStep();
+
         processCommands();
 
         final DbfImportCompletedEvent customSpringEvent = new DbfImportCompletedEvent(this,
@@ -75,6 +80,10 @@ public class ImportDbfService {
         applicationEventPublisher.publishEvent(customSpringEvent);
 
         return persons;
+    }
+
+    private void postImportStep() {
+        postImportStepService.process();
     }
 
     void processCommands() {
