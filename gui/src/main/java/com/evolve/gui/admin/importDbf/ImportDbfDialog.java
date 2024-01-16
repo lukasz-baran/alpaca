@@ -28,7 +28,7 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
     private final TextField accountsFilePathTextField = new TextField();
 
     public ImportDbfDialog(StageManager stageManager, LocalUserConfiguration localUserConfiguration) {
-        super("Nowy document", "Wybierz pliki DBF ze starej aplikacji");
+        super("Import plików ze starej aplikacji", "Wybierz pliki DBF ze starej aplikacji");
         this.stageManager = stageManager;
         this.localUserConfiguration = localUserConfiguration;
     }
@@ -130,11 +130,6 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
 
         return group;
     }
-
-//    private void updateSaveButtonState(Button saveButton, String newValue) {
-//
-//        saveButton.setDisable(newValue.trim().isEmpty());
-//    }
 
     @Override
     protected void validateSaveButton(Node saveButton) {

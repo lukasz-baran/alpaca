@@ -196,10 +196,6 @@ public class DocumentsController implements Initializable {
 
             documentsList.clear();
             documentsList.setAll(fileRepository.findByPersonId(personId).stream().map(DocumentEntry::of).toList());
-//            fileRepository.findByPersonId(personId).forEach(file -> {
-//                log.info("Found file: {}", file);
-//                documentsList.add(DocumentEntry.of(file));
-//            });
             documentsTable.setItems(documentsList);
         }
     }

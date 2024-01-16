@@ -20,6 +20,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
@@ -30,13 +31,17 @@ import org.springframework.stereotype.Component;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @FxmlView("main-table.fxml")
 @RequiredArgsConstructor
 @Slf4j
 public class MainTableController implements Initializable {
+    private static final String INVALID_REGISTRY_NUMBER_STYLE = "-fx-text-fill: red; -fx-font-weight: bold;";
 
     private final BooleanProperty disabledProperty = new SimpleBooleanProperty(false);
     private final PersonListModel personListModel;
@@ -79,13 +84,35 @@ public class MainTableController implements Initializable {
         // 0 means that the registry number is unknown which valid according to business requirements:
         registryNumberColumn.setCellFactory(param -> new TableCell<>() {
             @Override
-            protected void updateItem(Long itemQuantity, boolean empty) {
-                super.updateItem(itemQuantity, empty);
-                if (empty || itemQuantity.equals(0L)) {
+            protected void updateItem(Long registryNumber, boolean empty) {
+                super.updateItem(registryNumber, empty);
+                if (empty || registryNumber.equals(0L)) {
                     setText(null);
                 } else {
-                    setText(itemQuantity.toString());
+                    setText(registryNumber.toString());
                 }
+
+                // set tooltip if necessary:
+                setTooltip(null);
+                setStyle(null);
+                if (!empty && registryNumber != 0L) {
+                    final Set<PersonModel> persons = personListModel.getFilteredList()
+                            .stream()
+                            .filter(person -> Objects.equals(person.getRegistryNumber(), registryNumber))
+                            .collect(Collectors.toSet());
+
+                    if (persons.size() > 1) {
+                        setStyle(INVALID_REGISTRY_NUMBER_STYLE);
+                        final String tooltipText = "Poniższe osoby mają ten sam numer kartoteki:\n" +
+                            persons.stream().map(personModel ->
+                                personModel.getId() + " " + personModel.getFirstName() + " " + personModel.getLastName())
+                                .collect(Collectors.joining("\n"));
+                        final Tooltip registryNumberTooltip = new Tooltip(tooltipText);
+                        registryNumberTooltip.setShowDelay(Duration.ZERO);
+                        setTooltip(registryNumberTooltip);
+                    }
+                }
+
             }
         });
 
