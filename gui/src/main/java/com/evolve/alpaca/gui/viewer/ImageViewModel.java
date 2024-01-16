@@ -5,7 +5,6 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import lombok.Getter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,12 +18,6 @@ public class ImageViewModel {
 
     private final ReadOnlyStringWrapper status = new ReadOnlyStringWrapper("Ready.");
     private final ReadOnlyObjectWrapper<ImageModel> selectedImageModelWrapper = new ReadOnlyObjectWrapper<>();
-    @Getter
-    private final String[] supportedReadExtensions
-            = new String[]{"bmp", "png", "gif", "jpeg", "jpg", "tiff", "ico", "cur", "psd", "psb" /*, "svg", "wmf"*/};
-    @Getter
-    private final String[] supportedWriteExtensions
-            = new String[]{"bmp", "png", "gif", "jpeg", "jpg", "tiff", "ico"};
 
     public ImageViewModel() {
         selectedImageModelProperty().addListener(((observable, oldValue, newValue) -> {

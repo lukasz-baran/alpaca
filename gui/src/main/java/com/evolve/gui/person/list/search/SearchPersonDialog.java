@@ -56,12 +56,15 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
         final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
 
-        final ChangeListener<Boolean> listener = (prop, old, val) -> updateLabelOnAttachments(hasDocumentsCheckBox, saveButton);
+        final ChangeListener<Boolean> listener = (prop, old, val) -> {
+            updateLabelOnAttachments(hasDocumentsCheckBox, saveButton);
+            validateSaveButton(saveButton);
+        };
         hasDocumentsCheckBox.selectedProperty().addListener(listener);
         hasDocumentsCheckBox.indeterminateProperty().addListener(listener);
 
         unitNumberCombo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) ->
-                saveButton.setDisable(false));
+                validateSaveButton(saveButton));
 
         dialog.getDialogPane().setContent(grid);
 
@@ -83,12 +86,16 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
         return dialog.showAndWait();
     }
 
+    @Override
+    protected void validateSaveButton(Node saveButton) {
+        saveButton.setDisable(false);
+    }
+
     private void updateLabelOnAttachments(CheckBox hasDocumentsCheckBox, Node saveButton) {
         final String txt = hasDocumentsCheckBox.isIndeterminate() ? "Bez znaczenia" :
                 hasDocumentsCheckBox.isSelected() ? "Obecne" :
                         "Brak załączników";
         hasDocumentsCheckBox.setText(txt);
-        saveButton.setDisable(false);
     }
 
 

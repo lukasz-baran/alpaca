@@ -93,7 +93,8 @@ public class UnitDialog extends DialogWindow<Unit> {
         return dialog.showAndWait();
     }
 
-    void validateSaveButton(Node saveButton) {
+    @Override
+    protected void validateSaveButton(Node saveButton) {
 
         final String description = unitNameTextField.getText().trim();
         boolean disable = unitIdComboBox.getValue().isEmpty() || description.isEmpty();

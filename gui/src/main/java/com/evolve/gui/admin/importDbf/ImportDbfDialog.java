@@ -3,6 +3,7 @@ package com.evolve.gui.admin.importDbf;
 import com.evolve.alpaca.conf.LocalUserConfiguration;
 import com.evolve.gui.DialogWindow;
 import com.evolve.gui.StageManager;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -23,6 +24,8 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
 
     private final StageManager stageManager;
     private final LocalUserConfiguration localUserConfiguration;
+    private final TextField mainFilePathTextField = new TextField();
+    private final TextField accountsFilePathTextField = new TextField();
 
     public ImportDbfDialog(StageManager stageManager, LocalUserConfiguration localUserConfiguration) {
         super("Nowy document", "Wybierz pliki DBF ze starej aplikacji");
@@ -68,8 +71,7 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
         final HBox group = new HBox();
         group.setSpacing(10);
 
-        final TextField filePathTextField = new TextField();
-        filePathTextField.setPromptText("Z_B_KO.DBF");
+        mainFilePathTextField.setPromptText("Z_B_KO.DBF");
 
         final Button chooseFileButton = new Button("Wybierz plik");
         chooseFileButton.onActionProperty().setValue(event -> {
@@ -80,22 +82,19 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
             }
             dbfFiles.setMainFile(file);
 
-            filePathTextField.setText(file.getAbsolutePath());
+            mainFilePathTextField.setText(file.getAbsolutePath());
         });
-        group.getChildren().add(filePathTextField);
+        group.getChildren().add(mainFilePathTextField);
         group.getChildren().add(chooseFileButton);
 
         localUserConfiguration.loadProperty(LocalUserConfiguration.Z_B_KO_DBF_LOCATION)
                 .ifPresent(filePath -> {
-                    filePathTextField.setText(filePath);
+                    mainFilePathTextField.setText(filePath);
                     dbfFiles.setMainFile(new File(filePath));
                 });
 
-        updateSaveButtonState(saveButton, filePathTextField.getText());
-
-        filePathTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            updateSaveButtonState(saveButton, newValue);
-        });
+        validateSaveButton(saveButton);
+        mainFilePathTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
 
         return group;
     }
@@ -104,8 +103,7 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
         final HBox group = new HBox();
         group.setSpacing(10);
 
-        final TextField filePathTextField = new TextField();
-        filePathTextField.setPromptText("PLAN.DBF");
+        accountsFilePathTextField.setPromptText("PLAN.DBF");
 
         final Button chooseFileButton = new Button("Wybierz plik");
         chooseFileButton.onActionProperty().setValue(event -> {
@@ -116,27 +114,35 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
             }
             dbfFiles.setPlanAccountsFile(file);
 
-            filePathTextField.setText(file.getAbsolutePath());
+            accountsFilePathTextField.setText(file.getAbsolutePath());
         });
-        group.getChildren().add(filePathTextField);
+        group.getChildren().add(accountsFilePathTextField);
         group.getChildren().add(chooseFileButton);
 
         localUserConfiguration.loadProperty(LocalUserConfiguration.PLAN_DBF_LOCATION)
                 .ifPresent(filePath -> {
-                    filePathTextField.setText(filePath);
+                    accountsFilePathTextField.setText(filePath);
                     dbfFiles.setPlanAccountsFile(new File(filePath));
                 });
-        updateSaveButtonState(saveButton, filePathTextField.getText());
 
-        filePathTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            updateSaveButtonState(saveButton, newValue);
-        });
+        validateSaveButton(saveButton);
+        accountsFilePathTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
 
         return group;
     }
 
-    private void updateSaveButtonState(Button saveButton, String newValue) {
-        saveButton.setDisable(newValue.trim().isEmpty());
+//    private void updateSaveButtonState(Button saveButton, String newValue) {
+//
+//        saveButton.setDisable(newValue.trim().isEmpty());
+//    }
+
+    @Override
+    protected void validateSaveButton(Node saveButton) {
+        final boolean notEmpty = accountsFilePathTextField.getText().trim().isEmpty() ||
+                mainFilePathTextField.getText().trim().isEmpty();
+
+        saveButton.setDisable(notEmpty);
     }
+
 
 }

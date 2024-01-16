@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ContextMenu?>
-<?import javafx.scene.control.MenuItem?>
-
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <VBox xmlns="http://javafx.com/javafx/19"
       stylesheets="@../../../../../styles/style.css"
       xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" prefWidth="255.0" spacing="5.0"
@@ -31,4 +26,8 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
         </columnResizePolicy>
     </TableView>
+    <padding>
+        <Insets bottom="5.0" top="5.0" />
+    </padding>
+
 </VBox>

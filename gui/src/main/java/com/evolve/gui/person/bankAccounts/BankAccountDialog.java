@@ -86,7 +86,8 @@ public class BankAccountDialog extends DialogWindow<BankAccount>  {
         return dialog.showAndWait();
     }
 
-    void validateSaveButton(Node saveButton) {
+    @Override
+    protected void validateSaveButton(Node saveButton) {
         final String newBankNumber = this.bankAccountNumberTextField.getText().trim();
         final String newNotes = Strings.emptyToNull(this.textAreaNotes.getText());
 

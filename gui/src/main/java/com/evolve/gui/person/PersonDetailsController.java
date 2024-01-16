@@ -3,14 +3,11 @@ package com.evolve.gui.person;
 import com.evolve.EditPersonDataCommand;
 import com.evolve.alpaca.util.LocalDateStringConverter;
 import com.evolve.alpaca.validation.ValidationException;
-import com.evolve.domain.Person;
-import com.evolve.domain.RegistryNumber;
-import com.evolve.domain.Unit;
+import com.evolve.domain.*;
 import com.evolve.gui.EditableGuiElement;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.components.GenderComboboxController;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
-import com.evolve.gui.person.UnitNumberItem;
 import com.evolve.gui.person.address.PersonAddressesController;
 import com.evolve.gui.person.authorizedPerson.AuthorizedPersonsController;
 import com.evolve.gui.person.bankAccounts.PersonBankAccountsController;
@@ -34,6 +31,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxControllerAndView;
@@ -79,6 +77,8 @@ public class PersonDetailsController extends EditableGuiElement
     public Button btnSave;
     public Button btnCancel;
 
+    @FXML Text textPersonStatus; // person status is displayed in the label
+
     @FXML TextField idTextField;
     @FXML TextField firstNameTextField;
     @FXML TextField secondNameTextField;
@@ -113,7 +113,7 @@ public class PersonDetailsController extends EditableGuiElement
             return;
         }
 
-        Person person = personsService.findById(personModel.getId());
+        final Person person = personsService.findById(personModel.getId());
         log.info("Person details: {}", person);
 
         idTextField.setText(person.getPersonId());
@@ -148,12 +148,11 @@ public class PersonDetailsController extends EditableGuiElement
                     () -> this.unitNumberComboBox.getSelectionModel().clearSelection());
         unitNumberComboBox.setDisable(true);
 
-
         personAddresses.getController().setPersonAddresses(person.getAddresses());
 
         authorizedController.getController().setAuthorizedPersons(person.getAuthorizedPersons());
 
-        personStatusController.getController().setPerson(person);
+        setPersonStatus(person);
 
         personBankAccountsController.getController().setPersonBankAccounts(person.getBankAccounts());
 
@@ -198,6 +197,14 @@ public class PersonDetailsController extends EditableGuiElement
 
     public void cancelButtonClicked(ActionEvent actionEvent) {
         revertChanges();
+    }
+
+    private void setPersonStatus(Person person) {
+        textPersonStatus.setText(Optional.ofNullable(person.getStatus())
+                        .map(PersonStatusDetails::getStatus)
+                        .orElse(PersonStatus.ACTIVE)
+                                .getName());
+        personStatusController.getController().setPerson(person);
     }
 
     private void persistChanges() {

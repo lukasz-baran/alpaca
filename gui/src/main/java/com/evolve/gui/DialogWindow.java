@@ -1,6 +1,7 @@
 package com.evolve.gui;
 
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -31,6 +32,7 @@ public abstract class DialogWindow<ENTITY> {
 
     public abstract Optional<ENTITY> showDialog(Window window);
 
+    protected abstract void validateSaveButton(Node saveButton);
 
     protected final Dialog<ENTITY> createDialog(Window window) {
         final Dialog<ENTITY> dialog = new Dialog<>();

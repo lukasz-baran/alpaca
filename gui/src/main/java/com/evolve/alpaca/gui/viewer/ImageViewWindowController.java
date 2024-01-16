@@ -101,7 +101,7 @@ public class ImageViewWindowController implements Initializable {
         //scene.getStylesheets().add(getClass().getResource("styles/style.css").toExternalForm());
         stage.initOwner(stageManager.getPrimaryStage());
         stage.setScene(scene);
-        stage.setTitle("SlimView");
+        stage.setTitle("Image view");
         stage.initModality(Modality.WINDOW_MODAL);
         stage.getIcons().add(APPLICATION_ICON);
 
@@ -159,9 +159,7 @@ public class ImageViewWindowController implements Initializable {
         gridPaneQuickInfo.visibleProperty().bind(isViewingFullScreen);
 
         // common EventHandler for all toolbar elements; focus on the ImageView whenever any element is actioned
-        EventHandler<ActionEvent> defaultToolbarEventHandler = event -> {
-            imageViewMain.requestFocus();
-        };
+        EventHandler<ActionEvent> defaultToolbarEventHandler = event -> imageViewMain.requestFocus();
 
         // set focus on the ImageView whenever any Button on the Toolbar is actioned
         toolBar.getItems().forEach(node -> {

@@ -82,9 +82,20 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
     <build>
+
+        <resources>
+            <!-- used to propagate version number from POM to target/classes -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>

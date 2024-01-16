@@ -25,6 +25,9 @@ public class NewPersonDialog extends DialogWindow<Person> {
 
     private final PersonsService personsService;
     private final UnitsService unitsService;
+    private final TextField firstNameTextField = new TextField();
+    private final TextField lastNameTextField = new TextField();
+    private final TextField personIdTextField = new TextField();
 
     public NewPersonDialog(PersonsService personsService, UnitsService unitsService) {
         super("Nowa osoba", "Podaj dane osobowe nowej osoby. Numer ID zostanie wygenerowany automatycznie");
@@ -38,12 +41,9 @@ public class NewPersonDialog extends DialogWindow<Person> {
 
         final GridPane grid = createGridPane();
 
-        final TextField firstNameTextField = new TextField();
         firstNameTextField.setPromptText("Imię");
-        final TextField lastNameTextField = new TextField();
         lastNameTextField.setPromptText("Nazwisko");
 
-        final TextField personIdTextField = new TextField();
         personIdTextField.setPromptText("ID");
         personIdTextField.setEditable(false);
 
@@ -102,11 +102,11 @@ public class NewPersonDialog extends DialogWindow<Person> {
 
         firstNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             updatePersonGenderBasedOnFirstName(firstNameTextField, genderCombo);
-            validateSaveButton(saveButton, personIdTextField, firstNameTextField, lastNameTextField);
+            validateSaveButton(saveButton);
         });
         lastNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             regeneratePersonId(personIdTextField, lastNameTextField);
-            validateSaveButton(saveButton, personIdTextField, firstNameTextField, lastNameTextField);
+            validateSaveButton(saveButton);
         });
 
         dialog.getDialogPane().setContent(grid);
@@ -164,8 +164,8 @@ public class NewPersonDialog extends DialogWindow<Person> {
                 .ifPresent(personIdTextField::setText);
     }
 
-    void validateSaveButton(
-            Node saveButton, TextField personIdTextField, TextField firstNameTextField, TextField lastNameTextField) {
+    @Override
+    protected void validateSaveButton(Node saveButton) {
         final boolean disable = personIdTextField.getText().trim().isEmpty()
                 || firstNameTextField.getText().trim().isEmpty()
                 || lastNameTextField.getText().trim().isEmpty();

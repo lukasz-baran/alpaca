@@ -137,6 +137,7 @@ public class Person implements Serializable {
     public enum AddressType {
         HOME("Domowy"),
         MAILING("Korespondencyjny"),
+        WORK("Służbowy"),
         OTHER("Inny");
 
         private final String name;
