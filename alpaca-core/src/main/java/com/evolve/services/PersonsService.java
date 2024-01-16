@@ -31,24 +31,43 @@ public class PersonsService implements FindPerson {
 
     @Override
     public List<Person> fetch(PersonLookupCriteria criteria) {
-        var filteredByUnit =  StringUtils.isNotEmpty(criteria.getUnitNumber()) ?
-                personRepository.findAll(
-                    Example.of(Person.builder().unitNumber(criteria.getUnitNumber()).build()),
-                    criteria.getSort()) :
-                 personRepository.findAll(criteria.getSort());
+        final List<Person> filteredByUnitAndStatus = findPersons(criteria);
 
         if (criteria.getHasDocuments() != null) {
             var listOfIds = fileRepository.findAll().stream().map(ContentFile::getPersonId).collect(Collectors.toSet());
 
             if (criteria.getHasDocuments()) {
-                return filteredByUnit.stream().filter(p -> listOfIds.contains(p.getPersonId())).collect(Collectors.toList());
+                return filteredByUnitAndStatus.stream().filter(p -> listOfIds.contains(p.getPersonId())).collect(Collectors.toList());
             } else {
-                return filteredByUnit.stream().filter(p -> !listOfIds.contains(p.getPersonId())).collect(Collectors.toList());
+                return filteredByUnitAndStatus.stream().filter(p -> !listOfIds.contains(p.getPersonId())).collect(Collectors.toList());
             }
         }
 
-        return filteredByUnit;
+        return filteredByUnitAndStatus;
     }
+
+    private List<Person> findPersons(PersonLookupCriteria criteria) {
+        var personBuilder = Person.builder();
+        boolean hasCriteria = false;
+
+        if (StringUtils.isNotEmpty(criteria.getUnitNumber())) {
+            personBuilder.unitNumber(criteria.getUnitNumber());
+            hasCriteria = true;
+        }
+
+        if (criteria.getStatus() != null) {
+            personBuilder.status(PersonStatusDetails.builder().status(criteria.getStatus()).build());
+            hasCriteria = true;
+        }
+
+        if (hasCriteria) {
+            return personRepository.findAll(
+                    Example.of(personBuilder.build()),
+                    criteria.getSort());
+        }
+        return personRepository.findAll(criteria.getSort());
+    }
+
 
     @Override
     public Optional<String> findNextPersonId(String lastName) {

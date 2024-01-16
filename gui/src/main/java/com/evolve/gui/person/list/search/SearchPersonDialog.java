@@ -1,5 +1,6 @@
 package com.evolve.gui.person.list.search;
 
+import com.evolve.domain.PersonStatus;
 import com.evolve.domain.Unit;
 import com.evolve.gui.DialogWindow;
 import com.evolve.gui.person.UnitNumberItem;
@@ -17,14 +18,31 @@ import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Slf4j
 public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
-    private final UnitsService unitsService;
+    private final ObservableList<UnitNumberItem> units = FXCollections.observableArrayList();
+    private final ObservableList<PersonStatusSearchItem> statuses = FXCollections.observableArrayList();
+
+    private final ComboBox<UnitNumberItem> unitNumberCombo;
+    private final CheckBox hasDocumentsCheckBox = new CheckBox();
+    private final ComboBox<PersonStatusSearchItem> personStatusCombo;
 
     public SearchPersonDialog(UnitsService unitsService) {
         super("Szukaj osób", "Wprowadź kryteria wyszukiwania");
-        this.unitsService = unitsService;
+
+        this.units.add(UnitNumberItem.ALL);
+        for (Unit unit : unitsService.fetchList()) {
+            this.units.add(new UnitNumberItem(unit.getId(), unit.getName()));
+        }
+        this.unitNumberCombo = new ComboBox<>(units);
+
+        this.statuses.add(PersonStatusSearchItem.ALL);
+        this.statuses.addAll(Stream.of(PersonStatus.values())
+                .map(PersonStatusSearchItem::new)
+                .toList());
+        this.personStatusCombo = new ComboBox<>(statuses);
     }
 
     @Override
@@ -35,35 +53,32 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
 
         final GridPane grid = createGridPane();
 
-        final ObservableList<UnitNumberItem> units = FXCollections.observableArrayList();
-        units.add(UnitNumberItem.ALL);
-        for (Unit unit : unitsService.fetchList()) {
-            units.add(new UnitNumberItem(unit.getId(), unit.getName()));
-        }
-        final ComboBox<UnitNumberItem> unitNumberCombo = new ComboBox<>(units);
-
         grid.add(new Label("Jednostka:"), 0, 0);
         grid.add(unitNumberCombo, 1, 0);
 
-        final CheckBox hasDocumentsCheckBox = new CheckBox();
         hasDocumentsCheckBox.indeterminateProperty().set(true);
         hasDocumentsCheckBox.setAllowIndeterminate(true);
 
         grid.add(new Label("Załączniki:"), 0, 1);
         grid.add(hasDocumentsCheckBox, 1, 1);
 
+        grid.add(new Label("Status:"), 0, 2);
+        grid.add(personStatusCombo, 1, 2);
 
         final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
 
         final ChangeListener<Boolean> listener = (prop, old, val) -> {
-            updateLabelOnAttachments(hasDocumentsCheckBox, saveButton);
+            updateLabelOnAttachments(hasDocumentsCheckBox);
             validateSaveButton(saveButton);
         };
         hasDocumentsCheckBox.selectedProperty().addListener(listener);
         hasDocumentsCheckBox.indeterminateProperty().addListener(listener);
 
         unitNumberCombo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) ->
+                validateSaveButton(saveButton));
+
+        personStatusCombo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) ->
                 validateSaveButton(saveButton));
 
         dialog.getDialogPane().setContent(grid);
@@ -78,7 +93,11 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
                 final Boolean hasDocuments = hasDocumentsCheckBox.isIndeterminate() ? null :
                                 hasDocumentsCheckBox.isSelected();
 
-                return new PersonSearchCriteria(unitNumber, hasDocuments);
+                final PersonStatus personStatus = Optional.ofNullable(personStatusCombo.getValue())
+                        .map(PersonStatusSearchItem::getPersonStatus)
+                        .orElse(null);
+
+                return new PersonSearchCriteria(unitNumber, hasDocuments, personStatus);
             }
             return null;
         });
@@ -91,7 +110,7 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
         saveButton.setDisable(false);
     }
 
-    private void updateLabelOnAttachments(CheckBox hasDocumentsCheckBox, Node saveButton) {
+    private void updateLabelOnAttachments(CheckBox hasDocumentsCheckBox) {
         final String txt = hasDocumentsCheckBox.isIndeterminate() ? "Bez znaczenia" :
                 hasDocumentsCheckBox.isSelected() ? "Obecne" :
                         "Brak załączników";

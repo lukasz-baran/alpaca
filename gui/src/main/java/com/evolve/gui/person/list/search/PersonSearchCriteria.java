@@ -1,15 +1,16 @@
 package com.evolve.gui.person.list.search;
 
+import com.evolve.domain.PersonStatus;
 import org.apache.commons.lang3.StringUtils;
 
-public record PersonSearchCriteria(String unitNumber, Boolean hasDocuments) {
+public record PersonSearchCriteria(String unitNumber, Boolean hasDocuments, PersonStatus personStatus) {
 
     public static PersonSearchCriteria empty() {
-        return new PersonSearchCriteria(null, null);
+        return new PersonSearchCriteria(null, null, null);
     }
 
     public boolean isEmpty() {
-        return StringUtils.isEmpty(unitNumber) && hasDocuments == null;
+        return StringUtils.isEmpty(unitNumber) && hasDocuments == null && personStatus == null;
     }
 
     @Override
@@ -22,8 +23,11 @@ public record PersonSearchCriteria(String unitNumber, Boolean hasDocuments) {
 
         if (hasDocuments != null) {
             final String yesNo = hasDocuments ? "Tak" : "Nie";
-
             result += " Załączniki: " + yesNo;
+        }
+
+        if (personStatus != null) {
+            result += " Status: " + personStatus.getName();
         }
 
         return result;

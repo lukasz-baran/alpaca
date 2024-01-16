@@ -159,6 +159,7 @@ public class MainTableController implements Initializable {
                         .upDown(upDown)
                         .unitNumber(criteria.unitNumber())
                         .hasDocuments(criteria.hasDocuments())
+                        .status(criteria.personStatus())
                         .build());
 
         log.info("total person number {}", persons.size());

@@ -30,6 +30,7 @@ public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
 
     private Optional<PersonStatusDetails> detectDeceased(List<String> guesses) {
         return guesses.stream()
+                .filter(guess -> !guess.startsWith("zm. nazwiska")) // exception!
                 .filter(guess -> containsIgnoreCase(DECEASED, guess))
                 .findFirst()
                 .map(guess -> removeMatchingString(DECEASED, guess))
