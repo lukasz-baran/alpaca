@@ -1,6 +1,7 @@
 package com.evolve.gui.person.list;
 
 import com.evolve.alpaca.importing.event.DbfImportCompletedEvent;
+import com.evolve.alpaca.utils.LogUtil;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonLookupCriteria;
@@ -9,6 +10,7 @@ import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.event.PersonListDoubleClickEvent;
 import com.evolve.gui.person.list.search.PersonSearchCriteria;
 import com.evolve.services.PersonsService;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.transformation.FilteredList;
@@ -17,6 +19,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -138,18 +142,40 @@ public class MainTableController implements Initializable {
             personListModel.getCurrentPersonProperty().setValue(newValue);
         });
 
-        personTable.setRowFactory( tv -> {
+        personTable.setRowFactory(tv -> {
             final TableRow<PersonModel> row = new TableRow<>();
+
+            final ContextMenu contextMenu = createContextMenu(row);
+
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
                     final PersonModel rowData = row.getItem();
                     publisher.publishEvent(new PersonListDoubleClickEvent(rowData));
                 }
             });
+
+            row.contextMenuProperty().bind(Bindings.when(row.emptyProperty()).then((ContextMenu) null)
+                    .otherwise(contextMenu));
+
             return row ;
         });
 
         resetSearchHyperlink.setOnAction(event -> showSearchCriteria(PersonSearchCriteria.empty()));
+    }
+
+    private ContextMenu createContextMenu(TableRow<PersonModel> row) {
+        final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem exportJson = new MenuItem("Eksportuj jako JSON");
+        exportJson.setOnAction(event -> {
+            final String personId = row.getItem().getId();
+            final Person person = personsService.findById(personId);
+            final String personJson = LogUtil.prettyPrintJson(person);
+            final ClipboardContent clipboardContent = new ClipboardContent();
+            clipboardContent.putString(personJson);
+            Clipboard.getSystemClipboard().setContent(clipboardContent);
+        });
+        contextMenu.getItems().add(exportJson);
+        return contextMenu;
     }
 
     private void populateTable(String sortBy, boolean upDown, PersonSearchCriteria criteria) {

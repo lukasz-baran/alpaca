@@ -46,6 +46,12 @@ public class PersonAssertion extends AbstractAssert<PersonAssertion, Person> {
         return this;
     }
 
+    public PersonAssertion hasNoBirthDate() {
+        assertThat(actual.getDob()).isNull();
+        return this;
+    }
+
+
     public PersonAssertion wasBornOn(LocalDate expectedDob) {
         assertThat(actual.getDob()).isEqualTo(expectedDob);
         return this;
@@ -80,4 +86,10 @@ public class PersonAssertion extends AbstractAssert<PersonAssertion, Person> {
         assertThat(actual.getBankAccounts()).containsExactlyInAnyOrder(bankAccounts);
         return this;
     }
+
+    public PersonAssertion hasStatusHistory(PersonStatusChange... statusChanges) {
+        assertThat(actual.getStatusChanges()).containsExactly(statusChanges);
+        return this;
+    }
+
 }

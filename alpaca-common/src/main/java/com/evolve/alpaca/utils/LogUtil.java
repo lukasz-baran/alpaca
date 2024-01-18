@@ -34,6 +34,14 @@ public final class LogUtil {
                 .writeValueAsString(object);
     }
 
+    @SneakyThrows
+    public static String prettyPrintJson(Object object) {
+        return OBJECT_MAPPER
+                .writerWithDefaultPrettyPrinter()
+                .writeValueAsString(object);
+    }
+
+
     public static Level disableLogging() {
         final Logger root = (Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
         final Level currentLevel = root.getLevel();

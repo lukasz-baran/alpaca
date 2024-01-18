@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.evolve.alpaca.importing.DateParser.DATE_PATTERN;
@@ -19,6 +20,7 @@ public class PersonDateOfBirthDeducer extends AbstractSmartDeducer<LocalDate> {
     @Override
     public Optional<LocalDate> deduceFrom(List<String> guesses) {
         return guesses.stream()
+                .filter(Objects::nonNull)
                 .filter(guess -> guess.matches("^" + DATE_PATTERN.pattern() + ".*"))
                 .findFirst().flatMap(this::deduceDob);
     }

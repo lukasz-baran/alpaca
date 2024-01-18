@@ -1,12 +1,12 @@
 package com.evolve.alpaca.importing.importDbf.deducers;
 
 import com.evolve.alpaca.importing.importDbf.RegistryNumbers;
+import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
 import com.evolve.domain.Address;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonId;
-import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
+import com.evolve.domain.PersonStatusChange;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -50,8 +50,8 @@ class PersonDataDeducerShould {
     void handleDoubleLastName() {
         final DbfPerson PERSON_DBF = DbfPerson.builder()
                 .SYM_ODB("12067")
-                .NAZ_ODB1("KOWALSKA-MADERA ANNA")
-                .NAZ_ODB2("KOWALSKA-MADERA ANNA")
+                .NAZ_ODB1("ALFA-BETA ANNA")
+                .NAZ_ODB2("ALFA-BETA ANNA")
                 .NAZ_ODB3("A. Mickiewicza 13")
                 .NAZ_ODB4("35-211 Rzeszów")
                 .NAZ_ODB5("")
@@ -63,15 +63,65 @@ class PersonDataDeducerShould {
         assertPerson(person)
                 .hasPersonId(new PersonId("12", "067"))
                 .hasFirstName("Anna")
-                .hasLastName("Kowalska-Madera")
+                .hasLastName("Alfa-Beta")
                 .wasBornOn(LocalDate.of(1969, Month.AUGUST, 25))
-                //.hasAddress(new Person.PersonAddress(Address.of("A. Mickiewicza 13", "35-211", "Rzeszów"), Person.AddressType.HOME))
+                .hasAddress(new Person.PersonAddress(Address.of("A. Mickiewicza 13", "35-211", "Rzeszów"), Person.AddressType.HOME))
                 .hasAuthorizedPerson(Person.AuthorizedPerson.builder()
                         .firstName("Zygmunt")
                         .lastName("Madera")
                         .relation("mąż")
-                        .build());
+                        .build())
+                .hasStatusHistory(new PersonStatusChange(PersonStatusChange.EventType.BORN, LocalDate.of(1969, 8, 25), null));
     }
+
+    @Test
+    void decodeCorrectDeathDate() {
+        final DbfPerson PERSON_DBF = DbfPerson.builder()
+                .SYM_ODB("11022")
+                .NAZ_ODB1("ALFA-BETA ANNA")
+                .NAZ_ODB2("ALFA-BETA ANNA")
+                .NAZ_ODB3("25,07 40")
+                .NAZ_ODB4("")
+                .NAZ_ODB5("")
+                .NAZ_ODB6("")
+                .NAZ_ODB7("ZMARŁA 25-08-2016")
+                .build();
+        final Person person = new PersonDataDeducer(PERSON_DBF, new IssuesLogger(), registryNumbers).deduce().orElseThrow();
+
+        assertPerson(person)
+                .hasPersonId(new PersonId("11", "022"))
+                .hasFirstName("Anna")
+                .hasLastName("Alfa-Beta")
+                .hasNoBirthDate()
+                .hasStatusHistory(new PersonStatusChange(PersonStatusChange.EventType.DIED, LocalDate.of(2016, 8, 25), "25-08-2016"));
+    }
+
+    @Test
+    void decodeResignationDate() {
+        final DbfPerson PERSON_DBF = DbfPerson.builder()
+                .SYM_ODB("01003")
+                .NAZ_ODB1("ALFA ADAM")
+                .NAZ_ODB2("ALFA ADAM")
+                .NAZ_ODB3("10.04.43 20.10.82")
+                .NAZ_ODB4("ż.Beta Gamma-Delta")
+                .NAZ_ODB5("Bazaltowa 9/12")
+                .NAZ_ODB6("22-333 Nigdzie")
+                .NAZ_ODB7("")
+                .INFO("rez. 09.11.2020")
+                .build();
+        final Person person = new PersonDataDeducer(PERSON_DBF, new IssuesLogger(), registryNumbers).deduce().orElseThrow();
+
+        assertPerson(person)
+            .hasPersonId(new PersonId("01", "003"))
+            .hasFirstName("Adam")
+            .hasLastName("Alfa")
+            .wasBornOn(LocalDate.of(1943, 4, 10))
+            .hasStatusHistory(
+                new PersonStatusChange(PersonStatusChange.EventType.BORN, LocalDate.of(1943, 4, 10), null),
+                new PersonStatusChange(PersonStatusChange.EventType.JOINED, LocalDate.of(1982, 10, 20), null),
+                new PersonStatusChange(PersonStatusChange.EventType.RESIGNED, LocalDate.of(2020, 11, 9), "09.11.2020"));
+    }
+
 
     @Test
     void ignoreIncorrectPersonData() {

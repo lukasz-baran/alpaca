@@ -83,7 +83,7 @@ public class ImportDbfService {
     }
 
     private void postImportStep() {
-        postImportStepService.process();
+        postImportStepService.processAll();
     }
 
     void processCommands() {

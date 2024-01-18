@@ -3,6 +3,7 @@ package com.evolve.alpaca.importing.importDbf;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @AllArgsConstructor
+@Slf4j
 public class RegistryNumbers {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
@@ -34,14 +36,14 @@ public class RegistryNumbers {
         if (!numbers.isEmpty()) {
             numbers.getNumber().ifPresent(newNumber -> {
                 if (allNumbers.contains(newNumber)) {
-                    System.out.println("New registry number already found: " + newNumber);
+                    log.debug("New registry number already found: {}", newNumber);
                 }
                 allNumbers.add(newNumber);
             });
 
             numbers.getOldNumber().ifPresent(oldNumber -> {
                 if (oldNumbers.contains(oldNumber)) {
-                    System.out.println("Old registry number already found: " + oldNumber);
+                    log.debug("Old registry number already found: {}", oldNumber);
                 }
                 oldNumbers.add(oldNumber);
             });
@@ -126,7 +128,6 @@ public class RegistryNumbers {
                 final List<CSVRecord> csvRecords = parser.getRecords();
                 csvRecords.forEach(csvRecord -> {
                     final String id = csvRecord.get("number");
-                    System.out.println(id);
                     registryNumbers.parseLine(id);
                 });
             }

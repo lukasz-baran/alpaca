@@ -27,7 +27,8 @@ public class JoiningDateDeducer extends AbstractSmartDeducer<LocalDate> {
     }
 
     boolean isDateJoined(String input) {
-        if (StatusPersonDeducer.RESIGNED.stream().anyMatch(input::startsWith)) {
+        if (StatusPersonDeducer.RESIGNED.stream().anyMatch(input::startsWith) ||
+            StatusPersonDeducer.DECEASED.stream().anyMatch(input::startsWith)) {
             return false;
         }
 
