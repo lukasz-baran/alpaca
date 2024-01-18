@@ -3,6 +3,7 @@ package com.evolve.alpaca.importing;
 import com.evolve.alpaca.importing.importDbf.ImportDbfService;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatus;
+import com.evolve.repo.jpa.PersonRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class ImportAndFixDataTest {
     @Autowired
     ImportDbfService importDbfService;
 
+    @Autowired
+    PersonRepository personRepository;
+
     @Test
     void importAndFix() throws IOException {
         // given
@@ -36,10 +40,10 @@ public class ImportAndFixDataTest {
                 .isTrue();
 
         // when
-        final List<Person> result = importDbfService.startImport(resourcePersons.getFile().getPath(), "");
+        importDbfService.startImport(resourcePersons.getFile().getPath(), "");
 
         // then
-        sanityChecks(result);
+        sanityChecks(personRepository.findAll());
     }
 
     void sanityChecks(List<Person> importedPersons) {
@@ -49,8 +53,8 @@ public class ImportAndFixDataTest {
         assertPerson(getPersonById(importedPersons, "01003"))
                 .hasStatus(PersonStatus.RESIGNED);
 
-//        assertPerson(getPersonById(importedPersons, "01021"))
-//                .hasStatus(PersonStatus.ACTIVE);
+        assertPerson(getPersonById(importedPersons, "01021"))
+                .hasStatus(PersonStatus.ACTIVE);
         // 01014 - rezygnacja 16.09.03
     }
 
