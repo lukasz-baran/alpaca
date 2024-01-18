@@ -1,6 +1,7 @@
 package com.evolve.alpaca.importing.importDbf.deducers;
 
 import com.evolve.alpaca.importing.DateParser;
+import com.evolve.alpaca.utils.DateUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.time.DateTimeException;
@@ -11,7 +12,6 @@ import java.util.Optional;
 import static com.evolve.alpaca.importing.DateParser.DATE_PATTERN;
 
 public class JoiningDateDeducer extends AbstractSmartDeducer<LocalDate> {
-
     public static final String DATE_JOINED = ".*" + DATE_PATTERN.pattern() + "$";
 
     public JoiningDateDeducer(IssuesLogger.ImportIssues issues) {
@@ -27,8 +27,11 @@ public class JoiningDateDeducer extends AbstractSmartDeducer<LocalDate> {
     }
 
     boolean isDateJoined(String input) {
-        if (StatusPersonDeducer.RESIGNED.stream().anyMatch(input::startsWith) ||
-            StatusPersonDeducer.DECEASED.stream().anyMatch(input::startsWith)) {
+        if (StatusPersonDeducer.RESIGNED.stream().anyMatch(
+                prefix -> StringUtils.startsWithIgnoreCase(input, prefix)) ||
+
+            StatusPersonDeducer.DECEASED.stream().anyMatch(
+                prefix -> StringUtils.startsWithIgnoreCase(input, prefix))) {
             return false;
         }
 
@@ -49,7 +52,8 @@ public class JoiningDateDeducer extends AbstractSmartDeducer<LocalDate> {
         final int index = split.length - 1;
 
         try {
-            return DateParser.parse(split[index]);
+            final Optional<LocalDate> maybeJoinedDate = DateParser.parse(split[index]);
+            return maybeJoinedDate.map(DateUtils::adjustDateToCurrentCentury);
         } catch (DateTimeException dateTimeException) {
             issues.store(String.format("Unable to create LocalDate for %s", input));
         }

@@ -25,6 +25,9 @@ class StatusPersonDeducerShould {
 
         assertThat(deducer.deduceFrom(List.of("ZM 01.08.2014")))
                 .hasValue(PersonStatusDetails.dead("01.08.2014"));
+
+        assertThat(deducer.deduceFrom(List.of("zm. 19.07.2023")))
+                .hasValue(PersonStatusDetails.dead("19.07.2023"));
     }
 
     @Test

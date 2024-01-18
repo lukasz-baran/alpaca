@@ -92,4 +92,9 @@ public class PersonAssertion extends AbstractAssert<PersonAssertion, Person> {
         return this;
     }
 
+    public PersonAssertion hasStatus(PersonStatus expectedStatus) {
+        assertThat(actual.getStatus().getStatus()).isEqualTo(expectedStatus);
+        return this;
+    }
+
 }

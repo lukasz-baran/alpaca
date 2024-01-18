@@ -50,6 +50,12 @@ public class PersonStatusDetails {
                 .build();
     }
 
+    public static PersonStatusDetails unknown() {
+        return PersonStatusDetails.builder()
+                .status(PersonStatus.UNKNOWN)
+                .build();
+    }
+
     public static PersonStatusDetails dead(String deathDate) {
         return PersonStatusDetails.builder()
                 .status(PersonStatus.DEAD)
@@ -74,16 +80,22 @@ public class PersonStatusDetails {
     }
 
     public static PersonStatusDetails basedOnStatusChange(List<PersonStatusChange> statusChanges) {
-        // find newest status change
-        return statusChanges
-                .stream()
-                .filter(change -> change.getWhen() != null)
-                .max(Comparator.comparing(PersonStatusChange::getWhen))
-                .map(PersonStatusDetails::basedOnStatusChange)
-                .orElse(PersonStatusDetails.active());
+        if (!statusChanges.isEmpty()) {
+            final int lastIndex = statusChanges.size() - 1;
+
+            return basedOnStatusChange(statusChanges.get(lastIndex));
+        }
+        return unknown();
+
+//        return statusChanges
+//                .stream()
+//                .filter(change -> change.getWhen() != null)
+//                .max(Comparator.comparing(PersonStatusChange::getWhen))
+//                .map(PersonStatusDetails::basedOnStatusChange)
+//                .orElse(PersonStatusDetails.active());
     }
 
-    static PersonStatusDetails basedOnStatusChange(PersonStatusChange change) {
+    private static PersonStatusDetails basedOnStatusChange(PersonStatusChange change) {
         return switch (change.getEventType()) {
             case DIED ->  PersonStatusDetails.dead(change.getOriginalValue());
             case RESIGNED -> PersonStatusDetails.resigned(change.getOriginalValue());

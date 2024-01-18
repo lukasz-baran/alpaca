@@ -1,6 +1,7 @@
 package com.evolve.alpaca.importing.importDbf.deducers;
 
 import com.evolve.alpaca.importing.importDbf.RegistryNumbers;
+import com.evolve.alpaca.utils.DateUtils;
 import com.evolve.domain.*;
 import com.evolve.alpaca.importing.DateParser;
 import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
@@ -39,8 +40,7 @@ public class PersonDataDeducer {
     }
 
     public Optional<Person> deduce() {
-        PersonIdDeducer personIdDeducer = new PersonIdDeducer(person);
-        final Optional<PersonId> personId = personIdDeducer.deduceFrom(guesses);
+        final Optional<PersonId> personId = new PersonIdDeducer(person).deduceFrom(guesses);
         final IssuesLogger.ImportIssues issues = issuesLogger.forPersonId(personId.map(PersonId::toString).orElse(null));
         if (personId.isEmpty()) {
             log.warn("Unable to deduce ID from {}", person);
@@ -184,7 +184,8 @@ public class PersonDataDeducer {
 
     private static Optional<LocalDate> tryParseDate(String date) {
         try {
-            return DateParser.parse(date);
+            return DateParser.parse(date)
+                    .map(DateUtils::adjustDateToCurrentCentury);
         } catch (DateTimeException dateTimeException) {
             return Optional.empty();
         }

@@ -2,6 +2,7 @@ package com.evolve.alpaca.importing;
 
 import com.evolve.alpaca.importing.importDbf.ImportDbfService;
 import com.evolve.domain.Person;
+import com.evolve.domain.PersonStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.io.IOException;
 import java.util.List;
 
+import static com.evolve.domain.PersonAssertion.assertPerson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
 
@@ -37,8 +39,25 @@ public class ImportAndFixDataTest {
         final List<Person> result = importDbfService.startImport(resourcePersons.getFile().getPath(), "");
 
         // then
-        assertThat(result)
+        sanityChecks(result);
+    }
+
+    void sanityChecks(List<Person> importedPersons) {
+        assertThat(importedPersons)
                 .hasSizeGreaterThan(1000);
 
+        assertPerson(getPersonById(importedPersons, "01003"))
+                .hasStatus(PersonStatus.RESIGNED);
+
+//        assertPerson(getPersonById(importedPersons, "01021"))
+//                .hasStatus(PersonStatus.ACTIVE);
+        // 01014 - rezygnacja 16.09.03
+    }
+
+    Person getPersonById(List<Person> importedPersons, String personId) {
+        return importedPersons.stream()
+                .filter(person -> person.getPersonId().equals(personId))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("The following person id is not found: " + personId));
     }
 }

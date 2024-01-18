@@ -20,8 +20,28 @@ public class PersonStatusChange {
     @Column(name = "whenAdded")
     private LocalDate when;
 
-    // sometimes it is impossible to get exact date, so we keep here original value
+    // sometimes it is impossible to get exact date, so we keep here the original value
     private String originalValue;
+
+    public PersonStatusChange(EventType eventType, LocalDate when) {
+        this(eventType, when, null);
+    }
+
+    public static PersonStatusChange born(LocalDate when) {
+        return new PersonStatusChange(EventType.BORN, when);
+    }
+
+    public static PersonStatusChange joined(LocalDate when) {
+        return new PersonStatusChange(EventType.JOINED, when);
+    }
+
+    public static PersonStatusChange resigned(String originalValue) {
+        return new PersonStatusChange(EventType.RESIGNED, null, originalValue);
+    }
+
+    public static PersonStatusChange died(LocalDate when, String originalValue) {
+        return new PersonStatusChange(EventType.DIED, when, originalValue);
+    }
 
     @Getter
     @RequiredArgsConstructor
