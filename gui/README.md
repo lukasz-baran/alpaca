@@ -1,4 +1,5 @@
 
+# Build
 
 Building of installation package requires:
 * `jlink` - from JDK (you need to add it to your PATH)
@@ -15,3 +16,8 @@ Download WiX tools https://wixtoolset.org
 ### jconsole parameters
 
 * `--win-console` - disables cmd console while running the application - expected by business, super-useful for the developers   
+
+
+# Links, inspiration, etc
+
+* Better input text fields: https://coderscratchpad.com/clearable-textfield-in-javafx-using-controlsfx/

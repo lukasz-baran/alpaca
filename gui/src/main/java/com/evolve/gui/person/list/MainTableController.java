@@ -69,9 +69,13 @@ public class MainTableController implements Initializable {
     @FXML Text textSearchCriteria;
     @FXML Hyperlink resetSearchHyperlink;
 
+
+
     @FXML Text textNumberOfRecords;
     @FXML TextField filterField;
-    @FXML Button btnClearFilter;
+    @FXML AnchorPane autoCompletePane;
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -136,8 +140,6 @@ public class MainTableController implements Initializable {
 
         personTableAnchorPane.disableProperty().bind(disabledProperty);
 
-        btnClearFilter.setOnAction(event -> filterField.clear());
-
         personTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             personListModel.getCurrentPersonProperty().setValue(newValue);
         });
@@ -191,6 +193,7 @@ public class MainTableController implements Initializable {
         log.info("total person number {}", persons.size());
 
         final FilteredList<PersonModel> filteredData = personListModel.feed(persons);
+
 
         filterField.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredData.setPredicate(person -> person.matches(newValue));

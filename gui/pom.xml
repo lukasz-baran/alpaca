@@ -43,6 +43,13 @@
             <version>17-r1</version>
         </dependency>-->
 
+        <!-- we want to have input text with clear button inside -->
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>11.2.0</version>
+        </dependency>
+
         <!-- image viewer needs this -->
         <dependency>
             <groupId>org.imgscalr</groupId>
