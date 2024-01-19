@@ -48,7 +48,7 @@
                        AnchorPane.topAnchor="0.0">
                 <items>
                     <fx:include source="person/list/main-table.fxml" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-                    <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+                    <TabPane fx:id="tabsPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                         <Tab text="Podstawowe dane" fx:id="tabPersonDetails"/>
                         <Tab text="Oryginalne dane" fx:id="tabOriginalDetails"/>
                         <Tab text="Konta (0)" fx:id="tabPersonAdditionalData"/>

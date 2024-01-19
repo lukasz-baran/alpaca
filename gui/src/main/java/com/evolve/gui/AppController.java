@@ -31,6 +31,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -82,6 +83,8 @@ public class AppController implements Initializable {
     public Button btnExport;
     public Button btnSearch;
 
+
+    @FXML TabPane tabsPane;
     @FXML Tab tabPersonDetails;
     @FXML Tab tabOriginalDetails;
     @FXML Tab tabPersonAdditionalData;
@@ -158,6 +161,9 @@ public class AppController implements Initializable {
             stageManager.displayWarning("Nie można zacząć edycji, gdyż nie wybrano osoby");
             return;
         }
+
+        // change active tab to person details:
+        tabsPane.getSelectionModel().select(tabPersonDetails);
 
         personDetailsController.setEditable(true);
         mainTableController.disableControls(true);
