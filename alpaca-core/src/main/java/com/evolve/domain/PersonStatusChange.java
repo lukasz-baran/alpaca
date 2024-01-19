@@ -42,6 +42,13 @@ public class PersonStatusChange {
     public static PersonStatusChange died(LocalDate when, String originalValue) {
         return new PersonStatusChange(EventType.DIED, when, originalValue);
     }
+    public static PersonStatusChange died(LocalDate when) {
+        return new PersonStatusChange(EventType.DIED, when);
+    }
+
+    public boolean isDeathDate() {
+        return eventType == EventType.DIED;
+    }
 
     @Getter
     @RequiredArgsConstructor

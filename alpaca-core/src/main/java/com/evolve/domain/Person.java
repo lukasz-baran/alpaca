@@ -193,8 +193,16 @@ public class Person implements Serializable {
             this.dob = when;
             this.statusChanges.add(0, newPersonStatusChange);
         } else {
-            this.statusChanges.add(newPersonStatusChange);
+            this.statusChanges.stream()
+                    .filter(PersonStatusChange::isDeathDate)
+                    .findFirst()
+                    .ifPresentOrElse(element -> statusChanges.add(statusChanges.indexOf(element), newPersonStatusChange),
+                    () -> this.statusChanges.add(newPersonStatusChange));
+
+            //this.statusChanges.add(newPersonStatusChange);
         }
     }
+
+
 
 }
