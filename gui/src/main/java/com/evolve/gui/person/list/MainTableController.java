@@ -4,11 +4,11 @@ import com.evolve.alpaca.importing.event.DbfImportCompletedEvent;
 import com.evolve.alpaca.utils.LogUtil;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
-import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.event.PersonListDoubleClickEvent;
 import com.evolve.gui.person.list.search.PersonSearchCriteria;
+import com.evolve.gui.person.list.search.PersonSearchService;
 import com.evolve.services.PersonsService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -50,6 +50,8 @@ public class MainTableController implements Initializable {
     private final BooleanProperty disabledProperty = new SimpleBooleanProperty(false);
     private final PersonListModel personListModel;
     private final PersonsService personsService;
+    private final PersonSearchService personSearchService;
+
     private final StageManager stageManager;
     private final ApplicationEventPublisher publisher;
 
@@ -79,7 +81,7 @@ public class MainTableController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        populateTable("id", true, PersonSearchCriteria.empty());
+        populateTable(PersonSearchCriteria.empty());
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
@@ -180,15 +182,8 @@ public class MainTableController implements Initializable {
         return contextMenu;
     }
 
-    private void populateTable(String sortBy, boolean upDown, PersonSearchCriteria criteria) {
-        final List<PersonListView> persons = personsService.fetchList(
-                PersonLookupCriteria.builder()
-                        .sortBy(sortBy)
-                        .upDown(upDown)
-                        .unitNumber(criteria.unitNumber())
-                        .hasDocuments(criteria.hasDocuments())
-                        .status(criteria.personStatus())
-                        .build());
+    private void populateTable(PersonSearchCriteria criteria) {
+        final List<PersonListView> persons = personSearchService.defaultOrder(criteria);
 
         log.info("total person number {}", persons.size());
 
@@ -214,7 +209,7 @@ public class MainTableController implements Initializable {
         log.info("import: " + importCompleted.getMessage());
         stageManager.displayInformation(importCompleted.getMessage());
 
-        populateTable("id", true, PersonSearchCriteria.empty());
+        populateTable(PersonSearchCriteria.empty());
     }
 
     @EventListener
@@ -247,7 +242,7 @@ public class MainTableController implements Initializable {
         final String text = "Kryteria: " + criteria;
         textSearchCriteria.setText(text);
         AnchorPane.setTopAnchor(personTable, show ? 35.0 : 5);
-        populateTable("id", true, criteria);
+        populateTable(criteria);
     }
 
     private void refreshNumberOfItems() {

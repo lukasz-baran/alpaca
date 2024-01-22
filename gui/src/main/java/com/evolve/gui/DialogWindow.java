@@ -46,10 +46,6 @@ public abstract class DialogWindow<ENTITY> {
 
         findSubmitButton(dialog).setId("saveButton");
 
-
-        // Set the icon (must be included in the project).
-        //dialog.setGraphic(new ImageView(this.getClass().getResource("login.png").toString()));
-
         return dialog;
     }
 

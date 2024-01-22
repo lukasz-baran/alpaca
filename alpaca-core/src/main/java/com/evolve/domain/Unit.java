@@ -20,6 +20,21 @@ import java.io.Serializable;
 public class Unit implements Serializable {
     private static final String SEPARATOR = "–";
 
+    public static final String EXEMPT_FROM_FEES_UNIT_NUMBER = "95";
+    public static final String RESIGNED_UNIT_NUMBER = "97";
+    public static final String REMOVED_UNIT_NUMBER = "98";
+    public static final String DECEASED_UNIT_NUMBER = "99";
+
+    public static String fromCode(String code) {
+        return switch (code) {
+            case EXEMPT_FROM_FEES_UNIT_NUMBER -> "zwolnieni";
+            case RESIGNED_UNIT_NUMBER -> "rezygnacja";
+            case REMOVED_UNIT_NUMBER -> "skreśleni";
+            case DECEASED_UNIT_NUMBER -> "zmarli";
+            default -> "nieznany";
+        };
+    }
+
     @javax.persistence.Id
     private String id;
 

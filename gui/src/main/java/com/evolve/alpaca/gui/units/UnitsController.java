@@ -122,19 +122,7 @@ public class UnitsController implements Initializable {
                 }
             });
 
-            final MenuItem removeMenuItem = new MenuItem("Usuń");
-            removeMenuItem.setOnAction(event -> {
-                final List<Person> list = findPerson.findByUnitId(row.getItem().getUnitNumber());
-                if (!list.isEmpty()) {
-                    stageManager.displayWarning("Nie można usunąć jednostki, która jest przypisana do "
-                            + list.size() + " osób.");
-                    return;
-                }
-
-                units.remove(row.getItem());
-                tableView.refresh();
-                listWasModifiedProperty.set(true);
-            });
+            final MenuItem removeMenuItem = createRemoveMenuItem(tableView, row);
 
             contextMenu.getItems().add(editMenuItem);
             contextMenu.getItems().add(removeMenuItem);
@@ -145,6 +133,23 @@ public class UnitsController implements Initializable {
             return row;
         });
 
+    }
+
+    private MenuItem createRemoveMenuItem(TableView<UnitEntry> tableView, TableRow<UnitEntry> row) {
+        final MenuItem removeMenuItem = new MenuItem("Usuń");
+        removeMenuItem.setOnAction(event -> {
+            final List<Person> list = findPerson.findByUnitId(row.getItem().getUnitNumber());
+            if (!list.isEmpty()) {
+                stageManager.displayWarning("Nie można usunąć jednostki, która jest przypisana do "
+                        + list.size() + " osób.");
+                return;
+            }
+
+            units.remove(row.getItem());
+            tableView.refresh();
+            listWasModifiedProperty.set(true);
+        });
+        return removeMenuItem;
     }
 
     public void loadUnits() {

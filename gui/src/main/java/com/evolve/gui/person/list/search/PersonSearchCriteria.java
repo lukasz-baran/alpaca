@@ -1,16 +1,26 @@
 package com.evolve.gui.person.list.search;
 
+import com.evolve.domain.Account;
 import com.evolve.domain.PersonStatus;
+import com.evolve.domain.Unit;
 import org.apache.commons.lang3.StringUtils;
 
-public record PersonSearchCriteria(String unitNumber, Boolean hasDocuments, PersonStatus personStatus) {
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public record PersonSearchCriteria(String unitNumber, Boolean hasDocuments,
+                                   PersonStatus personStatus,
+                                   Set<Account.AccountType> hasAccountTypes,
+                                   Set<String> hasAccountUnits) {
 
     public static PersonSearchCriteria empty() {
-        return new PersonSearchCriteria(null, null, null);
+        return new PersonSearchCriteria(null, null, null, Set.of(), Set.of());
     }
 
     public boolean isEmpty() {
-        return StringUtils.isEmpty(unitNumber) && hasDocuments == null && personStatus == null;
+        return StringUtils.isEmpty(unitNumber) && hasDocuments == null && personStatus == null &&
+                hasAccountUnits.isEmpty() && hasAccountTypes.isEmpty();
     }
 
     @Override
@@ -28,6 +38,23 @@ public record PersonSearchCriteria(String unitNumber, Boolean hasDocuments, Pers
 
         if (personStatus != null) {
             result += " Status: " + personStatus.getName();
+        }
+
+        final Set<String> accountTypes = new HashSet<>();
+
+        if (!hasAccountTypes.isEmpty()) {
+            hasAccountTypes.stream()
+                    .map(Account.AccountType::getDescription).forEach(accountTypes::add);
+        }
+
+        if (!hasAccountUnits.isEmpty()) {
+            hasAccountUnits.stream()
+                    .map(Unit::fromCode)
+                    .forEach(accountTypes::add);
+        }
+
+        if (!accountTypes.isEmpty()) {
+            result += " Typy kont: " + String.join(", ", accountTypes);
         }
 
         return result;

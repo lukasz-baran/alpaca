@@ -23,9 +23,7 @@ public class Account {
      * Maybe {@code null} when account does not belong to a person
      */
     private String personId;
-
     private String unitNumber;
-
     private AccountType accountType;
 
     public static String getUnitNumber(String accountingNumber) {
