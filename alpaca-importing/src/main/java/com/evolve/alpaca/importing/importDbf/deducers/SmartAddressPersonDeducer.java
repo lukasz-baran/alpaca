@@ -16,8 +16,12 @@ public class SmartAddressPersonDeducer extends AbstractSmartDeducer<Address>{
     static final String STREET_NUMBER_PATTERN = "( ?((/ ?\\d+)|[AaBbCcDdEeFfGg]))?";
     static final Pattern STREET_PATTERN = Pattern.compile("([uU]l\\. )?[\\p{IsAlphabetic} \\.]+\\d+[AaBbCcDd]?" + STREET_NUMBER_PATTERN);
 
+    // contains elements that were removed during deduction process
+    private final Set<String> usedLines;
+
     public SmartAddressPersonDeducer(IssuesLogger.ImportIssues issues) {
         super(issues);
+        this.usedLines = new HashSet<>();
     }
 
     @Override
@@ -40,9 +44,11 @@ public class SmartAddressPersonDeducer extends AbstractSmartDeducer<Address>{
         }
 
         if (!cityCodes.isEmpty()) {
-            return Optional.of(postalCode(cityCodes.stream().findFirst().get(),
-                    streetCandidates.stream().findFirst().orElse(null)
-                    ));
+            final String cityWithPostalCode = cityCodes.stream().findFirst().get();
+            usedLines.add(cityWithPostalCode);
+            final Optional<String> street = streetCandidates.stream().findFirst();
+            street.ifPresent(usedLines::add);
+            return Optional.of(postalCode(cityWithPostalCode, street.orElse(null)));
         }
 
         return Optional.empty();
@@ -51,8 +57,9 @@ public class SmartAddressPersonDeducer extends AbstractSmartDeducer<Address>{
     @Override
     public List<String> removeGuesses(List<String> guesses) {
         return guesses.stream()
-                .filter(guess -> !isCityCode(guess))
-                .filter(guess -> !isStreet(guess))
+                .filter(guess -> !usedLines.contains(guess))
+//                .filter(guess -> !isCityCode(guess))
+//                .filter(guess -> !isStreet(guess))
                 .collect(Collectors.toList());
     }
 

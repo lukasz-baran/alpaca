@@ -11,7 +11,7 @@ public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
     //NOTE: the order in the following lists is important:
     public static final List<String> DECEASED = List.of("ZMARŁA", "ZMARŁ", "ZM.", "ZM ");
     public static final List<String> RESIGNED = List.of("rezygnacja", "REZ.", "Rezyg.", "rezy", "REZ");
-    public static final List<String> REMOVED = List.of("Skreślenie", "skreśl.", "Skreśl", "skre", "SKR");
+    public static final List<String> REMOVED = List.of("Skreślenie", "skreśl.", "Skreśl", "skreśl", "skre", "SKR");
 
     @Override
     public Optional<PersonStatusDetails> deduceFrom(List<String> guesses) {
@@ -29,6 +29,15 @@ public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
     }
 
     private Optional<PersonStatusDetails> detectDeceased(List<String> guesses) {
+        // pre-filter to detect statuses without exact dates
+        final List<String> dead = List.of("zmar"); // bad spelling!
+        if (guesses.stream()
+                .filter(StringUtils::isNotBlank)
+                .map(String::trim)
+                .anyMatch(guess -> anyEqualsIgnoreCase(dead, guess))) {
+            return Optional.of(PersonStatusDetails.dead());
+        }
+
         return guesses.stream()
                 .filter(guess -> !StringUtils.startsWith(guess, "zm. nazwiska")) // exception!
                 .filter(guess -> containsIgnoreCase(DECEASED, guess))

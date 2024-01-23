@@ -4,7 +4,6 @@ import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Embeddable;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -60,6 +59,12 @@ public class PersonStatusDetails {
         return PersonStatusDetails.builder()
                 .status(PersonStatus.DEAD)
                 .deathDate(deathDate)
+                .build();
+    }
+
+    public static PersonStatusDetails dead() {
+        return PersonStatusDetails.builder()
+                .status(PersonStatus.DEAD)
                 .build();
     }
 

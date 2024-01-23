@@ -6,6 +6,7 @@ import com.evolve.domain.Address;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonId;
 import com.evolve.domain.PersonStatusChange;
+import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -121,6 +122,34 @@ class PersonDataDeducerShould {
                 new PersonStatusChange(PersonStatusChange.EventType.JOINED, LocalDate.of(1982, 10, 20), null),
                 new PersonStatusChange(PersonStatusChange.EventType.RESIGNED, LocalDate.of(2020, 11, 9), "09.11.2020"));
     }
+
+    @Test
+    void decodeRemovalDate() {
+        final LocalDate expectedDob = LocalDate.of(1955, 7, 2);
+        final DbfPerson PERSON_DBF = DbfPerson.builder()
+                .SYM_ODB("01003")
+                .NAZ_ODB1("ALFA ADAM")
+                .NAZ_ODB2("ALFA ADAM")
+                .NAZ_ODB3("2.07.55 13,03,84")
+                .NAZ_ODB4("s.Piotr Serwus")
+                .NAZ_ODB5("Świadka 7/119")
+                .NAZ_ODB6("35-310 Rzeszów")
+                .NAZ_ODB7("Skreślenie 2012")
+                .INFO("")
+                .build();
+        final Person person = new PersonDataDeducer(PERSON_DBF, new IssuesLogger(), registryNumbers).deduce().orElseThrow();
+
+        assertPerson(person)
+                .hasPersonId(new PersonId("01", "003"))
+                .hasFirstName("Adam")
+                .hasLastName("Alfa")
+                .wasBornOn(expectedDob)
+                .hasStatusHistory(
+                        new PersonStatusChange(PersonStatusChange.EventType.BORN, expectedDob, null),
+                        new PersonStatusChange(PersonStatusChange.EventType.JOINED, LocalDate.of(1984, 3, 13), null),
+                        new PersonStatusChange(PersonStatusChange.EventType.REMOVED, null, "2012"));
+    }
+
 
 
     @Test

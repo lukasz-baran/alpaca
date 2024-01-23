@@ -1,5 +1,6 @@
 package com.evolve.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -46,6 +47,7 @@ public class PersonStatusChange {
         return new PersonStatusChange(EventType.DIED, when);
     }
 
+    @JsonIgnore
     public boolean isDeathDate() {
         return eventType == EventType.DIED;
     }
