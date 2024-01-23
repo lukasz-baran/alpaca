@@ -6,7 +6,7 @@ import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
-import com.evolve.gui.person.event.PersonListDoubleClickEvent;
+import com.evolve.gui.person.event.PersonEditionRequestedEvent;
 import com.evolve.gui.person.list.search.PersonSearchCriteria;
 import com.evolve.gui.person.list.search.PersonSearchService;
 import com.evolve.services.PersonsService;
@@ -154,7 +154,7 @@ public class MainTableController implements Initializable {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
                     final PersonModel rowData = row.getItem();
-                    publisher.publishEvent(new PersonListDoubleClickEvent(rowData));
+                    publisher.publishEvent(new PersonEditionRequestedEvent(rowData));
                 }
             });
 
@@ -169,6 +169,8 @@ public class MainTableController implements Initializable {
 
     private ContextMenu createContextMenu(TableRow<PersonModel> row) {
         final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem editPerson = new MenuItem("Edytuj");
+        editPerson.setOnAction(event -> publisher.publishEvent(new PersonEditionRequestedEvent(row.getItem())));
         final MenuItem exportJson = new MenuItem("Eksportuj jako JSON");
         exportJson.setOnAction(event -> {
             final String personId = row.getItem().getId();
@@ -178,7 +180,7 @@ public class MainTableController implements Initializable {
             clipboardContent.putString(personJson);
             Clipboard.getSystemClipboard().setContent(clipboardContent);
         });
-        contextMenu.getItems().add(exportJson);
+        contextMenu.getItems().addAll(editPerson, exportJson);
         return contextMenu;
     }
 

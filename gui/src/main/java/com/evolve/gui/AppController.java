@@ -16,7 +16,7 @@ import com.evolve.alpaca.gui.help.AboutDialogWindow;
 import com.evolve.gui.person.PersonDetailsController;
 import com.evolve.gui.person.accounts.PersonAccountsController;
 import com.evolve.gui.person.list.MainTableController;
-import com.evolve.gui.person.event.PersonListDoubleClickEvent;
+import com.evolve.gui.person.event.PersonEditionRequestedEvent;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.search.SearchPersonDialog;
 import com.evolve.gui.person.originalDetails.OriginalDetailsController;
@@ -196,7 +196,7 @@ public class AppController implements Initializable {
     }
 
     @EventListener
-    public void onApplicationEvent(PersonListDoubleClickEvent event) {
+    public void onApplicationEvent(PersonEditionRequestedEvent event) {
         // we pass null because the person is already set in the model
         editButtonClicked();
     }

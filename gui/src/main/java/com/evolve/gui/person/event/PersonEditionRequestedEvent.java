@@ -6,8 +6,8 @@ import org.springframework.context.ApplicationEvent;
 /**
  * User requested edition of the person details
  */
-public class PersonListDoubleClickEvent extends ApplicationEvent {
-    public PersonListDoubleClickEvent(PersonModel person) {
+public class PersonEditionRequestedEvent extends ApplicationEvent {
+    public PersonEditionRequestedEvent(PersonModel person) {
         super(person);
     }
 }
