@@ -3,7 +3,6 @@ package com.evolve.gui.documents;
 import com.evolve.alpaca.gui.viewer.ImageViewWindowController;
 import com.evolve.content.ContentFile;
 import com.evolve.content.ContentStoreService;
-import com.evolve.content.FileRepository;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
@@ -15,20 +14,27 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -49,7 +55,6 @@ public class DocumentsController implements Initializable {
     private final StageManager stageManager;
     private final PersonListModel personListModel;
     private final ContentStoreService contentStoreService;
-    private final FileRepository fileRepository;
 
     private final FxControllerAndView<ImageViewWindowController, BorderPane> mainWindowController;
 
@@ -60,13 +65,11 @@ public class DocumentsController implements Initializable {
     @FXML TableColumn<DocumentEntry, String> summaryColumn;
     @FXML Button btnAddDocument;
 
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         documentsTable.setRowFactory(tv -> {
-            final TableRow<DocumentEntry> row = new TableRow<>();
+            final TableRow<DocumentEntry> row = new DocumentsRow();
 
             final ContextMenu contextMenu = new ContextMenu();
 
@@ -87,11 +90,10 @@ public class DocumentsController implements Initializable {
             final MenuItem removeDocumentMenuItem = new MenuItem("Usuń");
             removeDocumentMenuItem.setOnAction(event -> removeDocument(row.getItem()));
 
-
-            contextMenu.getItems().add(openDocumentMenuItem);
-            contextMenu.getItems().add(saveDocumentMenuItem);
-            contextMenu.getItems().add(editDocumentMenuItem);
-            contextMenu.getItems().add(removeDocumentMenuItem);
+            contextMenu.getItems().addAll(openDocumentMenuItem,
+                    saveDocumentMenuItem,
+                    editDocumentMenuItem,
+                    removeDocumentMenuItem);
             row.contextMenuProperty().bind(Bindings.when(row.emptyProperty()).then((ContextMenu) null)
                     .otherwise(contextMenu));
             return row ;
@@ -158,13 +160,22 @@ public class DocumentsController implements Initializable {
         log.info("File saved successfully: {}", fileToSave);
     }
 
+    @SneakyThrows
     private void openDocument(DocumentEntry documentEntry) {
-        if (StringUtils.contains(documentEntry.getMimeType(), "image")) {
-
+        if (documentEntry.isImageFile()) {
             mainWindowController.getController().openImage(documentEntry);
+        } else  {
+            final InputStream inputStream = contentStoreService.getContent(documentEntry.getId());
 
-        } else {
-            stageManager.displayWarning("Można przeglądać jedynie dokumenty graficzne");
+            final String prefix = FilenameUtils.getBaseName(documentEntry.getFileName());
+            final String suffix = "." + FilenameUtils.getExtension(documentEntry.getFileName());
+            final File tempFile = File.createTempFile(prefix, suffix);
+            tempFile.deleteOnExit();
+            try (FileOutputStream out = new FileOutputStream(tempFile)) {
+                IOUtils.copy(inputStream, out);
+            }
+
+            Desktop.getDesktop().open(tempFile);
         }
     }
 
@@ -195,9 +206,28 @@ public class DocumentsController implements Initializable {
             String personId = personModel.getId();
 
             documentsList.clear();
-            documentsList.setAll(fileRepository.findByPersonId(personId).stream().map(DocumentEntry::of).toList());
+            documentsList.setAll(contentStoreService.findFiles(personId).stream().map(DocumentEntry::of).toList());
             documentsTable.setItems(documentsList);
         }
     }
+
+    /**
+     * This extra class is needed to display tooltips on document entries
+     */
+    public static class DocumentsRow extends TableRow<DocumentEntry> {
+        private final Tooltip tooltip = new Tooltip();
+
+        @Override
+        public void updateItem(DocumentEntry documentEntry, boolean empty) {
+            super.updateItem(documentEntry, empty);
+            if (documentEntry == null) {
+                setTooltip(null);
+            } else {
+                tooltip.setText("mime type: " + documentEntry.getMimeType());
+                setTooltip(tooltip);
+            }
+        }
+    }
+
 
 }

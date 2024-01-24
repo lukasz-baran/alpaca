@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.net.URLConnection;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -41,6 +42,10 @@ public class ContentStoreService {
         ContentFile contentFile = fileRepository.getById(id);
         log.info("reading file {}", contentFile);
         return fileContentStore.getContent(contentFile);
+    }
+
+    public List<ContentFile> findFiles(String personId) {
+        return fileRepository.findByPersonId(personId);
     }
 
     public void deleteContent(Long id) {
