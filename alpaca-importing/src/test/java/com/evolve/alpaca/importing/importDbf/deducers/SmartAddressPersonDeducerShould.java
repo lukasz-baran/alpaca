@@ -66,21 +66,27 @@ class SmartAddressPersonDeducerShould {
     @ValueSource(strings = {"Monopolowa 1 / 7", "Kochanowskiego 17",
             "Świadka 7/119", "M. C.Skłodowskiej 4/13", "Grunwaldzka 8 A",
             "Al. Niepodległości 14",
-
             "Kochanowskiego 3 B",
             "Paderewskiego 122a",
             "Obrońców poczty Gdań 1A/1",
-            //"Warszawska 1/3/219",
+            "Warszawska 1/3/219",
             "Chmielnik 476 G",
-            //"Seniora 2/IV/4",
-            //"Wiosenna 1 c / 3",
+            "Seniora 2/IV/4",
+            "Wiosenna 1 c / 3",
             "Obr. Pokoju 74d /15",
             "Sikorskiego 6a/3",
             "Dąbka 10 F",
-            //"8 Marca 2",
+            "8 Marca 2",
             "Słowackiego 15a",
-            //"6-go-Sierpnia 4",
+            "6-go-Sierpnia 4",
             "Potockiego 5 a",
+            "8-go Marca 22",
+            "Nagawczyna 210 H",
+            "16 Stycznia 22 / 7",
+            "3 Maja 33/2",
+            "11-ego Listopada 13/22",
+            "1000-lecia 32 / 15",
+            "29-ego Listopada 51/7"
     })
     void detectValidStreetNames(String input) {
         assertThat(SmartAddressPersonDeducer.isStreet(input))

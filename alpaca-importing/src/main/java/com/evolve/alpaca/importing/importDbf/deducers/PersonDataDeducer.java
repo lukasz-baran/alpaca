@@ -50,11 +50,8 @@ public class PersonDataDeducer {
         final PersonCredentialsDeducer namePersonDeducer = new PersonCredentialsDeducer(person, issues);
         final Optional<PersonCredentialsDeducer.DeducedCredentials> credentials = namePersonDeducer.deduceFrom(guesses);
 
-        final SmartAddressPersonDeducer addressDeducer = new SmartAddressPersonDeducer(issues);
-        Optional<Address> maybeAddress = addressDeducer.deduceFrom(guesses);
-        if (maybeAddress.isPresent()) {
-            guesses = addressDeducer.removeGuesses(guesses);
-        }
+        // adres osoby
+        final Optional<Address> maybeAddress = new SmartAddressPersonDeducer(issues, true).deduceFrom(guesses);
 
         final AuthorizedPersonDeducer authorizedPersonDeducer = new AuthorizedPersonDeducer(issues);
         Optional<List<Person.AuthorizedPerson>> maybeAuthorizedPerson = authorizedPersonDeducer.deduceFrom(guesses);

@@ -42,7 +42,6 @@ public class IssuesLogger {
         }
 
         public void store(String issue) {
-            log.warn(issue);
             issues.add(issue);
         }
     }

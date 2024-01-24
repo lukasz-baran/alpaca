@@ -92,14 +92,18 @@
 
     <build>
 
+        <!-- used to propagate version number from POM to target/classes -->
+<!--
         <resources>
-            <!-- used to propagate version number from POM to target/classes -->
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <excludes>
+                    <exclude>logback.xml</exclude>
+                </excludes>
             </resource>
         </resources>
-
+-->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
