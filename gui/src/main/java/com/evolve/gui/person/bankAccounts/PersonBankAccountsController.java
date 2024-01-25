@@ -49,28 +49,6 @@ public class PersonBankAccountsController extends EditableGuiElement implements 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         bankAccountNumberColumn.setCellValueFactory(new PropertyValueFactory<>("number"));
-        bankAccountNumberColumn.setCellFactory(column -> new TableCell<>() {
-            @Override
-            protected void updateItem(String bankAccountNumberText, boolean empty) {
-                super.updateItem(bankAccountNumberText, empty);
-                setText(bankAccountNumberText);
-
-                if (StringUtils.isNotBlank(bankAccountNumberText)) {
-                    final Tooltip bankTooltip = new Tooltip(bankAccountNumberText);
-                    bankTooltip.setShowDelay(Duration.ZERO);
-                    setTooltip(bankTooltip);
-
-                    bankTooltip.setOnShowing(event -> {
-                        if (event.getSource() instanceof Tooltip tooltip) {
-                            if (StringUtils.isNotBlank(bankAccountNumberText)) {
-                                tooltip.setText(bankAccountTooltip.buildTooltipText(bankAccountNumberText));
-                            }
-                        }
-                    });
-                }
-            }
-        });
-
         personBankAccountsTable.setItems(list);
 
         addNewBankAccount.disableProperty().bind(disabledProperty);
@@ -78,7 +56,7 @@ public class PersonBankAccountsController extends EditableGuiElement implements 
 
         personBankAccountsTable.editableProperty().bind(disabledProperty.not());
         personBankAccountsTable.setRowFactory(tableView -> {
-            final TableRow<BankAccountEntry> row = new TableRow<>();
+            final TableRow<BankAccountEntry> row = new PersonBankAccountRow();
 
             final ContextMenu contextMenu = createContextMenu(tableView, row);
 
@@ -167,5 +145,25 @@ public class PersonBankAccountsController extends EditableGuiElement implements 
         return list.stream()
                 .map(BankAccountEntry::toBankAccount)
                 .collect(Collectors.toList());
+    }
+
+    public  class PersonBankAccountRow extends TableRow<BankAccountEntry> {
+        private final Tooltip tooltip = new Tooltip();
+
+        @Override
+        public void updateItem(BankAccountEntry bankAccountEntry, boolean empty) {
+            super.updateItem(bankAccountEntry, empty);
+            if (bankAccountEntry == null) {
+                setTooltip(null);
+            } else {
+                final String bankAccountNumberText = bankAccountEntry.getNumber();
+                if (StringUtils.isNotBlank(bankAccountNumberText)) {
+                    tooltip.setText(bankAccountTooltip.buildTooltipText(bankAccountNumberText));
+                    tooltip.setShowDelay(Duration.ZERO);
+                    setTooltip(tooltip);
+                }
+            }
+        }
+
     }
 }
