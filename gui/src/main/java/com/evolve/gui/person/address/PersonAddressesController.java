@@ -16,7 +16,6 @@ import javafx.scene.input.ClipboardContent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -49,17 +48,6 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         streetColumn.setCellValueFactory(new PropertyValueFactory<>("street"));
-        streetColumn.setCellFactory(column -> new TableCell<>() {
-            @Override
-            protected void updateItem(String streetText, boolean empty) {
-                super.updateItem(streetText, empty);
-                setText(streetText);
-                if (StringUtils.isNotBlank(streetText)) {
-                    setTooltip(StageManager.newTooltip(streetText));
-                }
-            }
-        });
-
         postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
         addressTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
@@ -71,23 +59,17 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
 
         addressesTable.editableProperty().bind(disabledProperty.not());
         addressesTable.setRowFactory(tableView -> {
-            final TableRow<AddressEntry> row = new TableRow<>();
+            final TableRow<AddressEntry> row = new PersonAddressRow();
             final ContextMenu contextMenu = new ContextMenu();
 
             final MenuItem copyAddress = new MenuItem("Kopiuj");
-            copyAddress.setOnAction(event -> {
-                final ClipboardContent clipboardContent = new ClipboardContent();
-                final Optional<String> addressAsText =
-                        Optional.ofNullable(row.getItem())
-                                .map(AddressEntry::getPersonAddress)
-                                .map(address -> String.join(" ",
-                                        trimToEmpty(address.getStreet()),
-                                        trimToEmpty(address.getPostalCode()),
-                                        trimToEmpty(address.getCity())));
-
-                addressAsText.ifPresent(clipboardContent::putString);
-                Clipboard.getSystemClipboard().setContent(clipboardContent);
-            });
+            copyAddress.setOnAction(event -> Optional.ofNullable(row.getItem())
+                    .map(PersonAddressesController::concatenatedAddressString)
+                    .ifPresent(text -> {
+                        final ClipboardContent clipboardContent = new ClipboardContent();
+                        clipboardContent.putString(text);
+                        Clipboard.getSystemClipboard().setContent(clipboardContent);
+            }));
 
             final MenuItem editMenuItem = new MenuItem("Edytuj");
             editMenuItem.setOnAction(event -> editPersonAddress(tableView, row));
@@ -155,6 +137,29 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
         return list.stream()
                 .map(AddressEntry::getPersonAddress)
                 .collect(Collectors.toList());
+    }
+
+    private static String concatenatedAddressString(AddressEntry addressEntry) {
+        final Person.PersonAddress address = addressEntry.getPersonAddress();
+        return String.join(" ",
+                        trimToEmpty(address.getStreet()),
+                        trimToEmpty(address.getPostalCode()),
+                        trimToEmpty(address.getCity()));
+    }
+
+    public static class PersonAddressRow extends TableRow<AddressEntry> {
+        private final Tooltip tooltip = new Tooltip();
+
+        @Override
+        public void updateItem(AddressEntry addressEntry, boolean empty) {
+            super.updateItem(addressEntry, empty);
+            if (addressEntry == null) {
+                setTooltip(null);
+            } else {
+                tooltip.setText(PersonAddressesController.concatenatedAddressString(addressEntry));
+                setTooltip(tooltip);
+            }
+        }
     }
 
 }
