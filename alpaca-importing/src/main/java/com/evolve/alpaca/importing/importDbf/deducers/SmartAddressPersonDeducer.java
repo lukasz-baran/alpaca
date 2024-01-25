@@ -20,8 +20,8 @@ public class SmartAddressPersonDeducer extends AbstractSmartDeducer<Address>{
     static final Pattern STREET_PATTERN = Pattern.compile(STREET_NAME_PATTERN + STREET_NUMBER_PATTERN);
 
     /**
-     * <b>Ugly way</b> of recognizing some standard street addresses.
-     * But we don't want to lose time on preparing super-advanced regular expressions.
+     * <b>Ugly way</b> of recognizing some street addresses.
+     * We don't want to lose time on preparing super-advanced regular expressions.
      */
     static List<String> ARBITRARY_ACCEPTED_STREET_PREFIXES = List.of(
             "ul.",

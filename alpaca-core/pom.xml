@@ -117,6 +117,14 @@
             <artifactId>javadbf</artifactId>
             <version>1.14.0</version>
         </dependency>
+
+        <!-- for clearing h2 db -->
+        <dependency>
+            <groupId>de.cronn</groupId>
+            <artifactId>test-utils</artifactId>
+            <version>0.2.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

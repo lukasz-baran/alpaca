@@ -5,6 +5,7 @@ import com.evolve.alpaca.ddd.CommandCollector;
 import com.evolve.alpaca.validation.ValidationException;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonGenderDeducer;
+import com.evolve.domain.PersonStatusDetails;
 import com.evolve.domain.RegistryNumber;
 import com.evolve.repo.jpa.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,7 @@ public class PersonEditService extends ApplicationService {
         person.setAddresses(command.addresses());
         person.setAuthorizedPersons(command.authorizedPersons());
         person.setStatusChanges(command.personStatusChanges());
+        person.setStatus(PersonStatusDetails.basedOnStatusChange(command.personStatusChanges()));
         person.setUnitNumber(command.unitNumber());
         person.setRegistryNumber(RegistryNumber.of(command.registryNumber()));
         person.setOldRegistryNumber(RegistryNumber.of(command.oldRegistryNumber()));

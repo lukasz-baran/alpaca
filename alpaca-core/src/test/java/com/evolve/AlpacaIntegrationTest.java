@@ -3,13 +3,18 @@ package com.evolve;
 import com.evolve.domain.*;
 import com.evolve.services.PersonEditService;
 import com.evolve.services.PersonsService;
+import com.evolve.services.UnitsService;
+import de.cronn.testutils.h2.H2Util;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ExtendWith(SpringExtension.class)
 @TestPropertySource("classpath:test.properties")
+@Import(H2Util.class)
 public class AlpacaIntegrationTest {
 
     public static final String TEST_FIRST_NAME = "Jan";
@@ -32,16 +38,24 @@ public class AlpacaIntegrationTest {
 
     @Autowired PersonsService personsService;
     @Autowired PersonEditService personEditService;
+    @Autowired UnitsService unitsService;
+
+    @BeforeEach
+    void resetDatabase(@Autowired H2Util h2Util) {
+        h2Util.resetDatabase();
+    }
 
     @Test
     void testApp() {
         // given  -- initially database is empty
+
+        System.out.println(unitsService.fetchList().size());
         var list = personsService.fetchList(PersonLookupCriteria.ALL);
         assertThat(list)
                 .isEmpty();
 
         // when
-        final Optional<String> nextId = personsService.findNextPersonId("Barabasz");
+        final Optional<String> nextId = personsService.findNextPersonId(TEST_LAST_NAME);
 
         // then
         assertThat(nextId)
@@ -90,6 +104,40 @@ public class AlpacaIntegrationTest {
                 .hasBankAccount(bankAccount);
 
         // then --
+    }
+
+    @Test
+    void shouldAlwaysUpdateStatuses() {
+        // given
+        final String personId = personsService.findNextPersonId(TEST_LAST_NAME).orElseThrow();
+        final Person newPerson = Person.builder()
+                .personId(personId)
+                .firstName(TEST_FIRST_NAME)
+                .lastName(TEST_LAST_NAME)
+                .unitNumber(TEST_UNIT_NAME)
+                .status(PersonStatusDetails.unknown())
+                .build();
+        personsService.insertPerson(newPerson);
+
+        assertPerson(personsService.findById(personId))
+                .hasStatus(PersonStatus.UNKNOWN);
+
+        // when -- statuses are added
+        final List<PersonStatusChange> newStatuses = List.of(
+                PersonStatusChange.born(LocalDate.of(1980, 8, 28)),
+                PersonStatusChange.joined(LocalDate.of(2020, 1, 25)));
+
+        personEditService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
+                null, null, List.of(), List.of(), List.of(), newStatuses, TEST_UNIT_NAME, null, null,
+                List.of()));
+
+        // then
+        assertPerson(personsService.findById(personId))
+                .hasFirstName(TEST_FIRST_NAME)
+                .hasLastName(TEST_LAST_NAME)
+                .hasUnitNumber(TEST_UNIT_NAME)
+                .hasPersonId(personId)
+                .hasStatus(PersonStatus.ACTIVE);
     }
 
 }
