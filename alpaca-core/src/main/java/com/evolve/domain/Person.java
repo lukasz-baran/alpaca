@@ -198,8 +198,6 @@ public class Person implements Serializable {
                     .findFirst()
                     .ifPresentOrElse(element -> statusChanges.add(statusChanges.indexOf(element), newPersonStatusChange),
                     () -> this.statusChanges.add(newPersonStatusChange));
-
-            //this.statusChanges.add(newPersonStatusChange);
         }
     }
 

@@ -148,7 +148,7 @@ public class PersonBankAccountsController extends EditableGuiElement implements 
     }
 
     public  class PersonBankAccountRow extends TableRow<BankAccountEntry> {
-        private final Tooltip tooltip = new Tooltip();
+        private final Tooltip bankTooltip = new Tooltip();
 
         @Override
         public void updateItem(BankAccountEntry bankAccountEntry, boolean empty) {
@@ -158,9 +158,13 @@ public class PersonBankAccountsController extends EditableGuiElement implements 
             } else {
                 final String bankAccountNumberText = bankAccountEntry.getNumber();
                 if (StringUtils.isNotBlank(bankAccountNumberText)) {
-                    tooltip.setText(bankAccountTooltip.buildTooltipText(bankAccountNumberText));
-                    tooltip.setShowDelay(Duration.ZERO);
-                    setTooltip(tooltip);
+                    bankTooltip.setOnShowing(event -> {
+                        if (event.getSource() instanceof Tooltip tooltip) {
+                            tooltip.setText(bankAccountTooltip.buildTooltipText(bankAccountNumberText));
+                        }
+                    });
+                    bankTooltip.setShowDelay(Duration.ZERO);
+                    setTooltip(bankTooltip);
                 }
             }
         }
