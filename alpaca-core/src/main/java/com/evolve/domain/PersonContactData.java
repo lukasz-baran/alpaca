@@ -42,6 +42,11 @@ public class PersonContactData {
         EMAIL("Email");
 
         private final String description;
+
+        @Override
+        public String toString() {
+            return this.description;
+        }
     }
 
     public static Optional<String> findEmail(List<PersonContactData> contactDataList) {
