@@ -11,6 +11,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 
@@ -89,6 +90,11 @@ public class BankAccountDialog extends DialogWindow<BankAccount>  {
     @Override
     protected void validateSaveButton(Node saveButton) {
         final String newBankNumber = this.bankAccountNumberTextField.getText().trim();
+        if (StringUtils.isEmpty(newBankNumber)) {
+            saveButton.setDisable(true);
+            return;
+        }
+
         final String newNotes = Strings.emptyToNull(this.textAreaNotes.getText());
 
         saveButton.setDisable(BankAccount.of(newBankNumber, newNotes).equals(this.bankAccountEntry));

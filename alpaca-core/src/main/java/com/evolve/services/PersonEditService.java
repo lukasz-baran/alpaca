@@ -34,8 +34,7 @@ public class PersonEditService extends ApplicationService {
         person.setFirstName(command.firstName());
         person.setLastName(command.lastName());
         person.setSecondName(command.secondName());
-        person.setEmail(command.email());
-        person.setPhoneNumbers(command.phoneNumbers());
+        person.setContactData(command.contactData());
         person.setAddresses(command.addresses());
         person.setAuthorizedPersons(command.authorizedPersons());
         person.setStatusChanges(command.personStatusChanges());

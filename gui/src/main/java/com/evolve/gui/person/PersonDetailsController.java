@@ -13,7 +13,7 @@ import com.evolve.gui.person.authorizedPerson.AuthorizedPersonsController;
 import com.evolve.gui.person.bankAccounts.PersonBankAccountsController;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
-import com.evolve.gui.person.phoneNumber.PhoneNumbersController;
+import com.evolve.gui.person.contactDetails.PersonContactDataController;
 import com.evolve.gui.person.status.PersonStatusController;
 import com.evolve.services.PersonEditService;
 import com.evolve.services.PersonsService;
@@ -62,7 +62,7 @@ public class PersonDetailsController extends EditableGuiElement
     private final FxControllerAndView<AuthorizedPersonsController, AnchorPane> authorizedController;
 
     @FXML
-    private final FxControllerAndView<PhoneNumbersController, AnchorPane> phoneNumbersController;
+    private final FxControllerAndView<PersonContactDataController, AnchorPane> phoneNumbersController;
 
     @FXML
     private final FxControllerAndView<PersonAddressesController, AnchorPane> personAddresses;
@@ -88,7 +88,6 @@ public class PersonDetailsController extends EditableGuiElement
     @FXML TextField registryNumberTextField;
     @FXML TextField oldRegistryNumberTextField;
 
-    @FXML TextField emailTextField;
     @FXML ComboBox<UnitNumberItem> unitNumberComboBox;
 
 
@@ -120,9 +119,8 @@ public class PersonDetailsController extends EditableGuiElement
         firstNameTextField.setText(person.getFirstName());
         secondNameTextField.setText(person.getSecondName());
         lastNameTextField.setText(person.getLastName());
-        emailTextField.setText(person.getEmail());
 
-        phoneNumbersController.getController().setPhoneNumbers(person.getPhoneNumbers());
+        phoneNumbersController.getController().setPersonContactData(person.getContactData());
 
         registryNumberTextField.setText(
                 Optional.ofNullable(person.getRegistryNumber())
@@ -167,7 +165,6 @@ public class PersonDetailsController extends EditableGuiElement
         firstNameTextField.setEditable(editable);
         lastNameTextField.setEditable(editable);
         secondNameTextField.setEditable(editable);
-        emailTextField.setEditable(editable);
 
         // FIXME person gender cannot be edited!
         personGender.getController().setEditable(editable);
@@ -213,7 +210,6 @@ public class PersonDetailsController extends EditableGuiElement
                 firstNameTextField.getText(),
                 lastNameTextField.getText(),
                 secondNameTextField.getText(),
-                emailTextField.getText(),
                 phoneNumbersController.getController().getNumbers(),
                 personAddresses.getController().getPersonAddresses(),
                 authorizedController.getController().getAuthorizedPersons(),

@@ -90,7 +90,7 @@ public class AlpacaIntegrationTest {
         final BankAccount bankAccount = BankAccount.of("1234", "bank account description");
 
         personEditService.editPerson(new EditPersonDataCommand(personId, NEW_FIRST_NAME, NEW_LAST_NAME,
-                null, NEW_EMAIL, List.of(), List.of(), List.of(), List.of(), TEST_UNIT_NAME, NEW_REGISTRY_NUMBER, null,
+                null, List.of(PersonContactData.email(NEW_EMAIL)), List.of(), List.of(), List.of(), TEST_UNIT_NAME, NEW_REGISTRY_NUMBER, null,
                 List.of(bankAccount)));
 
         // then -- changes are persisted in db
@@ -128,7 +128,7 @@ public class AlpacaIntegrationTest {
                 PersonStatusChange.joined(LocalDate.of(2020, 1, 25)));
 
         personEditService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
-                null, null, List.of(), List.of(), List.of(), newStatuses, TEST_UNIT_NAME, null, null,
+                null, List.of(), List.of(), List.of(), newStatuses, TEST_UNIT_NAME, null, null,
                 List.of()));
 
         // then

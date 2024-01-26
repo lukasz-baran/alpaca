@@ -7,11 +7,14 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.geometry.Insets?>
 <AnchorPane minHeight="0.0" minWidth="0.0" xmlns="http://javafx.com/javafx/19"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.phoneNumber.PhoneNumbersController">
-    <TableView fx:id="phoneNumbersTable" layoutY="19.0" prefHeight="120.0" prefWidth="300.0"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.contactDetails.PersonContactDataController">
+    <TableView fx:id="personContactDataTable" layoutY="19.0" prefHeight="120.0" prefWidth="300.0"
                AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
         <columns>
-            <TableColumn fx:id="phoneNumber" prefWidth="75.0" text="Numer telefonu" />
+            <TableColumn fx:id="contactTypeColumn" maxWidth="20.0" minWidth="20.0"  />
+            <TableColumn fx:id="phoneOrEmailColumn" prefWidth="75.0" text="Telefon/email" />
+            <TableColumn fx:id="commentColumn" prefWidth="75.0" text="Opis" />
+
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

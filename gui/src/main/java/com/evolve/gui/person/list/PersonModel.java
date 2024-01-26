@@ -17,18 +17,15 @@ public class PersonModel {
     private final SimpleStringProperty id;
     private final SimpleStringProperty firstName;
     private final SimpleStringProperty lastName;
-    private final SimpleStringProperty email;
     private final ObjectProperty<LocalDate> dob;
     private final SimpleLongProperty age;
     private final SimpleStringProperty status;
     private final SimpleLongProperty registryNumber;
 
-    PersonModel(String id, String firstName, String lastName, String email, LocalDate dob,
-                PersonStatus status, Long registryNumber) {
+    PersonModel(String id, String firstName, String lastName, LocalDate dob, PersonStatus status, Long registryNumber) {
         this.id = new SimpleStringProperty(id);
         this.firstName = new SimpleStringProperty(firstName);
         this.lastName = new SimpleStringProperty(lastName);
-        this.email = new SimpleStringProperty(email);
         this.dob = new SimpleObjectProperty<>(dob);
         this.age = new SimpleLongProperty(calculateAge(dob, status));
         this.status = new SimpleStringProperty(status.toString());
@@ -36,8 +33,7 @@ public class PersonModel {
     }
 
     PersonModel(PersonListView person) {
-        this(person.personId(), person.firstName(), person.lastName(), person.email(),
-                person.dob(), person.status(), person.getRegistryNumber().orElse(0L));
+        this(person.personId(), person.firstName(), person.lastName(), person.dob(), person.status(), person.getRegistryNumber().orElse(0L));
     }
 
     public String getId() {
@@ -59,13 +55,6 @@ public class PersonModel {
     }
     public void setLastName(String fName) {
         lastName.set(fName);
-    }
-
-    public String getEmail() {
-        return email.get();
-    }
-    public void setEmail(String fName) {
-        email.set(fName);
     }
 
     public LocalDate getDob() {
@@ -99,7 +88,6 @@ public class PersonModel {
     public void update(Person updatedPerson) {
         this.firstName.set(updatedPerson.getFirstName());
         this.lastName.set(updatedPerson.getLastName());
-        this.email.set(updatedPerson.getEmail());
         this.dob.set(updatedPerson.getDob());
 
         final Optional<PersonStatus> maybePersonStatus = Optional.ofNullable(updatedPerson.getStatus()).map(PersonStatusDetails::getStatus);

@@ -42,7 +42,7 @@ public class PersonAssertion extends AbstractAssert<PersonAssertion, Person> {
     }
 
     public PersonAssertion hasEmail(String expectedEmail) {
-        assertThat(actual.getEmail()).isEqualTo(expectedEmail);
+        assertThat(actual.getEmail()).hasValue(expectedEmail);
         return this;
     }
 

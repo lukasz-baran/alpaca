@@ -4,6 +4,7 @@ import com.evolve.EditPersonDataCommand;
 import com.evolve.alpaca.validation.ValidationResult;
 import com.evolve.alpaca.validation.Validator;
 import com.evolve.domain.Person;
+import com.evolve.domain.PersonContactData;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -32,11 +33,7 @@ public class PersonEditionValidator implements Validator<EditPersonDataCommand> 
             violations.add(LAST_NAME_CANNOT_BE_EMPTY);
         }
 
-        if (StringUtils.isNotBlank(command.email())) {
-            if (!EmailValidator.getInstance().isValid(command.email())) {
-                violations.add(EMAIL_IS_NOT_VALID);
-            }
-        }
+        validateEmails(violations, command.contactData());
 
         if (StringUtils.isNotBlank(command.registryNumber())) {
             if (!StringUtils.isNumeric(command.registryNumber())) {
@@ -47,6 +44,16 @@ public class PersonEditionValidator implements Validator<EditPersonDataCommand> 
         validateAddresses(violations, command.addresses());
 
         return new ValidationResult(violations);
+    }
+
+    private void validateEmails(Set<String> validations, List<PersonContactData> contactData) {
+        ListUtils.emptyIfNull(contactData).forEach(contact -> {
+           if (contact.getType() == PersonContactData.ContactType.EMAIL) {
+               if (!EmailValidator.getInstance().isValid(contact.getData())) {
+                   validations.add(EMAIL_IS_NOT_VALID);
+               }
+           }
+        });
     }
 
     private void validateAddresses(Set<String> validations, List<Person.PersonAddress> addresses) {

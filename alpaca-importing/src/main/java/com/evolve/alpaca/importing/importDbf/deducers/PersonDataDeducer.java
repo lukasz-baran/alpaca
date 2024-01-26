@@ -72,20 +72,8 @@ public class PersonDataDeducer {
 
         final Optional<PersonStatusDetails> personStatusDetails = new StatusPersonDeducer().deduceFrom(guesses);
 
-        List<String> infoGuesses = Lists.newArrayList(
-                StringUtils.trim(person.getEMAIL()),
-                StringUtils.trim(person.getINFO()),
-                StringUtils.trim(person.getTEL0()),
-                StringUtils.trim(person.getTEL1()));
-
-        final EmailPersonDeducer emailPersonDeducer = new EmailPersonDeducer(issues);
-        final Optional<String> maybeEmail = emailPersonDeducer.deduceFrom(infoGuesses);
-        if (maybeEmail.isPresent()) {
-            infoGuesses = emailPersonDeducer.removeGuesses(infoGuesses);
-        }
-
-        final PhoneNumbersDeducer phoneNumbersDeducer = new PhoneNumbersDeducer(issues);
-        final Optional<List<String>> maybePhoneNumbers = phoneNumbersDeducer.deduceFrom(Lists.newArrayList(person.getTEL0(), person.getTEL1()));
+        // telefony i emaile
+        final List<PersonContactData> contactData = deducePhonesAndEmails(issues);
 
         // ustalmy numery w kartotekach
         final RegistryNumbers.Numbers numbers = registryNumbers.parseLine(person.getNR_IDENT());
@@ -114,13 +102,42 @@ public class PersonDataDeducer {
                 .authorizedPersons(authorizedPeople)
                 .status(personStatusDetails.orElse(null))
                 .statusChanges(statusChanges)
-                .email(maybeEmail.orElse(null))
-                .phoneNumbers(maybePhoneNumbers.orElse(List.of()))
+                .contactData(contactData)
                 .unitNumber(unitNumber.orElse(null))
                 .rawData(person.getData())
                 .bankAccounts(bankAccounts)
                 .build();
         return Optional.of(personData);
+    }
+
+    List<PersonContactData> deducePhonesAndEmails(final IssuesLogger.ImportIssues issues) {
+        List<String> infoGuesses = Lists.newArrayList(
+                StringUtils.trim(person.getEMAIL()),
+                StringUtils.trim(person.getINFO()),
+                StringUtils.trim(person.getTEL0()),
+                StringUtils.trim(person.getTEL1()));
+
+        final EmailPersonDeducer emailPersonDeducer = new EmailPersonDeducer(issues);
+        final Optional<String> maybeEmail = emailPersonDeducer.deduceFrom(infoGuesses);
+        if (maybeEmail.isPresent()) {
+            infoGuesses = emailPersonDeducer.removeGuesses(infoGuesses);
+        }
+
+        final PhoneNumbersDeducer phoneNumbersDeducer = new PhoneNumbersDeducer(issues);
+        final Optional<List<String>> maybePhoneNumbers = phoneNumbersDeducer.deduceFrom(Lists.newArrayList(person.getTEL0(), person.getTEL1()));
+
+        final List<PersonContactData> result = new ArrayList<>();
+
+        maybePhoneNumbers.ifPresent(phoneNumbers -> {
+            phoneNumbers.forEach(phoneNumber -> {
+                result.add(new PersonContactData(phoneNumber, PersonContactData.ContactType.PHONE));
+            });
+        });
+
+        maybeEmail.ifPresent(email ->
+                result.add(new PersonContactData(email, PersonContactData.ContactType.EMAIL)));
+
+        return result;
     }
 
     List<BankAccount> deduceBankAccount(final IssuesLogger.ImportIssues issues) {

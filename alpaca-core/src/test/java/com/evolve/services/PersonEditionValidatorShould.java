@@ -3,6 +3,7 @@ package com.evolve.services;
 import com.evolve.EditPersonDataCommand;
 import com.evolve.alpaca.validation.ValidationResult;
 import com.evolve.domain.Person;
+import com.evolve.domain.PersonContactData;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -15,8 +16,8 @@ class PersonEditionValidatorShould {
     @Test
     void validatePerson() {
         // given
-        final EditPersonDataCommand person = new EditPersonDataCommand("id", "John", "Doe", "secondName", null,
-                List.of("123456789"), List.of(new Person.PersonAddress("street", "city", "zip", null)),
+        final EditPersonDataCommand person = new EditPersonDataCommand("id", "John", "Doe", "secondName",
+                List.of(PersonContactData.phone("123456789")), List.of(new Person.PersonAddress("street", "city", "zip", null)),
                 List.of(),
                 List.of(),
                 "unitNumber",
@@ -31,8 +32,9 @@ class PersonEditionValidatorShould {
         assertThat(result.isValid()).isTrue();
 
         // when -- put some invalid data into the pojo
-        final EditPersonDataCommand invalidCommand = new EditPersonDataCommand("id", "", "", "secondName", "invalid email address",
-                List.of("123456789"), List.of(new Person.PersonAddress("", "city", "zip", null)),
+        final EditPersonDataCommand invalidCommand = new EditPersonDataCommand("id", "", "", "secondName",
+                List.of(PersonContactData.email("invalid email address"), PersonContactData.phone("123456789")),
+                List.of(new Person.PersonAddress("", "city", "zip", null)),
                 List.of(),
                 List.of(),
                 "unitNumber",
