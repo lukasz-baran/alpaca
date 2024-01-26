@@ -91,13 +91,6 @@ public class PersonStatusDetails {
             return basedOnStatusChange(statusChanges.get(lastIndex));
         }
         return unknown();
-
-//        return statusChanges
-//                .stream()
-//                .filter(change -> change.getWhen() != null)
-//                .max(Comparator.comparing(PersonStatusChange::getWhen))
-//                .map(PersonStatusDetails::basedOnStatusChange)
-//                .orElse(PersonStatusDetails.active());
     }
 
     private static PersonStatusDetails basedOnStatusChange(PersonStatusChange change) {

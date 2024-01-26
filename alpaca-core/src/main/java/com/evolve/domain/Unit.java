@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
@@ -35,7 +36,7 @@ public class Unit implements Serializable {
         };
     }
 
-    @javax.persistence.Id
+    @Id
     private String id;
 
     private String name;

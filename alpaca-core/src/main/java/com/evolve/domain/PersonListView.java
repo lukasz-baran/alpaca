@@ -11,13 +11,12 @@ import java.util.Optional;
  * @param dob            urodzony/urodzona
  * @param registryNumber numer ewidencyjny (kartoteki)
  */
-public record PersonListView(String personId, String firstName, String secondName, String lastName, //String email,
+public record PersonListView(String personId, String firstName, String secondName, String lastName,
                              LocalDate dob, PersonStatus status, Long registryNumber) {
 
     public static PersonListView of(Person person) {
         return new PersonListView(person.getPersonId(), person.getFirstName(), person.getSecondName(),
                 person.getLastName(),
-                //person.getEmail(),
                 person.getDob(),
                 personStatus(person),
                 registryNumber(person));

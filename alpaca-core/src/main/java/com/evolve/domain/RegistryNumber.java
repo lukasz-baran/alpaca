@@ -13,7 +13,7 @@ import java.util.Optional;
 @ToString
 @Embeddable
 public class RegistryNumber {
-    private Integer registryNum; // numer kartoteki
+    private Integer registryNum;
 
     public static RegistryNumber of(String input) {
         if (StringUtils.isBlank(input)) {
