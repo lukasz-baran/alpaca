@@ -17,7 +17,7 @@ class PersonEditionValidatorShould {
     void validatePerson() {
         // given
         final EditPersonDataCommand person = new EditPersonDataCommand("id", "John", "Doe", "secondName",
-                List.of(PersonContactData.phone("123456789")), List.of(new Person.PersonAddress("street", "city", "zip", null)),
+                List.of(PersonContactData.phone("123456789")), List.of(new Person.PersonAddress("street", "city", "zip", null, null)),
                 List.of(),
                 List.of(),
                 "unitNumber",
@@ -34,7 +34,7 @@ class PersonEditionValidatorShould {
         // when -- put some invalid data into the pojo
         final EditPersonDataCommand invalidCommand = new EditPersonDataCommand("id", "", "", "secondName",
                 List.of(PersonContactData.email("invalid email address"), PersonContactData.phone("123456789")),
-                List.of(new Person.PersonAddress("", "city", "zip", null)),
+                List.of(new Person.PersonAddress("", "city", "zip", null, null)),
                 List.of(),
                 List.of(),
                 "unitNumber",
