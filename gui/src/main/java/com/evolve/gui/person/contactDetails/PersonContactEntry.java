@@ -13,8 +13,8 @@ import lombok.ToString;
 @ToString
 public class PersonContactEntry {
 
-    public static final Image PHONE_ICON = new Image("phone-32x32.png");
-    public static final Image EMAIL_ICON = new Image("email-32x32.png");
+    public static final Image PHONE_ICON = new Image("icons/phone-32x32.png");
+    public static final Image EMAIL_ICON = new Image("icons/email-32x32.png");
 
     private PersonContactData personContactData;
 

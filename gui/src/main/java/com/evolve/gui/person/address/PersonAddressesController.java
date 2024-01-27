@@ -11,6 +11,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import lombok.RequiredArgsConstructor;
@@ -38,19 +40,22 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
     private final ObservableList<AddressEntry> list = FXCollections.observableArrayList();
 
     @FXML TableView<AddressEntry> addressesTable;
+    @FXML TableColumn<AddressEntry, Image> addressTypeColumn;
     @FXML TableColumn<AddressEntry, String> streetColumn;
     @FXML TableColumn<AddressEntry, String> postalCodeColumn;
     @FXML TableColumn<AddressEntry, String> cityColumn;
-    @FXML TableColumn<AddressEntry, String> addressTypeColumn;
+    @FXML TableColumn<AddressEntry, String> commentColumn;
 
     @FXML MenuItem addAddress;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        addressTypeColumn.setCellValueFactory(new PropertyValueFactory<>("imageType"));
+        addressTypeColumn.setCellFactory(item -> new AddressTypeIconTableCell());
         streetColumn.setCellValueFactory(new PropertyValueFactory<>("street"));
         postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
-        addressTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        commentColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
 
         setPersonAddresses(Collections.emptyList()); // it's needed, without this initial call the table won't be populated with real data
 
@@ -158,6 +163,28 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
             } else {
                 tooltip.setText(PersonAddressesController.concatenatedAddressString(addressEntry));
                 setTooltip(tooltip);
+            }
+        }
+    }
+
+    static class AddressTypeIconTableCell extends TableCell<AddressEntry, Image> {
+        private final ImageView imageView = new ImageView();
+
+        public AddressTypeIconTableCell() {
+            imageView.setFitHeight(12);
+            imageView.setFitWidth(12);
+        }
+
+        @Override
+        protected void updateItem(Image image, boolean empty) {
+            super.updateItem(image, empty);
+
+            if (image == null || empty) {
+                imageView.setImage(null);
+                setGraphic(null);
+            } else {
+                imageView.setImage(image);
+                setGraphic(imageView);
             }
         }
     }

@@ -1,19 +1,23 @@
 package com.evolve.gui.person.address;
 
 import com.evolve.domain.Person;
+import javafx.scene.image.Image;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+@Getter
 @AllArgsConstructor
 @Setter
 @ToString
 public class AddressEntry {
+    public static final Image HOME_ADDRESS_ICON = new Image("icons/home-outline.230x256.png");
+    public static final Image MAILING_ADDRESS_ICON = new Image("icons/mail.256x209.png");
+    public static final Image WORK_ADDRESS_ICON = new Image("icons/work-alt-bag.256x256.png");
+    public static final Image OTHER_ADDRESS_ICON = new Image("icons/other.256x256.png");
 
-    @Getter
     private Person.PersonAddress personAddress;
-
 
     public String getStreet() {
         return personAddress.getStreet();
@@ -27,8 +31,18 @@ public class AddressEntry {
         return personAddress.getCity();
     }
 
-    public Person.AddressType getType() {
-        return personAddress.getType();
+    public String getComment() {
+        return personAddress.getComment();
+    }
+
+    @SuppressWarnings("unused")
+    public Image getImageType() {
+        return switch (personAddress.getType()) {
+            case HOME -> HOME_ADDRESS_ICON;
+            case MAILING -> MAILING_ADDRESS_ICON;
+            case WORK -> WORK_ADDRESS_ICON;
+            case OTHER -> OTHER_ADDRESS_ICON;
+        };
     }
 
 }
