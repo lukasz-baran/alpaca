@@ -125,15 +125,17 @@ public class Person implements Serializable {
     public static class PersonAddress extends Address {
 
         private AddressType type;
+        private String comment;
 
         public PersonAddress(Address address, AddressType type) {
             super(address.getStreet(), address.getPostalCode(), address.getCity());
             this.type = type;
         }
 
-        public PersonAddress(String street, String postCode, String city, AddressType type) {
+        public PersonAddress(String street, String postCode, String city, AddressType type, String comment) {
             super(street, postCode, city);
             this.type = type;
+            this.comment = comment;
         }
     }
 

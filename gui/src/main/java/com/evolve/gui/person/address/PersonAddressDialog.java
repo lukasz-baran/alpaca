@@ -22,6 +22,7 @@ public class PersonAddressDialog extends DialogWindow<Person.PersonAddress> {
     private final TextField postalCodeTextField = new TextField();
     private final TextField cityTextField = new TextField();
     private final ComboBox<Person.AddressType> typeComboBox;
+    private final TextField commentTextField = new TextField();
 
     private final ObjectProperty<Person.AddressType> addressTypeObjectProperty = new SimpleObjectProperty<>();
 
@@ -43,12 +44,14 @@ public class PersonAddressDialog extends DialogWindow<Person.PersonAddress> {
         streetTextField.setPromptText("Ulica");
         postalCodeTextField.setPromptText("Kod pocztowy");
         cityTextField.setPromptText("Miasto");
+        commentTextField.setPromptText("Komentarz");
 
         Optional.ofNullable(personAddress).ifPresent(address -> {
             streetTextField.setText(address.getStreet());
             postalCodeTextField.setText(address.getPostalCode());
             cityTextField.setText(address.getCity());
             addressTypeObjectProperty.setValue(personAddress.getType());
+            commentTextField.setText(personAddress.getComment());
         });
 
         grid.add(new Label("Ulica:"), 0, 0);
@@ -59,6 +62,8 @@ public class PersonAddressDialog extends DialogWindow<Person.PersonAddress> {
         grid.add(cityTextField, 1, 2);
         grid.add(new Label("Typ:"), 0, 3);
         grid.add(typeComboBox, 1, 3);
+        grid.add(new Label("Komentarz:"), 0, 4);
+        grid.add(commentTextField, 1, 4);
 
         final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
@@ -68,6 +73,7 @@ public class PersonAddressDialog extends DialogWindow<Person.PersonAddress> {
         postalCodeTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
         cityTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
         addressTypeObjectProperty.addListener(change -> validateSaveButton(saveButton));
+        commentTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
 
         dialog.getDialogPane().setContent(grid);
 
@@ -95,6 +101,8 @@ public class PersonAddressDialog extends DialogWindow<Person.PersonAddress> {
                 streetTextField.getText().trim(),
                 postalCodeTextField.getText().trim(),
                 cityTextField.getText().trim(),
-                addressTypeObjectProperty.getValue());
+                addressTypeObjectProperty.getValue(),
+                commentTextField.getText().trim()
+        );
     }
 }
