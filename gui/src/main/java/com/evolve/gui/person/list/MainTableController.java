@@ -5,16 +5,21 @@ import com.evolve.alpaca.utils.LogUtil;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
 import com.evolve.gui.StageManager;
+import com.evolve.gui.components.NewPersonDialog;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.event.PersonEditionRequestedEvent;
 import com.evolve.gui.person.list.search.PersonSearchCriteria;
 import com.evolve.gui.person.list.search.PersonSearchService;
+import com.evolve.gui.person.list.search.SearchPersonDialog;
+import com.evolve.gui.person.problemsExplorer.ProblemsExplorerController;
 import com.evolve.services.PersonsService;
+import com.evolve.services.UnitsService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -23,10 +28,12 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
@@ -51,9 +58,18 @@ public class MainTableController implements Initializable {
     private final PersonListModel personListModel;
     private final PersonsService personsService;
     private final PersonSearchService personSearchService;
+    private final UnitsService unitsService;
 
     private final StageManager stageManager;
     private final ApplicationEventPublisher publisher;
+
+    private final FxControllerAndView<ProblemsExplorerController, VBox> problemsExplorerController;
+
+    @FXML Button btnNewPerson;
+    @FXML Button btnEdit;
+    @FXML Button btnDelete;
+    @FXML Button btnExport;
+    @FXML Button btnSearch;
 
     @FXML AnchorPane personTableAnchorPane;
 
@@ -153,8 +169,7 @@ public class MainTableController implements Initializable {
 
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
-                    final PersonModel rowData = row.getItem();
-                    publisher.publishEvent(new PersonEditionRequestedEvent(rowData));
+                    startEdition(row.getItem());
                 }
             });
 
@@ -170,7 +185,7 @@ public class MainTableController implements Initializable {
     private ContextMenu createContextMenu(TableRow<PersonModel> row) {
         final ContextMenu contextMenu = new ContextMenu();
         final MenuItem editPerson = new MenuItem("Edytuj");
-        editPerson.setOnAction(event -> publisher.publishEvent(new PersonEditionRequestedEvent(row.getItem())));
+        editPerson.setOnAction(event -> startEdition(row.getItem()));
         final MenuItem exportJson = new MenuItem("Eksportuj jako JSON");
         exportJson.setOnAction(event -> {
             final String personId = row.getItem().getId();
@@ -236,6 +251,12 @@ public class MainTableController implements Initializable {
 
     public void disableControls(boolean disable) {
         disabledProperty.setValue(disable);
+
+        btnEdit.setDisable(disable);
+        btnDelete.setDisable(disable);
+        btnNewPerson.setDisable(disable);
+        btnExport.setDisable(disable);
+        btnSearch.setDisable(disable);
     }
 
     public void showSearchCriteria(PersonSearchCriteria criteria) {
@@ -250,4 +271,56 @@ public class MainTableController implements Initializable {
     private void refreshNumberOfItems() {
         textNumberOfRecords.setText("Liczba: " + personTable.getItems().size());
     }
+
+
+    @FXML
+    public void newPersonButtonClicked(ActionEvent actionEvent) {
+        new NewPersonDialog(personsService, unitsService)
+                .showDialog(stageManager.getWindow())
+                .ifPresent(person -> {
+                    final boolean success = personsService.insertPerson(person);
+
+                    if (!success) {
+                        stageManager.displayWarning("Nie udało się dodać osoby");
+                    } else {
+                        personInserted(person);
+                    }
+                });
+    }
+
+    @FXML
+    void editButtonClicked() {
+        final PersonModel editedPerson = this.personListModel.getCurrentPersonProperty().getValue();
+        if (editedPerson == null) {
+            log.warn("No person is selected - cannot edit");
+
+            stageManager.displayWarning("Nie można zacząć edycji, gdyż nie wybrano osoby");
+            return;
+        }
+        startEdition(editedPerson);
+    }
+
+    void startEdition(PersonModel editedPerson) {
+        publisher.publishEvent(new PersonEditionRequestedEvent(editedPerson));
+        disableControls(true);
+    }
+
+    @FXML
+    void searchButtonClicked(ActionEvent actionEvent) {
+        new SearchPersonDialog(unitsService)
+                .showDialog(stageManager.getWindow())
+                .ifPresent(this::showSearchCriteria);
+    }
+
+    @FXML
+    void notYetImplemented(ActionEvent actionEvent) {
+        stageManager.displayInformation("Feature is not yet implemented");
+    }
+
+    @FXML
+    void problemsExplorerClicked(ActionEvent actionEvent) {
+        problemsExplorerController.getController().show();
+    }
+
+
 }

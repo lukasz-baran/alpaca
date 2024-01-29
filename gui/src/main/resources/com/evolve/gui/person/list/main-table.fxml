@@ -1,46 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.evolve.gui.person.list.MyTextField?>
-<?import javafx.geometry.Insets?>
+<?import com.evolve.gui.person.list.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextFlow?>
-<AnchorPane fx:id="personTableAnchorPane" minHeight="0.0" minWidth="100.0" prefHeight="299.0" prefWidth="554.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.list.MainTableController">
-    <padding>
-        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-    </padding>
-    <HBox fx:id="searchCriteriaHBox" alignment="TOP_CENTER" prefHeight="18.0" prefWidth="640.0" spacing="5.0" visible="false" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-        <TextFlow>
-            <Text fx:id="textSearchCriteria" />
-            <Hyperlink fx:id="resetSearchHyperlink" text="Wyczyść" />
-        </TextFlow>
-    </HBox>
-    <TableView fx:id="personTable" layoutX="10.0" layoutY="10.0" maxWidth="1000.0" prefHeight="363.0" prefWidth="279.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
-        <columns>
-            <TableColumn fx:id="idColumn" editable="false" maxWidth="50.0" minWidth="45" text="ID" />
-            <TableColumn fx:id="firstNameColumn" editable="false" minWidth="100" text="Imię" />
-            <TableColumn fx:id="lastNameColumn" editable="false" minWidth="120" text="Nazwisko" />
-            <TableColumn fx:id="dobColumn" editable="false" maxWidth="75" minWidth="75" text="Data ur." />
-            <TableColumn fx:id="ageColumn" editable="false" maxWidth="75" minWidth="75" text="Wiek" />
-            <TableColumn fx:id="statusColumn" editable="false" maxWidth="100" minWidth="50" text="Status" />
-            <TableColumn fx:id="registryNumberColumn" editable="false" minWidth="50" text="Kartoteka" />
-        </columns>
-        <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-        </columnResizePolicy>
-    </TableView>
-    <HBox id="HBox" alignment="TOP_CENTER" prefHeight="18.0" prefWidth="640.0" spacing="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
-        <TextFlow style="--fx-background-color: red;" maxWidth="70" minWidth="70" >
-            <Text fx:id="textNumberOfRecords" text="Liczba: 0"/>
-        </TextFlow>
+<?import javafx.scene.text.*?>
 
-        <AnchorPane fx:id="autoCompletePane" prefHeight="15.0" maxHeight="15.0" prefWidth="444.0" HBox.hgrow="ALWAYS">
-            <children>
-                <MyTextField fx:id="filterField"  fx:factory="create"  AnchorPane.bottomAnchor="0.0"
-                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" HBox.hgrow="ALWAYS"
-                />
-            </children>
-        </AnchorPane>
+
+<VBox VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.evolve.gui.person.list.MainTableController" minWidth="280">
+
+    <HBox id="quickMenu" alignment="BASELINE_LEFT" maxHeight="18.0" prefHeight="18.0" spacing="5.0"
+          GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <Button fx:id="btnNewPerson" onAction="#newPersonButtonClicked" text="Nowy" />
+        <Button fx:id="btnEdit" text="Edytuj" onAction="#editButtonClicked"/>
+        <Button fx:id="btnDelete" text="Usuń" onAction="#notYetImplemented"/>
+        <Button fx:id="btnSearch" text="Szukaj" onAction="#searchButtonClicked"/>
+        <Button fx:id="btnExport" text="Błędy" onAction="#problemsExplorerClicked"/>
+        <padding>
+            <Insets left="5.0" right="5.0" top="5.0" />
+        </padding>
     </HBox>
-</AnchorPane>
+
+    <AnchorPane fx:id="personTableAnchorPane" minHeight="0.0" minWidth="100.0" prefHeight="299.0" prefWidth="554.0"
+                xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
+                VBox.vgrow="ALWAYS">
+        <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+        </padding>
+
+       <HBox fx:id="searchCriteriaHBox" alignment="TOP_CENTER" prefHeight="18.0" prefWidth="640.0"
+             spacing="5.0" visible="false"
+             AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+           <TextFlow>
+               <Text fx:id="textSearchCriteria" />
+               <Hyperlink fx:id="resetSearchHyperlink" text="Wyczyść" />
+           </TextFlow>
+       </HBox>
+
+       <TableView fx:id="personTable" layoutX="10.0" layoutY="10.0" maxWidth="1000.0" prefHeight="363.0" prefWidth="279.0"
+                  GridPane.columnIndex="0" GridPane.rowIndex="2"
+                  AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
+           <columns>
+               <TableColumn fx:id="idColumn" editable="false" maxWidth="50.0" minWidth="45" text="ID" />
+               <TableColumn fx:id="firstNameColumn" editable="false" minWidth="100" text="Imię" />
+               <TableColumn fx:id="lastNameColumn" editable="false" minWidth="120" text="Nazwisko" />
+               <TableColumn fx:id="dobColumn" editable="false" maxWidth="75" minWidth="75" text="Data ur." />
+               <TableColumn fx:id="ageColumn" editable="false" maxWidth="75" minWidth="75" text="Wiek" />
+               <TableColumn fx:id="statusColumn" editable="false" maxWidth="100" minWidth="50" text="Status" />
+               <TableColumn fx:id="registryNumberColumn" editable="false" minWidth="50" text="Kartoteka" />
+           </columns>
+           <columnResizePolicy>
+               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+           </columnResizePolicy>
+       </TableView>
+
+       <HBox id="HBox" alignment="TOP_CENTER" prefHeight="18.0" prefWidth="640.0" spacing="5.0"
+             AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+           <TextFlow maxWidth="70" minWidth="70" style="--fx-background-color: red;">
+               <Text fx:id="textNumberOfRecords" text="Liczba: 0" />
+           </TextFlow>
+
+           <AnchorPane fx:id="autoCompletePane" maxHeight="15.0" prefHeight="15.0" prefWidth="444.0" HBox.hgrow="ALWAYS">
+               <MyTextField fx:id="filterField" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" HBox.hgrow="ALWAYS" fx:factory="create" />
+           </AnchorPane>
+       </HBox>
+
+    </AnchorPane>
+
+
+</VBox>

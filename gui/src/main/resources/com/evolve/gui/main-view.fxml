@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox prefHeight="494.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/19"
@@ -25,19 +24,6 @@
             <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" text="O programie"/>
         </Menu>
     </MenuBar>
-
-    <HBox id="quickMenu" alignment="BASELINE_LEFT" prefHeight="18.0"
-          spacing="5.0" AnchorPane.bottomAnchor="5.0"
-          AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
-        <Button fx:id="btnNew" text="Nowy" onAction="#newPersonButtonClicked"/>
-        <Button fx:id="btnEdit" text="Edytuj" onAction="#editButtonClicked"/>
-        <Button fx:id="btnDelete" text="Usuń" onAction="#notYetImplemented"/>
-        <Button fx:id="btnSearch" text="Szukaj" onAction="#searchButtonClicked"/>
-        <Button fx:id="btnExport" text="Błędy" onAction="#problemsExplorerClicked"/>
-        <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-        </padding>
-    </HBox>
 
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0"
                 VBox.vgrow="ALWAYS">

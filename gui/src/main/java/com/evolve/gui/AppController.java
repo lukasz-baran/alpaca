@@ -1,34 +1,27 @@
 package com.evolve.gui;
 
 import com.evolve.alpaca.conf.LocalUserConfiguration;
+import com.evolve.alpaca.gui.help.AboutDialogWindow;
+import com.evolve.alpaca.gui.units.UnitsController;
 import com.evolve.alpaca.importing.importDbf.ImportDbfService;
 import com.evolve.alpaca.importing.importDoc.ImportAlphanumeric;
 import com.evolve.alpaca.importing.importDoc.ImportPeople;
 import com.evolve.alpaca.importing.importDoc.group.GrupyAlfabetyczne;
 import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
 import com.evolve.gui.admin.importDbf.ImportDbfDialog;
-import com.evolve.gui.components.NewPersonDialog;
-import com.evolve.alpaca.gui.units.UnitsController;
 import com.evolve.gui.documents.DocumentEntry;
 import com.evolve.gui.documents.DocumentsController;
-import com.evolve.gui.events.PersonEditionFinishedEvent;
-import com.evolve.alpaca.gui.help.AboutDialogWindow;
 import com.evolve.gui.person.PersonDetailsController;
 import com.evolve.gui.person.accounts.PersonAccountsController;
-import com.evolve.gui.person.list.MainTableController;
 import com.evolve.gui.person.event.PersonEditionRequestedEvent;
+import com.evolve.gui.person.list.MainTableController;
 import com.evolve.gui.person.list.PersonListModel;
-import com.evolve.gui.person.list.search.SearchPersonDialog;
 import com.evolve.gui.person.originalDetails.OriginalDetailsController;
-import com.evolve.gui.person.problemsExplorer.ProblemsExplorerController;
-import com.evolve.services.PersonsService;
-import com.evolve.services.UnitsService;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -61,8 +54,6 @@ public class AppController implements Initializable {
     private final PersonListModel personListModel;
 
     private final ImportDbfService importDbfService;
-    private final PersonsService personsService;
-    private final UnitsService unitsService;
     private final FxWeaver fxWeaver;
     private final StageManager stageManager;
     private final LocalUserConfiguration localUserConfiguration;
@@ -73,16 +64,8 @@ public class AppController implements Initializable {
     private final PersonDetailsController personDetailsController;
     private final MainTableController mainTableController;
 
-    private final FxControllerAndView<ProblemsExplorerController, VBox> problemsExplorerController;
     private final FxControllerAndView<PersonAccountsController, VBox> personAccountsController;
     private final FxControllerAndView<DocumentsController, VBox> documentsController;
-
-    public Button btnNew;
-    public Button btnEdit;
-    public Button btnDelete;
-    public Button btnExport;
-    public Button btnSearch;
-
 
     @FXML TabPane tabsPane;
     @FXML Tab tabPersonDetails;
@@ -132,51 +115,13 @@ public class AppController implements Initializable {
         System.exit(0);
     }
 
-    public void problemsExplorerClicked(ActionEvent actionEvent) {
-        problemsExplorerController.getController().show();
+    @FXML
+    void newPersonButtonClicked(ActionEvent actionEvent) {
+        mainTableController.newPersonButtonClicked(actionEvent);
     }
 
-    public void notYetImplemented(ActionEvent actionEvent) {
-        stageManager.displayInformation("Feature is not yet implemented");
-    }
-
-    public void newPersonButtonClicked(ActionEvent actionEvent) {
-        new NewPersonDialog(personsService, unitsService)
-            .showDialog(stageManager.getWindow())
-            .ifPresent(person -> {
-                final boolean success = personsService.insertPerson(person);
-
-                if (!success) {
-                    stageManager.displayWarning("Nie udało się dodać osoby");
-                } else {
-                    mainTableController.personInserted(person);
-                }
-            });
-    }
-
-    public void editButtonClicked() {
-        if (this.personListModel.getCurrentPersonProperty().getValue() == null) {
-            log.warn("No person is selected - cannot edit");
-
-            stageManager.displayWarning("Nie można zacząć edycji, gdyż nie wybrano osoby");
-            return;
-        }
-
-        // change active tab to person details:
-        tabsPane.getSelectionModel().select(tabPersonDetails);
-
-        personDetailsController.setEditable(true);
-        mainTableController.disableControls(true);
-        disableControls(true);
-    }
-
-    public void searchButtonClicked(ActionEvent actionEvent) {
-        new SearchPersonDialog(unitsService)
-                .showDialog(stageManager.getWindow())
-                .ifPresent(mainTableController::showSearchCriteria);
-    }
-
-    public void importDbfClicked(ActionEvent actionEvent) {
+    @FXML
+    void importDbfClicked(ActionEvent actionEvent) {
         new ImportDbfDialog(stageManager, localUserConfiguration)
                 .showDialog(stageManager.getWindow())
                 .ifPresent(dbFiles -> {
@@ -188,7 +133,8 @@ public class AppController implements Initializable {
                 });
     }
 
-    public void importPeopleClicked(ActionEvent actionEvent) {
+    @FXML
+    void importPeopleClicked(ActionEvent actionEvent) {
         final List<PersonFromDoc> people = new ImportPeople(false).processFile();
 
         final GrupyAlfabetyczne grupyAlfabetyczne = new ImportAlphanumeric()
@@ -198,20 +144,11 @@ public class AppController implements Initializable {
     @EventListener
     public void onApplicationEvent(PersonEditionRequestedEvent event) {
         // we pass null because the person is already set in the model
-        editButtonClicked();
-    }
 
-    @EventListener
-    public void onApplicationEvent(PersonEditionFinishedEvent event) {
-        disableControls(false);
-    }
+        // change active tab to person details:
+        tabsPane.getSelectionModel().select(tabPersonDetails);
 
-    void disableControls(boolean disable) {
-        btnEdit.setDisable(disable);
-        btnDelete.setDisable(disable);
-        btnNew.setDisable(disable);
-        btnExport.setDisable(disable);
-        btnSearch.setDisable(disable);
+        personDetailsController.setEditable(true);
     }
 
 }
