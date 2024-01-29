@@ -16,7 +16,6 @@ import com.evolve.gui.person.accounts.PersonAccountsController;
 import com.evolve.gui.person.event.PersonEditionRequestedEvent;
 import com.evolve.gui.person.list.MainTableController;
 import com.evolve.gui.person.list.PersonListModel;
-import com.evolve.gui.person.originalDetails.OriginalDetailsController;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
@@ -34,7 +33,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxControllerAndView;
-import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -54,7 +52,6 @@ public class AppController implements Initializable {
     private final PersonListModel personListModel;
 
     private final ImportDbfService importDbfService;
-    private final FxWeaver fxWeaver;
     private final StageManager stageManager;
     private final LocalUserConfiguration localUserConfiguration;
 
@@ -85,8 +82,6 @@ public class AppController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Locale.setDefault(new Locale("pl"));
-        tabPersonDetails.setContent(fxWeaver.loadView(PersonDetailsController.class));
-        tabOriginalDetails.setContent(fxWeaver.loadView(OriginalDetailsController.class));
 
         personAccountsController.getView()
                         .ifPresent(vBox -> tabPersonAdditionalData.setContent(vBox));
