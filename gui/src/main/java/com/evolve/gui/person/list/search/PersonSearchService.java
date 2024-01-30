@@ -31,6 +31,7 @@ public class PersonSearchService {
                         .unitNumber(criteria.unitNumber())
                         .hasDocuments(criteria.hasDocuments())
                         .status(criteria.personStatus())
+                        .gender(criteria.personGender())
                         .build());
 
         if (!criteria.hasAccountUnits().isEmpty() || !criteria.hasAccountTypes().isEmpty()) {

@@ -1,6 +1,7 @@
 package com.evolve.gui.person.list.search;
 
 import com.evolve.domain.Account;
+import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatus;
 import com.evolve.domain.Unit;
 import com.evolve.gui.DialogWindow;
@@ -23,13 +24,13 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 @Slf4j
 public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
 
     private final ComboBox<UnitNumberItem> unitNumberCombo;
     private final CheckBox hasDocumentsCheckBox = new CheckBox();
+    private final ComboBox<GenderSearchItem> personGenderCombo;
     private final ComboBox<PersonStatusSearchItem> personStatusCombo;
 
     // accounts-related checkboxes:
@@ -53,12 +54,8 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
                 .toList());
         this.unitNumberCombo = new ComboBox<>(units);
 
-        final ObservableList<PersonStatusSearchItem> statuses = FXCollections.observableArrayList();
-        statuses.add(PersonStatusSearchItem.ALL);
-        statuses.addAll(Stream.of(PersonStatus.values())
-                .map(PersonStatusSearchItem::new)
-                .toList());
-        this.personStatusCombo = new ComboBox<>(statuses);
+        this.personStatusCombo = new ComboBox<>(PersonStatusSearchItem.getSearchItems());
+        this.personGenderCombo = new ComboBox<>(GenderSearchItem.getSearchItems());
     }
 
     @Override
@@ -87,10 +84,14 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
                                 hasDocumentsCheckBox.isSelected();
 
                 final PersonStatus personStatus = Optional.ofNullable(personStatusCombo.getValue())
-                        .map(PersonStatusSearchItem::getPersonStatus)
+                        .map(PersonStatusSearchItem::personStatus)
                         .orElse(null);
 
-                return new PersonSearchCriteria(unitNumber, hasDocuments, personStatus,
+                final Person.Gender personGender = Optional.ofNullable(personGenderCombo.getValue())
+                        .map(GenderSearchItem::gender)
+                        .orElse(null);
+
+                return new PersonSearchCriteria(unitNumber, hasDocuments, personStatus, personGender,
                         getSelectedAccountTypes(),
                         getSelectedAccountUnitNumbers());
             }
@@ -117,6 +118,9 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
         gridPersonCriteria.add(new Label("Status:"), 0, 3);
         gridPersonCriteria.add(personStatusCombo, 1, 3);
 
+        gridPersonCriteria.add(new Label("Płeć:"), 0, 4);
+        gridPersonCriteria.add(personGenderCombo, 1, 4);
+
         final ChangeListener<Boolean> listener = (prop, old, val) -> {
             updateLabelOnAttachments(hasDocumentsCheckBox);
             validateSaveButton(saveButton);
@@ -129,6 +133,10 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
 
         personStatusCombo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) ->
                 validateSaveButton(saveButton));
+
+        personGenderCombo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) ->
+                validateSaveButton(saveButton));
+
         return gridPersonCriteria;
     }
 
@@ -190,6 +198,7 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
             Objects.nonNull(unitNumberCombo.getValue()) ||
             !hasDocumentsCheckBox.isIndeterminate() ||
             Objects.nonNull(personStatusCombo.getValue()) ||
+            Objects.nonNull(personGenderCombo.getValue()) ||
             isAnyAccountSelected();
 
         saveButton.setDisable(!enableSaveButton);

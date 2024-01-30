@@ -47,7 +47,7 @@ public class PersonsService implements FindPerson {
     }
 
     private List<Person> findPersons(PersonLookupCriteria criteria) {
-        var personBuilder = Person.builder();
+        final Person.PersonBuilder personBuilder = Person.builder();
         boolean hasCriteria = false;
 
         if (StringUtils.isNotEmpty(criteria.getUnitNumber())) {
@@ -57,6 +57,11 @@ public class PersonsService implements FindPerson {
 
         if (criteria.getStatus() != null) {
             personBuilder.status(PersonStatusDetails.builder().status(criteria.getStatus()).build());
+            hasCriteria = true;
+        }
+
+        if (criteria.getGender() != null) {
+            personBuilder.gender(criteria.getGender());
             hasCriteria = true;
         }
 

@@ -24,6 +24,7 @@ public class PersonLookupCriteria {
     private String unitNumber;
     private Boolean hasDocuments;
     private PersonStatus status;
+    private Person.Gender gender;
 
     @JsonIgnore
     public Sort getSort() {
