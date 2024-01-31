@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @Builder
 @Embeddable
-public class PersonStatusChange {
+public class PersonStatusChange implements Comparable<PersonStatusChange> {
 
     private EventType eventType;
     @Column(name = "whenAdded")
@@ -52,6 +52,19 @@ public class PersonStatusChange {
         return eventType == EventType.DIED;
     }
 
+    @Override
+    public int compareTo(PersonStatusChange o) {
+        if (eventType == EventType.BORN) {
+            return -1;
+        }
+
+        if (eventType == EventType.DIED) {
+            return 1;
+        }
+
+        return this.eventType.compareTo(o.eventType);
+    }
+
     @Getter
     @RequiredArgsConstructor
     public enum EventType {
@@ -60,7 +73,7 @@ public class PersonStatusChange {
         RESIGNED("Rezygnacja"),
         DIED("Zmarł(a)"),
         REMOVED("Skreślenie"),
-        ACCOUNT_CREATED("Data założenia");
+        ARCHIVED("Usunięcie");
 
         private final String name;
 

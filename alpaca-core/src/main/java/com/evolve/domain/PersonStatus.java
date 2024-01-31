@@ -11,7 +11,8 @@ public enum PersonStatus {
     DEAD("Nie żyje"),
     RESIGNED("Rezygnacja"),
     REMOVED("Skreślenie"),
-    UNKNOWN("Nieznany");
+    UNKNOWN("Nieznany"),
+    ARCHIVED("Usunięcie");
 
     private final String name;
 

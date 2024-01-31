@@ -9,10 +9,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 
@@ -47,7 +44,11 @@ public class Person implements Serializable {
     private List<String> previousLastNames; // poprzednie nazwiska (panieńskie, przed zmianą nazwiska)
 
     private LocalDate dob; // urodzony/urodzona
-    private LocalDate memberSince; // data założenia konta
+
+    private String pesel;
+    private String idNumber; // nr dowodu osobistego
+    private Boolean retired; // na emeryturze
+    private Boolean exemptFromFees; // zwolniony ze składek
 
     @Valid
     @ElementCollection(targetClass = PersonAddress.class) //, fetch = FetchType.EAGER)
@@ -84,20 +85,17 @@ public class Person implements Serializable {
     @ElementCollection(targetClass = Comment.class) //, fetch = FetchType.EAGER)
     @CollectionTable(name = "person_comments", joinColumns = @JoinColumn(name = "person_id"))
     @LazyCollection(LazyCollectionOption.FALSE)
-//    @AttributeOverrides({
-//            @AttributeOverride(name = "addressLine1", column = @Column(name = "house_number")),
-//            @AttributeOverride(name = "addressLine2", column = @Column(name = "street"))
-//    })
     private List<Comment> comments; // notatki
 
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name="raw_data_key")
     @Column(name="raw_data_value")
-    //@CollectionTable(name="person_raw_data", joinColumns=@JoinColumn(name="person_id"))
     private Map<String, String> rawData;
 
     public void setStatusChanges(List<PersonStatusChange> statusChanges) {
-        this.statusChanges = statusChanges;
+        // TODO this is experimental
+        this.statusChanges = List.copyOf(new TreeSet<>(statusChanges));
+
         emptyIfNull(statusChanges).stream()
                 .filter(statusChange -> statusChange.getEventType() == PersonStatusChange.EventType.BORN)
                 .findFirst()
@@ -174,40 +172,13 @@ public class Person implements Serializable {
 
 
     public void addOrUpdateStatusChange(PersonStatusChange.EventType eventType, LocalDate when) {
-        if (this.statusChanges == null) {
-            this.statusChanges = new ArrayList<>();
-        }
-        this.statusChanges
-                .stream()
-                .filter(personStatusChange -> personStatusChange.getEventType() == eventType)
-                .findFirst()
-                .ifPresentOrElse(statusChange -> {
-                            statusChange.setWhen(when);
-                            statusChange.setEventType(eventType);
-                        },
-                        () -> addNewStatusChange(eventType, when));
+        final PersonStatusDeducer personStatusDeducer = new PersonStatusDeducer(this);
+        personStatusDeducer.addOrUpdateStatusChange(eventType, when);
 
-        this.status = PersonStatusDetails.basedOnStatusChange(this.statusChanges);
+        this.statusChanges = personStatusDeducer.getStatusChanges();
+        this.status = personStatusDeducer.getStatus();
+        personStatusDeducer.getDob().ifPresent(newDob -> this.dob = newDob);
+
     }
-
-    private void addNewStatusChange(PersonStatusChange.EventType eventType, LocalDate when) {
-        PersonStatusChange newPersonStatusChange = PersonStatusChange.builder()
-                .eventType(eventType)
-                .when(when)
-                .build();
-
-        if (eventType == PersonStatusChange.EventType.BORN) {
-            this.dob = when;
-            this.statusChanges.add(0, newPersonStatusChange);
-        } else {
-            this.statusChanges.stream()
-                    .filter(PersonStatusChange::isDeathDate)
-                    .findFirst()
-                    .ifPresentOrElse(element -> statusChanges.add(statusChanges.indexOf(element), newPersonStatusChange),
-                    () -> this.statusChanges.add(newPersonStatusChange));
-        }
-    }
-
-
 
 }
