@@ -2,6 +2,7 @@ package com.evolve.gui.person.list;
 
 import com.evolve.domain.*;
 import javafx.beans.property.*;
+import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDate;
@@ -22,6 +23,9 @@ public class PersonModel {
     private final SimpleStringProperty status;
     private final SimpleLongProperty registryNumber;
 
+    @Getter
+    private final PersonStatus personStatus;
+
     PersonModel(String id, String firstName, String lastName, LocalDate dob, PersonStatus status, Long registryNumber) {
         this.id = new SimpleStringProperty(id);
         this.firstName = new SimpleStringProperty(firstName);
@@ -30,6 +34,7 @@ public class PersonModel {
         this.age = new SimpleLongProperty(calculateAge(dob, status));
         this.status = new SimpleStringProperty(status.toString());
         this.registryNumber = new SimpleLongProperty(registryNumber);
+        this.personStatus = status;
     }
 
     PersonModel(PersonListView person) {

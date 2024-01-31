@@ -4,6 +4,7 @@ import com.evolve.alpaca.importing.event.DbfImportCompletedEvent;
 import com.evolve.alpaca.utils.LogUtil;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
+import com.evolve.domain.PersonStatus;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.components.NewPersonDialog;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
@@ -180,6 +181,13 @@ public class MainTableController implements Initializable {
         });
 
         resetSearchHyperlink.setOnAction(event -> showSearchCriteria(PersonSearchCriteria.empty()));
+
+        // handle buttons for ARCHIVED persons:
+        this.personListModel.getCurrentPersonProperty().addListener((observable, oldValue, newValue) -> {
+            final boolean markAsArchived = newValue != null && newValue.getPersonStatus() == PersonStatus.ARCHIVED;
+            btnEdit.setDisable(markAsArchived);
+            btnDelete.setDisable(markAsArchived);
+        });
     }
 
     private ContextMenu createContextMenu(TableRow<PersonModel> row) {
@@ -301,6 +309,11 @@ public class MainTableController implements Initializable {
     }
 
     void startEdition(PersonModel editedPerson) {
+        if (editedPerson.getPersonStatus() == PersonStatus.ARCHIVED) {
+            stageManager.displayWarning("Nie można edytować osób usuniętych");
+            return;
+        }
+
         publisher.publishEvent(new PersonEditionRequestedEvent(editedPerson));
         disableControls(true);
     }

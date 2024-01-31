@@ -39,6 +39,7 @@ public class PersonFixer implements InitializingBean {
     public static final String PREVIOUS_NAME_KEY = "previousName";
     public static final String REGISTRY_NAME_KEY = "registryNumber";
     public static final String OLD_REGISTRY_NAME_KEY = "oldRegistryNumber";
+    public static final String ARCHIVED_DATE_NAME_KEY = "archivedDate"; // status nadawany przede wszystkim skasowanym rekordom
 
 
     public static final Map<String, String> FIXER_TAGS_TO_TEXT = ImmutableMap.<String, String>builder()
@@ -53,6 +54,7 @@ public class PersonFixer implements InitializingBean {
                 .put(PREVIOUS_NAME_KEY, "Poprzednie nazwisko")
                 .put(REGISTRY_NAME_KEY, "Numer kartoteki")
                 .put(OLD_REGISTRY_NAME_KEY, "Numer starej kartoteki")
+                .put(ARCHIVED_DATE_NAME_KEY, "Data usunięcia")
                 .build();
 
     public static final String ID = "id";
@@ -128,6 +130,7 @@ public class PersonFixer implements InitializingBean {
             case PREVIOUS_NAME_KEY -> addPreviousLastName(person, newValue);
             case REGISTRY_NAME_KEY -> person.setRegistryNumber(RegistryNumber.of(newValue));
             case OLD_REGISTRY_NAME_KEY -> person.setOldRegistryNumber(RegistryNumber.of(newValue));
+            case ARCHIVED_DATE_NAME_KEY -> DateParser.parse(newValue).ifPresent(dateOfArchival -> addPersonArchivedDate(person, dateOfArchival));
             default -> {}
         }
     }
@@ -156,6 +159,10 @@ public class PersonFixer implements InitializingBean {
 
     private void addPersonRemovedDate(Person person, LocalDate dateOfRemoved) {
         person.addOrUpdateStatusChange(PersonStatusChange.EventType.REMOVED, dateOfRemoved);
+    }
+
+    private void addPersonArchivedDate(Person person, LocalDate dateOfArchived) {
+        person.addOrUpdateStatusChange(PersonStatusChange.EventType.ARCHIVED, dateOfArchived);
     }
 
     public void addPreviousLastName(Person person, String previousLastName) {

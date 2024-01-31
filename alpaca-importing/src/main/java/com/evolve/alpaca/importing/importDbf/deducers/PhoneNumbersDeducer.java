@@ -21,6 +21,7 @@ public class PhoneNumbersDeducer extends AbstractSmartDeducer<List<String>> {
         return Optional.of(guesses.stream()
                 .filter(StringUtils::isNotBlank)
                 .filter(not(PhoneNumbersDeducer::containsOnlyDots))
+                .filter(PhoneNumbersDeducer::containsAtLeastOneDigit)
                 .map(String::trim)
                 .collect(Collectors.toList()));
     }
@@ -28,6 +29,10 @@ public class PhoneNumbersDeducer extends AbstractSmartDeducer<List<String>> {
     @Override
     public List<String> removeGuesses(List<String> guesses) {
         return guesses;
+    }
+
+    static boolean containsAtLeastOneDigit(String entry) {
+        return StringUtils.containsAny(entry, "0123456789");
     }
 
     static boolean containsOnlyDots(String entry) {

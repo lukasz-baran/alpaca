@@ -84,6 +84,12 @@ public class PersonStatusDetails {
                 .build();
     }
 
+    public static PersonStatusDetails archived() {
+        return PersonStatusDetails.builder()
+                .status(PersonStatus.ARCHIVED)
+                .build();
+    }
+
     public static PersonStatusDetails basedOnStatusChange(List<PersonStatusChange> statusChanges) {
         if (!statusChanges.isEmpty()) {
             final int lastIndex = statusChanges.size() - 1;
@@ -98,6 +104,7 @@ public class PersonStatusDetails {
             case DIED ->  PersonStatusDetails.dead(change.getOriginalValue());
             case RESIGNED -> PersonStatusDetails.resigned(change.getOriginalValue());
             case REMOVED -> PersonStatusDetails.removed(change.getOriginalValue());
+            case ARCHIVED -> PersonStatusDetails.archived();
             default -> PersonStatusDetails.active();
         };
     }
