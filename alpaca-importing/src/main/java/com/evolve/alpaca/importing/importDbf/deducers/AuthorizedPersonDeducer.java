@@ -9,8 +9,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static java.util.function.Predicate.not;
-
 public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.AuthorizedPerson>> {
 
     private static final Set<PersonRelative> RELATIVE_TYPES = Set.of(
@@ -34,7 +32,8 @@ public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.Au
             PersonRelative.of("up. matka", "matka"),
             PersonRelative.of("br.", "brat"),
             PersonRelative.of("oj.", "ojciec"),
-            PersonRelative.of("up. narzcz.", "narzeczony(a)")
+            PersonRelative.of("up. narzcz.", "narzeczony(a)"),
+            PersonRelative.of("up.", "mąż", "mąż")
         );
     // TODO handle other relations
     // TODO handle two relatives ->
@@ -45,34 +44,62 @@ public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.Au
 
     private static final Predicate<String> isAnyRelation = guess -> RELATIVE_TYPES.stream().anyMatch(relativeType -> relativeType.isRelation().test(guess));
 
-    public AuthorizedPersonDeducer(IssuesLogger.ImportIssues issues) {
+    /**
+     * {@code true} remove matched lines
+     */
+    private final boolean removeGuesses;
+
+    public AuthorizedPersonDeducer(IssuesLogger.ImportIssues issues, boolean removeGuesses) {
         super(issues);
+        this.removeGuesses = removeGuesses;
     }
 
     @Override
     public Optional<List<Person.AuthorizedPerson>> deduceFrom(List<String> guesses) {
-        return RELATIVE_TYPES.stream()
-                .map(relativeType -> relativeType.deduceAuthorizedPerson(guesses))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .findFirst()
-                .map(List::of);
+        final List<Person.AuthorizedPerson> authorizedPeople = deduce(guesses);
+
+        if (!authorizedPeople.isEmpty()) {
+            removeGuesses(guesses);
+            return Optional.of(authorizedPeople);
+        }
+        return Optional.empty();
     }
 
     @Override
     public List<String> removeGuesses(List<String> guesses) {
-        return guesses.stream()
-                .filter(not(isAnyRelation))
+        if (this.removeGuesses) {
+            guesses.removeIf(isAnyRelation);
+        }
+        return guesses;
+//        return guesses.stream()
+//                .filter(not(isAnyRelation))
+//                .collect(Collectors.toList());
+    }
+
+    private List<Person.AuthorizedPerson> deduce(List<String> guesses) {
+        return RELATIVE_TYPES.stream()
+                .map(relativeType -> relativeType.deduceAuthorizedPerson(guesses))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    public record PersonRelative(String distinct, String relation) {
+
+    public record PersonRelative(String prefix, String relation, String suffix) {
         static PersonRelative of(String distinct, String relation) {
-            return new PersonRelative(distinct, relation);
+            return new PersonRelative(distinct, relation, null);
+        }
+
+        static PersonRelative of(String prefix, String relation, String suffix) {
+            return new PersonRelative(prefix, relation, suffix);
         }
 
         Predicate<String> isRelation() {
-            return s -> StringUtils.isNotBlank(s) && s.startsWith(this.distinct);
+            if (StringUtils.isEmpty(suffix)) {
+                return s -> StringUtils.isNotBlank(s) && s.startsWith(this.prefix);
+            } else {
+                return s -> StringUtils.isNotBlank(s) && s.startsWith(this.prefix) && s.endsWith(this.suffix);
+            }
         }
 
         Optional<Person.AuthorizedPerson> deduceAuthorizedPerson(List<String> guesses) {
@@ -80,7 +107,7 @@ public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.Au
                     .filter(isRelation())
                     .findFirst();
             return maybeRelation.map(goodGuess -> {
-                        final String trimmed = StringUtils.removeStart(goodGuess, this.distinct).trim();
+                        final String trimmed = StringUtils.removeStart(goodGuess, this.prefix).trim();
                         return trimmed.split(" ");
                     })
                     .filter(afterSplit -> afterSplit.length > 1)

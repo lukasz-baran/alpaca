@@ -95,7 +95,7 @@ public class PersonModel {
         this.lastName.set(updatedPerson.getLastName());
         this.dob.set(updatedPerson.getDob());
 
-        final Optional<PersonStatus> maybePersonStatus = Optional.ofNullable(updatedPerson.getStatus()).map(PersonStatusDetails::getStatus);
+        final Optional<PersonStatus> maybePersonStatus = Optional.ofNullable(updatedPerson.getStatus());
         this.age.set(calculateAge(updatedPerson.getDob(), maybePersonStatus.orElse(null)));
         maybePersonStatus.ifPresent(status -> this.status.set(status.getName()));
 

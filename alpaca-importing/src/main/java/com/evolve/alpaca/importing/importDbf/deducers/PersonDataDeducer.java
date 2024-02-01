@@ -1,10 +1,11 @@
 package com.evolve.alpaca.importing.importDbf.deducers;
 
+import com.evolve.alpaca.importing.PersonStatusDetails;
 import com.evolve.alpaca.importing.importDbf.RegistryNumbers;
 import com.evolve.alpaca.utils.DateUtils;
-import com.evolve.domain.*;
 import com.evolve.alpaca.importing.DateParser;
 import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
+import com.evolve.domain.*;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -23,7 +25,7 @@ public class PersonDataDeducer {
     private final DbfPerson person;
     private final IssuesLogger issuesLogger;
     private final RegistryNumbers registryNumbers;
-    private List<String> guesses;
+    private final List<String> guesses;
 
     public PersonDataDeducer(DbfPerson person, IssuesLogger issuesLogger, RegistryNumbers registryNumbers) {
         this.person = person;
@@ -34,7 +36,10 @@ public class PersonDataDeducer {
                 StringUtils.trim(person.getNAZ_ODB5()),
                 StringUtils.trim(person.getNAZ_ODB6()),
                 StringUtils.trim(person.getNAZ_ODB7()),
-                StringUtils.trim(person.getINFO()));
+                StringUtils.trim(person.getINFO()))
+                .stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
 
         this.registryNumbers = registryNumbers;
     }
@@ -53,11 +58,10 @@ public class PersonDataDeducer {
         // adres osoby
         final Optional<Address> maybeAddress = new SmartAddressPersonDeducer(issues, true).deduceFrom(guesses);
 
-        final AuthorizedPersonDeducer authorizedPersonDeducer = new AuthorizedPersonDeducer(issues);
-        Optional<List<Person.AuthorizedPerson>> maybeAuthorizedPerson = authorizedPersonDeducer.deduceFrom(guesses);
-        if (maybeAuthorizedPerson.isPresent()) {
-            guesses = authorizedPersonDeducer.removeGuesses(guesses);
-        }
+        // osoby upoważnione
+        final List<Person.AuthorizedPerson> authorizedPeople =
+                        new AuthorizedPersonDeducer(issues, true).deduceFrom(guesses)
+                        .orElse(List.of());
 
         final Optional<LocalDate> maybeDob = new PersonDateOfBirthDeducer(issues).deduceFrom(guesses);
         final Optional<LocalDate> maybeJoiningDate = new JoiningDateDeducer(issues).deduceFrom(guesses);
@@ -66,9 +70,6 @@ public class PersonDataDeducer {
                 maybeAddress.map(address -> new Person.PersonAddress(address, Person.AddressType.HOME))
                         .map(List::of)
                         .orElse(List.of());
-
-        final List<Person.AuthorizedPerson> authorizedPeople =
-                maybeAuthorizedPerson.orElse(List.of());
 
         final Optional<PersonStatusDetails> personStatusDetails = new StatusPersonDeducer().deduceFrom(guesses);
 
@@ -89,6 +90,9 @@ public class PersonDataDeducer {
 
         final List<PersonStatusChange> statusChanges = deduceStatusChanges(maybeDob, maybeJoiningDate, personStatusDetails);
 
+        final PersonStatus personStatus = personStatusDetails.map(PersonStatusDetails::getStatus)
+                .orElse(null);
+
         final Person personData = Person.builder()
                 .personId(personId.map(PersonId::toString).orElse(null))
                 .firstName(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getFirstName).orElse(null))
@@ -100,7 +104,7 @@ public class PersonDataDeducer {
                 .oldRegistryNumber(oldRegistryNumber.orElse(null))
                 .addresses(personAddresses)
                 .authorizedPersons(authorizedPeople)
-                .status(personStatusDetails.orElse(null))
+                .status(personStatus)
                 .statusChanges(statusChanges)
                 .contactData(contactData)
                 .unitNumber(unitNumber.orElse(null))

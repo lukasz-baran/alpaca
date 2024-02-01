@@ -10,8 +10,10 @@ import java.util.regex.Pattern;
 @Slf4j
 public class SmartAddressPersonDeducer extends AbstractSmartDeducer<Address>{
 
-    // \p{IsAlphabetic} - includes also Polish characters ąćż..
-    static final Pattern CITY_CODE_PATTERN = Pattern.compile("\\d{2}-\\d{3} [\\p{IsAlphabetic} ]+");
+    /**
+     * Note: {@code \p{IsAlphabetic}} will include also Polish characters such as: ąćż…
+     */
+    static final Pattern CITY_CODE_PATTERN = Pattern.compile("\\d{2}-\\d{3} [\\p{IsAlphabetic} ]+\\.?");
 
     //ul. Wyspiañskiego 63/2
     //8-go Marca

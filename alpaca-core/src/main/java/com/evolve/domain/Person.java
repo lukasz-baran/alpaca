@@ -1,6 +1,5 @@
 package com.evolve.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -9,7 +8,9 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 
@@ -61,18 +62,12 @@ public class Person implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<PersonContactData> contactData;
 
-    @JsonIgnore
-    public Optional<String> getEmail() {
-        return PersonContactData.findEmail(contactData);
-    }
-
     @ElementCollection(targetClass = BankAccount.class) //, fetch = FetchType.EAGER)
     @CollectionTable(name = "person_bank_accounts", joinColumns = @JoinColumn(name = "person_id"))
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<BankAccount> bankAccounts;
 
-    @Embedded
-    private PersonStatusDetails status;
+    private PersonStatus status;
 
     @ElementCollection(targetClass = PersonStatusChange.class) //, fetch = FetchType.EAGER)
     @LazyCollection(LazyCollectionOption.FALSE)

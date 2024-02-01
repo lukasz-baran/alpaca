@@ -40,6 +40,10 @@ public class PersonStatusChange implements Comparable<PersonStatusChange> {
         return new PersonStatusChange(EventType.RESIGNED, null, originalValue);
     }
 
+    public static PersonStatusChange resigned(LocalDate when) {
+        return new PersonStatusChange(EventType.RESIGNED, when);
+    }
+
     public static PersonStatusChange died(LocalDate when, String originalValue) {
         return new PersonStatusChange(EventType.DIED, when, originalValue);
     }

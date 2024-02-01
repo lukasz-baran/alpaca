@@ -1,7 +1,7 @@
 package com.evolve.alpaca.importing.importDoc.group;
 
+import com.evolve.alpaca.importing.PersonStatusDetails;
 import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
-import com.evolve.domain.PersonStatusDetails;
 import com.evolve.domain.RegistryNumber;
 import lombok.extern.slf4j.Slf4j;
 

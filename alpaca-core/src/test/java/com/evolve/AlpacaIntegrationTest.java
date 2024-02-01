@@ -115,7 +115,7 @@ public class AlpacaIntegrationTest {
                 .firstName(TEST_FIRST_NAME)
                 .lastName(TEST_LAST_NAME)
                 .unitNumber(TEST_UNIT_NAME)
-                .status(PersonStatusDetails.unknown())
+                .status(PersonStatus.UNKNOWN)
                 .build();
         personsService.insertPerson(newPerson);
 

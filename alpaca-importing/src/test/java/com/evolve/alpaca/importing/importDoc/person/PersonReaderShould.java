@@ -1,6 +1,6 @@
 package com.evolve.alpaca.importing.importDoc.person;
 
-import com.evolve.domain.PersonStatusDetails;
+import com.evolve.alpaca.importing.PersonStatusDetails;
 import com.evolve.domain.RegistryNumber;
 import org.junit.jupiter.api.Test;
 

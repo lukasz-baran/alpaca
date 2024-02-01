@@ -1,14 +1,10 @@
 package com.evolve.gui.person.status;
 
 import com.evolve.domain.Person;
-import com.evolve.domain.PersonStatus;
 import com.evolve.domain.PersonStatusChange;
-import com.evolve.domain.PersonStatusDetails;
 import com.evolve.gui.EditableGuiElement;
 import com.evolve.gui.StageManager;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -25,7 +21,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 

@@ -1,6 +1,6 @@
 package com.evolve.alpaca.importing.importDoc.group;
 
-import com.evolve.domain.PersonStatusDetails;
+import com.evolve.alpaca.importing.PersonStatusDetails;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,7 +1,6 @@
 package com.evolve.alpaca.importing.importDbf.deducers;
 
-import com.evolve.domain.PersonStatus;
-import com.evolve.domain.PersonStatusDetails;
+import com.evolve.alpaca.importing.PersonStatusDetails;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -32,20 +31,24 @@ class StatusPersonDeducerShould {
 
     @Test
     void deduceIfPersonResigned() {
-        PersonStatusDetails result = deducer.deduceFrom(List.of("rez. 04.03."))
-                .orElseThrow(AssertionError::new);
+        assertThat(deducer.deduceFrom(List.of("rez. 04.03.")).orElseThrow())
+                .isEqualTo(PersonStatusDetails.resigned("04.03."));
 
-        assertThat(result.getStatus())
-                .isEqualTo(PersonStatus.RESIGNED);
-        assertThat(result.getResignationDate())
-                .isEqualTo("04.03.");
+        assertThat(deducer.deduceFrom(List.of("REZ VIII/07")).orElseThrow())
+                .isEqualTo(PersonStatusDetails.resigned("VIII/07"));
 
-        result = deducer.deduceFrom(List.of("REZ VIII/07"))
-                .orElseThrow(AssertionError::new);
-        assertThat(result.getStatus())
-                .isEqualTo(PersonStatus.RESIGNED);
-        assertThat(result.getResignationDate())
-                .isEqualTo("VIII/07");
+        assertThat(deducer.deduceFrom(List.of("rez zw skł 12.04.2005")).orElseThrow())
+                .isEqualTo(PersonStatusDetails.resigned("12.04.2005"));
+
+        assertThat(deducer.deduceFrom(List.of("rez zwr skł 12.04.2005")).orElseThrow())
+                .isEqualTo(PersonStatusDetails.resigned("12.04.2005"));
+    }
+
+    //"rezyg z podwyższonej skła"
+    @Test
+    void ignoreExceptionsForResignedStatuses() {
+        assertThat(deducer.deduceFrom(List.of("rezyg z podwyższonej skła")))
+                .isEmpty();
     }
 
     @Test
@@ -60,6 +63,24 @@ class StatusPersonDeducerShould {
                 .hasValue(PersonStatusDetails.removed("2012"));
         assertThat(deducer.deduceFrom(List.of("skreśl XII 2009")))
                 .hasValue(PersonStatusDetails.removed("XII 2009"));
+
+        assertThat(deducer.deduceFrom(List.of("sk.02-10-2017")))
+                .hasValue(PersonStatusDetails.removed("02-10-2017"));
+
+        assertThat(deducer.deduceFrom(List.of("sk-02-10-2017")))
+                .hasValue(PersonStatusDetails.removed("02-10-2017"));
+
+        assertThat(deducer.deduceFrom(List.of("SKRŚL VIII-2010")))
+                .hasValue(PersonStatusDetails.removed("VIII-2010"));
+
+        assertThat(deducer.deduceFrom(List.of("skr. zw skł 12.04.2005")))
+                .hasValue(PersonStatusDetails.removed("12.04.2005"));
+
+        assertThat(deducer.deduceFrom(List.of("skr. zwr skł 12,04.2005")))
+                .hasValue(PersonStatusDetails.removed("12,04.2005"));
+
+        assertThat(deducer.deduceFrom(List.of("skreślony XII 2002")))
+                .hasValue(PersonStatusDetails.removed("XII 2002"));
     }
 
 }

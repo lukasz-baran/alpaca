@@ -1,5 +1,7 @@
-package com.evolve.domain;
+package com.evolve.alpaca.importing;
 
+import com.evolve.domain.PersonStatus;
+import com.evolve.domain.PersonStatusChange;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,13 +18,11 @@ import java.util.List;
 @Builder
 @Embeddable
 public class PersonStatusDetails {
-    public static final String NO_DATA = null;
 
     private PersonStatus status;
     private String deathDate;
-    private String resignationDate;
+    private String resignationDate; // not needed by business code
     private String removedDate;
-    private String comment;
 
     /**
      * resigned without date

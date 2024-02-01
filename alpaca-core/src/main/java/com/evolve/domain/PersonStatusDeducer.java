@@ -3,14 +3,12 @@ package com.evolve.domain;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Getter
 public class PersonStatusDeducer {
-    private final List<PersonStatusChange> statusChanges;
-    private PersonStatusDetails status;
+    private List<PersonStatusChange> statusChanges;
+    private PersonStatus status;
     private LocalDate dob;
 
     public Optional<LocalDate> getDob() {
@@ -32,7 +30,7 @@ public class PersonStatusDeducer {
                         },
                         () -> addNewStatusChange(eventType, when));
 
-        this.status = PersonStatusDetails.basedOnStatusChange(this.statusChanges);
+        this.status = PersonStatus.basedOnStatusChange(this.statusChanges);
     }
 
     private void addNewStatusChange(PersonStatusChange.EventType eventType, LocalDate when) {
@@ -40,18 +38,29 @@ public class PersonStatusDeducer {
                 .eventType(eventType)
                 .when(when)
                 .build();
-
         if (eventType == PersonStatusChange.EventType.BORN) {
             this.dob = when;
-            this.statusChanges.add(0, newPersonStatusChange);
-        } else {
-            this.statusChanges.stream()
-                    .filter(PersonStatusChange::isDeathDate)
-                    .findFirst()
-                    .ifPresentOrElse(element -> statusChanges.add(statusChanges.indexOf(element), newPersonStatusChange),
-                            () -> this.statusChanges.add(newPersonStatusChange));
         }
+
+        Set<PersonStatusChange> personStatusChanges = new TreeSet<>(this.statusChanges);
+
+        personStatusChanges.add(newPersonStatusChange);
+
+        this.statusChanges = List.copyOf(personStatusChanges);
+
+//        if (eventType == PersonStatusChange.EventType.BORN) {
+//            this.dob = when;
+//            this.statusChanges.add(0, newPersonStatusChange);
+//        } else {
+//            this.statusChanges.stream()
+//                    .filter(PersonStatusChange::isDeathDate)
+//                    .findFirst()
+//                    .ifPresentOrElse(element -> statusChanges.add(statusChanges.indexOf(element), newPersonStatusChange),
+//                            () -> this.statusChanges.add(newPersonStatusChange));
+//        }
     }
+
+
 
 
 

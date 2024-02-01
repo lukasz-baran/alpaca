@@ -27,7 +27,7 @@ public record PersonListView(String personId, String firstName, String secondNam
     }
 
     static PersonStatus personStatus(Person person) {
-        return Optional.ofNullable(person.getStatus()).map(PersonStatusDetails::getStatus)
+        return Optional.ofNullable(person.getStatus())
                 .orElse(PersonStatus.ACTIVE);
     }
 

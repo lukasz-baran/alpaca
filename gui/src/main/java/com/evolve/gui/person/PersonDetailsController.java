@@ -198,7 +198,6 @@ public class PersonDetailsController extends EditableGuiElement
 
     private void setPersonStatus(Person person) {
         textPersonStatus.setText(Optional.ofNullable(person.getStatus())
-                        .map(PersonStatusDetails::getStatus)
                         .orElse(PersonStatus.ACTIVE)
                                 .getName());
         personStatusController.getController().setPerson(person);

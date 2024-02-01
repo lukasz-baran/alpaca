@@ -56,7 +56,7 @@ public class PersonsService implements FindPerson {
         }
 
         if (criteria.getStatus() != null) {
-            personBuilder.status(PersonStatusDetails.builder().status(criteria.getStatus()).build());
+            personBuilder.status(criteria.getStatus());
             hasCriteria = true;
         }
 

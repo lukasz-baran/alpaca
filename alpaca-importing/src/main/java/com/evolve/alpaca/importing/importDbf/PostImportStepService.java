@@ -2,15 +2,13 @@ package com.evolve.alpaca.importing.importDbf;
 
 import com.evolve.alpaca.utils.LogUtil;
 import com.evolve.domain.Person;
-import com.evolve.domain.PersonStatusDetails;
+import com.evolve.domain.PersonStatus;
 import com.evolve.repo.jpa.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Purpose of this service is to update status of people based on
@@ -41,7 +39,7 @@ public class PostImportStepService {
         log.info("Number of persons to be verified: {}", persons.size());
 
         persons.forEach(person -> {
-                PersonStatusDetails result = PersonStatusDetails.basedOnStatusChange(person.getStatusChanges());
+                PersonStatus result = PersonStatus.basedOnStatusChange(person.getStatusChanges());
                 log.info("id {} history of statuses: {} deduced: {}",
                         person.getPersonId(),
                         LogUtil.printJson(person.getStatusChanges()),
