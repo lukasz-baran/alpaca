@@ -1,5 +1,6 @@
 package com.evolve.gui.person.list;
 
+import com.evolve.alpaca.gui.export.PersonExportHandler;
 import com.evolve.alpaca.importing.event.DbfImportCompletedEvent;
 import com.evolve.alpaca.utils.LogUtil;
 import com.evolve.domain.Person;
@@ -12,7 +13,6 @@ import com.evolve.gui.person.event.PersonEditionRequestedEvent;
 import com.evolve.gui.person.list.search.PersonSearchCriteria;
 import com.evolve.gui.person.list.search.PersonSearchService;
 import com.evolve.gui.person.list.search.SearchPersonDialog;
-import com.evolve.gui.person.problemsExplorer.ProblemsExplorerController;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
 import javafx.beans.binding.Bindings;
@@ -29,12 +29,10 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
@@ -63,8 +61,7 @@ public class MainTableController implements Initializable {
 
     private final StageManager stageManager;
     private final ApplicationEventPublisher publisher;
-
-    private final FxControllerAndView<ProblemsExplorerController, VBox> problemsExplorerController;
+    private final PersonExportHandler personExportHandler;
 
     @FXML Button btnNewPerson;
     @FXML Button btnEdit;
@@ -84,17 +81,15 @@ public class MainTableController implements Initializable {
     @FXML TableColumn<PersonModel, String> statusColumn;
     @FXML TableColumn<PersonModel, Long> registryNumberColumn;
 
+    // search criteria bar (shown after Search is applied)
     @FXML HBox searchCriteriaHBox;
     @FXML Text textSearchCriteria;
     @FXML Hyperlink resetSearchHyperlink;
 
-
-
+    // bottom quick-search bat
     @FXML Text textNumberOfRecords;
     @FXML TextField filterField;
     @FXML AnchorPane autoCompletePane;
-
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -280,7 +275,6 @@ public class MainTableController implements Initializable {
         textNumberOfRecords.setText("Liczba: " + personTable.getItems().size());
     }
 
-
     @FXML
     public void newPersonButtonClicked(ActionEvent actionEvent) {
         new NewPersonDialog(personsService, unitsService)
@@ -327,13 +321,11 @@ public class MainTableController implements Initializable {
 
     @FXML
     void notYetImplemented(ActionEvent actionEvent) {
-        stageManager.displayInformation("Feature is not yet implemented");
+        stageManager.displayInformation("Funkcjonalność nie została jeszcze zaimplementowana");
     }
 
     @FXML
-    void problemsExplorerClicked(ActionEvent actionEvent) {
-        problemsExplorerController.getController().show();
+    void exportButtonClicked(ActionEvent actionEvent) {
+        personExportHandler.displayExportCriteria(personTable.getItems());
     }
-
-
 }

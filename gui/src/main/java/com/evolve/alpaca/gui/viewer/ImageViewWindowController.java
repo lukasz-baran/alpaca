@@ -56,7 +56,7 @@ public class ImageViewWindowController implements Initializable {
     private final StageManager stageManager;
     private final ContentStoreService contentStoreService;
 
-    public ImageViewModel imageViewModel = new ImageViewModel();
+    private ImageViewModel imageViewModel = new ImageViewModel();
     private final Preferences preferences = Preferences.userNodeForPackage(this.getClass());
 
     private final double zoomStep = 0.1;

@@ -16,6 +16,7 @@ import com.evolve.gui.person.accounts.PersonAccountsController;
 import com.evolve.gui.person.event.PersonEditionRequestedEvent;
 import com.evolve.gui.person.list.MainTableController;
 import com.evolve.gui.person.list.PersonListModel;
+import com.evolve.gui.person.problemsExplorer.ProblemsExplorerController;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
@@ -63,6 +64,7 @@ public class AppController implements Initializable {
 
     private final FxControllerAndView<PersonAccountsController, VBox> personAccountsController;
     private final FxControllerAndView<DocumentsController, VBox> documentsController;
+    private final FxControllerAndView<ProblemsExplorerController, VBox> problemsExplorerController;
 
     @FXML TabPane tabsPane;
     @FXML Tab tabPersonDetails;
@@ -134,6 +136,11 @@ public class AppController implements Initializable {
 
         final GrupyAlfabetyczne grupyAlfabetyczne = new ImportAlphanumeric()
                 .processFile();
+    }
+
+    @FXML
+    void lookForErrorsClicked(ActionEvent actionEvent) {
+        problemsExplorerController.getController().show();
     }
 
     @EventListener

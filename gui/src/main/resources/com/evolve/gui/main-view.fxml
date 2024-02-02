@@ -16,6 +16,8 @@
                       onAction="#importDbfClicked"/>
             <MenuItem fx:id="importPeopleMenuItem" mnemonicParsing="false" text="Import People"
                       onAction="#importPeopleClicked"/>
+            <SeparatorMenuItem />
+            <MenuItem mnemonicParsing="false" text="Szukaj błędów" onAction="#lookForErrorsClicked"/>
         </Menu>
         <Menu mnemonicParsing="false" text="Słowniki">
             <MenuItem fx:id="unitsMenuItem" mnemonicParsing="false" text="Lista jednostek"/>

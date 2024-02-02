@@ -144,18 +144,6 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
         final GridPane gridAccountCriteria = createGridPane();
         gridAccountCriteria.add(new Label("Dane konta:"), 0, 0, 2, 1);
 
-// TODO checkboxes:
-//
-//    składki 200...
-//    pożyczki 201...
-//    chwilówki 203...
-//    odprawy pośmiertne 807...
-//
-//    zwolnieni ..95
-//    rezygnacja ..97
-//    skreśleni ..98
-//    zmarli ..99
-
         gridAccountCriteria.add(new Label("200.. składki:"), 0, 1);
         gridAccountCriteria.add(hasFeesAccountsCheckBox, 1, 1);
 

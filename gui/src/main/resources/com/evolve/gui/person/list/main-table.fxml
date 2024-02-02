@@ -16,7 +16,7 @@
         <Button fx:id="btnEdit" text="Edytuj" onAction="#editButtonClicked"/>
         <Button fx:id="btnDelete" text="Usuń" onAction="#notYetImplemented"/>
         <Button fx:id="btnSearch" text="Szukaj" onAction="#searchButtonClicked"/>
-        <Button fx:id="btnExport" text="Błędy" onAction="#problemsExplorerClicked"/>
+        <Button fx:id="btnExport" text="Eksport" onAction="#exportButtonClicked"/>
         <padding>
             <Insets left="5.0" right="5.0" top="5.0" />
         </padding>
