@@ -1,5 +1,7 @@
 package com.evolve.alpaca.gui.export;
 
+import com.evolve.alpaca.export.PersonExportCriteria;
+import com.evolve.alpaca.export.PersonExportType;
 import com.evolve.gui.DialogWindow;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
@@ -36,15 +38,13 @@ public class PersonExportDialog extends DialogWindow<PersonExportCriteria> {
         grid.add(new Label("Rodzaj eksportu:"), 0, 0);
         grid.add(exportTypeComboBox, 1, 0);
 
-//        grid.add(new Label("Plik kont DBF:"), 0, 1);
+//        grid.add(new Label("TODO TODO TODO:"), 0, 1);
 //        grid.add(groupAccounts, 1, 1);
 
         exportTypeComboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) ->
                 validateSaveButton(saveButton));
 
         dialog.getDialogPane().setContent(grid);
-
-
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {

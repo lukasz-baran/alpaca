@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -174,6 +175,14 @@ public class Person implements Serializable {
         this.status = personStatusDeducer.getStatus();
         personStatusDeducer.getDob().ifPresent(newDob -> this.dob = newDob);
 
+    }
+
+    public static Long calculateAge(LocalDate dob, PersonStatus status) {
+        if (status != PersonStatus.ACTIVE) {
+            return -1L;
+        }
+
+        return dob != null ? Period.between(dob, LocalDate.now()).getYears() : 0L;
     }
 
 }

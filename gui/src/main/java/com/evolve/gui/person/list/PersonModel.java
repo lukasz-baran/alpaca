@@ -1,14 +1,20 @@
 package com.evolve.gui.person.list;
 
-import com.evolve.domain.*;
-import javafx.beans.property.*;
+import com.evolve.domain.Person;
+import com.evolve.domain.PersonListView;
+import com.evolve.domain.PersonStatus;
+import com.evolve.domain.RegistryNumber;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.Optional;
 
+import static com.evolve.domain.Person.calculateAge;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 @SuppressWarnings("unused")
@@ -122,11 +128,4 @@ public class PersonModel {
         return trimToEmpty(getId()).toLowerCase().contains(lowerCaseFilter);
     }
 
-    private static Long calculateAge(LocalDate dob, PersonStatus status) {
-        if (status != PersonStatus.ACTIVE) {
-            return -1L;
-        }
-
-        return dob != null ? Period.between(dob, LocalDate.now()).getYears() : 0L;
-    }
 }

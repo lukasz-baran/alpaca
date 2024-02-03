@@ -1,9 +1,11 @@
 
 # What's this?
 
-Module is responsible for exporting data from Alpaca to Google Sheets.
+Module responsible for exporting data from Alpaca to different formats (eg. CSV)
 
-# Links
-https://www.baeldung.com/google-sheets-java-client
+## TODO (wishlist)
+
+** export to google sheets: https://www.baeldung.com/google-sheets-java-client
+** 
 
 

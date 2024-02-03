@@ -1,4 +1,4 @@
-package com.evolve.alpaca.gui.export;
+package com.evolve.alpaca.export;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

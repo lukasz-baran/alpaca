@@ -1,4 +1,4 @@
-package com.evolve.alpaca.gui.export;
+package com.evolve.alpaca.export;
 
 public record PersonExportCriteria(PersonExportType exportType) {
 }

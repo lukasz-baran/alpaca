@@ -6,4 +6,7 @@ public class AlpacaBusinessException extends RuntimeException {
         super(message);
     }
 
+    public AlpacaBusinessException(Throwable cause) {
+        super(cause);
+    }
 }

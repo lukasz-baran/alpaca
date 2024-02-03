@@ -94,7 +94,7 @@ public class PersonFixer implements InitializingBean {
             });
         }
 
-        log.info("Data loaded from fixer: {}", data);
+        log.info("Loaded {} fixer records", data.size());
         return data.size();
     }
 
