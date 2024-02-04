@@ -3,6 +3,7 @@ package com.evolve.alpaca.gui.export;
 import com.evolve.alpaca.export.PersonExportService;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.person.list.PersonModel;
+import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ public class PersonExportHandler {
     private final StageManager stageManager;
     private final PersonExportService alpacaExportService;
 
-    public void displayExportCriteria(javafx.collections.ObservableList<PersonModel> currentSelection) {
+    public void displayExportCriteria(ObservableList<PersonModel> currentSelection) {
         new PersonExportDialog()
                 .showDialog(stageManager.getWindow())
                 .ifPresent(personExportCriteria -> {
@@ -41,7 +42,8 @@ public class PersonExportHandler {
                     }
 
                     log.info("Selected file: {}", fileToSave);
-                    alpacaExportService.exportPersons(fileToSave);
+                    var orderedElements = currentSelection.stream().map(PersonModel::getId).toList();
+                    alpacaExportService.exportPersons(personExportCriteria, fileToSave, orderedElements);
                 });
     }
 

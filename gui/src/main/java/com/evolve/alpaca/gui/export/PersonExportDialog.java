@@ -46,6 +46,7 @@ public class PersonExportDialog extends DialogWindow<PersonExportCriteria> {
 
         dialog.getDialogPane().setContent(grid);
 
+        exportTypeComboBox.setValue(PersonExportType.ALL);
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
 

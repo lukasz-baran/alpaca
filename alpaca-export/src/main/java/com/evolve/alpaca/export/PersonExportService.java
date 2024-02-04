@@ -9,12 +9,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 
 @Slf4j
 @Service
@@ -27,21 +33,37 @@ public class PersonExportService {
         this.mappingStrategy.setType(PersonExportView.class);
     }
 
-    public void exportPersons(File file)  {
+    public void exportPersons(PersonExportCriteria criteria, File file, List<String> orderedList)  {
         log.info("export to {}", file.getAbsolutePath());
+        final List<PersonExportView> recordsForExport = fetchRecordsToExport(criteria.exportType(), orderedList);
 
-        List<PersonExportView> allPersons = personsService.fetch(PersonLookupCriteria.ALL)
-                .stream()
-                .map(PersonExportView::of)
-                .toList();
-
-        try (var writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
-            writeToFile(writer, allPersons);
+        try (BufferedWriter writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
+            writeToFile(writer, recordsForExport);
             writer.flush();
         } catch (CsvDataTypeMismatchException | CsvRequiredFieldEmptyException |
                  IOException ex) {
             throw new AlpacaExportException(ex);
         }
+    }
+
+    List<PersonExportView> fetchRecordsToExport(PersonExportType exportType, List<String> orderedList) {
+        final List<PersonExportView> allPersons = personsService.fetch(PersonLookupCriteria.ALL)
+                .stream()
+                .map(PersonExportView::of)
+                .toList();
+        if (exportType == PersonExportType.ALL) {
+            return allPersons;
+        }
+
+        final Function<String, Optional<PersonExportView>> idToPerson = personId -> allPersons.stream()
+                .filter(record -> personId.equals(record.getId()))
+                .findFirst();
+        return emptyIfNull(orderedList)
+                .stream()
+                .map(idToPerson)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     void writeToFile(Writer writer, List<PersonExportView> records) throws CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
