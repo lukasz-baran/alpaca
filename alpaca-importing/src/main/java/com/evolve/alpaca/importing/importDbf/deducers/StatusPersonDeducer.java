@@ -50,6 +50,10 @@ public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
 
         return guesses.stream()
                 .filter(guess -> !StringUtils.startsWith(guess, "zm. nazwiska")) // exception!
+                .filter(guess -> !StringUtils.startsWith(guess, "zm. os. up"))
+                .filter(guess -> !StringUtils.startsWith(guess, "zm.os.up."))
+                .filter(guess -> !StringUtils.startsWith(guess, "zm. os up."))
+                .filter(guess -> !StringUtils.startsWith(guess, "zm. adresu"))
                 .filter(guess -> containsIgnoreCase(DECEASED, guess))
                 .findFirst()
                 .map(guess -> removeMatchingString(DECEASED, guess))

@@ -24,6 +24,7 @@ public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.Au
             PersonRelative.of("c.", "córka"),
             PersonRelative.of("c,", "córka"),
             PersonRelative.of("brat", "brat"),
+            PersonRelative.of("up. brat", "brat"),
             PersonRelative.of("stra ", "siostra"),
             PersonRelative.of("up. siostra", "siostra"),
             PersonRelative.of("st.", "siostra"),
@@ -33,7 +34,9 @@ public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.Au
             PersonRelative.of("br.", "brat"),
             PersonRelative.of("oj.", "ojciec"),
             PersonRelative.of("up. narzcz.", "narzeczony(a)"),
-            PersonRelative.of("up.", "mąż", "mąż")
+            PersonRelative.of("up.", "mąż", "mąż"), //prefix-suffix pattern
+            PersonRelative.of("partnerka", "partnerka"),
+            PersonRelative.of("partner", "partner")
         );
     // TODO handle other relations
     // TODO handle two relatives ->
@@ -71,9 +74,6 @@ public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.Au
             guesses.removeIf(isAnyRelation);
         }
         return guesses;
-//        return guesses.stream()
-//                .filter(not(isAnyRelation))
-//                .collect(Collectors.toList());
     }
 
     private List<Person.AuthorizedPerson> deduce(List<String> guesses) {
