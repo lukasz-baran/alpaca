@@ -161,8 +161,6 @@ public class Person implements Serializable {
         private String firstName;
         private String lastName;
         private String relation; // żona, mąż, syn, matka, córka, synowie
-        private String phone;
-        private Address address;
         private String comment;
     }
 
@@ -174,7 +172,6 @@ public class Person implements Serializable {
         this.statusChanges = personStatusDeducer.getStatusChanges();
         this.status = personStatusDeducer.getStatus();
         personStatusDeducer.getDob().ifPresent(newDob -> this.dob = newDob);
-
     }
 
     public static Long calculateAge(LocalDate dob, PersonStatus status) {

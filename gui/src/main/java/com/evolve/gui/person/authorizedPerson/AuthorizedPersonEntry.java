@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import static com.google.common.base.Strings.nullToEmpty;
+
 @Setter
 @EqualsAndHashCode
 @AllArgsConstructor
@@ -24,6 +26,15 @@ public class AuthorizedPersonEntry {
 
     public String getRelation() {
         return authorizedPerson.getRelation();
+    }
+
+    public String getFullName() {
+        return nullToEmpty(authorizedPerson.getFirstName()) + " " +
+                nullToEmpty(authorizedPerson.getLastName());
+    }
+
+    public String getComment() {
+        return authorizedPerson.getComment();
     }
 
 }
