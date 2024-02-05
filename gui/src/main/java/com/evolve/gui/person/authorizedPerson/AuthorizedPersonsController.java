@@ -12,6 +12,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
@@ -20,10 +23,12 @@ import org.springframework.stereotype.Component;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 @Component
 @FxmlView("authorized-persons-list.fxml")
@@ -34,17 +39,17 @@ public class AuthorizedPersonsController extends EditableGuiElement implements I
     private final StageManager stageManager;
 
     @FXML TableView<AuthorizedPersonEntry> authorizedPersonsTable;
-    @FXML TableColumn<AuthorizedPersonEntry, String> authorizedFirstNameColumn;
-    @FXML TableColumn<AuthorizedPersonEntry, String> authorizedLastNameColumn;
+    @FXML TableColumn<AuthorizedPersonEntry, String> authorizedFullNameColumn;
     @FXML TableColumn<AuthorizedPersonEntry, String> relationColumn;
+    @FXML TableColumn<AuthorizedPersonEntry, String> commentColumn;
 
     @FXML MenuItem addAuthorizedPerson;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        authorizedFirstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-        authorizedLastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        authorizedFullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         relationColumn.setCellValueFactory(new PropertyValueFactory<>("relation"));
+        commentColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
 
         setAuthorizedPersons(Collections.emptyList()); // it's needed, without this initial call the table won't be populated with real data
 
@@ -52,14 +57,24 @@ public class AuthorizedPersonsController extends EditableGuiElement implements I
 
         addAuthorizedPerson.disableProperty().bind(disabledProperty);
 
-        addAuthorizedPerson.setOnAction(this::addAuthorizedPerson);
-
-        // this sucks because on other machines it doesn't have to be 25 pixels :)
         TableViewResizer.resizeTable(authorizedPersonsTable);
 
         authorizedPersonsTable.setRowFactory(tableView -> {
-                final TableRow<AuthorizedPersonEntry> row = new TableRow<>();
+                final TableRow<AuthorizedPersonEntry> row = new AuthorizedPersonRow();
                 final ContextMenu contextMenu = new ContextMenu();
+
+                final MenuItem addMenuItem = new MenuItem("Dodaj");
+                addMenuItem.setOnAction(event -> editAuthorizedPerson(tableView, row));
+                addMenuItem.disableProperty().bind(disabledProperty);
+
+                final MenuItem copyMenuItem = new MenuItem("Kopiuj");
+                copyMenuItem.setOnAction(event -> Optional.ofNullable(row.getItem())
+                        .map(AuthorizedPersonsController::concatenatedAuthorizedPersonString)
+                        .ifPresent(text -> {
+                            final ClipboardContent clipboardContent = new ClipboardContent();
+                            clipboardContent.putString(text);
+                            Clipboard.getSystemClipboard().setContent(clipboardContent);
+                        }));
 
                 final MenuItem editMenuItem = new MenuItem("Edytuj");
                 editMenuItem.setOnAction(event -> editAuthorizedPerson(tableView, row));
@@ -86,8 +101,7 @@ public class AuthorizedPersonsController extends EditableGuiElement implements I
                 });
                 removeMenuItem.disableProperty().bind(disabledProperty);
 
-                contextMenu.getItems().add(editMenuItem);
-                contextMenu.getItems().add(removeMenuItem);
+                contextMenu.getItems().addAll(addMenuItem, copyMenuItem, editMenuItem, removeMenuItem);
 
                 // Set context menu on row, but use a binding to make it only show for non-empty rows:
                 row.contextMenuProperty().bind(Bindings.when(row.emptyProperty()).then((ContextMenu) null)
@@ -96,7 +110,8 @@ public class AuthorizedPersonsController extends EditableGuiElement implements I
             });
     }
 
-    private void addAuthorizedPerson(Event actionEvent) {
+    @FXML
+    void addAuthorizedPerson(Event actionEvent) {
         new AuthorizedPersonDialog(null)
             .showDialog(stageManager.getWindow())
             .ifPresent(person -> {
@@ -127,6 +142,31 @@ public class AuthorizedPersonsController extends EditableGuiElement implements I
         return list.stream()
                 .map(AuthorizedPersonEntry::getAuthorizedPerson)
                 .collect(Collectors.toList());
+    }
+
+    static class AuthorizedPersonRow extends TableRow<AuthorizedPersonEntry> {
+        private final Tooltip tooltip = new Tooltip();
+
+        public AuthorizedPersonRow() {
+            tooltip.setShowDelay(Duration.ZERO);
+        }
+
+        @Override
+        public void updateItem(AuthorizedPersonEntry authorizedPersonEntry, boolean empty) {
+            super.updateItem(authorizedPersonEntry, empty);
+            if (authorizedPersonEntry == null) {
+                setTooltip(null);
+            } else {
+                tooltip.setText(concatenatedAuthorizedPersonString(authorizedPersonEntry));
+                setTooltip(tooltip);
+            }
+        }
+    }
+
+    private static String concatenatedAuthorizedPersonString(AuthorizedPersonEntry entry) {
+        return String.join("\n",
+                trimToEmpty(entry.getFullName()),
+                trimToEmpty(entry.getComment()));
     }
 
 }

@@ -55,13 +55,14 @@ public class AuthorizedPersonDialog extends DialogWindow<Person.AuthorizedPerson
         grid.add(commentTextArea, 1, 3);
 
         // Enable/Disable login button depending on whether a username was entered.
-        Node loginButton = dialog.getDialogPane().lookupButton(saveButtonType);
-        loginButton.setDisable(true);
+        final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
+        saveButton.setDisable(true);
 
         // Do some validation (using the Java 8 lambda syntax).
-        firstNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            loginButton.setDisable(newValue.trim().isEmpty());
-        });
+        firstNameTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
+        lastNameTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
+        relationTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
+        commentTextArea.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
 
         dialog.getDialogPane().setContent(grid);
 
@@ -88,7 +89,6 @@ public class AuthorizedPersonDialog extends DialogWindow<Person.AuthorizedPerson
                 firstNameTextField.getText().trim(),
                 lastNameTextField.getText().trim(),
                 relationTextField.getText().trim(),
-                null, null,
                 commentTextArea.getText());
     }
 
