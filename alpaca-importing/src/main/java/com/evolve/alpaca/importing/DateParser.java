@@ -71,7 +71,8 @@ public class DateParser {
 
     /**
      * Note: At his low-level we don't know whether we have a date from the 1900s or 2000s,
-     * so later this year value might be corrected.
+     * so later this year value might be corrected by:<br/>
+     * {@link com.evolve.alpaca.utils.DateUtils#adjustDateToCurrentCentury(java.time.LocalDate)}
      */
     static int sanitizeYear(String year) {
         if (year.length() == 2) {
