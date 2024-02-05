@@ -1,5 +1,6 @@
 package com.evolve.gui.person.status;
 
+import com.evolve.alpaca.util.TableViewResizer;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatusChange;
 import com.evolve.gui.EditableGuiElement;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -32,9 +32,6 @@ import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 @RequiredArgsConstructor
 public class PersonStatusController extends EditableGuiElement implements Initializable {
     private final StageManager stageManager;
-    //private final ObjectProperty<PersonStatus> personStatusObjectProperty = new SimpleObjectProperty<>();
-    //@FXML ComboBox<PersonStatus> personStatusCombo;
-
     private final ObservableList<PersonHistoryStatusEntry> statusChanges = FXCollections.observableArrayList();
 
     @FXML TableView<PersonHistoryStatusEntry> statusHistoryTable;
@@ -46,19 +43,19 @@ public class PersonStatusController extends EditableGuiElement implements Initia
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        personStatusCombo.getItems().addAll(PersonStatus.values());
-//        personStatusCombo.valueProperty().bindBidirectional(personStatusObjectProperty);
-//        personStatusCombo.setDisable(true);
-//        personStatusCombo.getSelectionModel().select(null);
 
         addNewStatus.disableProperty().bind(disabledProperty);
         addNewStatus.setOnAction(this::addNewStatus);
+
+        statusHistoryTable.setItems(statusChanges);
 
         // table
         statusHistoryTable.editableProperty().bind(disabledProperty.not());
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("eventType"));
         whenColumn.setCellValueFactory(new PropertyValueFactory<>("when"));
         originalValueColumn.setCellValueFactory(new PropertyValueFactory<>("originalValue"));
+
+        TableViewResizer.resizeTable(statusHistoryTable);
         statusHistoryTable.setRowFactory(tableView -> {
             final TableRow<PersonHistoryStatusEntry> row = new TableRow<>();
             final ContextMenu contextMenu = new ContextMenu();
@@ -103,28 +100,13 @@ public class PersonStatusController extends EditableGuiElement implements Initia
 
             return row;
         });
-        setPersonStatusHistory(Collections.emptyList());
+
     }
 
     public void setPerson(Person person) {
-//        setPersonStatus(person.getStatus());
-        setPersonStatusHistory(person.getStatusChanges());
-    }
-
-//    void setPersonStatus(PersonStatusDetails personStatus) {
-//        log.info("Setting person status: {}", personStatus);
-//        personStatusObjectProperty.setValue(
-//                Optional.ofNullable(personStatus)
-//                        .map(PersonStatusDetails::getStatus)
-//                        .orElse(PersonStatus.ACTIVE));
-//    }
-
-    void setPersonStatusHistory(final List<PersonStatusChange> personStatusChanges) {
         statusChanges.clear();
-        emptyIfNull(personStatusChanges)
+        emptyIfNull(person.getStatusChanges())
                 .forEach(status -> statusChanges.add(new PersonHistoryStatusEntry(status)));
-
-        statusHistoryTable.setItems(statusChanges);
     }
 
     private void addNewStatus(Event actionEvent) {

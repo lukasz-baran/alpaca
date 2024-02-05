@@ -1,5 +1,6 @@
 package com.evolve.gui.person.bankAccounts;
 
+import com.evolve.alpaca.util.TableViewResizer;
 import com.evolve.domain.BankAccount;
 import com.evolve.gui.EditableGuiElement;
 import com.evolve.gui.StageManager;
@@ -54,6 +55,7 @@ public class PersonBankAccountsController extends EditableGuiElement implements 
         addNewBankAccount.disableProperty().bind(disabledProperty);
         addNewBankAccount.setOnAction(this::addNewBankAccount);
 
+        TableViewResizer.resizeTable(personBankAccountsTable);
         personBankAccountsTable.editableProperty().bind(disabledProperty.not());
         personBankAccountsTable.setRowFactory(tableView -> {
             final TableRow<BankAccountEntry> row = new PersonBankAccountRow();

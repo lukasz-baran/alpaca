@@ -1,5 +1,6 @@
 package com.evolve.gui.person.address;
 
+import com.evolve.alpaca.util.TableViewResizer;
 import com.evolve.domain.Person;
 import com.evolve.gui.EditableGuiElement;
 import com.evolve.gui.StageManager;
@@ -62,6 +63,7 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
         addAddress.disableProperty().bind(disabledProperty);
         addAddress.setOnAction(this::addPersonAddress);
 
+        TableViewResizer.resizeTable(addressesTable);
         addressesTable.editableProperty().bind(disabledProperty.not());
         addressesTable.setRowFactory(tableView -> {
             final TableRow<AddressEntry> row = new PersonAddressRow();

@@ -1,5 +1,6 @@
 package com.evolve.gui.person.authorizedPerson;
 
+import com.evolve.alpaca.util.TableViewResizer;
 import com.evolve.domain.Person;
 import com.evolve.gui.EditableGuiElement;
 import com.evolve.gui.StageManager;
@@ -52,6 +53,9 @@ public class AuthorizedPersonsController extends EditableGuiElement implements I
         addAuthorizedPerson.disableProperty().bind(disabledProperty);
 
         addAuthorizedPerson.setOnAction(this::addAuthorizedPerson);
+
+        // this sucks because on other machines it doesn't have to be 25 pixels :)
+        TableViewResizer.resizeTable(authorizedPersonsTable);
 
         authorizedPersonsTable.setRowFactory(tableView -> {
                 final TableRow<AuthorizedPersonEntry> row = new TableRow<>();

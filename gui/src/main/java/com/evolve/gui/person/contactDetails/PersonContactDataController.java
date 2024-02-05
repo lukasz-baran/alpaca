@@ -1,5 +1,6 @@
 package com.evolve.gui.person.contactDetails;
 
+import com.evolve.alpaca.util.TableViewResizer;
 import com.evolve.domain.PersonContactData;
 import com.evolve.gui.EditableGuiElement;
 import com.evolve.gui.StageManager;
@@ -56,6 +57,7 @@ public class PersonContactDataController extends EditableGuiElement implements I
         addPhoneNumber.disableProperty().bind(disabledProperty);
         addPhoneNumber.setOnAction(this::addContactDetails);
 
+        TableViewResizer.resizeTable(personContactDataTable);
         personContactDataTable.editableProperty().bind(disabledProperty.not());
         personContactDataTable.setRowFactory(tableView -> {
             final TableRow<PersonContactEntry> row = new TableRow<>();
