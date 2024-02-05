@@ -21,6 +21,8 @@ public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
             "SKRŚL",
             "skr. zw skł",
             "skr. zwr skł",
+            "skr zw skł",
+            "sker zw skł",
             "skre", "SKR", "sk.", "sk-");
 
     @Override
@@ -98,7 +100,7 @@ public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
     }
 
     private String removeMatchingString(List<String> list, String guess) {
-        return list.stream()
+        return list.stream().sequential()
                 .filter(element -> StringUtils.containsIgnoreCase(guess, element))
                 .map(element -> StringUtils.removeIgnoreCase(guess, element))
                 .findFirst()

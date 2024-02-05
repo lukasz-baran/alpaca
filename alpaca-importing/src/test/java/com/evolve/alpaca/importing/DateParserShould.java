@@ -30,4 +30,14 @@ class DateParserShould {
         assertThat(result).hasValue(LocalDate.of(2001, Month.FEBRUARY, 28));
     }
 
+    @Test
+    void removeTrailingPolishYearSuffix() {
+        // given
+        final String input = "12.04.2005r.";
+        // when
+        final Optional<LocalDate> result = DateParser.parse(input);
+        // then
+        assertThat(result).hasValue(LocalDate.of(2005, Month.APRIL, 12));
+    }
+
 }

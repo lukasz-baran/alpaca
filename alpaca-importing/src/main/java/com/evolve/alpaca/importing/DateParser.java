@@ -1,6 +1,7 @@
 package com.evolve.alpaca.importing;
 
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -38,10 +39,12 @@ public class DateParser {
             .put("XII", 12)
             .build();
 
-    public static Optional<LocalDate> parse(String input) {
-        if (input == null) {
+    public static Optional<LocalDate> parse(String rawInput) {
+        if (StringUtils.isBlank(rawInput)) {
             return Optional.empty();
         }
+
+        final String input = removeTrailingYearSuffix(rawInput);
 
         final Matcher matcher = DATE_PATTERN.matcher(input);
         if (matcher.matches()) {
@@ -62,6 +65,14 @@ public class DateParser {
         return Optional.empty();
     }
 
+    private static String removeTrailingYearSuffix(String input) {
+        return StringUtils.removeEndIgnoreCase(input, "r.");
+    }
+
+    /**
+     * Note: At his low-level we don't know whether we have a date from the 1900s or 2000s,
+     * so later this year value might be corrected.
+     */
     static int sanitizeYear(String year) {
         if (year.length() == 2) {
             return Integer.parseInt("19" + year);

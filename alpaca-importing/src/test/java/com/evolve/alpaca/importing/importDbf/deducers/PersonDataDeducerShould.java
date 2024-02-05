@@ -6,7 +6,6 @@ import com.evolve.domain.Address;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonId;
 import com.evolve.domain.PersonStatusChange;
-import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -31,6 +30,7 @@ class PersonDataDeducerShould {
                 .NAZ_ODB5("Monopolowa 1 / 7")
                 .NAZ_ODB6("35-020 Rzeszów")
                 .NAZ_ODB7("ż.Alicja Einstein")
+                .INFO("skr zw skł 12.04.2005r.")
                 .build();
         final Person person = new PersonDataDeducer(PERSON_DBF, new IssuesLogger(), registryNumbers).deduce().orElseThrow();
 
@@ -44,7 +44,11 @@ class PersonDataDeducerShould {
                         .firstName("Alicja")
                         .lastName("Einstein")
                         .relation("żona")
-                        .build());
+                        .build())
+                .hasStatusHistory(
+                        PersonStatusChange.born(LocalDate.of(1964, 12, 17)),
+                        PersonStatusChange.joined(LocalDate.of(1992, 11, 5)),
+                        PersonStatusChange.removed(LocalDate.of(2005, 4, 12), "12.04.2005r."));
     }
 
     @Test
@@ -72,7 +76,7 @@ class PersonDataDeducerShould {
                         .lastName("Madera")
                         .relation("mąż")
                         .build())
-                .hasStatusHistory(new PersonStatusChange(PersonStatusChange.EventType.BORN, LocalDate.of(1969, 8, 25), null));
+                .hasStatusHistory(PersonStatusChange.born(LocalDate.of(1969, 8, 25)));
     }
 
     @Test
@@ -94,7 +98,7 @@ class PersonDataDeducerShould {
                 .hasFirstName("Anna")
                 .hasLastName("Alfa-Beta")
                 .hasNoBirthDate()
-                .hasStatusHistory(new PersonStatusChange(PersonStatusChange.EventType.DIED, LocalDate.of(2016, 8, 25), "25-08-2016"));
+                .hasStatusHistory(PersonStatusChange.died(LocalDate.of(2016, 8, 25), "25-08-2016"));
     }
 
     @Test
@@ -108,7 +112,7 @@ class PersonDataDeducerShould {
                 .NAZ_ODB5("Bazaltowa 9/12")
                 .NAZ_ODB6("22-333 Nigdzie")
                 .NAZ_ODB7("")
-                .INFO("rez. 09.11.2020")
+                .INFO("rez. 09.11.2020") //skr zw skł 12.04.2005r.
                 .build();
         final Person person = new PersonDataDeducer(PERSON_DBF, new IssuesLogger(), registryNumbers).deduce().orElseThrow();
 
@@ -118,9 +122,9 @@ class PersonDataDeducerShould {
             .hasLastName("Alfa")
             .wasBornOn(LocalDate.of(1943, 4, 10))
             .hasStatusHistory(
-                new PersonStatusChange(PersonStatusChange.EventType.BORN, LocalDate.of(1943, 4, 10), null),
-                new PersonStatusChange(PersonStatusChange.EventType.JOINED, LocalDate.of(1982, 10, 20), null),
-                new PersonStatusChange(PersonStatusChange.EventType.RESIGNED, LocalDate.of(2020, 11, 9), "09.11.2020"));
+                PersonStatusChange.born(LocalDate.of(1943, 4, 10)),
+                PersonStatusChange.joined(LocalDate.of(1982, 10, 20)),
+                PersonStatusChange.resigned(LocalDate.of(2020, 11, 9), "09.11.2020"));
     }
 
     @Test
@@ -145,12 +149,10 @@ class PersonDataDeducerShould {
                 .hasLastName("Alfa")
                 .wasBornOn(expectedDob)
                 .hasStatusHistory(
-                        new PersonStatusChange(PersonStatusChange.EventType.BORN, expectedDob, null),
-                        new PersonStatusChange(PersonStatusChange.EventType.JOINED, LocalDate.of(1984, 3, 13), null),
-                        new PersonStatusChange(PersonStatusChange.EventType.REMOVED, null, "2012"));
+                        PersonStatusChange.born(expectedDob),
+                        PersonStatusChange.joined(LocalDate.of(1984, 3, 13)),
+                        PersonStatusChange.removed("2012"));
     }
-
-
 
     @Test
     void ignoreIncorrectPersonData() {

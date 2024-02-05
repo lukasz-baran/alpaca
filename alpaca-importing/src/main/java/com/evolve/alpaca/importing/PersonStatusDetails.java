@@ -1,12 +1,10 @@
 package com.evolve.alpaca.importing;
 
 import com.evolve.domain.PersonStatus;
-import com.evolve.domain.PersonStatusChange;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Embeddable;
-import java.util.List;
 
 /**
  * Describes Person status: dead, resigned, etc
@@ -49,12 +47,6 @@ public class PersonStatusDetails {
                 .build();
     }
 
-    public static PersonStatusDetails unknown() {
-        return PersonStatusDetails.builder()
-                .status(PersonStatus.UNKNOWN)
-                .build();
-    }
-
     public static PersonStatusDetails dead(String deathDate) {
         return PersonStatusDetails.builder()
                 .status(PersonStatus.DEAD)
@@ -68,45 +60,11 @@ public class PersonStatusDetails {
                 .build();
     }
 
-    /**
-     * User was removed from the members list
-     */
-    public static PersonStatusDetails removed() {
-        return PersonStatusDetails.builder()
-                .status(PersonStatus.REMOVED)
-                .build();
-    }
-
     public static PersonStatusDetails removed(String removedDate) {
         return PersonStatusDetails.builder()
                 .status(PersonStatus.REMOVED)
                 .removedDate(removedDate)
                 .build();
-    }
-
-    public static PersonStatusDetails archived() {
-        return PersonStatusDetails.builder()
-                .status(PersonStatus.ARCHIVED)
-                .build();
-    }
-
-    public static PersonStatusDetails basedOnStatusChange(List<PersonStatusChange> statusChanges) {
-        if (!statusChanges.isEmpty()) {
-            final int lastIndex = statusChanges.size() - 1;
-
-            return basedOnStatusChange(statusChanges.get(lastIndex));
-        }
-        return unknown();
-    }
-
-    private static PersonStatusDetails basedOnStatusChange(PersonStatusChange change) {
-        return switch (change.getEventType()) {
-            case DIED ->  PersonStatusDetails.dead(change.getOriginalValue());
-            case RESIGNED -> PersonStatusDetails.resigned(change.getOriginalValue());
-            case REMOVED -> PersonStatusDetails.removed(change.getOriginalValue());
-            case ARCHIVED -> PersonStatusDetails.archived();
-            default -> PersonStatusDetails.active();
-        };
     }
 
     @Override

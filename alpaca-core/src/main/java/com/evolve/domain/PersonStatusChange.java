@@ -36,19 +36,38 @@ public class PersonStatusChange implements Comparable<PersonStatusChange> {
         return new PersonStatusChange(EventType.JOINED, when);
     }
 
+    // resignations:
+
     public static PersonStatusChange resigned(String originalValue) {
         return new PersonStatusChange(EventType.RESIGNED, null, originalValue);
+    }
+
+    public static PersonStatusChange resigned(LocalDate when, String originalValue) {
+        return new PersonStatusChange(EventType.RESIGNED, when, originalValue);
     }
 
     public static PersonStatusChange resigned(LocalDate when) {
         return new PersonStatusChange(EventType.RESIGNED, when);
     }
 
+    // deaths:
+
     public static PersonStatusChange died(LocalDate when, String originalValue) {
         return new PersonStatusChange(EventType.DIED, when, originalValue);
     }
+
     public static PersonStatusChange died(LocalDate when) {
         return new PersonStatusChange(EventType.DIED, when);
+    }
+
+    // removals:
+
+    public static PersonStatusChange removed(LocalDate when, String originalValue) {
+        return new PersonStatusChange(EventType.REMOVED, when, originalValue);
+    }
+
+    public static PersonStatusChange removed(String originalValue) {
+        return new PersonStatusChange(EventType.REMOVED, null, originalValue);
     }
 
     @JsonIgnore

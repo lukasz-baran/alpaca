@@ -44,7 +44,6 @@ class StatusPersonDeducerShould {
                 .isEqualTo(PersonStatusDetails.resigned("12.04.2005"));
     }
 
-    //"rezyg z podwyższonej skła"
     @Test
     void ignoreExceptionsForResignedStatuses() {
         assertThat(deducer.deduceFrom(List.of("rezyg z podwyższonej skła")))
@@ -75,6 +74,13 @@ class StatusPersonDeducerShould {
 
         assertThat(deducer.deduceFrom(List.of("skr. zw skł 12.04.2005")))
                 .hasValue(PersonStatusDetails.removed("12.04.2005"));
+
+        // note r. suffix will be removed later:
+        assertThat(deducer.deduceFrom(List.of("skr zw skł 12.04.2005r.")))
+                .hasValue(PersonStatusDetails.removed("12.04.2005r."));
+
+        assertThat(deducer.deduceFrom(List.of("sker zw skł 12.04.2005r.")))
+                .hasValue(PersonStatusDetails.removed("12.04.2005r."));
 
         assertThat(deducer.deduceFrom(List.of("skr. zwr skł 12,04.2005")))
                 .hasValue(PersonStatusDetails.removed("12,04.2005"));
