@@ -111,7 +111,7 @@ public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.Au
                         return trimmed.split(" ");
                     })
                     .filter(afterSplit -> afterSplit.length > 1)
-                    .map(afterSplit -> new Person.AuthorizedPerson(afterSplit[0], afterSplit[1], this.relation, null, null, null));
+                    .map(afterSplit -> new Person.AuthorizedPerson(afterSplit[0], afterSplit[1], this.relation, null));
 
         }
 
