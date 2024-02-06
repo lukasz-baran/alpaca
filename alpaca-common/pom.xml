@@ -60,7 +60,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <verbose>true</verbose>
+                    <verbose>false</verbose>
                     <generateGitPropertiesFile>false</generateGitPropertiesFile>
                 </configuration>
             </plugin>
