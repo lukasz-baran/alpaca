@@ -60,7 +60,11 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <verbose>false</verbose>
+                    <gitDescribe>
+                        <skip>false</skip>
+                        <always>true</always>
+                    </gitDescribe>
+                    <verbose>true</verbose>
                     <generateGitPropertiesFile>false</generateGitPropertiesFile>
                 </configuration>
             </plugin>
