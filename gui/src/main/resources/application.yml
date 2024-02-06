@@ -17,7 +17,6 @@ spring:
       filesystemRoot: c:/alpaca/content/
 
 alpaca:
-  version: 1.0
   commands:
     store: c:/alpaca/commands/
   nbp:

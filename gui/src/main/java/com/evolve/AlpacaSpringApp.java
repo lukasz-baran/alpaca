@@ -1,6 +1,7 @@
 package com.evolve;
 
 import com.evolve.gui.AlpacaJavafxApp;
+import com.evolve.gui.SplashScreenLoader;
 import javafx.application.Application;
 import javafx.scene.Node;
 import net.rgielen.fxweaver.core.FxControllerAndView;
@@ -18,7 +19,12 @@ import org.springframework.context.annotation.Scope;
 public class AlpacaSpringApp {
 
     public static void main(String[] args) {
+        loadSplashScreen();
         Application.launch(AlpacaJavafxApp.class, args);
+    }
+
+    private static void loadSplashScreen() {
+        System.setProperty("javafx.preloader", SplashScreenLoader.class.getCanonicalName());
     }
 
     @Bean

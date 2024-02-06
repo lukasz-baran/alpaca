@@ -4,6 +4,7 @@ import com.evolve.AlpacaSpringApp;
 import com.evolve.gui.events.StageReadyEvent;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.application.Preloader;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -28,6 +29,7 @@ public class AlpacaJavafxApp extends Application {
     @Override
     public void start(Stage stage) {
         applicationContext.publishEvent(new StageReadyEvent(stage));
+        hideSplashScreen();
 
         stageManager = applicationContext.getBean(StageManager.class);
         stageManager.setPrimaryStage(stage);
@@ -38,6 +40,10 @@ public class AlpacaJavafxApp extends Application {
     public void stop() {
         this.applicationContext.close();
         Platform.exit();
+    }
+
+    private void hideSplashScreen() {
+        notifyPreloader(new Preloader.StateChangeNotification(Preloader.StateChangeNotification.Type.BEFORE_START, this));
     }
 
 }
