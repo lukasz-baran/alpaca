@@ -116,6 +116,7 @@ public class Person implements Serializable {
     @NoArgsConstructor
     @Embeddable
     @EqualsAndHashCode(callSuper = true)
+    @ToString(callSuper = true)
     public static class PersonAddress extends Address {
 
         private AddressType type;

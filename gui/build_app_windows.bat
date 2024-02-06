@@ -44,6 +44,7 @@ rem --win-console
 rem   --input input ^
 rem    --input target/installer/input/libs ^
 
+rem  --win-console ^
 call "jpackage" ^
     --type msi ^
     --dest target/installer ^
@@ -54,7 +55,6 @@ call "jpackage" ^
     --runtime-image target/java-runtime ^
     --win-menu ^
     --win-shortcut ^
-    --win-console ^
     --win-dir-chooser ^
     --win-per-user-install ^
     --icon src/main/resources/alpaca.ico ^

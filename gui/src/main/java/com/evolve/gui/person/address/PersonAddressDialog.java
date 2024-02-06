@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 
@@ -98,11 +99,11 @@ public class PersonAddressDialog extends DialogWindow<Person.PersonAddress> {
 
     private Person.PersonAddress getPersonAddress() {
         return new Person.PersonAddress(
-                streetTextField.getText().trim(),
-                postalCodeTextField.getText().trim(),
-                cityTextField.getText().trim(),
+                StringUtils.trimToNull(streetTextField.getText()),
+                StringUtils.trimToNull(postalCodeTextField.getText()),
+                StringUtils.trimToNull(cityTextField.getText()),
                 addressTypeObjectProperty.getValue(),
-                commentTextField.getText().trim()
+                StringUtils.trimToNull(commentTextField.getText())
         );
     }
 }

@@ -19,7 +19,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 public class SplashScreenLoader extends Preloader {
-    public static final Image SPLASH_IMAGE = new Image("images/alpaca-splash.png");
+    public static final Image SPLASH_IMAGE = new Image("images/alpacahand.png");
     private static final int SPLASH_WIDTH = 813 + 20;
     private static final int SPLASH_HEIGHT = 420 + 20;
 

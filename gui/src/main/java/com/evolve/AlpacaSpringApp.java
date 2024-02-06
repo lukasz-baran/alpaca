@@ -15,16 +15,22 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 
+import java.util.Arrays;
+
 @SpringBootApplication(scanBasePackages = "com.evolve")
 public class AlpacaSpringApp {
 
     public static void main(String[] args) {
-        loadSplashScreen();
+        loadSplashScreen(args);
         Application.launch(AlpacaJavafxApp.class, args);
     }
 
-    private static void loadSplashScreen() {
-        System.setProperty("javafx.preloader", SplashScreenLoader.class.getCanonicalName());
+    private static void loadSplashScreen(String[] args) {
+        final boolean showSplash = args == null || !Arrays.asList(args).contains("noSplash");
+
+        if (showSplash) {
+            System.setProperty("javafx.preloader", SplashScreenLoader.class.getCanonicalName());
+        }
     }
 
     @Bean
