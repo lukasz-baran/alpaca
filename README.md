@@ -1,6 +1,6 @@
 # What is this?
 
-Alpaca is a small desktop application that collects information about association members. In a way it's a CRM. 
+Alpaca is a small desktop application that collects information about association members. In a way it's a simple customer relationship management system, but instead of customers it collects information about membership status and personal data.
 
 ## Technology stack 
 * Java version: 17
