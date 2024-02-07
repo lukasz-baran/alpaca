@@ -36,4 +36,8 @@ public class AlpacaCommonConfiguration implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         log.info("Alpaca version: {} build: {}", applicationVersion, gitCommitNumber);
     }
+
+    public String getFullVersionNumber() {
+        return applicationVersion + " hash: " + gitCommitNumber;
+    }
 }
