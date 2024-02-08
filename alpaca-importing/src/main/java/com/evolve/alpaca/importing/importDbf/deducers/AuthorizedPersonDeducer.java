@@ -13,6 +13,7 @@ public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.Au
 
     private static final Set<PersonRelative> RELATIVE_TYPES = Set.of(
             PersonRelative.of("ż.", "żona"),
+            PersonRelative.of("z.", "żona"),
             PersonRelative.of("up. ż.", "żona"),
             PersonRelative.of("up.ż.", "żona"),
             PersonRelative.of("up. żona", "żona"),
@@ -32,7 +33,8 @@ public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.Au
             PersonRelative.of("mt-", "matka"),
             PersonRelative.of("up. matka", "matka"),
             PersonRelative.of("br.", "brat"),
-            PersonRelative.of("oj.", "ojciec"),
+            PersonRelative.of("o.", "ojciec"),
+            PersonRelative.of("oj.","ojciec"),
             PersonRelative.of("up. o.", "ojciec"),
             PersonRelative.of("narz.", "narzeczony(a)"),
             PersonRelative.of("up. narzcz.", "narzeczony(a)"),
