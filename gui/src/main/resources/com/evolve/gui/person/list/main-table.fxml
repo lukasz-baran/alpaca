@@ -8,6 +8,7 @@
 
 
 <VBox VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      stylesheets="@../../../../../styles/style.css"
       fx:controller="com.evolve.gui.person.list.MainTableController" minWidth="280">
 
     <HBox id="quickMenu" alignment="BASELINE_LEFT" maxHeight="18.0" prefHeight="18.0" spacing="5.0"

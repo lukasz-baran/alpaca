@@ -12,3 +12,13 @@
 .table-row-cell:invalid {
    -fx-border-color: red;
 }
+
+.tooltip{
+    -fx-background-color: cornsilk;
+    -fx-border-width:1;
+    -fx-border-color: darkgray;
+    -fx-background-radius: 1.0;
+    -fx-text-fill: black;
+    -fx-font-weight: normal;
+    -fx-font-size: 12px;
+}
