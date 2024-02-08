@@ -63,8 +63,8 @@ public class PersonDataDeducer {
                         new AuthorizedPersonDeducer(issues, true).deduceFrom(guesses)
                         .orElse(List.of());
 
-        final Optional<LocalDate> maybeDob = new PersonDateOfBirthDeducer(issues).deduceFrom(guesses);
-        final Optional<LocalDate> maybeJoiningDate = new JoiningDateDeducer(issues).deduceFrom(guesses);
+        final Optional<PersonStatusChange> maybeDob = new PersonDateOfBirthDeducer(issues).deduceFrom(guesses);
+        final Optional<PersonStatusChange> maybeJoiningDate = new JoiningDateDeducer(issues).deduceFrom(guesses);
 
         final List<Person.PersonAddress> personAddresses =
                 maybeAddress.map(address -> new Person.PersonAddress(address, Person.AddressType.HOME))
@@ -99,7 +99,7 @@ public class PersonDataDeducer {
                 .secondName(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getSecondName).orElse(null))
                 .gender(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getGender).orElse(null))
                 .lastName(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getLastName).orElse(null))
-                .dob(maybeDob.orElse(null))
+                .dob(maybeDob.map(PersonStatusChange::getWhen).orElse(null))
                 .registryNumber(registryNumber.orElse(null))
                 .oldRegistryNumber(oldRegistryNumber.orElse(null))
                 .addresses(personAddresses)
@@ -157,18 +157,12 @@ public class PersonDataDeducer {
         return bankAccount.stream().toList();
     }
 
-    List<PersonStatusChange> deduceStatusChanges(Optional<LocalDate> maybeDob,
-            Optional<LocalDate> maybeJoinedDate, Optional<PersonStatusDetails> personStatusDetails) {
+    List<PersonStatusChange> deduceStatusChanges(Optional<PersonStatusChange> maybeDob,
+            Optional<PersonStatusChange> maybeJoinedDate, Optional<PersonStatusDetails> personStatusDetails) {
         final List<PersonStatusChange> statusChanges = new ArrayList<>();
-        maybeDob.ifPresent(dob -> statusChanges.add(PersonStatusChange.builder()
-                        .eventType(PersonStatusChange.EventType.BORN)
-                        .when(dob)
-                .build()));
 
-        maybeJoinedDate.ifPresent(joinedDate -> statusChanges.add(PersonStatusChange.builder()
-                        .eventType(PersonStatusChange.EventType.JOINED)
-                        .when(joinedDate)
-                        .build()));
+        maybeDob.ifPresent(statusChanges::add);
+        maybeJoinedDate.ifPresent(statusChanges::add);
 
         personStatusDetails.ifPresent(statusDetails -> {
             switch (statusDetails.getStatus()) {

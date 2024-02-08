@@ -13,13 +13,14 @@ public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
     //NOTE: the order in the following lists is important:
     public static final List<String> DECEASED = List.of("ZMARŁA", "ZMARŁ", "ZM.", "ZM ");
     public static final List<String> RESIGNED = List.of("rez zw skł", "rez zwr skł",
-            "rezygnacja", "REZ.", "Rezyg.", "rezy", "REZ");
+            "rezygnacja", "REZ.", "Rezyg.", "rezy.", "rezy", "REZ");
 
     public static final List<String> REMOVED = List.of("Skreślenie",
             "skreślony",
             "skreśl.", "Skreśl", "skreśl",
             "SKRŚL",
             "skr. zw skł",
+            "skr zwr skł",
             "skr. zwr skł",
             "skr zw skł",
             "sker zw skł",

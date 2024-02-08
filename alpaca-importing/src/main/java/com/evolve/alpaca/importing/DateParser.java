@@ -24,6 +24,8 @@ public class DateParser {
     static final String ROMAN_MONTH_PATTERN = "(I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII)";
     static final Pattern DATE_WITH_ROMAN_LITERALS_PATTERN = Pattern.compile(DAY_PATTERN + DATE_SEPARATOR + ROMAN_MONTH_PATTERN + DATE_SEPARATOR + YEAR_PATTERN);
 
+    public static final Pattern SHORT_DATE_ROMAN_LITERALS_PATTERN = Pattern.compile(ROMAN_MONTH_PATTERN + "\\s*[/-]\\s*" + YEAR_PATTERN, Pattern.CASE_INSENSITIVE);
+
     static final Map<String,Integer> ROMAN_LITERALS_TO_NUMBERS = ImmutableMap.<String,Integer>builder()
             .put("I", 1)
             .put("II", 2)
@@ -62,11 +64,19 @@ public class DateParser {
             return Optional.of(LocalDate.of(year, month, day));
         }
 
+        final Matcher shortDateRomanMatcher = SHORT_DATE_ROMAN_LITERALS_PATTERN.matcher(input);
+        if (shortDateRomanMatcher.matches()) {
+            final int day = 1; // Assume first day of the month!
+            final int month = ROMAN_LITERALS_TO_NUMBERS.get(StringUtils.upperCase(shortDateRomanMatcher.group(1)));
+            final int year = sanitizeYear(shortDateRomanMatcher.group(2));
+            return Optional.of(LocalDate.of(year, month, day));
+        }
+
         return Optional.empty();
     }
 
     private static String removeTrailingYearSuffix(String input) {
-        return StringUtils.removeEndIgnoreCase(input, "r.");
+        return StringUtils.removeEndIgnoreCase(input, "r.").stripTrailing();
     }
 
     /**

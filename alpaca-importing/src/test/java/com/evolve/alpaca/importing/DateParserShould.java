@@ -32,12 +32,26 @@ class DateParserShould {
 
     @Test
     void removeTrailingPolishYearSuffix() {
-        // given
-        final String input = "12.04.2005r.";
-        // when
-        final Optional<LocalDate> result = DateParser.parse(input);
-        // then
-        assertThat(result).hasValue(LocalDate.of(2005, Month.APRIL, 12));
+        assertThat(DateParser.parse("12.04.2005r."))
+                .hasValue(LocalDate.of(2005, Month.APRIL, 12));
+
+        assertThat(DateParser.parse("4.07.2006 r."))
+                .hasValue(LocalDate.of(2006, Month.JULY, 4));
+
+        assertThat(DateParser.parse("4.07.2006 R."))
+                .hasValue(LocalDate.of(2006, Month.JULY, 4));
+    }
+
+    @Test
+    void parseShortDateWithRomanNumbers() {
+        assertThat(DateParser.parse("IV / 2005"))
+                .hasValue(LocalDate.of(2005, Month.APRIL, 1));
+        assertThat(DateParser.parse("IV/2005"))
+                .hasValue(LocalDate.of(2005, Month.APRIL, 1));
+        assertThat(DateParser.parse("IV-2005"))
+                .hasValue(LocalDate.of(2005, Month.APRIL, 1));
+        assertThat(DateParser.parse("IV-05"))
+                .hasValue(LocalDate.of(1905, Month.APRIL, 1)); // 1905 will be corrected later
     }
 
 }

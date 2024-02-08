@@ -33,6 +33,8 @@ public class AuthorizedPersonDeducer extends AbstractSmartDeducer<List<Person.Au
             PersonRelative.of("up. matka", "matka"),
             PersonRelative.of("br.", "brat"),
             PersonRelative.of("oj.", "ojciec"),
+            PersonRelative.of("up. o.", "ojciec"),
+            PersonRelative.of("narz.", "narzeczony(a)"),
             PersonRelative.of("up. narzcz.", "narzeczony(a)"),
             PersonRelative.of("up.", "mąż", "mąż"), //prefix-suffix pattern
             PersonRelative.of("partnerka", "partnerka"),

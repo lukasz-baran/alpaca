@@ -36,6 +36,10 @@ public class PersonStatusChange implements Comparable<PersonStatusChange> {
         return new PersonStatusChange(EventType.JOINED, when);
     }
 
+    public static PersonStatusChange joined(LocalDate when, String originalValue) {
+        return new PersonStatusChange(EventType.JOINED, when, originalValue);
+    }
+
     // resignations:
 
     public static PersonStatusChange resigned(String originalValue) {

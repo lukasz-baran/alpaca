@@ -47,7 +47,7 @@ class PersonDataDeducerShould {
                         .build())
                 .hasStatusHistory(
                         PersonStatusChange.born(LocalDate.of(1964, 12, 17)),
-                        PersonStatusChange.joined(LocalDate.of(1992, 11, 5)),
+                        PersonStatusChange.joined(LocalDate.of(1992, 11, 5), "5.11.92"),
                         PersonStatusChange.removed(LocalDate.of(2005, 4, 12), "12.04.2005r."));
     }
 
@@ -123,7 +123,7 @@ class PersonDataDeducerShould {
             .wasBornOn(LocalDate.of(1943, 4, 10))
             .hasStatusHistory(
                 PersonStatusChange.born(LocalDate.of(1943, 4, 10)),
-                PersonStatusChange.joined(LocalDate.of(1982, 10, 20)),
+                PersonStatusChange.joined(LocalDate.of(1982, 10, 20), "20.10.82"),
                 PersonStatusChange.resigned(LocalDate.of(2020, 11, 9), "09.11.2020"));
     }
 
@@ -150,7 +150,7 @@ class PersonDataDeducerShould {
                 .wasBornOn(expectedDob)
                 .hasStatusHistory(
                         PersonStatusChange.born(expectedDob),
-                        PersonStatusChange.joined(LocalDate.of(1984, 3, 13)),
+                        PersonStatusChange.joined(LocalDate.of(1984, 3, 13), "13,03,84"),
                         PersonStatusChange.removed("2012"));
     }
 
