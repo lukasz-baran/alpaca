@@ -30,10 +30,11 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
         </padding>
 
-       <HBox fx:id="searchCriteriaHBox" alignment="TOP_CENTER" prefHeight="18.0" prefWidth="640.0"
+       <HBox fx:id="searchCriteriaHBox" alignment="TOP_CENTER" prefHeight="25" maxHeight="25" prefWidth="640.0"
              spacing="5.0" visible="false"
-             AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-           <TextFlow>
+              AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="3.0"
+            style="-fx-background-color: cornsilk; -fx-border-width:1; -fx-border-color: darkgray; -fx-background-radius: 1.0;">
+           <TextFlow maxHeight="30">
                <Text fx:id="textSearchCriteria" />
                <Hyperlink fx:id="resetSearchHyperlink" text="Wyczyść" />
            </TextFlow>

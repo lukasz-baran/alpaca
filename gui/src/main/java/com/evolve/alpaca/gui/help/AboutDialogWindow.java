@@ -10,10 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
@@ -90,6 +87,11 @@ public class AboutDialogWindow implements Initializable {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.getIcons().add(APPLICATION_ICON);
         stage.setResizable(false);
+        stage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
+            if (KeyCode.ESCAPE == event.getCode()) {
+                closeWindow();
+            }
+        });
     }
 
     public void show() {
@@ -98,7 +100,7 @@ public class AboutDialogWindow implements Initializable {
 
     @FXML
     void onOk(ActionEvent actionEvent) {
-        stage.close();
+        closeWindow();
     }
 
     @FXML
@@ -127,5 +129,9 @@ public class AboutDialogWindow implements Initializable {
             cm.getItems().add(copyMenuItem);
             cm.show(aboutTextFlow, mouseEvent.getScreenX(), mouseEvent.getScreenY());
         }
+    }
+
+    private void closeWindow() {
+        stage.close();
     }
 }

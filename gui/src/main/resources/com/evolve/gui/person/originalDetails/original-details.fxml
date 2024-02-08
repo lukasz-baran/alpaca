@@ -13,55 +13,54 @@
 
 <GridPane hgap="10.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="com.evolve.gui.person.originalDetails.OriginalDetailsController">
-   <columnConstraints>
-      <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
-      <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints minHeight="30.0" prefHeight="30.0" maxHeight="30.0" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-   </rowConstraints>
-   <children>
-       <TableView fx:id="originalDetailsTable" prefHeight="520.0" prefWidth="290.0" GridPane.rowIndex="1">
-           <columns>
-               <TableColumn fx:id="keyColumn" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false"
-                            text="Pole" />
-               <TableColumn fx:id="valueColumn" prefWidth="200.0" text="Wartość" resizable="false" />
-           </columns>
-           <columnResizePolicy>
-               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-           </columnResizePolicy>
-           <contextMenu>
-               <ContextMenu>
-                   <items>
-                       <MenuItem fx:id="copyValue" mnemonicParsing="false" text="Kopiuj" />
-                   </items>
-               </ContextMenu>
-           </contextMenu>
-        </TableView>
-   
-        <TableView fx:id="fixersDataTable" prefHeight="520.0" prefWidth="350.0" maxWidth="350.0"
-                   GridPane.columnIndex="1" GridPane.rowIndex="1">
-           <columns>
-               <TableColumn fx:id="fieldColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Pole" />
-               <TableColumn fx:id="newValueColumn" prefWidth="200.0" text="Nowa wartość" resizable="false" />
-           </columns>
-           <columnResizePolicy>
-             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-           </columnResizePolicy>
-       </TableView>
-      <Label text="Oryginalne dane">
-         <padding>
-            <Insets left="10.0" />
-         </padding>
-      </Label>
-      <Label text="Dane naprawcze" GridPane.columnIndex="1">
-         <padding>
-            <Insets left="10.0" />
-         </padding>
-      </Label>
-   </children>
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="30.0" prefHeight="30.0" maxHeight="30.0" vgrow="NEVER"/>
+        <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" />
+        <Insets bottom="10.0" left="10.0" right="10.0"/>
     </padding>
+    <TableView fx:id="originalDetailsTable" prefHeight="520.0" prefWidth="290.0" GridPane.rowIndex="1">
+        <columns>
+            <TableColumn fx:id="keyColumn" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false"
+                         text="Pole"/>
+            <TableColumn fx:id="valueColumn" prefWidth="200.0" text="Wartość" resizable="false"/>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+        <contextMenu>
+            <ContextMenu>
+                <items>
+                    <MenuItem fx:id="copyValue" mnemonicParsing="false" text="Kopiuj"/>
+                </items>
+            </ContextMenu>
+        </contextMenu>
+    </TableView>
+
+    <TableView fx:id="fixersDataTable" prefHeight="520.0" prefWidth="350.0" maxWidth="350.0"
+               GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <columns>
+            <TableColumn fx:id="fieldColumn" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false"
+                         text="Pole"/>
+            <TableColumn fx:id="newValueColumn" prefWidth="200.0" text="Nowa wartość" resizable="false"/>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+    </TableView>
+    <Label text="Oryginalne dane">
+        <padding>
+          <Insets left="10.0"/>
+        </padding>
+    </Label>
+    <Label text="Dane naprawcze" GridPane.columnIndex="1">
+        <padding>
+          <Insets left="10.0"/>
+        </padding>
+    </Label>
 </GridPane>
