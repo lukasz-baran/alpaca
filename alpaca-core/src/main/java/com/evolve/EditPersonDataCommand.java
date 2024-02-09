@@ -19,6 +19,8 @@ public record EditPersonDataCommand(String id,
                                     String unitNumber,
                                     String registryNumber,
                                     String oldRegistryNumber,
-                                    List<BankAccount> bankAccounts) implements Command {
+                                    List<BankAccount> bankAccounts,
+                                    Boolean retired,
+                                    Boolean exemptFromFees) implements Command {
 
 }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 
 import static com.evolve.domain.PersonAssertion.assertPerson;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class PersonShould {
 
@@ -27,6 +28,23 @@ class PersonShould {
                 .hasStatusHistory(PersonStatusChange.born(dob),
                         PersonStatusChange.joined(joined),
                         PersonStatusChange.died(death));
+    }
+
+    @Test
+    void setRetirement() {
+        assertThat(new Person().updateRetirement(true).getRetired())
+                .isTrue();
+        assertThat(new Person().updateRetirement(false).getRetired())
+                .isNull();
+
+        assertThat(Person.builder().retired(true).build().updateRetirement(true).getRetired())
+                .isTrue();
+        assertThat(Person.builder().retired(false).build().updateRetirement(true).getRetired())
+                .isTrue();
+
+        assertThat(Person.builder().retired(false).build().updateRetirement(true).getRetired())
+                .isTrue();
+
     }
 
 }

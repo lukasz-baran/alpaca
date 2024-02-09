@@ -1,6 +1,7 @@
 package com.evolve.domain;
 
 import lombok.*;
+import org.apache.commons.lang.BooleanUtils;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeSet;
 
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
@@ -96,6 +98,23 @@ public class Person implements Serializable {
                 .filter(statusChange -> statusChange.getEventType() == PersonStatusChange.EventType.BORN)
                 .findFirst()
                 .ifPresent(dobStatusChange -> this.dob = dobStatusChange.getWhen());
+    }
+
+    /**
+     * If false - set null
+     */
+    public Person updateRetirement(Boolean retired) {
+        this.retired = Optional.ofNullable(retired)
+                .filter(BooleanUtils::isTrue)
+                .orElse(null);
+        return this;
+    }
+
+    public Person updateExemptionFromFees(Boolean exemptFromFees) {
+        this.exemptFromFees = Optional.ofNullable(exemptFromFees)
+                .filter(BooleanUtils::isTrue)
+                .orElse(null);
+        return this;
     }
 
     @Getter

@@ -40,6 +40,8 @@ public class PersonEditService extends ApplicationService {
         person.setRegistryNumber(RegistryNumber.of(command.registryNumber()));
         person.setOldRegistryNumber(RegistryNumber.of(command.oldRegistryNumber()));
         person.setBankAccounts(command.bankAccounts());
+        person.updateRetirement(command.retired());
+        person.updateExemptionFromFees(command.exemptFromFees());
 
         final Person.Gender gender = PersonGenderDeducer.getGender(command.firstName());
         person.setGender(gender);

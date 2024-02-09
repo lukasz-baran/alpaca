@@ -110,7 +110,7 @@ public class PersonDetailsController extends EditableGuiElement
                 });
     }
 
-    public void setPerson(PersonModel personModel) {
+    private void setPerson(PersonModel personModel) {
         if (personModel == null || personModel.getId() == null) {
             return;
         }
@@ -213,9 +213,6 @@ public class PersonDetailsController extends EditableGuiElement
     }
 
     private void persistChanges() {
-        // TODO handle changes to retired/exemptFromFees properties
-        // they should be set using comparison to the previous state
-
         final EditPersonDataCommand command = new EditPersonDataCommand(
                 idTextField.getText(),
                 firstNameTextField.getText(),
@@ -228,8 +225,9 @@ public class PersonDetailsController extends EditableGuiElement
                 unitNumberComboBox.getSelectionModel().getSelectedItem().unitNumber(),
                 registryNumberTextField.getText(),
                 oldRegistryNumberTextField.getText(),
-                personBankAccountsController.getController().getAccounts()
-                );
+                personBankAccountsController.getController().getAccounts(),
+                retiredCheckBox.isSelected(),
+                exemptFromFeesCheckBox.isSelected());
 
         log.info("Update person data: {}", command);
 
