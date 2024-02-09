@@ -42,9 +42,8 @@ class PersonShould {
         assertThat(Person.builder().retired(false).build().updateRetirement(true).getRetired())
                 .isTrue();
 
-        assertThat(Person.builder().retired(false).build().updateRetirement(true).getRetired())
-                .isTrue();
-
+        assertThat(Person.builder().retired(true).build().updateRetirement(false).getRetired())
+                .isNull();
     }
 
 }
