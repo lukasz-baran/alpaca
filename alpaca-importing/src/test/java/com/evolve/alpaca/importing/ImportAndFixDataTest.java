@@ -35,12 +35,13 @@ public class ImportAndFixDataTest {
     void importAndFix() throws IOException {
         // given
         final Resource resourcePersons = new DefaultResourceLoader().getResource("Z_B_KO.DBF");
+        final Resource resourceAccounts = new DefaultResourceLoader().getResource("PLAN.DBF");
         // we don't want this test to fail when there is no DBF files:
-        assumeThat(resourcePersons.exists())
+        assumeThat(resourcePersons.exists() && resourceAccounts.exists())
                 .isTrue();
 
         // when
-        importDbfService.startImport(resourcePersons.getFile().getPath(), "");
+        importDbfService.startImport(resourcePersons.getFile().getPath(), resourceAccounts.getFile().getPath());
 
         // then
         sanityChecks(personRepository.findAll());
@@ -56,6 +57,12 @@ public class ImportAndFixDataTest {
         assertPerson(getPersonById(importedPersons, "01021"))
                 .hasStatus(PersonStatus.ACTIVE);
         // 01014 - rezygnacja 16.09.03
+
+        assertPerson(getPersonById(importedPersons, "07123"))
+                .isExemptFromFees();
+        assertPerson(getPersonById(importedPersons, "02102"))
+                .isExemptFromFees();
+
     }
 
     Person getPersonById(List<Person> importedPersons, String personId) {

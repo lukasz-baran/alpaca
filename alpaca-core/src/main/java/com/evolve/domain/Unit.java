@@ -36,6 +36,10 @@ public class Unit implements Serializable {
         };
     }
 
+    public static boolean isExemptFromFees(String code) {
+        return EXEMPT_FROM_FEES_UNIT_NUMBER.equals(code);
+    }
+
     @Id
     private String id;
 

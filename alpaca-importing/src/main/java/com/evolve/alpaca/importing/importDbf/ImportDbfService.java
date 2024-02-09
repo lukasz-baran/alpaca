@@ -66,12 +66,10 @@ public class ImportDbfService {
 
         personsService.insertPersons(persons);
 
-        if (StringUtils.isNotBlank(accountsFilePath)) {
-            importAccounts(accountsFilePath);
-        }
+        final List<Account> importedAccounts = importAccounts(accountsFilePath);
 
         // post import handles re-setting person status
-        postImportStep();
+        postImportStep(importedAccounts);
 
         processCommands();
 
@@ -82,8 +80,8 @@ public class ImportDbfService {
         return persons;
     }
 
-    private void postImportStep() {
-        postImportStepService.processAll();
+    private void postImportStep(List<Account> importedAccounts) {
+        postImportStepService.processAll(importedAccounts);
     }
 
     void processCommands() {
@@ -109,7 +107,11 @@ public class ImportDbfService {
         });
     }
 
-    void importAccounts(String accountsFilePath) {
+    List<Account> importAccounts(String accountsFilePath) {
+        if (StringUtils.isBlank(accountsFilePath)) {
+            return List.of();
+        }
+
         final List<DbfAccount> accountsDbf = new ImportAccountDbf()
                 .performImport(accountsFilePath)
                 .getItems();
@@ -119,6 +121,7 @@ public class ImportDbfService {
                 .toList();
 
         accountsService.insertAccounts(accounts);
+        return accounts;
     }
 
 

@@ -3,7 +3,10 @@ package com.evolve.gui.person;
 import com.evolve.EditPersonDataCommand;
 import com.evolve.alpaca.util.LocalDateStringConverter;
 import com.evolve.alpaca.validation.ValidationException;
-import com.evolve.domain.*;
+import com.evolve.domain.Person;
+import com.evolve.domain.PersonStatus;
+import com.evolve.domain.RegistryNumber;
+import com.evolve.domain.Unit;
 import com.evolve.gui.EditableGuiElement;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.components.GenderComboboxController;
@@ -11,9 +14,9 @@ import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.address.PersonAddressesController;
 import com.evolve.gui.person.authorizedPerson.AuthorizedPersonsController;
 import com.evolve.gui.person.bankAccounts.PersonBankAccountsController;
+import com.evolve.gui.person.contactDetails.PersonContactDataController;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
-import com.evolve.gui.person.contactDetails.PersonContactDataController;
 import com.evolve.gui.person.status.PersonStatusController;
 import com.evolve.services.PersonEditService;
 import com.evolve.services.PersonsService;
@@ -24,10 +27,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -36,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.apache.commons.lang.BooleanUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -88,8 +89,10 @@ public class PersonDetailsController extends EditableGuiElement
     @FXML TextField registryNumberTextField;
     @FXML TextField oldRegistryNumberTextField;
 
-    @FXML ComboBox<UnitNumberItem> unitNumberComboBox;
+    @FXML CheckBox retiredCheckBox;
+    @FXML CheckBox exemptFromFeesCheckBox;
 
+    @FXML ComboBox<UnitNumberItem> unitNumberComboBox;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -130,6 +133,9 @@ public class PersonDetailsController extends EditableGuiElement
                 Optional.ofNullable(person.getOldRegistryNumber())
                         .flatMap(RegistryNumber::getNumber)
                         .map(Object::toString).orElse(null));
+
+        retiredCheckBox.setSelected(BooleanUtils.isTrue(person.getRetired()));
+        exemptFromFeesCheckBox.setSelected(BooleanUtils.isTrue(person.getExemptFromFees()));
 
         personGender.getController().setPersonGender(person);
 
@@ -174,6 +180,9 @@ public class PersonDetailsController extends EditableGuiElement
         registryNumberTextField.setEditable(editable);
         oldRegistryNumberTextField.setEditable(editable);
 
+        retiredCheckBox.setDisable(!editable);
+        exemptFromFeesCheckBox.setDisable(!editable);
+
         personAddresses.getController().setEditable(editable);
         authorizedController.getController().setEditable(editable);
         phoneNumbersController.getController().setEditable(editable);
@@ -204,6 +213,9 @@ public class PersonDetailsController extends EditableGuiElement
     }
 
     private void persistChanges() {
+        // TODO handle changes to retired/exemptFromFees properties
+        // they should be set using comparison to the previous state
+
         final EditPersonDataCommand command = new EditPersonDataCommand(
                 idTextField.getText(),
                 firstNameTextField.getText(),

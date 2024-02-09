@@ -98,4 +98,8 @@ public class PersonAssertion extends AbstractAssert<PersonAssertion, Person> {
         return this;
     }
 
+    public PersonAssertion isExemptFromFees() {
+        assertThat(actual.getExemptFromFees()).isTrue();
+        return this;
+    }
 }

@@ -31,7 +31,7 @@ public class PostImportProcessTest {
         var person = personRepository.findByPersonId("11022");
 
         if (person != null) {
-            postImportStepService.process(List.of(person));
+            postImportStepService.process(List.of(person), List.of());
         }
 
     }
