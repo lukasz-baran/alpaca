@@ -46,6 +46,8 @@ class StatusPersonDeducerShould {
         assertThat(deducer.deduceFrom(List.of("REZYGNACJA 4.07.2006 r.")))
                 .hasValue(PersonStatusDetails.resigned("4.07.2006 r."));
 
+        assertThat(deducer.deduceFrom(List.of("R 11.06.02")))
+                .hasValue(PersonStatusDetails.resigned("11.06.02"));
     }
 
     @Test

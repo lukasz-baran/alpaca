@@ -1,12 +1,12 @@
 package com.evolve.alpaca.importing.importDbf.deducers;
 
+import com.evolve.alpaca.importing.DateParser;
 import com.evolve.alpaca.importing.PersonStatusDetails;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.function.Predicate.not;
+import java.util.stream.Collectors;
 
 public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
 
@@ -28,25 +28,28 @@ public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
 
     @Override
     public Optional<PersonStatusDetails> deduceFrom(List<String> guesses) {
-        final Optional<PersonStatusDetails> maybeDead = detectDeceased(guesses);
+        final List<String> sanitized = guesses.stream()
+                .filter(StringUtils::isNotBlank)
+                .map(String::trim)
+                .collect(Collectors.toList());
+
+        final Optional<PersonStatusDetails> maybeDead = detectDeceased(sanitized);
         if (maybeDead.isPresent()) {
             return maybeDead;
         }
 
-        final Optional<PersonStatusDetails> maybeResigned = detectResigned(guesses);
+        final Optional<PersonStatusDetails> maybeResigned = detectResigned(sanitized);
         if (maybeResigned.isPresent()) {
             return maybeResigned;
         }
 
-        return detectRemoved(guesses);
+        return detectRemoved(sanitized);
     }
 
     private Optional<PersonStatusDetails> detectDeceased(List<String> guesses) {
         // pre-filter to detect statuses without exact dates
         final List<String> dead = List.of("zmar"); // bad spelling!
         if (guesses.stream()
-                .filter(StringUtils::isNotBlank)
-                .map(String::trim)
                 .anyMatch(guess -> anyEqualsIgnoreCase(dead, guess))) {
             return Optional.of(PersonStatusDetails.dead());
         }
@@ -67,10 +70,18 @@ public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
         final List<String> resignation = List.of("rez", "rezy", "rez.");
 
         if (guesses.stream()
-                .filter(StringUtils::isNotBlank)
-                .map(String::trim)
                 .anyMatch(guess -> anyEqualsIgnoreCase(resignation, guess))) {
             return Optional.of(PersonStatusDetails.resigned());
+        }
+
+        // detect "R 11.06.02" or similar Resignation statuses:
+        if (guesses.stream()
+                .anyMatch(guess -> guess.matches("R " + DateParser.DATE_PATTERN))) {
+            return guesses.stream()
+                    .filter(guess -> guess.matches("R " + DateParser.DATE_PATTERN))
+                    .findFirst()
+                    .map(guess -> guess.replaceFirst("R ", ""))
+                    .map(PersonStatusDetails::resigned);
         }
 
         final List<String> exceptions = List.of("rezyg z podwyższonej skła");
@@ -101,7 +112,7 @@ public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
     }
 
     private String removeMatchingString(List<String> list, String guess) {
-        return list.stream().sequential()
+        return list.stream()
                 .filter(element -> StringUtils.containsIgnoreCase(guess, element))
                 .map(element -> StringUtils.removeIgnoreCase(guess, element))
                 .findFirst()

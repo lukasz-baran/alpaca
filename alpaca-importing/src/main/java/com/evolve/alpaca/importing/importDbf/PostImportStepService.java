@@ -65,6 +65,12 @@ public class PostImportStepService {
                 persistChanges.set(true);
             }
 
+            // retirement can be updated once we have deduced person status properly
+            if (Person.isRetired(person)) {
+                person.updateRetirement(true);
+                persistChanges.set(true);
+            }
+
             if (persistChanges.get()) {
                 personRepository.save(person);
             }

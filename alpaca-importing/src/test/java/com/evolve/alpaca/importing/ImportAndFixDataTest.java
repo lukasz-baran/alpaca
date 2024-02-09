@@ -63,6 +63,10 @@ public class ImportAndFixDataTest {
         assertPerson(getPersonById(importedPersons, "02102"))
                 .isExemptFromFees();
 
+        // then -- check: "R 11.06.02" - resigned status
+        assertPerson(getPersonById(importedPersons, "20015"))
+                .hasStatus(PersonStatus.RESIGNED);
+
     }
 
     Person getPersonById(List<Person> importedPersons, String personId) {

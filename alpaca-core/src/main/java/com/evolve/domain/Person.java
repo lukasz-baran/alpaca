@@ -202,4 +202,18 @@ public class Person implements Serializable {
         return dob != null ? Period.between(dob, LocalDate.now()).getYears() : 0L;
     }
 
+    public static boolean isRetired(Person person) {
+        if (person.status == PersonStatus.DEAD || person.status == PersonStatus.ARCHIVED || person.dob == null) {
+            return false;
+        }
+
+        // retirement age for females is 60:
+        if (person.gender == Gender.FEMALE && Period.between(person.dob, LocalDate.now()).getYears() >= 60) {
+            return true;
+        }
+
+        // retirement age for males is 65:
+        return person.gender == Gender.MALE && Period.between(person.dob, LocalDate.now()).getYears() >= 65;
+    }
+
 }
