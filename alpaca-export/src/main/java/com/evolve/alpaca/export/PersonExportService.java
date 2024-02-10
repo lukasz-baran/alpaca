@@ -1,5 +1,7 @@
 package com.evolve.alpaca.export;
 
+import com.evolve.alpaca.utils.LogUtil;
+import com.evolve.domain.Person;
 import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.services.PersonsService;
 import com.opencsv.bean.*;
@@ -9,10 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
@@ -35,8 +34,29 @@ public class PersonExportService {
 
     public void exportPersons(PersonExportCriteria criteria, File file, List<String> orderedList)  {
         log.info("export to {}", file.getAbsolutePath());
-        final List<PersonExportView> recordsForExport = fetchRecordsToExport(criteria.exportType(), orderedList);
+        var persons = fetchPersonsForExport(criteria.exportType(), orderedList);
 
+        switch (criteria.exportTargetFormat()) {
+            case CSV -> exportToCsv(file, persons);
+            case JSON -> exportToJson(file, persons);
+            case ODS -> log.warn("Not yet implemented!");
+        }
+    }
+
+    void exportToJson(File file, List<Person> personList) {
+        final String personJson = LogUtil.prettyPrintJson(personList);
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(personJson);
+            writer.flush();
+        } catch (IOException ex) {
+            throw new AlpacaExportException(ex);
+        }
+    }
+
+    void exportToCsv(File file, List<Person> personList) {
+        final List<PersonExportView> recordsForExport = personList.stream()
+                .map(PersonExportView::of)
+                .collect(Collectors.toList());
         try (BufferedWriter writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
             writeToFile(writer, recordsForExport);
             writer.flush();
@@ -44,6 +64,25 @@ public class PersonExportService {
                  IOException ex) {
             throw new AlpacaExportException(ex);
         }
+    }
+
+    List<Person> fetchPersonsForExport(PersonExportType exportType, List<String> orderedList) {
+        final List<Person> allPersons = personsService.fetch(PersonLookupCriteria.ALL)
+                .stream()
+                .toList();
+        if (exportType == PersonExportType.ALL) {
+            return allPersons;
+        }
+
+        final Function<String, Optional<Person>> idToPerson = personId -> allPersons.stream()
+                .filter(person -> personId.equals(person.getPersonId()))
+                .findFirst();
+        return emptyIfNull(orderedList)
+                .stream()
+                .map(idToPerson)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     List<PersonExportView> fetchRecordsToExport(PersonExportType exportType, List<String> orderedList) {

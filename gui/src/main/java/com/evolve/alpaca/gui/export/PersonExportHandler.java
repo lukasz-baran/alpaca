@@ -1,5 +1,6 @@
 package com.evolve.alpaca.gui.export;
 
+import com.evolve.alpaca.export.ExportTargetFormat;
 import com.evolve.alpaca.export.PersonExportService;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.person.list.PersonModel;
@@ -18,8 +19,9 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class PersonExportHandler {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd_HHmm");
-    private static final String FILE_NAME_PATTERN = "alpaca_export_%s.csv";
-
+    private static final String CSV_FILE_NAME_PATTERN = "alpaca_export_%s.csv";
+    private static final String JSON_FILE_NAME_PATTERN = "alpaca_export_%s.json";
+    private static final String ODS_FILE_NAME_PATTERN = "alpaca_export_%s.ods";
 
     private final StageManager stageManager;
     private final PersonExportService alpacaExportService;
@@ -28,12 +30,12 @@ public class PersonExportHandler {
         new PersonExportDialog()
                 .showDialog(stageManager.getWindow())
                 .ifPresent(personExportCriteria -> {
-                    System.out.println("Person export criteria: " + personExportCriteria);
+                    log.info("Person export criteria: {}", personExportCriteria);
 
                     final FileChooser fileChooser = new FileChooser();
                     fileChooser.setTitle("Zapisz plik");
                     fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("All Files", "*.*"));
-                    fileChooser.setInitialFileName(getInitialFileName());
+                    fileChooser.setInitialFileName(getInitialFileName(personExportCriteria.exportTargetFormat()));
 
                     final File fileToSave = fileChooser.showSaveDialog(stageManager.getPrimaryStage());
                     if (fileToSave == null) {
@@ -47,8 +49,13 @@ public class PersonExportHandler {
                 });
     }
 
-    private String getInitialFileName() {
-        return String.format(FILE_NAME_PATTERN, LocalDateTime.now().format(DATE_TIME_FORMATTER));
+    private String getInitialFileName(ExportTargetFormat exportTargetFormat) {
+        var currentTime = LocalDateTime.now().format(DATE_TIME_FORMATTER);
+        return switch (exportTargetFormat) {
+            case CSV -> String.format(CSV_FILE_NAME_PATTERN, currentTime);
+            case JSON -> String.format(JSON_FILE_NAME_PATTERN, currentTime);
+            case ODS -> String.format(ODS_FILE_NAME_PATTERN, currentTime);
+        };
     }
 
 }
