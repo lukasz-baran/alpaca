@@ -28,6 +28,8 @@ public class AlpacaJavafxApp extends Application {
 
     @Override
     public void start(Stage stage) {
+        Thread.setDefaultUncaughtExceptionHandler(new GlobalExceptionHandler(stage));
+
         applicationContext.publishEvent(new StageReadyEvent(stage));
         hideSplashScreen();
 

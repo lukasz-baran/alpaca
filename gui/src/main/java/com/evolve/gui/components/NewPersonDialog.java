@@ -1,11 +1,11 @@
 package com.evolve.gui.components;
 
+import com.evolve.FindPerson;
 import com.evolve.alpaca.util.DatePickerKeyEventHandler;
 import com.evolve.alpaca.util.LocalDateStringConverter;
 import com.evolve.domain.*;
 import com.evolve.gui.DialogWindow;
 import com.evolve.gui.person.UnitNumberItem;
-import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -23,16 +23,25 @@ import java.util.Optional;
 @Slf4j
 public class NewPersonDialog extends DialogWindow<Person> {
 
-    private final PersonsService personsService;
-    private final UnitsService unitsService;
+    private static final String NEW_REGISTRY_NUMBER_TOOLTIP_TEXT =
+            "%d, gdyż ostatni znaleziony numer kartoteki to %d należący do %s %s";
+
+    private final ObservableList<UnitNumberItem> units = FXCollections.observableArrayList();
     private final TextField firstNameTextField = new TextField();
     private final TextField lastNameTextField = new TextField();
     private final TextField personIdTextField = new TextField();
+    private final TextField registryNumberTextField = new TextField();
+    private final FindPerson findPerson;
 
-    public NewPersonDialog(PersonsService personsService, UnitsService unitsService) {
+    public NewPersonDialog(FindPerson findPerson, UnitsService unitsService) {
         super("Nowa osoba", "Podaj dane osobowe nowej osoby. Numer ID zostanie wygenerowany automatycznie");
-        this.personsService = personsService;
-        this.unitsService = unitsService;
+        this.findPerson = findPerson;
+        this.units.addAll(unitsService.fetchList().stream().map(unit -> new UnitNumberItem(unit.getId(), unit.getName()))
+                .toList());
+
+        this.findPerson.findLastRegistryNumber()
+                .ifPresentOrElse(this::setUpNewRegistryNumber,
+                    () -> registryNumberTextField.setPromptText("Numer kartoteki"));
     }
 
     @Override
@@ -59,17 +68,10 @@ public class NewPersonDialog extends DialogWindow<Person> {
         dobDatePicker.setPromptText("Data urodzenia");
         dobDatePicker.getEditor().setOnKeyTyped(new DatePickerKeyEventHandler(dobConverter, dobDatePicker));
 
-        ObservableList<UnitNumberItem> units = FXCollections.observableArrayList();
-        for (Unit unit : unitsService.fetchList()) {
-            units.add(new UnitNumberItem(unit.getId(), unit.getName()));
-        }
         final ComboBox<UnitNumberItem> unitNumberCombo = new ComboBox<>(units);
 
         final ComboBox<Person.Gender> genderCombo = new ComboBox<>(
                 FXCollections.observableArrayList(Person.Gender.FEMALE, Person.Gender.MALE));
-
-        final TextField registryNumberTextField = new TextField();
-        registryNumberTextField.setPromptText("Numer kartoteki");
 
         // first column
         grid.add(new Label("Imię:"), 0, 0);
@@ -160,8 +162,19 @@ public class NewPersonDialog extends DialogWindow<Person> {
 
     void regeneratePersonId(TextField personIdTextField, TextField lastNameTextField) {
         personIdTextField.setText("");
-        personsService.findNextPersonId(lastNameTextField.getText().trim())
+        findPerson.findNextPersonId(lastNameTextField.getText().trim())
                 .ifPresent(personIdTextField::setText);
+    }
+
+    void setUpNewRegistryNumber(Integer number) {
+        final Person person = findPerson.byRegistryNumber(number).stream().findFirst().orElseThrow();
+
+        final long newNumber = number + 1;
+        final String tooltipText = NEW_REGISTRY_NUMBER_TOOLTIP_TEXT.formatted(newNumber,
+                number, person.getFirstName(), person.getLastName());
+
+        this.registryNumberTextField.setText(Long.toString(newNumber));
+        this.registryNumberTextField.setTooltip(new Tooltip(tooltipText));
     }
 
     @Override

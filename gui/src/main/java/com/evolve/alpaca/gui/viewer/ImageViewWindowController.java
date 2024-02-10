@@ -450,7 +450,7 @@ public class ImageViewWindowController implements Initializable {
 
     private void showLoadingFailedError(Exception e) {
 
-        Util.showCustomErrorDialog(
+        StageManager.showCustomErrorDialog(
                         "Loading failed",
                         "The requested file doesn't exist or is unreadable.",
                         imageViewMain.getScene().getWindow(), e)

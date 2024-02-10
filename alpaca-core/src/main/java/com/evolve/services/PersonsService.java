@@ -80,6 +80,11 @@ public class PersonsService implements FindPerson {
             hasCriteria.set(true);
         }
 
+        if (criteria.getRegistryNumber() != null) {
+            personBuilder.registryNumber(RegistryNumber.of(criteria.getRegistryNumber()));
+            hasCriteria.set(true);
+        }
+
         if (hasCriteria.get()) {
             return personRepository.findAll(
                     Example.of(personBuilder.build()),
@@ -119,6 +124,11 @@ public class PersonsService implements FindPerson {
                 .map(PersonId::of)
                 .map(PersonId::nextId)
                 .map(PersonId::toString);
+    }
+
+    @Override
+    public Optional<Integer> findLastRegistryNumber() {
+        return Optional.ofNullable(personRepository.findMaxRegistryNumber());
     }
 
     @Override

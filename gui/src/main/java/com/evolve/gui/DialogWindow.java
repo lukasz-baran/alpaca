@@ -1,5 +1,6 @@
 package com.evolve.gui;
 
+import com.google.common.io.Resources;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -43,6 +44,8 @@ public abstract class DialogWindow<ENTITY> {
         dialog.setHeaderText(headerText);
         dialog.getDialogPane().setId("dialogPane");
         dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+        dialog.getDialogPane().getStylesheets().add(Resources.getResource("styles/style.css").toExternalForm());
 
         findSubmitButton(dialog).setId("saveButton");
 

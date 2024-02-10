@@ -15,4 +15,6 @@ public interface PersonRepository extends JpaRepository<Person, PersonId> {
     @Query("SELECT p FROM Person p where SUBSTRING(p.personId, 0, 2) = :groupNumber")
     List<Person> findByGroupName(@Param("groupNumber") String groupNumber);
 
+    @Query(value = "SELECT MAX(registryNumber.registryNum) FROM Person")
+    Integer findMaxRegistryNumber();
 }

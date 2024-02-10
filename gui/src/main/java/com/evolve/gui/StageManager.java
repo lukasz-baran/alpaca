@@ -8,6 +8,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -20,6 +22,8 @@ import net.rgielen.fxweaver.core.FxWeaver;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -28,7 +32,6 @@ import java.util.Optional;
 @Slf4j
 public class StageManager {
     public static final Image APPLICATION_ICON = new Image("alpaca.png");
-    public static final FileChooser.ExtensionFilter DBF_EXTENSION_FILTER = new FileChooser.ExtensionFilter("dbf (*.dbf)", "*.dbf");
 
     private final FxWeaver fxWeaver;
     private final SimpleObjectProperty<File> lastKnownDirectoryProperty;
@@ -131,5 +134,34 @@ public class StageManager {
         var tooltip = new Tooltip(tooltipText);
         tooltip.setShowDelay(Duration.ZERO);
         return tooltip;
+    }
+
+    public static Alert showCustomErrorDialog(String header, String content, Window owner, Throwable e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.initOwner(owner);
+        alert.setTitle("Error");
+
+        if (e != null) {
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            e.printStackTrace(printWriter);
+            String stackTrace = stringWriter.toString(); // stack trace as a string
+
+            javafx.scene.control.TextArea textArea = new javafx.scene.control.TextArea(stackTrace);
+            textArea.setEditable(false);
+            textArea.setWrapText(false);
+            textArea.setMaxWidth(Double.MAX_VALUE);
+            textArea.setMaxHeight(Double.MAX_VALUE);
+            GridPane.setVgrow(textArea, Priority.ALWAYS);
+            GridPane.setHgrow(textArea, Priority.ALWAYS);
+            GridPane expContent = new GridPane();
+            expContent.setMaxWidth(Double.MAX_VALUE);
+            expContent.add(textArea, 0, 0);
+
+            alert.getDialogPane().setExpandableContent(expContent);
+        }
+        return alert;
     }
 }
