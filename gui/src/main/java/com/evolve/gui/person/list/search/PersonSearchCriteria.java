@@ -42,8 +42,7 @@ public record PersonSearchCriteria(String unitNumber, Boolean hasDocuments,
         }
 
         if (hasDocuments != null) {
-            final String yesNo = hasDocuments ? "Tak" : "Nie";
-            result += " Załączniki: " + yesNo;
+            result += " Załączniki: " + BooleanUtils.toString(hasDocuments, "Tak", "Nie");
         }
 
         if (isRetired != null) {
