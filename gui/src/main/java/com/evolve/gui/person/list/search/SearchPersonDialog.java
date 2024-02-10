@@ -32,6 +32,8 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
     private final CheckBox hasDocumentsCheckBox = new CheckBox();
     private final ComboBox<GenderSearchItem> personGenderCombo;
     private final ComboBox<PersonStatusSearchItem> personStatusCombo;
+    private final CheckBox retiredCheckBox = new CheckBox();
+    private final CheckBox exemptFromFeesCheckBox = new CheckBox();
 
     // accounts-related checkboxes:
     final CheckBox hasFeesAccountsCheckBox = new CheckBox();
@@ -83,6 +85,12 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
                 final Boolean hasDocuments = hasDocumentsCheckBox.isIndeterminate() ? null :
                                 hasDocumentsCheckBox.isSelected();
 
+                final Boolean isRetired = retiredCheckBox.isIndeterminate() ? null :
+                        retiredCheckBox.isSelected();
+
+                final Boolean isExemptFromFees = exemptFromFeesCheckBox.isIndeterminate() ? null :
+                        exemptFromFeesCheckBox.isSelected();
+
                 final PersonStatus personStatus = Optional.ofNullable(personStatusCombo.getValue())
                         .map(PersonStatusSearchItem::personStatus)
                         .orElse(null);
@@ -93,7 +101,8 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
 
                 return new PersonSearchCriteria(unitNumber, hasDocuments, personStatus, personGender,
                         getSelectedAccountTypes(),
-                        getSelectedAccountUnitNumbers());
+                        getSelectedAccountUnitNumbers(),
+                        isRetired, isExemptFromFees);
             }
             return null;
         });
@@ -121,12 +130,31 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
         gridPersonCriteria.add(new Label("Płeć:"), 0, 4);
         gridPersonCriteria.add(personGenderCombo, 1, 4);
 
+        retiredCheckBox.indeterminateProperty().set(true);
+        retiredCheckBox.setAllowIndeterminate(true);
+
+        gridPersonCriteria.add(new Label("Emeryt:"), 0, 5);
+        gridPersonCriteria.add(retiredCheckBox, 1, 5);
+
+        exemptFromFeesCheckBox.indeterminateProperty().set(true);
+        exemptFromFeesCheckBox.setAllowIndeterminate(true);
+
+        gridPersonCriteria.add(new Label("Zwolniony:"), 0, 6);
+        gridPersonCriteria.add(exemptFromFeesCheckBox, 1, 6);
+
+
         final ChangeListener<Boolean> listener = (prop, old, val) -> {
             updateLabelOnAttachments(hasDocumentsCheckBox);
+            updateLabelOnRetired(retiredCheckBox);
+            updateLabelOnExemptFromFees(exemptFromFeesCheckBox);
             validateSaveButton(saveButton);
         };
         hasDocumentsCheckBox.selectedProperty().addListener(listener);
         hasDocumentsCheckBox.indeterminateProperty().addListener(listener);
+        retiredCheckBox.selectedProperty().addListener(listener);
+        retiredCheckBox.indeterminateProperty().addListener(listener);
+        exemptFromFeesCheckBox.selectedProperty().addListener(listener);
+        exemptFromFeesCheckBox.indeterminateProperty().addListener(listener);
 
         unitNumberCombo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) ->
                 validateSaveButton(saveButton));
@@ -139,6 +167,7 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
 
         return gridPersonCriteria;
     }
+
 
     private GridPane createAccountsSearchCriteria(Node saveButton) {
         final GridPane gridAccountCriteria = createGridPane();
@@ -187,7 +216,9 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
             !hasDocumentsCheckBox.isIndeterminate() ||
             Objects.nonNull(personStatusCombo.getValue()) ||
             Objects.nonNull(personGenderCombo.getValue()) ||
-            isAnyAccountSelected();
+            isAnyAccountSelected() ||
+            !retiredCheckBox.isIndeterminate() ||
+            !exemptFromFeesCheckBox.isIndeterminate();
 
         saveButton.setDisable(!enableSaveButton);
     }
@@ -237,11 +268,25 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
         return unitNumbers;
     }
 
-    private void updateLabelOnAttachments(CheckBox hasDocumentsCheckBox) {
+    private static void updateLabelOnAttachments(CheckBox hasDocumentsCheckBox) {
         final String txt = hasDocumentsCheckBox.isIndeterminate() ? "Bez znaczenia" :
                 hasDocumentsCheckBox.isSelected() ? "Obecne" :
                         "Brak załączników";
         hasDocumentsCheckBox.setText(txt);
+    }
+
+    private static void updateLabelOnRetired(CheckBox retiredCheckBox) {
+        final String txt = retiredCheckBox.isIndeterminate() ? "Bez znaczenia" :
+                retiredCheckBox.isSelected() ? "Jest" :
+                        "Nie jest";
+        retiredCheckBox.setText(txt);
+    }
+
+    private static void updateLabelOnExemptFromFees(CheckBox exemptFromFeesCheckBox) {
+        final String txt = exemptFromFeesCheckBox.isIndeterminate() ? "Bez znaczenia" :
+                exemptFromFeesCheckBox.isSelected() ? "Jest" :
+                        "Nie jest";
+        exemptFromFeesCheckBox.setText(txt);
     }
 
 

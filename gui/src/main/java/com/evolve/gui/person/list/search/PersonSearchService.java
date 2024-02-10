@@ -32,6 +32,8 @@ public class PersonSearchService {
                         .hasDocuments(criteria.hasDocuments())
                         .status(criteria.personStatus())
                         .gender(criteria.personGender())
+                        .retired(criteria.isRetired())
+                        .exemptFromFees(criteria.isExemptFromFees())
                         .build());
 
         if (!criteria.hasAccountUnits().isEmpty() || !criteria.hasAccountTypes().isEmpty()) {

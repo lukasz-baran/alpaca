@@ -26,6 +26,9 @@ public class PersonLookupCriteria {
     private PersonStatus status;
     private Person.Gender gender;
 
+    private Boolean retired;
+    private Boolean exemptFromFees;
+
     @JsonIgnore
     public Sort getSort() {
         final Sort sort = Sort.by(sortBy == null || "id".equals(sortBy) ? "personId" : sortBy);

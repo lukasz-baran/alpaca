@@ -12,6 +12,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -48,24 +49,38 @@ public class PersonsService implements FindPerson {
 
     private List<Person> findPersons(PersonLookupCriteria criteria) {
         final Person.PersonBuilder personBuilder = Person.builder();
-        boolean hasCriteria = false;
+        final AtomicBoolean hasCriteria = new AtomicBoolean(false);
 
         if (StringUtils.isNotEmpty(criteria.getUnitNumber())) {
             personBuilder.unitNumber(criteria.getUnitNumber());
-            hasCriteria = true;
+            hasCriteria.set(true);
         }
 
         if (criteria.getStatus() != null) {
             personBuilder.status(criteria.getStatus());
-            hasCriteria = true;
+            hasCriteria.set(true);
         }
 
         if (criteria.getGender() != null) {
             personBuilder.gender(criteria.getGender());
-            hasCriteria = true;
+            hasCriteria.set(true);
         }
 
-        if (hasCriteria) {
+        if (criteria.getRetired() != null) {
+            if (criteria.getRetired()) {
+                personBuilder.retired(true);
+            }
+            hasCriteria.set(true);
+        }
+
+        if (criteria.getExemptFromFees() != null) {
+            if (criteria.getExemptFromFees()) {
+                personBuilder.exemptFromFees(true);
+            }
+            hasCriteria.set(true);
+        }
+
+        if (hasCriteria.get()) {
             return personRepository.findAll(
                     Example.of(personBuilder.build()),
                     criteria.getSort());

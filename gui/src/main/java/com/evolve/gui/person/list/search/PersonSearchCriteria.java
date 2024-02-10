@@ -4,6 +4,7 @@ import com.evolve.domain.Account;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatus;
 import com.evolve.domain.Unit;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashSet;
@@ -13,15 +14,19 @@ public record PersonSearchCriteria(String unitNumber, Boolean hasDocuments,
                                    PersonStatus personStatus,
                                    Person.Gender personGender,
                                    Set<Account.AccountType> hasAccountTypes,
-                                   Set<String> hasAccountUnits) {
+                                   Set<String> hasAccountUnits,
+                                   Boolean isRetired,
+                                   Boolean isExemptFromFees) {
 
     public static PersonSearchCriteria empty() {
-        return new PersonSearchCriteria(null, null, null, null, Set.of(), Set.of());
+        return new PersonSearchCriteria(null, null, null, null, Set.of(), Set.of(), null, null);
     }
 
     public boolean isEmpty() {
         return StringUtils.isEmpty(unitNumber) &&
                 hasDocuments == null &&
+                isRetired == null &&
+                isExemptFromFees == null &&
                 personStatus == null &&
                 personGender == null &&
                 hasAccountUnits.isEmpty() &&
@@ -39,6 +44,14 @@ public record PersonSearchCriteria(String unitNumber, Boolean hasDocuments,
         if (hasDocuments != null) {
             final String yesNo = hasDocuments ? "Tak" : "Nie";
             result += " Załączniki: " + yesNo;
+        }
+
+        if (isRetired != null) {
+            result += " Emeryt: " + BooleanUtils.toString(isRetired, "Tak", "Nie");
+        }
+
+        if (isExemptFromFees != null) {
+            result += " Zwolniony: " + BooleanUtils.toString(isExemptFromFees, "Tak", "Nie");
         }
 
         if (personStatus != null) {
