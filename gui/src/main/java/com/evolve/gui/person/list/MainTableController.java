@@ -24,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -80,6 +81,8 @@ public class MainTableController implements Initializable {
     @FXML TableColumn<PersonModel, Long> ageColumn;
     @FXML TableColumn<PersonModel, String> statusColumn;
     @FXML TableColumn<PersonModel, Long> registryNumberColumn;
+    @FXML TableColumn<PersonModel, Boolean> retiredColumn;
+    @FXML TableColumn<PersonModel, Boolean> exemptFromFeesColumn;
 
     // search criteria bar (shown after Search is applied)
     @FXML HBox searchCriteriaHBox;
@@ -100,6 +103,14 @@ public class MainTableController implements Initializable {
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         dobColumn.setCellValueFactory(new PropertyValueFactory<>("dob"));
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
+        retiredColumn.setCellValueFactory(new PropertyValueFactory<>("retired"));
+        retiredColumn.setCellValueFactory(cd -> cd.getValue().getRetired());
+        retiredColumn.setCellFactory(CheckBoxTableCell.forTableColumn(retiredColumn));
+
+        exemptFromFeesColumn.setCellValueFactory(new PropertyValueFactory<>("exemptFromFees"));
+        exemptFromFeesColumn.setCellValueFactory(cd -> cd.getValue().getExemptFromFees());
+        exemptFromFeesColumn.setCellFactory(CheckBoxTableCell.forTableColumn(exemptFromFeesColumn));
+
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         registryNumberColumn.setCellValueFactory(new PropertyValueFactory<>("registryNumber"));
         // the following handler prevents from showing 0 in registry number cells

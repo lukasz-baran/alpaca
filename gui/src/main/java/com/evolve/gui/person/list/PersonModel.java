@@ -4,12 +4,10 @@ import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonStatus;
 import com.evolve.domain.RegistryNumber;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import lombok.Getter;
 import lombok.ToString;
+import org.apache.commons.lang.BooleanUtils;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -28,11 +26,15 @@ public class PersonModel {
     private final SimpleLongProperty age;
     private final SimpleStringProperty status;
     private final SimpleLongProperty registryNumber;
-
+    @Getter
+    private final SimpleBooleanProperty retired;
+    @Getter
+    private final SimpleBooleanProperty exemptFromFees;
     @Getter
     private final PersonStatus personStatus;
 
-    PersonModel(String id, String firstName, String lastName, LocalDate dob, PersonStatus status, Long registryNumber) {
+    PersonModel(String id, String firstName, String lastName, LocalDate dob, PersonStatus status,
+                Long registryNumber, Boolean retired, Boolean exemptFromFees) {
         this.id = new SimpleStringProperty(id);
         this.firstName = new SimpleStringProperty(firstName);
         this.lastName = new SimpleStringProperty(lastName);
@@ -40,11 +42,14 @@ public class PersonModel {
         this.age = new SimpleLongProperty(calculateAge(dob, status));
         this.status = new SimpleStringProperty(status.toString());
         this.registryNumber = new SimpleLongProperty(registryNumber);
+        this.retired = new SimpleBooleanProperty(BooleanUtils.isTrue(retired));
+        this.exemptFromFees = new SimpleBooleanProperty(BooleanUtils.isTrue(exemptFromFees));
         this.personStatus = status;
     }
 
     PersonModel(PersonListView person) {
-        this(person.personId(), person.firstName(), person.lastName(), person.dob(), person.status(), person.getRegistryNumber().orElse(0L));
+        this(person.personId(), person.firstName(), person.lastName(), person.dob(), person.status(),
+                person.getRegistryNumber().orElse(0L), person.retired(), person.exemptFromFees());
     }
 
     public String getId() {
@@ -109,6 +114,9 @@ public class PersonModel {
                 .map(RegistryNumber::getRegistryNum);
         maybeRegistryNumber.ifPresentOrElse(this.registryNumber::set,
                 () -> this.registryNumber.set(0L));
+
+        this.retired.set(BooleanUtils.isTrue(updatedPerson.getRetired()));
+        this.exemptFromFees.set(BooleanUtils.isTrue(updatedPerson.getExemptFromFees()));
     }
 
     public boolean matches(String filteredText) {

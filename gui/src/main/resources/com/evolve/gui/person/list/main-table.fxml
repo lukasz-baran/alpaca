@@ -45,10 +45,12 @@
                   AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
            <columns>
                <TableColumn fx:id="idColumn" editable="false" maxWidth="50.0" minWidth="45" text="ID" />
-               <TableColumn fx:id="firstNameColumn" editable="false" minWidth="100" text="Imię" />
-               <TableColumn fx:id="lastNameColumn" editable="false" minWidth="120" text="Nazwisko" />
+               <TableColumn fx:id="firstNameColumn" editable="false" minWidth="100" maxWidth="100" text="Imię" />
+               <TableColumn fx:id="lastNameColumn" editable="false" minWidth="170" maxWidth="170" text="Nazwisko" />
                <TableColumn fx:id="dobColumn" editable="false" maxWidth="75" minWidth="75" text="Data ur." />
-               <TableColumn fx:id="ageColumn" editable="false" maxWidth="75" minWidth="75" text="Wiek" />
+               <TableColumn fx:id="ageColumn" editable="false" maxWidth="60" minWidth="60"  text="Wiek" />
+               <TableColumn fx:id="retiredColumn" editable="false" maxWidth="60" minWidth="60" text="Emeryt" />
+               <TableColumn fx:id="exemptFromFeesColumn" editable="false" maxWidth="60" minWidth="60" text="Zwoln." />
                <TableColumn fx:id="statusColumn" editable="false" maxWidth="100" minWidth="50" text="Status" />
                <TableColumn fx:id="registryNumberColumn" editable="false" minWidth="50" text="Kartoteka" />
            </columns>

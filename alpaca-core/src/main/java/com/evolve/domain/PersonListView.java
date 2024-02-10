@@ -12,14 +12,17 @@ import java.util.Optional;
  * @param registryNumber numer ewidencyjny (kartoteki)
  */
 public record PersonListView(String personId, String firstName, String secondName, String lastName,
-                             LocalDate dob, PersonStatus status, Long registryNumber) {
+                             LocalDate dob, PersonStatus status, Long registryNumber, Boolean retired,
+                             Boolean exemptFromFees) {
 
     public static PersonListView of(Person person) {
         return new PersonListView(person.getPersonId(), person.getFirstName(), person.getSecondName(),
                 person.getLastName(),
                 person.getDob(),
                 personStatus(person),
-                registryNumber(person));
+                registryNumber(person),
+                person.getRetired(),
+                person.getExemptFromFees());
     }
 
     public Optional<Long> getRegistryNumber() {
