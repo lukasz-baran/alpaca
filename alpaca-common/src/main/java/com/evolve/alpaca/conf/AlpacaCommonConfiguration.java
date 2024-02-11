@@ -12,7 +12,7 @@ import org.springframework.context.annotation.PropertySource;
 import java.time.Clock;
 
 @Configuration
-@PropertySource(value = {"classpath:application.properties"})
+@PropertySource(value = {"classpath:alpaca-common.properties"})
 @Getter
 @Slf4j
 public class AlpacaCommonConfiguration implements InitializingBean {
