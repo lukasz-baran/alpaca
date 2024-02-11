@@ -1,7 +1,6 @@
 package com.evolve.alpaca.importing.importDbf;
 
 import com.evolve.alpaca.importing.importDbf.domain.DbfAccount;
-import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
 import com.linuxense.javadbf.DBFReader;
 
 import java.util.HashMap;

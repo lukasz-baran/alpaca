@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <AnchorPane minHeight="0.0" minWidth="0.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.authorizedPerson.AuthorizedPersonsController">
     <TableView fx:id="authorizedPersonsTable" layoutY="19.0" prefHeight="120.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.columnIndex="1" GridPane.rowIndex="11">
         <columns>

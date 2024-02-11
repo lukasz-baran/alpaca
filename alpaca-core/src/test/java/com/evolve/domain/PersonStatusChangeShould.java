@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class PersonStatusChangeShould {
 
     LocalDate born = LocalDate.of(1933, 5, 10);

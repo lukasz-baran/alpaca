@@ -12,7 +12,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.*;
 import java.util.Optional;
 
 @Slf4j

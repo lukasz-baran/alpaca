@@ -1,7 +1,7 @@
 package com.evolve.alpaca.importing.importDoc.group;
 
-import com.evolve.domain.Group;
 import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
+import com.evolve.domain.Group;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

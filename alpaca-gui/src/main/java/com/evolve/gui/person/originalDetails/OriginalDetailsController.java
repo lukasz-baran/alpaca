@@ -23,7 +23,10 @@ import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 @Component
 @FxmlView("original-details.fxml")

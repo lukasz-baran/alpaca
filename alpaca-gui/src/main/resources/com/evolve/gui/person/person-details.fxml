@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-
 <VBox stylesheets="@../../../../styles/style.css" VBox.vgrow="NEVER" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.PersonDetailsController">
 
     <HBox id="personMenu" alignment="BASELINE_LEFT" prefHeight="18.0" spacing="5.0">

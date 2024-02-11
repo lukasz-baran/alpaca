@@ -1,7 +1,7 @@
 package com.evolve.alpaca.util;
 
 import javafx.beans.binding.Bindings;
-import javafx.scene.control.*;
+import javafx.scene.control.TableView;
 
 public class TableViewResizer {
 
