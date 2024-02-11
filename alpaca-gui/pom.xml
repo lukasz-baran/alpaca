@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gui</artifactId>
+    <artifactId>alpaca-gui</artifactId>
     <properties>
         <client.version>1.0.0</client.version>
         <exec.maven.plugin.version>1.6.0</exec.maven.plugin.version>
@@ -21,8 +21,8 @@
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
         </dependency>
-        <!-- uncomment if you need webview component
-        <dependency>
+        <!-- uncomment if you need webview component -->
+        <!-- <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-web</artifactId>
             <version>${javafx.version}</version>
@@ -96,19 +96,6 @@
     </dependencies>
 
     <build>
-
-        <!-- used to propagate version number from POM to target/classes -->
-<!--
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <excludes>
-                    <exclude>logback.xml</exclude>
-                </excludes>
-            </resource>
-        </resources>
--->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
