@@ -116,6 +116,8 @@ public class AlpacaIntegrationTest {
                 .lastName(TEST_LAST_NAME)
                 .unitNumber(TEST_UNIT_NAME)
                 .status(PersonStatus.UNKNOWN)
+                .retired(true)
+                .exemptFromFees(true)
                 .build();
         personsService.insertPerson(newPerson);
 
@@ -137,7 +139,10 @@ public class AlpacaIntegrationTest {
                 .hasLastName(TEST_LAST_NAME)
                 .hasUnitNumber(TEST_UNIT_NAME)
                 .hasPersonId(personId)
-                .hasStatus(PersonStatus.ACTIVE);
+                .hasStatus(PersonStatus.ACTIVE)
+                .isRetired()
+                .isExemptFromFees();
+
     }
 
 }

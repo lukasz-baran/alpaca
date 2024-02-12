@@ -8,6 +8,11 @@ import com.evolve.domain.PersonStatusChange;
 
 import java.util.List;
 
+/**
+ *
+ * @param retired {@code null} will keep the value untouched
+ * @param exemptFromFees {@code null} will keep the value untouched
+ */
 public record EditPersonDataCommand(String id,
                                     String firstName,
                                     String lastName,

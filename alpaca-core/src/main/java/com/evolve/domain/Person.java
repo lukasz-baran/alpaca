@@ -1,7 +1,6 @@
 package com.evolve.domain;
 
 import lombok.*;
-import org.apache.commons.lang.BooleanUtils;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -104,16 +103,14 @@ public class Person implements Serializable {
      * If false - set null
      */
     public Person updateRetirement(Boolean retired) {
-        this.retired = Optional.ofNullable(retired)
-                .filter(BooleanUtils::isTrue)
-                .orElse(null);
+        Optional.ofNullable(retired)
+                .ifPresent(newStatus -> this.retired = newStatus ? Boolean.TRUE : null);
         return this;
     }
 
     public Person updateExemptionFromFees(Boolean exemptFromFees) {
-        this.exemptFromFees = Optional.ofNullable(exemptFromFees)
-                .filter(BooleanUtils::isTrue)
-                .orElse(null);
+        Optional.ofNullable(exemptFromFees)
+                .ifPresent(newStatus -> this.exemptFromFees = newStatus ? Boolean.TRUE : null);
         return this;
     }
 
