@@ -1,6 +1,6 @@
 package com.evolve.alpaca.importing.importDbf.deducers;
 
-import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
+import com.evolve.alpaca.importing.importDbf.person.DbfPerson;
 import com.evolve.domain.PersonId;
 import lombok.extern.slf4j.Slf4j;
 

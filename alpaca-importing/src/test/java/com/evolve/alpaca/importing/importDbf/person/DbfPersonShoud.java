@@ -1,4 +1,4 @@
-package com.evolve.alpaca.importing.importDbf.domain;
+package com.evolve.alpaca.importing.importDbf.person;
 
 import org.assertj.core.util.Maps;
 import org.junit.jupiter.api.Test;

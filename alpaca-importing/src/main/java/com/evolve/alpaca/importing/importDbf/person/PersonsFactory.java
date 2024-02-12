@@ -1,8 +1,8 @@
-package com.evolve.alpaca.importing.importDbf;
+package com.evolve.alpaca.importing.importDbf.person;
 
+import com.evolve.alpaca.importing.importDbf.RegistryNumbers;
 import com.evolve.alpaca.importing.importDbf.deducers.IssuesLogger;
 import com.evolve.alpaca.importing.importDbf.deducers.PersonDataDeducer;
-import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
 import com.evolve.domain.Person;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

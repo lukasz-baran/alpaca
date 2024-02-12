@@ -1,7 +1,7 @@
 package com.evolve.alpaca.importing.importDbf.deducers;
 
 import com.evolve.alpaca.importing.importDbf.RegistryNumbers;
-import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
+import com.evolve.alpaca.importing.importDbf.person.DbfPerson;
 import com.evolve.domain.Address;
 import com.evolve.domain.Person;
 import org.junit.jupiter.api.Test;

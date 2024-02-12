@@ -2,8 +2,6 @@ package com.evolve.alpaca.importing.importDbf.person;
 
 import com.evolve.alpaca.importing.importDbf.DbfData;
 import com.evolve.alpaca.importing.importDbf.DbfImportBase;
-import com.evolve.alpaca.importing.importDbf.PersonsFactory;
-import com.evolve.alpaca.importing.importDbf.domain.DbfPerson;
 import com.evolve.domain.Person;
 import com.linuxense.javadbf.DBFReader;
 import lombok.RequiredArgsConstructor;
