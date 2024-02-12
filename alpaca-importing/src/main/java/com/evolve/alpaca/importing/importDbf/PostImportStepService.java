@@ -1,7 +1,7 @@
 package com.evolve.alpaca.importing.importDbf;
 
 import com.evolve.alpaca.utils.LogUtil;
-import com.evolve.domain.Account;
+import com.evolve.alpaca.account.Account;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatus;
 import com.evolve.domain.Unit;

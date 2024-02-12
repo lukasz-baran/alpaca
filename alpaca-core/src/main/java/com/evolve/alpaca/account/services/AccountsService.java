@@ -1,7 +1,9 @@
-package com.evolve.services;
+package com.evolve.alpaca.account.services;
 
-import com.evolve.domain.Account;
-import com.evolve.repo.jpa.AccountRepository;
+import com.evolve.alpaca.account.Account;
+import com.evolve.alpaca.account.AccountLookupCriteria;
+import com.evolve.alpaca.account.FindAccount;
+import com.evolve.alpaca.account.repo.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -13,14 +15,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class AccountsService {
+public class AccountsService implements FindAccount {
     private final AccountRepository accountRepository;
 
+    @Override
     public List<Account> findByPersonId(String personId) {
         return accountRepository.findByPersonId(personId);
     }
 
-    // TODO Do we need extra method?
+    @Override
     public List<Account> findByUnitAndAccountType(Collection<Account.AccountType> types,
                                                   Collection<String> unitNumbers) {
         return accountRepository.findByAccountTypeInOrUnitNumberIn(types, unitNumbers);
@@ -33,5 +36,10 @@ public class AccountsService {
                 .filter(account -> StringUtils.isNotBlank(account.getAccountId()))
                 .peek(account -> log.info("inserting {}", account))
                 .forEach(accountRepository::save);
+    }
+
+    @Override
+    public List<Account> fetch(AccountLookupCriteria criteria) {
+        return accountRepository.findAll(criteria.getSort());
     }
 }

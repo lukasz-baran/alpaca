@@ -1,9 +1,9 @@
 package com.evolve.gui.person.list.search;
 
-import com.evolve.domain.Account;
+import com.evolve.alpaca.account.Account;
 import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonLookupCriteria;
-import com.evolve.services.AccountsService;
+import com.evolve.alpaca.account.services.AccountsService;
 import com.evolve.services.PersonsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package com.evolve.gui.person.accounts;
 
-import com.evolve.domain.Account;
+import com.evolve.alpaca.account.Account;
 import com.evolve.domain.Unit;
 import com.evolve.services.UnitsService;
 import lombok.RequiredArgsConstructor;

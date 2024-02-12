@@ -1,5 +1,6 @@
 package com.evolve.domain;
 
+import com.evolve.alpaca.account.Account;
 import org.assertj.core.api.ObjectAssert;
 
 import static org.assertj.core.api.Assertions.assertThat;

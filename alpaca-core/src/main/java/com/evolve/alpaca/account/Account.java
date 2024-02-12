@@ -1,5 +1,6 @@
-package com.evolve.domain;
+package com.evolve.alpaca.account;
 
+import com.evolve.domain.Person;
 import lombok.*;
 import org.apache.commons.lang.StringUtils;
 
@@ -15,7 +16,7 @@ public class Account {
 
     @javax.persistence.Id
     private String accountId;
-    private String accountName; // imię i nazwisko albo coś innego
+    private String accountName; // Usually it contains person's name with some additional message
 
 
     /**

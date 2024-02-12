@@ -1,10 +1,10 @@
 package com.evolve.gui.person.accounts;
 
-import com.evolve.domain.Account;
+import com.evolve.alpaca.account.Account;
+import com.evolve.alpaca.account.FindAccount;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
-import com.evolve.services.AccountsService;
 import com.evolve.services.UnitsService;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -32,7 +32,7 @@ import java.util.ResourceBundle;
 @Slf4j
 public class PersonAccountsController implements Initializable {
     private final PersonListModel personListModel;
-    private final AccountsService accountsService;
+    private final FindAccount findAccount;
     private final AccountTooltipService accountTooltipService;
 
     @Getter
@@ -44,9 +44,9 @@ public class PersonAccountsController implements Initializable {
     @FXML TableColumn<AccountEntry, String> accountNameColumn;
     @FXML TableView<AccountEntry> accountsTable;
 
-    public PersonAccountsController(PersonListModel personListModel, AccountsService accountsService, UnitsService unitsService) {
+    public PersonAccountsController(PersonListModel personListModel, FindAccount findAccount, UnitsService unitsService) {
         this.personListModel = personListModel;
-        this.accountsService = accountsService;
+        this.findAccount = findAccount;
         this.accountTooltipService = new AccountTooltipService(unitsService);
     }
 
@@ -80,7 +80,7 @@ public class PersonAccountsController implements Initializable {
             return List.of();
         }
 
-        final List<Account> accounts = accountsService.findByPersonId(personModel.getId());
+        final List<Account> accounts = findAccount.findByPersonId(personModel.getId());
         log.info("Person accounts: {}", accounts);
 
         accountsList.clear();

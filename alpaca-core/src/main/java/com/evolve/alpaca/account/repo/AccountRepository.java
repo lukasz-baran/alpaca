@@ -1,6 +1,6 @@
-package com.evolve.repo.jpa;
+package com.evolve.alpaca.account.repo;
 
-import com.evolve.domain.Account;
+import com.evolve.alpaca.account.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;

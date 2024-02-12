@@ -1,7 +1,7 @@
 package com.evolve.alpaca.importing.importDbf;
 
 import com.evolve.alpaca.importing.importDbf.domain.DbfAccount;
-import com.evolve.domain.Account;
+import com.evolve.alpaca.account.Account;
 import org.junit.jupiter.api.Test;
 
 import static com.evolve.domain.AccountAssertion.assertAccount;

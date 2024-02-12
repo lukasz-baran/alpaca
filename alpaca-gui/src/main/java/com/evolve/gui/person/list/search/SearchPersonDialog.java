@@ -1,6 +1,6 @@
 package com.evolve.gui.person.list.search;
 
-import com.evolve.domain.Account;
+import com.evolve.alpaca.account.Account;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatus;
 import com.evolve.domain.Unit;

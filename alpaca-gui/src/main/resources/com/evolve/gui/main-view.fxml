@@ -21,6 +21,7 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Słowniki">
             <MenuItem fx:id="unitsMenuItem" mnemonicParsing="false" text="Lista jednostek"/>
+            <MenuItem fx:id="accountsMenuItem" mnemonicParsing="false" text="Plan kont"/>
         </Menu>
         <Menu mnemonicParsing="false" text="Pomoc">
             <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" text="O programie"/>

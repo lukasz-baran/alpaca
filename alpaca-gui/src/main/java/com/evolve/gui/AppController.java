@@ -1,6 +1,7 @@
 package com.evolve.gui;
 
 import com.evolve.alpaca.conf.LocalUserConfiguration;
+import com.evolve.alpaca.gui.accounts.AccountsController;
 import com.evolve.alpaca.gui.help.AboutDialogWindow;
 import com.evolve.alpaca.gui.units.UnitsController;
 import com.evolve.alpaca.importing.importDbf.ImportDbfService;
@@ -58,6 +59,7 @@ public class AppController implements Initializable {
 
     private final FxControllerAndView<AboutDialogWindow, AnchorPane> aboutDialogController;
     private final FxControllerAndView<UnitsController, VBox> unitsDialogController;
+    private final FxControllerAndView<AccountsController, VBox> accountsDialogController;
 
     private final PersonDetailsController personDetailsController;
     private final MainTableController mainTableController;
@@ -80,6 +82,7 @@ public class AppController implements Initializable {
     @FXML MenuItem unitsMenuItem;
     @FXML MenuItem importPeopleMenuItem;
     @FXML MenuItem aboutMenuItem;
+    @FXML MenuItem accountsMenuItem;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -94,6 +97,7 @@ public class AppController implements Initializable {
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
 
         unitsMenuItem.setOnAction(event -> unitsDialogController.getController().show());
+        accountsMenuItem.setOnAction(event -> accountsDialogController.getController().show());
 
         aboutMenuItem.setOnAction(event -> aboutDialogController.getController().show());
 
