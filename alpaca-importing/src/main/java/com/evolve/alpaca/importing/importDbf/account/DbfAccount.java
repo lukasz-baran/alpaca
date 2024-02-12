@@ -1,4 +1,4 @@
-package com.evolve.alpaca.importing.importDbf.domain;
+package com.evolve.alpaca.importing.importDbf.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,5 @@
-package com.evolve.alpaca.importing.importDbf;
+package com.evolve.alpaca.importing.importDbf.account;
 
-import com.evolve.alpaca.importing.importDbf.domain.DbfAccount;
 import com.evolve.alpaca.account.Account;
 import org.junit.jupiter.api.Test;
 

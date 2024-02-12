@@ -1,9 +1,19 @@
 package com.evolve.alpaca.importing;
 
 import com.evolve.alpaca.importing.importDbf.ImportDbfService;
+import com.evolve.alpaca.importing.importDbf.person.ImportPersonDbf;
+import com.evolve.alpaca.importing.importDbf.account.ImportAccountDbf;
+import com.evolve.alpaca.importing.importDbf.turnover.ImportTurnoverDbf;
+import com.evolve.alpaca.importing.importDoc.ImportAlphanumeric;
+import com.evolve.alpaca.importing.importDoc.ImportPeople;
+import com.evolve.alpaca.importing.importDoc.group.GrupyAlfabetyczne;
+import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatus;
 import com.evolve.repo.jpa.PersonRepository;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +24,11 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
+import static com.evolve.alpaca.importing.importDoc.ImportAlphanumeric.FILENAME_BY_ALPHA;
+import static com.evolve.alpaca.importing.importDoc.ImportPeople.FILENAME_BY_NUMBERS;
 import static com.evolve.domain.PersonAssertion.assertPerson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
@@ -23,6 +36,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @TestPropertySource("classpath:test.properties")
+@Slf4j
 public class ImportAndFixDataTest {
 
     @Autowired
@@ -30,6 +44,42 @@ public class ImportAndFixDataTest {
 
     @Autowired
     PersonRepository personRepository;
+
+    @SneakyThrows
+    @Test
+    @Disabled
+    void importTurnovers() {
+        var turnoversFile = new DefaultResourceLoader().getResource("OBROTY.DBF").getURL();
+
+        ImportTurnoverDbf.performImport(turnoversFile);
+    }
+
+    @Test
+    @SneakyThrows
+    @Disabled
+    void importAccounts() {
+        var accountsFile = new DefaultResourceLoader().getResource("PLAN.DBF").getURL();
+
+        ImportAccountDbf.importAccounts(accountsFile);
+    }
+
+    @SneakyThrows
+    @Test
+    @Disabled
+    public void importPeople() {
+        final List<PersonFromDoc> people = new ImportPeople(true).processFile();
+
+        final GrupyAlfabetyczne grupyAlfabetyczne = new ImportAlphanumeric()
+                .processFile();
+
+        final URL accountsFile = new DefaultResourceLoader().getResource("Z_B_KO.DBF").getURL();
+
+        final List<com.evolve.domain.Person> persons = ImportPersonDbf.importPeople(accountsFile);
+
+        log.info("Wczytano " + people.size() + " z indeksu " + FILENAME_BY_NUMBERS);
+        log.info("Wczytano " + grupyAlfabetyczne.getSize() + " z grup alfabetycznych " + FILENAME_BY_ALPHA);
+        log.info("Wczytano " + persons.size());
+    }
 
     @Test
     void importAndFix() throws IOException {
