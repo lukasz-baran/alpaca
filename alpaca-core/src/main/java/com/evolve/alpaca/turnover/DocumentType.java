@@ -11,4 +11,12 @@ public enum DocumentType {
 
     private final String symbol;
 
+    public static DocumentType fromString(String text) {
+        for (DocumentType b : DocumentType.values()) {
+            if (b.symbol.equalsIgnoreCase(text)) {
+                return b;
+            }
+        }
+        throw new RuntimeException("unknown value " + text);
+    }
 }

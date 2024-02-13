@@ -1,5 +1,7 @@
 package com.evolve.alpaca.importing.importDbf.turnover;
 
+import com.evolve.alpaca.turnover.DocumentType;
+import com.evolve.alpaca.turnover.Turnover;
 import lombok.*;
 
 import java.util.Map;
@@ -92,5 +94,11 @@ DbfTurnover(MK=2002011, SD=RK, ND=     5, LP=  15, KO=101, KWWN=0.00, KWMA=3759.
         }
 
     }
+
+    public static Turnover of(DbfTurnover turnover) {
+        return new Turnover(turnover.MK, DocumentType.fromString(turnover.SD),
+                turnover.ND, turnover.LP, turnover.KO, turnover.KWWN, turnover.KWMA);
+    }
+
 
 }

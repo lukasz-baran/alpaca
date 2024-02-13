@@ -1,8 +1,8 @@
 package com.evolve.alpaca.importing;
 
 import com.evolve.alpaca.importing.importDbf.ImportDbfService;
-import com.evolve.alpaca.importing.importDbf.person.ImportPersonDbf;
 import com.evolve.alpaca.importing.importDbf.account.ImportAccountDbf;
+import com.evolve.alpaca.importing.importDbf.person.ImportPersonDbf;
 import com.evolve.alpaca.importing.importDbf.turnover.ImportTurnoverDbf;
 import com.evolve.alpaca.importing.importDoc.ImportAlphanumeric;
 import com.evolve.alpaca.importing.importDoc.ImportPeople;
@@ -11,7 +11,6 @@ import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatus;
 import com.evolve.repo.jpa.PersonRepository;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -45,28 +44,27 @@ public class ImportAndFixDataTest {
     @Autowired
     PersonRepository personRepository;
 
-    @SneakyThrows
     @Test
     @Disabled
-    void importTurnovers() {
+    void importTurnovers() throws IOException {
         var turnoversFile = new DefaultResourceLoader().getResource("OBROTY.DBF").getURL();
 
-        ImportTurnoverDbf.performImport(turnoversFile);
+        var turnovers = ImportTurnoverDbf.performImport(turnoversFile);
+
+        turnovers.forEach(System.out::println);
     }
 
     @Test
-    @SneakyThrows
     @Disabled
-    void importAccounts() {
+    void importAccounts() throws IOException {
         var accountsFile = new DefaultResourceLoader().getResource("PLAN.DBF").getURL();
 
         ImportAccountDbf.importAccounts(accountsFile);
     }
 
-    @SneakyThrows
     @Test
     @Disabled
-    public void importPeople() {
+    public void importPeople() throws IOException {
         final List<PersonFromDoc> people = new ImportPeople(true).processFile();
 
         final GrupyAlfabetyczne grupyAlfabetyczne = new ImportAlphanumeric()

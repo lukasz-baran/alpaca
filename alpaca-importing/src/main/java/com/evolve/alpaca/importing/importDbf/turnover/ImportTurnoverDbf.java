@@ -2,6 +2,7 @@ package com.evolve.alpaca.importing.importDbf.turnover;
 
 import com.evolve.alpaca.importing.importDbf.DbfData;
 import com.evolve.alpaca.importing.importDbf.DbfImportBase;
+import com.evolve.alpaca.turnover.Turnover;
 import com.linuxense.javadbf.DBFReader;
 import lombok.RequiredArgsConstructor;
 
@@ -9,18 +10,19 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class ImportTurnoverDbf extends DbfImportBase<DbfTurnover> {
 
-    public static void performImport(URL turnoversFile) {
+    public static List<Turnover> performImport(URL turnoversFile) {
         final List<DbfTurnover> kontaDbf = new ImportTurnoverDbf()
                 .performImport(turnoversFile.getPath())
                 .getItems();
 
-        for (DbfTurnover dbfAccount : kontaDbf.subList(0, 100)) {
-            System.out.println(dbfAccount);
-        }
+        return kontaDbf.subList(0, 100).stream()
+                .map(DbfTurnover::of)
+                .collect(Collectors.toList());
     }
 
     @Override
