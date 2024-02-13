@@ -63,7 +63,6 @@
         <fx:include fx:id="personGender" source="../components/gender-select.fxml" GridPane.columnIndex="3" GridPane.rowIndex="3" />
 
         <!-- 5 row -->
-        <!--wrappingWidth="102.625"-->
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Kartoteki" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="4" />
             <HBox maxWidth="110" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
                 <padding>
@@ -96,7 +95,7 @@
         <fx:include fx:id="phoneNumbersController" source="contactDetails/contact-details.fxml" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Jednostka" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-        <ComboBox fx:id="unitNumberComboBox" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="6" />
+        <ComboBox fx:id="unitNumberComboBox" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="6" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Adresy" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="7" />
         <fx:include fx:id="personAddresses" source="address/person-addresses-list.fxml" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="7" />
