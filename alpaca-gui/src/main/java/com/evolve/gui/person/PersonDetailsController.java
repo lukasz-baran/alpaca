@@ -3,10 +3,7 @@ package com.evolve.gui.person;
 import com.evolve.EditPersonDataCommand;
 import com.evolve.alpaca.util.LocalDateStringConverter;
 import com.evolve.alpaca.validation.ValidationException;
-import com.evolve.domain.Person;
-import com.evolve.domain.PersonStatus;
-import com.evolve.domain.RegistryNumber;
-import com.evolve.domain.Unit;
+import com.evolve.domain.*;
 import com.evolve.gui.EditableGuiElement;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.components.GenderComboboxController;
@@ -15,12 +12,15 @@ import com.evolve.gui.person.address.PersonAddressesController;
 import com.evolve.gui.person.authorizedPerson.AuthorizedPersonsController;
 import com.evolve.gui.person.bankAccounts.PersonBankAccountsController;
 import com.evolve.gui.person.contactDetails.PersonContactDataController;
+import com.evolve.gui.person.details.PersonDetailsChange;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
 import com.evolve.gui.person.status.PersonStatusController;
 import com.evolve.services.PersonEditService;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -74,6 +75,7 @@ public class PersonDetailsController extends EditableGuiElement
     @FXML
     private final FxControllerAndView<PersonBankAccountsController, VBox> personBankAccountsController;
 
+    private final ObjectProperty<Person> originalPerson = new SimpleObjectProperty<>();
 
     public Button btnSave;
     public Button btnCancel;
@@ -93,6 +95,9 @@ public class PersonDetailsController extends EditableGuiElement
     @FXML CheckBox exemptFromFeesCheckBox;
 
     @FXML ComboBox<UnitNumberItem> unitNumberComboBox;
+
+    @FXML TextField peselTextField;
+    @FXML TextField idNumberTextField;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -118,6 +123,8 @@ public class PersonDetailsController extends EditableGuiElement
         final Person person = personsService.findById(personModel.getId());
         log.info("Person details: {}", person);
 
+        originalPerson.setValue(person);
+
         idTextField.setText(person.getPersonId());
         firstNameTextField.setText(person.getFirstName());
         secondNameTextField.setText(person.getSecondName());
@@ -142,6 +149,9 @@ public class PersonDetailsController extends EditableGuiElement
         dobTextField.setText(LocalDateStringConverter.localDateToString(person.getDob()));
         dobTextField.setEditable(false); // DOB is not editable using during person details edition
         dobTextField.setTooltip(new Tooltip("Data urodzenia jest ustalana na podstawie listy statusów."));
+
+        peselTextField.setText(person.getPesel());
+        idNumberTextField.setText(person.getIdNumber());
 
         unitsService.fetchList()
             .stream()
@@ -188,6 +198,9 @@ public class PersonDetailsController extends EditableGuiElement
         phoneNumbersController.getController().setEditable(editable);
         personStatusController.getController().setEditable(editable);
         personBankAccountsController.getController().setEditable(editable);
+
+        peselTextField.setEditable(editable);
+        idNumberTextField.setEditable(editable);
     }
 
 
@@ -213,6 +226,8 @@ public class PersonDetailsController extends EditableGuiElement
     }
 
     private void persistChanges() {
+        final PersonDetailsChange personDetailsEditionProcess = new PersonDetailsChange(originalPerson);
+
         final EditPersonDataCommand command = new EditPersonDataCommand(
                 idTextField.getText(),
                 firstNameTextField.getText(),
@@ -227,7 +242,9 @@ public class PersonDetailsController extends EditableGuiElement
                 oldRegistryNumberTextField.getText(),
                 personBankAccountsController.getController().getAccounts(),
                 retiredCheckBox.isSelected(),
-                exemptFromFeesCheckBox.isSelected());
+                exemptFromFeesCheckBox.isSelected(),
+                personDetailsEditionProcess.newPesel(peselTextField),
+                personDetailsEditionProcess.newIdNumber(idTextField));
 
         log.info("Update person data: {}", command);
 

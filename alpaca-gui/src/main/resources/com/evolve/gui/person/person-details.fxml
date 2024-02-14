@@ -38,6 +38,7 @@
             <RowConstraints vgrow="SOMETIMES" />
             <RowConstraints vgrow="SOMETIMES" />
             <RowConstraints />
+            <RowConstraints />
         </rowConstraints>
 
         <!-- 1 row -->
@@ -115,6 +116,12 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Konta bankowe:" wrappingWidth="70.625" />
         </TextFlow>
         <fx:include fx:id="personBankAccountsController" source="bankAccounts/person-bank-accounts.fxml" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="10" />
+
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nr dowodu" GridPane.rowIndex="11" />
+        <TextField fx:id="idNumberTextField" editable="false" maxWidth="110" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PESEL" wrappingWidth="102.625" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+        <TextField fx:id="peselTextField" editable="false" maxWidth="110" GridPane.columnIndex="3" GridPane.rowIndex="11" />
 
     </GridPane>
     <padding>

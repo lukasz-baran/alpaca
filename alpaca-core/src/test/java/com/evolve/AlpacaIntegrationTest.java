@@ -91,7 +91,7 @@ public class AlpacaIntegrationTest {
 
         personEditService.editPerson(new EditPersonDataCommand(personId, NEW_FIRST_NAME, NEW_LAST_NAME,
                 null, List.of(PersonContactData.email(NEW_EMAIL)), List.of(), List.of(), List.of(), TEST_UNIT_NAME, NEW_REGISTRY_NUMBER, null,
-                List.of(bankAccount), null, null));
+                List.of(bankAccount), null, null, null, null));
 
         // then -- changes are persisted in db
         assertPerson(personsService.findById(personId))
@@ -131,7 +131,7 @@ public class AlpacaIntegrationTest {
 
         personEditService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
                 null, List.of(), List.of(), List.of(), newStatuses, TEST_UNIT_NAME, null, null,
-                List.of(), null, null));
+                List.of(), null, null, null, null));
 
         // then
         assertPerson(personsService.findById(personId))
