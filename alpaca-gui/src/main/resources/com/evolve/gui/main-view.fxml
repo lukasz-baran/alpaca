@@ -39,7 +39,7 @@
                     <fx:include source="person/list/main-table.fxml" GridPane.columnIndex="1" GridPane.rowIndex="10" />
                     <TabPane fx:id="tabsPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                         <Tab text="Podstawowe dane" fx:id="tabPersonDetails">
-                            <fx:include source="person/person-details.fxml"/>
+                            <fx:include source="person/details/person-details.fxml"/>
                         </Tab>
                         <Tab text="Oryginalne dane" fx:id="tabOriginalDetails">
                             <fx:include source="person/originalDetails/original-details.fxml"/>

@@ -9,6 +9,7 @@ import com.evolve.domain.PersonStatus;
 import com.evolve.domain.RegistryNumber;
 import com.evolve.repo.jpa.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -45,6 +46,8 @@ public class PersonEditService extends ApplicationService {
         person.setBankAccounts(command.bankAccounts());
         person.updateRetirement(command.retired());
         person.updateExemptionFromFees(command.exemptFromFees());
+        person.updatePesel(command.pesel());
+        person.updateIdNumber(command.idNumber());
 
         final Person.Gender gender = PersonGenderDeducer.getGender(command.firstName());
         person.setGender(gender);

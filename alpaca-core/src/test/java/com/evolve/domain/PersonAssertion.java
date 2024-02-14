@@ -107,4 +107,24 @@ public class PersonAssertion extends AbstractAssert<PersonAssertion, Person> {
         assertThat(actual.getExemptFromFees()).isTrue();
         return this;
     }
+
+    public PersonAssertion hasPesel(String pesel) {
+        assertThat(actual.getPesel()).isEqualTo(pesel);
+        return this;
+    }
+
+    public PersonAssertion hasNoPesel() {
+        assertThat(actual.getPesel()).isNull();
+        return this;
+    }
+
+    public PersonAssertion hasIdNumber(String idNumber) {
+        assertThat(actual.getIdNumber()).isEqualTo(idNumber);
+        return this;
+    }
+
+    public PersonAssertion hasNoIdNumber() {
+        assertThat(actual.getIdNumber()).isNull();
+        return this;
+    }
 }

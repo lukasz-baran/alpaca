@@ -49,4 +49,85 @@ class PersonShould {
                 .isTrue();
     }
 
+    @Test
+    void updatePeselWithNewValue() {
+        final String pesel = "123";
+
+        assertPerson(new Person().updatePesel(pesel))
+                .hasPesel(pesel);
+
+        assertPerson(Person.builder().pesel("").build().updatePesel(pesel))
+                .hasPesel(pesel);
+
+        assertPerson(Person.builder().pesel("456").build().updatePesel(pesel))
+                .hasPesel(pesel);
+    }
+
+    @Test
+    void notUpdatePeselWhenNull() {
+        assertPerson(new Person().updatePesel(null))
+                .hasNoPesel();
+
+        assertPerson(Person.builder().pesel("").build().updatePesel(null))
+                .hasPesel("");
+
+        assertPerson(Person.builder().pesel("456").build().updatePesel(null))
+                .hasPesel("456");
+    }
+
+    @Test
+    void clearPeselWhenEmpty() {
+        final String clearingValue = "";
+
+        assertPerson(new Person().updatePesel(clearingValue))
+                .hasNoPesel();
+
+        assertPerson(Person.builder().pesel("").build().updatePesel(clearingValue))
+                .hasNoPesel();
+
+        assertPerson(Person.builder().pesel("456").build().updatePesel(clearingValue))
+                .hasNoPesel();
+    }
+
+    @Test
+    void updateIdNumberWithNewValue() {
+        final String idnumber = "123";
+
+        assertPerson(new Person().updateIdNumber(idnumber))
+                .hasIdNumber(idnumber);
+
+        assertPerson(Person.builder().idNumber("").build().updateIdNumber(idnumber))
+                .hasIdNumber(idnumber);
+
+        assertPerson(Person.builder().idNumber("456").build().updateIdNumber(idnumber))
+                .hasIdNumber(idnumber);
+    }
+
+    @Test
+    void notUpdateIdNumberWhenNull() {
+        assertPerson(new Person().updateIdNumber(null))
+                .hasNoIdNumber();
+
+        assertPerson(Person.builder().idNumber("").build().updateIdNumber(null))
+                .hasIdNumber("");
+
+        assertPerson(Person.builder().idNumber("456").build().updateIdNumber(null))
+                .hasIdNumber("456");
+    }
+
+    @Test
+    void clearIdNumberWhenEmpty() {
+        final String clearingValue = "";
+
+        assertPerson(new Person().updateIdNumber(clearingValue))
+                .hasNoIdNumber();
+
+        assertPerson(Person.builder().idNumber("").build().updateIdNumber(clearingValue))
+                .hasNoIdNumber();
+
+        assertPerson(Person.builder().idNumber("456").build().updateIdNumber(clearingValue))
+                .hasNoIdNumber();
+    }
+
+
 }

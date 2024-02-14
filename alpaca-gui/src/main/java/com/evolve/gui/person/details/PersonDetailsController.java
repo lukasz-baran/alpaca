@@ -1,4 +1,4 @@
-package com.evolve.gui.person;
+package com.evolve.gui.person.details;
 
 import com.evolve.EditPersonDataCommand;
 import com.evolve.alpaca.util.LocalDateStringConverter;
@@ -8,6 +8,7 @@ import com.evolve.gui.EditableGuiElement;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.components.GenderComboboxController;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
+import com.evolve.gui.person.UnitNumberItem;
 import com.evolve.gui.person.address.PersonAddressesController;
 import com.evolve.gui.person.authorizedPerson.AuthorizedPersonsController;
 import com.evolve.gui.person.bankAccounts.PersonBankAccountsController;
@@ -244,7 +245,7 @@ public class PersonDetailsController extends EditableGuiElement
                 retiredCheckBox.isSelected(),
                 exemptFromFeesCheckBox.isSelected(),
                 personDetailsEditionProcess.newPesel(peselTextField),
-                personDetailsEditionProcess.newIdNumber(idTextField));
+                personDetailsEditionProcess.newIdNumber(idNumberTextField));
 
         log.info("Update person data: {}", command);
 

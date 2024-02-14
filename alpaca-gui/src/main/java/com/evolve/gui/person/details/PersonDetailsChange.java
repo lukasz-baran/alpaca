@@ -15,11 +15,11 @@ public class PersonDetailsChange {
      *          "" if we clear the field or the new value
      */
     public String newPesel(TextField peselTextField) {
-        return getStringValue(originalData.getValue().getPesel(), peselTextField.getText().trim());
+        return getStringValue(originalData.getValue().getPesel(), StringUtils.trimToEmpty(peselTextField.getText()));
     }
 
-    public String newIdNumber(TextField idTextField) {
-        return getStringValue(originalData.getValue().getIdNumber(), idTextField.getText().trim());
+    public String newIdNumber(TextField idNumberTextField) {
+        return getStringValue(originalData.getValue().getIdNumber(), StringUtils.trimToEmpty(idNumberTextField.getText()));
     }
 
     private static String getStringValue(String oldValue, String newValue) {

@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<VBox stylesheets="@../../../../styles/style.css" VBox.vgrow="NEVER" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.PersonDetailsController">
+<VBox stylesheets="@../../../../../styles/style.css" VBox.vgrow="NEVER" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.details.PersonDetailsController">
 
     <HBox id="personMenu" alignment="BASELINE_LEFT" prefHeight="18.0" spacing="5.0">
         <Button fx:id="btnSave" disable="true" onAction="#saveButtonClicked" text="Zapisz" />
@@ -61,7 +61,7 @@
         <TextField fx:id="secondNameTextField" editable="false" maxWidth="110" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Płeć" wrappingWidth="102.625" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-        <fx:include fx:id="personGender" source="../components/gender-select.fxml" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+        <fx:include fx:id="personGender" source="../../components/gender-select.fxml" GridPane.columnIndex="3" GridPane.rowIndex="3" />
 
         <!-- 5 row -->
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Kartoteki" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="4" />
@@ -93,29 +93,29 @@
 
         <!-- 6 row -->
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dane kontaktowe:" wrappingWidth="70.625" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-        <fx:include fx:id="phoneNumbersController" source="contactDetails/contact-details.fxml" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5" />
+        <fx:include fx:id="phoneNumbersController" source="../contactDetails/contact-details.fxml" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Jednostka" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="6" />
         <ComboBox fx:id="unitNumberComboBox" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="6" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Adresy" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-        <fx:include fx:id="personAddresses" source="address/person-addresses-list.fxml" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="7" />
+        <fx:include fx:id="personAddresses" source="../address/person-addresses-list.fxml" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="7" />
 
         <TextFlow GridPane.columnIndex="0" GridPane.rowIndex="8">
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Upoważnieni:" wrappingWidth="70.625" />
         </TextFlow>
-        <fx:include fx:id="authorizedController" source="authorizedPerson/authorized-persons-list.fxml" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="8" />
+        <fx:include fx:id="authorizedController" source="../authorizedPerson/authorized-persons-list.fxml" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="8" />
 
         <TextFlow GridPane.columnIndex="0" GridPane.rowIndex="9">
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Status:&#10;" wrappingWidth="70.625" />
             <Text fx:id="textPersonStatus" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold" wrappingWidth="70.625" />
         </TextFlow>
-        <fx:include fx:id="personStatusController" source="status/person-status.fxml" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="9" />
+        <fx:include fx:id="personStatusController" source="../status/person-status.fxml" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="9" />
 
         <TextFlow GridPane.columnIndex="0" GridPane.rowIndex="10">
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Konta bankowe:" wrappingWidth="70.625" />
         </TextFlow>
-        <fx:include fx:id="personBankAccountsController" source="bankAccounts/person-bank-accounts.fxml" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="10" />
+        <fx:include fx:id="personBankAccountsController" source="../bankAccounts/person-bank-accounts.fxml" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="10" />
 
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nr dowodu" GridPane.rowIndex="11" />
         <TextField fx:id="idNumberTextField" editable="false" maxWidth="110" GridPane.columnIndex="1" GridPane.rowIndex="11" />

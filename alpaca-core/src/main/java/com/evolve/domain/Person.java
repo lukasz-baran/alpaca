@@ -1,6 +1,7 @@
 package com.evolve.domain;
 
 import lombok.*;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -111,6 +112,18 @@ public class Person implements Serializable {
     public Person updateExemptionFromFees(Boolean exemptFromFees) {
         Optional.ofNullable(exemptFromFees)
                 .ifPresent(newStatus -> this.exemptFromFees = newStatus ? Boolean.TRUE : null);
+        return this;
+    }
+
+    public Person updatePesel(final String pesel) {
+        Optional.ofNullable(pesel)
+                .ifPresent(newPesel -> this.pesel = StringUtils.defaultIfEmpty(newPesel, null));
+        return this;
+    }
+
+    public Person updateIdNumber(final String idNumber) {
+        Optional.ofNullable(idNumber)
+                .ifPresent(newIdNumber -> this.idNumber = StringUtils.defaultIfEmpty(newIdNumber, null));
         return this;
     }
 
