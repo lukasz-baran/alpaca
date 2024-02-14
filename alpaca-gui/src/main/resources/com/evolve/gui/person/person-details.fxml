@@ -18,8 +18,8 @@
     <GridPane>
 
         <columnConstraints>
-            <ColumnConstraints maxWidth="93.0" minWidth="80.0" prefWidth="67.0" /> <!-- hgrow="NEVER"  -->
-            <ColumnConstraints maxWidth="130.0" minWidth="100.0" prefWidth="130.0" /> <!-- hgrow="ALWAYS" -->
+            <ColumnConstraints maxWidth="93.0" minWidth="80.0" prefWidth="67.0" />
+            <ColumnConstraints maxWidth="130.0" minWidth="100.0" prefWidth="130.0" />
             <ColumnConstraints maxWidth="60.0" minWidth="60.0" prefWidth="60.0" />
             <ColumnConstraints maxWidth="110.0" minWidth="100.0" prefWidth="110.0" />
         </columnConstraints>
