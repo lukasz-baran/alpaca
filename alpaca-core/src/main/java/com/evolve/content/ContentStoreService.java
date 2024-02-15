@@ -55,4 +55,11 @@ public class ContentStoreService {
         fileContentStore.unsetContent(fileRepository.getById(id));
         fileRepository.deleteById(id);
     }
+
+    public void changeFileDetails(Long id, String newFileName, String newSummary) {
+        final ContentFile contentFile = fileRepository.getById(id);
+        contentFile.setName(newFileName);
+        contentFile.setSummary(newSummary);
+        fileRepository.save(contentFile);
+    }
 }

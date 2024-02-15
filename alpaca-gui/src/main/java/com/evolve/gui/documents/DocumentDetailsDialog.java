@@ -25,14 +25,13 @@ public class DocumentDetailsDialog extends DialogWindow<FilePathAndDescription> 
 
     private final FilePathAndDescription filePathAndDescription;
     private final StageManager stageManager;
-    private final TextField filePathTextField;
-
+    private final TextField filePathTextField = new TextField();
+    private final TextArea descriptionTextField = new TextArea();
 
     public DocumentDetailsDialog(StageManager stageManager) {
         super("Nowy document", "Wybierz plik - dozwolone formaty: " + String.join(", ", ACCEPTED_EXTENSION));
         this.filePathAndDescription = new FilePathAndDescription();
         this.stageManager = stageManager;
-        this.filePathTextField = new TextField();
     }
 
     @Override
@@ -61,7 +60,6 @@ public class DocumentDetailsDialog extends DialogWindow<FilePathAndDescription> 
         grid.add(new Label("Plik:"), 0, 0);
         grid.add(group, 1, 0);
 
-        final TextArea descriptionTextField = new TextArea();
         descriptionTextField.setPrefRowCount(5);
 
         grid.add(new Label("Opis:"), 0, 1);

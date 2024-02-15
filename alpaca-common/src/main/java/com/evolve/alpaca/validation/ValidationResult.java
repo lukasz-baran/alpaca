@@ -15,6 +15,10 @@ public class ValidationResult {
         return new ValidationResult();
     }
 
+    public static ValidationResult of(String message) {
+        return new ValidationResult(Set.of(message));
+    }
+
     private final Set<String> validationMessages;
 
     public ValidationResult() {

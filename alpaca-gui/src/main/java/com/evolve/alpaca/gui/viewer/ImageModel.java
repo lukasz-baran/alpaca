@@ -1,5 +1,6 @@
 package com.evolve.alpaca.gui.viewer;
 
+import com.evolve.alpaca.utils.FileNameUtils;
 import com.evolve.gui.documents.DocumentEntry;
 import javafx.scene.image.Image;
 import lombok.Getter;
@@ -35,7 +36,7 @@ public class ImageModel {
     }
 
     public String getFormat() {
-        return Util.getFileExt(name).toUpperCase();
+        return FileNameUtils.getFileExt(name).toUpperCase();
     }
 
     public double getWidth() {

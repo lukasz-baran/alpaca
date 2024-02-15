@@ -1,9 +1,9 @@
-package com.evolve.alpaca.gui.viewer;
+package com.evolve.alpaca.utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Util {
+public class FileNameUtils {
 
     public static String getFileExt(String filename) {
         if (filename.contains(".")) {
@@ -16,5 +16,4 @@ public class Util {
 
         return "";
     }
-
 }

@@ -84,8 +84,8 @@ public class DocumentsController implements Initializable {
             final MenuItem saveDocumentMenuItem = new MenuItem("Zapisz");
             saveDocumentMenuItem.setOnAction(event -> saveDocumentToFile(row.getItem()));
 
-            final MenuItem editDocumentMenuItem = new MenuItem("Edytuj opis");
-            // TODO: implement editDocumentMenuItem
+            final MenuItem editDocumentMenuItem = new MenuItem("Edytuj");
+            editDocumentMenuItem.setOnAction(event -> editDocument(row));
 
             final MenuItem removeDocumentMenuItem = new MenuItem("Usuń");
             removeDocumentMenuItem.setOnAction(event -> removeDocument(row.getItem()));
@@ -113,6 +113,18 @@ public class DocumentsController implements Initializable {
         personListModel.getCurrentPersonProperty().addListener(
                 (ObservableValue<? extends PersonModel> obs, PersonModel oldUser, PersonModel newUser) -> {
                     loadDocuments(newUser);
+                });
+    }
+
+    private void editDocument(TableRow<DocumentEntry> row) {
+        new DocumentEditDialog(row.getItem()).showDialog(stageManager.getWindow())
+                .ifPresent(documentEntry -> {
+                    log.info("edited details of document {}", documentEntry);
+                    contentStoreService.changeFileDetails(documentEntry.getId(), documentEntry.getFileName(),
+                            documentEntry.getSummary());
+                    row.getItem().setFileName(documentEntry.getFileName());
+                    row.getItem().setSummary(documentEntry.getSummary());
+                    documentsTable.refresh();
                 });
     }
 
