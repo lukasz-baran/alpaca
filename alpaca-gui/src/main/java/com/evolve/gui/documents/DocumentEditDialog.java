@@ -1,11 +1,13 @@
 package com.evolve.gui.documents;
 
-import com.evolve.alpaca.validation.ValidationResult;
 import com.evolve.gui.DialogWindow;
 import com.evolve.gui.StageManager;
 import javafx.application.Platform;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
 import org.apache.commons.lang3.StringUtils;
@@ -87,13 +89,9 @@ public class DocumentEditDialog extends DialogWindow<DocumentEntry> {
 
         if (!result.isValid()) {
             fileNameTextField.setStyle("-fx-border-color: red");
-            fileNameTextField.setTooltip(buildTooltip(result));
+            fileNameTextField.setTooltip(StageManager.buildTooltip(result));
         }
         return result.isValid();
-    }
-
-    Tooltip buildTooltip(ValidationResult validationResult) {
-        return StageManager.newTooltip(String.join("\n", validationResult.getErrors()));
     }
 
 

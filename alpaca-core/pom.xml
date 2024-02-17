@@ -93,6 +93,12 @@
             <version>2.14.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>pl.unak7.pesel-validator</groupId>
+            <artifactId>pesel-validator</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <!-- csv for fixing parsing dbf -->
         <dependency>
             <groupId>org.apache.commons</groupId>

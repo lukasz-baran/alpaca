@@ -69,8 +69,8 @@ public class PersonDetailsController extends EditableGuiElement
 
     private final ObjectProperty<Person> originalPerson = new SimpleObjectProperty<>();
 
-    public Button btnSave;
-    public Button btnCancel;
+    @FXML Button btnSave;
+    @FXML Button btnCancel;
 
     @FXML Text textPersonStatus; // person status is displayed in the label
 
@@ -91,6 +91,8 @@ public class PersonDetailsController extends EditableGuiElement
     @FXML TextField peselTextField;
     @FXML TextField idNumberTextField;
 
+    PeselValidationListener peselValidationListener;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         log.info("initialized - PersonDetails");
@@ -100,6 +102,10 @@ public class PersonDetailsController extends EditableGuiElement
             units.add(new UnitNumberItem(unit.getId(), unit.getName()));
         }
         unitNumberComboBox.setItems(units);
+
+        peselValidationListener = new PeselValidationListener(peselTextField);
+
+        peselTextField.textProperty().addListener(peselValidationListener);
 
         personListModel.getCurrentPersonProperty().addListener(
                 (ObservableValue<? extends PersonModel> obs, PersonModel oldUser, PersonModel newUser) -> {
@@ -116,6 +122,7 @@ public class PersonDetailsController extends EditableGuiElement
         log.info("Person details: {}", person);
 
         originalPerson.setValue(person);
+        peselValidationListener.setPerson(person);
 
         idTextField.setText(person.getPersonId());
         firstNameTextField.setText(person.getFirstName());
@@ -195,8 +202,8 @@ public class PersonDetailsController extends EditableGuiElement
         idNumberTextField.setEditable(editable);
     }
 
-
-    public void saveButtonClicked(ActionEvent actionEvent) {
+    @FXML
+    void saveButtonClicked(ActionEvent actionEvent) {
         // display alert asking for confirmation if confirmed, send command to update person data and close the window  if not confirmed, revert changes on view and close the window
         boolean result = stageManager.displayConfirmation("Zapisać zmiany?");
         if (result) {
@@ -206,7 +213,8 @@ public class PersonDetailsController extends EditableGuiElement
         }
     }
 
-    public void cancelButtonClicked(ActionEvent actionEvent) {
+    @FXML
+    void cancelButtonClicked(ActionEvent actionEvent) {
         revertChanges();
     }
 

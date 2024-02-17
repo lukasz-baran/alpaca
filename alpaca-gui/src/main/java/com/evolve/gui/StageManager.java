@@ -1,5 +1,6 @@
 package com.evolve.gui;
 
+import com.evolve.alpaca.validation.ValidationResult;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.Initializable;
@@ -128,6 +129,10 @@ public class StageManager {
         alert.setHeaderText(null);
         alert.initOwner(window);
         alert.show();
+    }
+
+    public static Tooltip buildTooltip(ValidationResult validationResult) {
+        return StageManager.newTooltip(String.join("\n", validationResult.getErrors()));
     }
 
     public static Tooltip newTooltip(String tooltipText) {
