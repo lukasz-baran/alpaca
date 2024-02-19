@@ -3,18 +3,18 @@
     <parent>
         <groupId>com.evolve</groupId>
         <artifactId>parent-pom</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>alpaca-rest</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>com.evolve</groupId>
             <artifactId>alpaca-core</artifactId>
-            <version>1.0.0</version>
+            <version> 1.0.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

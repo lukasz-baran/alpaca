@@ -4,7 +4,7 @@
 
     <groupId>com.evolve</groupId>
     <artifactId>parent-pom</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.2-SNAPSHOT</version>
     <name>parent-pom</name>
     <packaging>pom</packaging>
 
@@ -37,7 +37,7 @@
 
     <scm>
         <developerConnection>scm:git:https://github.com/lukasz-baran/alpaca.git</developerConnection>
-      <tag>parent-pom-1.0.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <dependencies>
@@ -234,22 +234,22 @@
             <dependency>
                 <groupId>com.evolve</groupId>
                 <artifactId>alpaca-common</artifactId>
-                <version>1.0.0</version>
+                <version> 1.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.evolve</groupId>
                 <artifactId>alpaca-importing</artifactId>
-                <version>1.0.0</version>
+                <version> 1.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.evolve</groupId>
                 <artifactId>alpaca-core</artifactId>
-                <version>1.0.0</version>
+                <version> 1.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.evolve</groupId>
                 <artifactId>alpaca-export</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.2-SNAPSHOT</version>
             </dependency>
 
             <dependency>

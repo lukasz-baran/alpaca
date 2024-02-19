@@ -3,10 +3,11 @@
     <parent>
         <groupId>com.evolve</groupId>
         <artifactId>parent-pom</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>alpaca-common</artifactId>
+  <version> 1.0.2-SNAPSHOT</version>
 
     <name>alpaca-common</name>
     <dependencies>
