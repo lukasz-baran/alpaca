@@ -37,6 +37,10 @@
         </repository>
     </repositories>
 
+    <scm>
+        <developerConnection>scm:git:https://github.com/lukasz-baran/alpaca.git</developerConnection>
+    </scm>
+
     <dependencies>
         <!-- spring -->
 <!--        <dependency>
