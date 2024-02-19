@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.evolve</groupId>
     <artifactId>parent-pom</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>parent-pom</name>
     <packaging>pom</packaging>
 
@@ -39,7 +37,8 @@
 
     <scm>
         <developerConnection>scm:git:https://github.com/lukasz-baran/alpaca.git</developerConnection>
-    </scm>
+      <tag>parent-pom-1.0.0</tag>
+  </scm>
 
     <dependencies>
         <!-- spring -->
@@ -235,22 +234,22 @@
             <dependency>
                 <groupId>com.evolve</groupId>
                 <artifactId>alpaca-common</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.evolve</groupId>
                 <artifactId>alpaca-importing</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.evolve</groupId>
                 <artifactId>alpaca-core</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.evolve</groupId>
                 <artifactId>alpaca-export</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
             </dependency>
 
             <dependency>
