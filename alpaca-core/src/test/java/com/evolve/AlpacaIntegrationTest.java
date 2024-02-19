@@ -3,7 +3,6 @@ package com.evolve;
 import com.evolve.domain.*;
 import com.evolve.services.PersonEditService;
 import com.evolve.services.PersonsService;
-import com.evolve.services.UnitsService;
 import de.cronn.testutils.h2.H2Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +37,6 @@ public class AlpacaIntegrationTest {
 
     @Autowired PersonsService personsService;
     @Autowired PersonEditService personEditService;
-    @Autowired UnitsService unitsService;
 
     @BeforeEach
     void resetDatabase(@Autowired H2Util h2Util) {
@@ -48,8 +46,6 @@ public class AlpacaIntegrationTest {
     @Test
     void testApp() {
         // given  -- initially database is empty
-
-        System.out.println(unitsService.fetchList().size());
         var list = personsService.fetchList(PersonLookupCriteria.ALL);
         assertThat(list)
                 .isEmpty();
@@ -107,8 +103,8 @@ public class AlpacaIntegrationTest {
     }
 
     @Test
-    void shouldAlwaysUpdateStatuses() {
-        // given
+    void shouldUpdateWhenDobAndJoinedDateAdded() {
+        // given -- person that doesn't have any statuses
         final String personId = personsService.findNextPersonId(TEST_LAST_NAME).orElseThrow();
         final Person newPerson = Person.builder()
                 .personId(personId)
@@ -122,27 +118,48 @@ public class AlpacaIntegrationTest {
         personsService.insertPerson(newPerson);
 
         assertPerson(personsService.findById(personId))
-                .hasStatus(PersonStatus.UNKNOWN);
+                .hasStatus(PersonStatus.UNKNOWN)
+                .hasNoBirthDate();
 
         // when -- statuses are added
-        final List<PersonStatusChange> newStatuses = List.of(
-                PersonStatusChange.born(LocalDate.of(1980, 8, 28)),
-                PersonStatusChange.joined(LocalDate.of(2020, 1, 25)));
+        final LocalDate dob = LocalDate.of(1980, 8, 28);
+        final LocalDate joined = LocalDate.of(2020, 1, 25);
 
         personEditService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
-                null, List.of(), List.of(), List.of(), newStatuses, TEST_UNIT_NAME, null, null,
+                null, List.of(), List.of(), List.of(), statusChanges(dob, joined), TEST_UNIT_NAME, null, null,
                 List.of(), null, null, null, null));
 
-        // then
+        // then -- person became active
         assertPerson(personsService.findById(personId))
                 .hasFirstName(TEST_FIRST_NAME)
                 .hasLastName(TEST_LAST_NAME)
                 .hasUnitNumber(TEST_UNIT_NAME)
                 .hasPersonId(personId)
+                .wasBornOn(dob)
                 .hasStatus(PersonStatus.ACTIVE)
                 .isRetired()
                 .isExemptFromFees();
 
+
+        // when -- dob is changed
+        final LocalDate newDob = LocalDate.of(1970, 2, 11);
+        personEditService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
+                null, List.of(), List.of(), List.of(), statusChanges(newDob, joined), TEST_UNIT_NAME, null, null,
+                List.of(), null, null, null, null));
+
+
+        // then -- changes are reflected
+        assertPerson(personsService.findById(personId))
+                .wasBornOn(newDob)
+                .hasStatus(PersonStatus.ACTIVE)
+                .isRetired()
+                .isExemptFromFees();
+
+    }
+
+
+    private List<PersonStatusChange> statusChanges(LocalDate dob, LocalDate joined) {
+        return List.of(PersonStatusChange.born(dob), PersonStatusChange.joined(joined));
     }
 
 }

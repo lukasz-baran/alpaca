@@ -5,14 +5,19 @@ import lombok.Getter;
 import java.time.LocalDate;
 import java.util.*;
 
+import static org.apache.commons.collections4.ListUtils.emptyIfNull;
+
 @Getter
 public class PersonStatusDeducer {
     private List<PersonStatusChange> statusChanges;
     private PersonStatus status;
-    private LocalDate dob;
 
     public Optional<LocalDate> getDob() {
-        return Optional.ofNullable(dob);
+        return emptyIfNull(statusChanges)
+                .stream()
+                .filter(change -> change.getEventType() == PersonStatusChange.EventType.BORN)
+                .map(PersonStatusChange::getWhen)
+                .findFirst();
     }
 
     public PersonStatusDeducer(Person person) {
@@ -38,9 +43,6 @@ public class PersonStatusDeducer {
                 .eventType(eventType)
                 .when(when)
                 .build();
-        if (eventType == PersonStatusChange.EventType.BORN) {
-            this.dob = when;
-        }
 
         Set<PersonStatusChange> personStatusChanges = new TreeSet<>(this.statusChanges);
 
