@@ -1,7 +1,7 @@
 @ECHO OFF
 SETLOCAL
 
-set MAIN_JAR=alpaca-gui-1.0.0-SNAPSHOT.jar
+set MAIN_JAR=alpaca-gui-1.0.2-SNAPSHOT.jar
 
 rem ------ SETUP DIRECTORIES AND FILES ----------------------------------------
 rem Remove previously generated java runtime and installers. Copy all required jar files into the input/libs folder.
@@ -39,7 +39,7 @@ call "jlink" ^
 echo executing "jpackage"
 
 mkdir input
-cp target/alpaca-gui-1.0.0-SNAPSHOT.jar input/
+cp target/alpaca-gui-1.0.2-SNAPSHOT.jar input/
 rem --win-console
 rem   --input input ^
 rem    --input target/installer/input/libs ^
@@ -51,7 +51,7 @@ call "jpackage" ^
     --input input ^
     --name alpaca ^
     --main-class org.springframework.boot.loader.PropertiesLauncher ^
-    --main-jar alpaca-gui-1.0.0-SNAPSHOT.jar ^
+    --main-jar alpaca-gui-1.0.2-SNAPSHOT.jar ^
     --runtime-image target/java-runtime ^
     --win-menu ^
     --win-shortcut ^
