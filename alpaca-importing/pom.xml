@@ -6,19 +6,19 @@
     <parent>
         <groupId>com.evolve</groupId>
         <artifactId>parent-pom</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.0.2</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>com.evolve</groupId>
             <artifactId>alpaca-core</artifactId>
-            <version> 1.0.2-SNAPSHOT</version>
+            <version> 1.0.2</version>
         </dependency>
         <dependency>
             <groupId>com.evolve</groupId>
             <artifactId>alpaca-core</artifactId>
-            <version> 1.0.2-SNAPSHOT</version>
+            <version> 1.0.2</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
