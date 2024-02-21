@@ -9,8 +9,8 @@
 
     <artifactId>alpaca-gui</artifactId>
     <properties>
-        <client.version>1.0.0</client.version>
         <exec.maven.plugin.version>1.6.0</exec.maven.plugin.version>
+        <finalName>${project.artifactId}-${project.version}.${packaging}</finalName>
     </properties>
 
     <dependencies>
@@ -160,12 +160,8 @@
                             <workingDirectory>${project.basedir}</workingDirectory>
                             <executable>build_app_windows.bat</executable>
                             <environmentVariables>
-                                <APP_VERSION>
-                                    ${client.version}
-                                </APP_VERSION>
-                                <PROJECT_VERSION>
-                                    ${project.version}
-                                </PROJECT_VERSION>
+                                <FINAL_NAME>${finalName}</FINAL_NAME>
+                                <PROJECT_VERSION>${project.version}</PROJECT_VERSION>
                             </environmentVariables>
                         </configuration>
                     </plugin>
