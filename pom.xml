@@ -33,12 +33,25 @@
             <releases><enabled>false</enabled></releases>
             <snapshots><enabled>true</enabled></snapshots>
         </repository>
+<!--        <repository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/lukasz-baran/alpaca</url>
+        </repository>-->
     </repositories>
 
     <scm>
         <developerConnection>scm:git:https://github.com/lukasz-baran/alpaca.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/lukasz-baran/alpaca</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <!-- spring -->
