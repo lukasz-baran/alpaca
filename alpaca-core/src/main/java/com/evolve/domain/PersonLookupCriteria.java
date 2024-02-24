@@ -1,10 +1,12 @@
 package com.evolve.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import org.apache.commons.lang.BooleanUtils;
-import org.springframework.data.domain.Sort;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Root;
 
 @Builder
 @Getter
@@ -31,9 +33,10 @@ public class PersonLookupCriteria {
 
     private Integer registryNumber;
 
-    @JsonIgnore
-    public Sort getSort() {
-        final Sort sort = Sort.by(sortBy == null || "id".equals(sortBy) ? "personId" : sortBy);
-        return BooleanUtils.isTrue(upDown) ? sort.ascending() : sort.descending();
+    public Order getOrder(Root<Person> root, CriteriaBuilder cb) {
+        final String orderField = sortBy == null || "id".equals(sortBy) ? "personId" : sortBy;
+        return BooleanUtils.isTrue(upDown) ?
+                cb.asc(root.get(orderField))
+                : cb.desc(root.get(orderField));
     }
 }

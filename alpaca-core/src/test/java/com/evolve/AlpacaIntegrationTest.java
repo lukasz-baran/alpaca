@@ -3,15 +3,8 @@ package com.evolve;
 import com.evolve.domain.*;
 import com.evolve.services.PersonEditService;
 import com.evolve.services.PersonsService;
-import de.cronn.testutils.h2.H2Util;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,11 +13,7 @@ import java.util.Optional;
 import static com.evolve.domain.PersonAssertion.assertPerson;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@ExtendWith(SpringExtension.class)
-@TestPropertySource("classpath:test.properties")
-@Import(H2Util.class)
-public class AlpacaIntegrationTest {
+public class AlpacaIntegrationTest extends AlpacaAbstractIntegrationTest{
 
     public static final String TEST_FIRST_NAME = "Jan";
     public static final String TEST_LAST_NAME = "Barabasz";
@@ -37,11 +26,6 @@ public class AlpacaIntegrationTest {
 
     @Autowired PersonsService personsService;
     @Autowired PersonEditService personEditService;
-
-    @BeforeEach
-    void resetDatabase(@Autowired H2Util h2Util) {
-        h2Util.resetDatabase();
-    }
 
     @Test
     void testApp() {
@@ -103,7 +87,7 @@ public class AlpacaIntegrationTest {
     }
 
     @Test
-    void shouldUpdateWhenDobAndJoinedDateAdded() {
+    void shouldUpdateStatusWhenDobAndJoinedDateAdded() {
         // given -- person that doesn't have any statuses
         final String personId = personsService.findNextPersonId(TEST_LAST_NAME).orElseThrow();
         final Person newPerson = Person.builder()

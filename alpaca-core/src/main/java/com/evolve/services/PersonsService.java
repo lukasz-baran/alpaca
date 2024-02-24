@@ -12,7 +12,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ public class PersonsService implements FindPerson {
 
     @Override
     public List<Person> fetch(PersonLookupCriteria criteria) {
-        final List<Person> filteredByUnitAndStatus = findPersons(criteria);
+        final List<Person> filteredByUnitAndStatus = personRepository.findByCriteria(criteria);
 
         if (criteria.getHasDocuments() != null) {
             var listOfIds = fileRepository.findAll().stream().map(ContentFile::getPersonId).collect(Collectors.toSet());
@@ -46,53 +45,6 @@ public class PersonsService implements FindPerson {
 
         return filteredByUnitAndStatus;
     }
-
-    private List<Person> findPersons(PersonLookupCriteria criteria) {
-        final Person.PersonBuilder personBuilder = Person.builder();
-        final AtomicBoolean hasCriteria = new AtomicBoolean(false);
-
-        if (StringUtils.isNotEmpty(criteria.getUnitNumber())) {
-            personBuilder.unitNumber(criteria.getUnitNumber());
-            hasCriteria.set(true);
-        }
-
-        if (criteria.getStatus() != null) {
-            personBuilder.status(criteria.getStatus());
-            hasCriteria.set(true);
-        }
-
-        if (criteria.getGender() != null) {
-            personBuilder.gender(criteria.getGender());
-            hasCriteria.set(true);
-        }
-
-        if (criteria.getRetired() != null) {
-            if (criteria.getRetired()) {
-                personBuilder.retired(true);
-            }
-            hasCriteria.set(true);
-        }
-
-        if (criteria.getExemptFromFees() != null) {
-            if (criteria.getExemptFromFees()) {
-                personBuilder.exemptFromFees(true);
-            }
-            hasCriteria.set(true);
-        }
-
-        if (criteria.getRegistryNumber() != null) {
-            personBuilder.registryNumber(RegistryNumber.of(criteria.getRegistryNumber()));
-            hasCriteria.set(true);
-        }
-
-        if (hasCriteria.get()) {
-            return personRepository.findAll(
-                    Example.of(personBuilder.build()),
-                    criteria.getSort());
-        }
-        return personRepository.findAll(criteria.getSort());
-    }
-
 
     @Override
     public Optional<String> findNextPersonId(String lastName) {
