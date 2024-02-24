@@ -90,14 +90,18 @@ public class Person implements Serializable {
     @Column(name="raw_data_value")
     private Map<String, String> rawData;
 
-    public void setStatusChanges(List<PersonStatusChange> statusChanges) {
-        // TODO this is experimental
-        this.statusChanges = List.copyOf(new TreeSet<>(statusChanges));
+    /**
+     * Updates statusChanges with enforced sorting, dob that and person's status
+     */
+    public void updateStatusChanges(List<PersonStatusChange> unsortedStatusChanges) {
+        this.statusChanges = List.copyOf(new TreeSet<>(unsortedStatusChanges));
 
-        emptyIfNull(statusChanges).stream()
+        emptyIfNull(unsortedStatusChanges).stream()
                 .filter(statusChange -> statusChange.getEventType() == PersonStatusChange.EventType.BORN)
                 .findFirst()
                 .ifPresent(dobStatusChange -> this.dob = dobStatusChange.getWhen());
+
+        this.status = PersonStatus.basedOnStatusChange(this.statusChanges);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.evolve.domain;
 import org.assertj.core.api.AbstractAssert;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -90,6 +91,11 @@ public class PersonAssertion extends AbstractAssert<PersonAssertion, Person> {
 
     public PersonAssertion hasStatusHistory(PersonStatusChange... statusChanges) {
         assertThat(actual.getStatusChanges()).containsExactly(statusChanges);
+        return this;
+    }
+
+    public PersonAssertion hasStatusHistory(List<PersonStatusChange> statusChanges) {
+        assertThat(actual.getStatusChanges()).containsExactly(statusChanges.toArray(new PersonStatusChange[]{}));
         return this;
     }
 

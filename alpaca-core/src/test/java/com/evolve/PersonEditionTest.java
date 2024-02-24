@@ -13,7 +13,7 @@ import java.util.Optional;
 import static com.evolve.domain.PersonAssertion.assertPerson;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AlpacaIntegrationTest extends AlpacaAbstractIntegrationTest{
+public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
 
     public static final String TEST_FIRST_NAME = "Jan";
     public static final String TEST_LAST_NAME = "Barabasz";
@@ -30,9 +30,7 @@ public class AlpacaIntegrationTest extends AlpacaAbstractIntegrationTest{
     @Test
     void testApp() {
         // given  -- initially database is empty
-        var list = personsService.fetchList(PersonLookupCriteria.ALL);
-        assertThat(list)
-                .isEmpty();
+        assertThat(personsService.fetchList(PersonLookupCriteria.ALL)).isEmpty();
 
         // when
         final Optional<String> nextId = personsService.findNextPersonId(TEST_LAST_NAME);
@@ -139,8 +137,49 @@ public class AlpacaIntegrationTest extends AlpacaAbstractIntegrationTest{
                 .isRetired()
                 .isExemptFromFees();
 
+
     }
 
+    @Test
+    void shouldKeepStatusWhenNewDateIsEarlier() {
+        // given
+        final String personId = personsService.findNextPersonId(TEST_LAST_NAME).orElseThrow();
+        final Person newPerson = Person.builder()
+                .personId(personId)
+                .firstName(TEST_FIRST_NAME)
+                .lastName(TEST_LAST_NAME)
+                .unitNumber(TEST_UNIT_NAME)
+                .status(PersonStatus.UNKNOWN)
+                .build();
+        personsService.insertPerson(newPerson);
+
+        // when
+        final LocalDate dob = LocalDate.of(1980, 8, 28);
+        final LocalDate death = LocalDate.of(2020, 1, 25);
+        var bornAndDied = List.of(PersonStatusChange.born(dob), PersonStatusChange.died(death));
+        personEditService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
+                null, List.of(), List.of(), List.of(), bornAndDied, TEST_UNIT_NAME, null, null,
+                List.of(), null, null, null, null));
+
+        // then
+        assertPerson(personsService.findById(personId))
+                .hasStatus(PersonStatus.DEAD)
+                .wasBornOn(dob)
+                .hasStatusHistory(bornAndDied);
+
+        // when
+        final LocalDate joined = LocalDate.of(2000, 1, 1);
+        var bornJoinedAndDied = List.of(PersonStatusChange.born(dob), PersonStatusChange.died(death), PersonStatusChange.joined(joined));
+        personEditService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
+                null, List.of(), List.of(), List.of(), bornJoinedAndDied, TEST_UNIT_NAME, null, null,
+                List.of(), null, null, null, null));
+
+        // then
+        assertPerson(personsService.findById(personId))
+                .hasStatus(PersonStatus.DEAD)
+                .wasBornOn(dob)
+                .hasStatusHistory(PersonStatusChange.born(dob), PersonStatusChange.joined(joined), PersonStatusChange.died(death));
+    }
 
     private List<PersonStatusChange> statusChanges(LocalDate dob, LocalDate joined) {
         return List.of(PersonStatusChange.born(dob), PersonStatusChange.joined(joined));

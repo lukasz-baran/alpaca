@@ -3,7 +3,7 @@ package com.evolve.alpaca.importing.importDbf.account;
 import com.evolve.alpaca.account.Account;
 import org.junit.jupiter.api.Test;
 
-import static com.evolve.domain.AccountAssertion.assertAccount;
+import static com.evolve.alpaca.account.AccountAssertion.assertAccount;
 
 class AccountsFactoryShould {
 
