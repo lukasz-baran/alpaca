@@ -1,6 +1,8 @@
 package com.evolve.alpaca.importing.importDbf;
 
 import com.evolve.EditPersonDataCommand;
+import com.evolve.alpaca.account.Account;
+import com.evolve.alpaca.account.services.AccountsService;
 import com.evolve.alpaca.ddd.CommandCollector;
 import com.evolve.alpaca.ddd.CommandsApplier;
 import com.evolve.alpaca.ddd.PersistedCommand;
@@ -8,19 +10,16 @@ import com.evolve.alpaca.importing.event.DbfImportCompletedEvent;
 import com.evolve.alpaca.importing.importDbf.account.AccountsFactory;
 import com.evolve.alpaca.importing.importDbf.account.DbfAccount;
 import com.evolve.alpaca.importing.importDbf.account.ImportAccountDbf;
-import com.evolve.alpaca.importing.importDbf.person.DbfPerson;
 import com.evolve.alpaca.importing.importDbf.fixers.PersonFixer;
+import com.evolve.alpaca.importing.importDbf.person.DbfPerson;
 import com.evolve.alpaca.importing.importDbf.person.ImportPersonDbf;
 import com.evolve.alpaca.importing.importDbf.person.PersonsFactory;
 import com.evolve.alpaca.importing.importDoc.ImportPeople;
 import com.evolve.alpaca.importing.importDoc.person.PersonsWrapper;
 import com.evolve.alpaca.utils.LogUtil;
-import com.evolve.alpaca.account.Account;
 import com.evolve.domain.Person;
 import com.evolve.domain.RegistryNumber;
-import com.evolve.alpaca.account.services.AccountsService;
-import com.evolve.services.PersonEditService;
-import com.evolve.services.PersonsService;
+import com.evolve.services.PersonApplicationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,12 +40,11 @@ public class ImportDbfService {
     private final ObjectMapper objectMapper = LogUtil.OBJECT_MAPPER;
 
     private final ApplicationEventPublisher applicationEventPublisher;
-    private final PersonsService personsService;
     private final PersonFixer personFixer;
     private final AccountsService accountsService;
     private final CommandsApplier commandsApplier;
     private final CommandCollector commandCollector;
-    private final PersonEditService personEditService;
+    private final PersonApplicationService personApplicationService;
 
     private final PostImportStepService postImportStepService;
 
@@ -68,7 +66,7 @@ public class ImportDbfService {
                 RegistryNumberFixer.fixPersonRegistryNumbers(person, kartotekaId);
         });
 
-        personsService.insertPersons(persons);
+        personApplicationService.insertPersons(persons);
 
         final List<Account> importedAccounts = importAccounts(accountsFilePath);
 
@@ -101,7 +99,7 @@ public class ImportDbfService {
 
                     log.info("applying command: {}", LogUtil.printJson(editPersonDataCommand));
 
-                    personEditService.editPerson(editPersonDataCommand);
+                    personApplicationService.editPerson(editPersonDataCommand);
                 }
             } catch (ClassNotFoundException e) {
                 log.error("Cannot find class - ", e);

@@ -1,5 +1,7 @@
 package com.evolve.gui.person.list;
 
+import com.evolve.ArchivePersonCommand;
+import com.evolve.FindPerson;
 import com.evolve.alpaca.gui.export.PersonExportHandler;
 import com.evolve.alpaca.importing.event.DbfImportCompletedEvent;
 import com.evolve.alpaca.utils.LogUtil;
@@ -9,11 +11,12 @@ import com.evolve.domain.PersonStatus;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.components.NewPersonDialog;
 import com.evolve.gui.events.PersonEditionFinishedEvent;
+import com.evolve.gui.person.event.PersonArchivedEvent;
 import com.evolve.gui.person.event.PersonEditionRequestedEvent;
 import com.evolve.gui.person.list.search.PersonSearchCriteria;
 import com.evolve.gui.person.list.search.PersonSearchService;
 import com.evolve.gui.person.list.search.SearchPersonDialog;
-import com.evolve.services.PersonsService;
+import com.evolve.services.PersonApplicationService;
 import com.evolve.services.UnitsService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -56,8 +59,9 @@ public class MainTableController implements Initializable {
 
     private final BooleanProperty disabledProperty = new SimpleBooleanProperty(false);
     private final PersonListModel personListModel;
-    private final PersonsService personsService;
+    private final FindPerson personsService;
     private final PersonSearchService personSearchService;
+    private final PersonApplicationService personApplicationService;
     private final UnitsService unitsService;
 
     private final StageManager stageManager;
@@ -291,7 +295,7 @@ public class MainTableController implements Initializable {
         new NewPersonDialog(personsService, unitsService)
                 .showDialog(stageManager.getWindow())
                 .ifPresent(person -> {
-                    final boolean success = personsService.insertPerson(person);
+                    final boolean success = personApplicationService.insertPerson(person);
 
                     if (!success) {
                         stageManager.displayWarning("Nie udało się dodać osoby");
@@ -331,12 +335,31 @@ public class MainTableController implements Initializable {
     }
 
     @FXML
-    void notYetImplemented(ActionEvent actionEvent) {
-        stageManager.displayInformation("Funkcjonalność nie została jeszcze zaimplementowana");
+    void exportButtonClicked(ActionEvent actionEvent) {
+        personExportHandler.displayExportCriteria(personTable.getItems());
     }
 
     @FXML
-    void exportButtonClicked(ActionEvent actionEvent) {
-        personExportHandler.displayExportCriteria(personTable.getItems());
+    void archivePersonButtonClicked(ActionEvent actionEvent) {
+        final PersonModel editedPerson = this.personListModel.getCurrentPersonProperty().getValue();
+        if (editedPerson == null) {
+            stageManager.displayWarning("Nie wybrano osoby");
+            return;
+        }
+        if (editedPerson.getPersonStatus() == PersonStatus.ARCHIVED) {
+            stageManager.displayWarning("Nie można usunąć osób już usuniętych");
+            return;
+        }
+
+        if (!stageManager.displayConfirmation("Czy na pewno trwale usunąć osobę? Operacja jest nieodwracalna!")) {
+            return;
+        }
+
+        final Person archivedPerson = personApplicationService.archivePerson(new ArchivePersonCommand(editedPerson.getId()));
+
+        personListModel.updatePerson(archivedPerson);
+        personTable.refresh();
+
+        publisher.publishEvent(new PersonArchivedEvent(archivedPerson));
     }
 }

@@ -1,7 +1,7 @@
 package com.evolve;
 
 import com.evolve.domain.*;
-import com.evolve.services.PersonEditService;
+import com.evolve.services.PersonApplicationService;
 import com.evolve.services.PersonsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,8 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
     public static final String NEW_REGISTRY_NUMBER = "1234";
 
     @Autowired PersonsService personsService;
-    @Autowired PersonEditService personEditService;
+    @Autowired
+    PersonApplicationService personApplicationService;
 
     @Test
     void testApp() {
@@ -47,7 +48,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
                 .lastName(TEST_LAST_NAME)
                 .unitNumber(TEST_UNIT_NAME)
                 .build();
-        personsService.insertPerson(newPerson);
+        personApplicationService.insertPerson(newPerson);
 
         // then
         assertThat(personsService.fetch(PersonLookupCriteria.ALL), PersonAssertion.class)
@@ -67,7 +68,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
         // when -- person is edited
         final BankAccount bankAccount = BankAccount.of("1234", "bank account description");
 
-        personEditService.editPerson(new EditPersonDataCommand(personId, NEW_FIRST_NAME, NEW_LAST_NAME,
+        personApplicationService.editPerson(new EditPersonDataCommand(personId, NEW_FIRST_NAME, NEW_LAST_NAME,
                 null, List.of(PersonContactData.email(NEW_EMAIL)), List.of(), List.of(), List.of(), TEST_UNIT_NAME, NEW_REGISTRY_NUMBER, null,
                 List.of(bankAccount), null, null, null, null));
 
@@ -97,7 +98,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
                 .retired(true)
                 .exemptFromFees(true)
                 .build();
-        personsService.insertPerson(newPerson);
+        personApplicationService.insertPerson(newPerson);
 
         assertPerson(personsService.findById(personId))
                 .hasStatus(PersonStatus.UNKNOWN)
@@ -107,7 +108,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
         final LocalDate dob = LocalDate.of(1980, 8, 28);
         final LocalDate joined = LocalDate.of(2020, 1, 25);
 
-        personEditService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
+        personApplicationService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
                 null, List.of(), List.of(), List.of(), statusChanges(dob, joined), TEST_UNIT_NAME, null, null,
                 List.of(), null, null, null, null));
 
@@ -125,7 +126,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
 
         // when -- dob is changed
         final LocalDate newDob = LocalDate.of(1970, 2, 11);
-        personEditService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
+        personApplicationService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
                 null, List.of(), List.of(), List.of(), statusChanges(newDob, joined), TEST_UNIT_NAME, null, null,
                 List.of(), null, null, null, null));
 
@@ -151,13 +152,13 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
                 .unitNumber(TEST_UNIT_NAME)
                 .status(PersonStatus.UNKNOWN)
                 .build();
-        personsService.insertPerson(newPerson);
+        personApplicationService.insertPerson(newPerson);
 
         // when
         final LocalDate dob = LocalDate.of(1980, 8, 28);
         final LocalDate death = LocalDate.of(2020, 1, 25);
         var bornAndDied = List.of(PersonStatusChange.born(dob), PersonStatusChange.died(death));
-        personEditService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
+        personApplicationService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
                 null, List.of(), List.of(), List.of(), bornAndDied, TEST_UNIT_NAME, null, null,
                 List.of(), null, null, null, null));
 
@@ -170,7 +171,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
         // when
         final LocalDate joined = LocalDate.of(2000, 1, 1);
         var bornJoinedAndDied = List.of(PersonStatusChange.born(dob), PersonStatusChange.died(death), PersonStatusChange.joined(joined));
-        personEditService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
+        personApplicationService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
                 null, List.of(), List.of(), List.of(), bornJoinedAndDied, TEST_UNIT_NAME, null, null,
                 List.of(), null, null, null, null));
 

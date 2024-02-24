@@ -5,7 +5,7 @@ import com.evolve.alpaca.ddd.CommandsApplier;
 import com.evolve.alpaca.importing.importDbf.fixers.PersonFixer;
 import com.evolve.domain.Person;
 import com.evolve.alpaca.account.services.AccountsService;
-import com.evolve.services.PersonEditService;
+import com.evolve.services.PersonApplicationService;
 import com.evolve.services.PersonsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -35,7 +35,8 @@ class ImportDbfServiceShould {
 
     @Mock CommandsApplier commandsApplier;
     @Mock CommandCollector commandCollector;
-    @Mock PersonEditService personEditService;
+    @Mock
+    PersonApplicationService personApplicationService;
 
     @InjectMocks
     ImportDbfService importDbfService;

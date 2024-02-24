@@ -4,6 +4,7 @@ import com.evolve.domain.Person;
 import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.domain.PersonStatus;
 import com.evolve.domain.RegistryNumber;
+import com.evolve.services.PersonApplicationService;
 import com.evolve.services.PersonsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ public class PersonLookupTest extends AlpacaAbstractIntegrationTest {
 
     @Autowired
     PersonsService personsService;
+    @Autowired
+    PersonApplicationService personApplicationService;
 
     @Test
     void shouldFilterPersons() {
@@ -171,7 +174,7 @@ public class PersonLookupTest extends AlpacaAbstractIntegrationTest {
                 .exemptFromFees(exemptFromFees)
                 .registryNumber(RegistryNumber.of(registryNumber))
                 .build();
-        personsService.insertPerson(newPerson);
+        personApplicationService.insertPerson(newPerson);
         return personId;
     }
 

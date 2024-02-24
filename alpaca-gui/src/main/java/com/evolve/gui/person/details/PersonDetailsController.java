@@ -16,10 +16,11 @@ import com.evolve.gui.person.address.PersonAddressesController;
 import com.evolve.gui.person.authorizedPerson.AuthorizedPersonsController;
 import com.evolve.gui.person.bankAccounts.PersonBankAccountsController;
 import com.evolve.gui.person.contactDetails.PersonContactDataController;
+import com.evolve.gui.person.event.PersonArchivedEvent;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
 import com.evolve.gui.person.status.PersonStatusController;
-import com.evolve.services.PersonEditService;
+import com.evolve.services.PersonApplicationService;
 import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
 import javafx.beans.property.ObjectProperty;
@@ -41,6 +42,7 @@ import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.apache.commons.lang.BooleanUtils;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -55,7 +57,7 @@ public class PersonDetailsController extends EditableGuiElement
         implements Initializable {
     private final ApplicationEventPublisher applicationEventPublisher;
     private final PersonsService personsService;
-    private final PersonEditService personEditService;
+    private final PersonApplicationService personApplicationService;
     private final UnitsService unitsService;
     private final PersonListModel personListModel;
     private final StageManager stageManager;
@@ -234,7 +236,7 @@ public class PersonDetailsController extends EditableGuiElement
 
         final Person savedPerson;
         try {
-            savedPerson = personEditService.editPerson(command);
+            savedPerson = personApplicationService.editPerson(command);
         } catch (ValidationException e) {
             log.error("Error while updating person data", e);
             stageManager.displayWarning("Błąd walidacji: " +e.getErrorMessages());
@@ -256,6 +258,11 @@ public class PersonDetailsController extends EditableGuiElement
         setEditable(false);
 
         applicationEventPublisher.publishEvent(new PersonEditionFinishedEvent(this, null));
+    }
+
+    @EventListener
+    public void onApplicationEvent(PersonArchivedEvent event) {
+        setPersonStatus(event.getArchivedPerson());
     }
 
 }

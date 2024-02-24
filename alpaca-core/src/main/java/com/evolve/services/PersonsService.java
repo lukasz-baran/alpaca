@@ -94,29 +94,5 @@ public class PersonsService implements FindPerson {
                 Example.of(Person.builder().unitNumber(unitNumber).build()));
     }
 
-    public boolean insertPerson(Person person) {
-        log.info("Adding person {}", person);
-        final Person insertedPerson = personRepository.save(person);
-        return true;
-    }
 
-    public void insertPersons(List<Person> personList) {
-        validatePerson(personList);
-
-        personRepository.deleteAll();
-        personRepository.saveAll(personList);
-    }
-
-    void validatePerson(List<Person> personList) {
-        Map<String, Long> counts =
-                personList.stream().map(Person::getPersonId).collect(Collectors.groupingBy(e -> e, Collectors.counting()));
-
-        counts.entrySet().stream()
-                .filter(entry -> entry.getValue() > 1)
-                .forEach(entry -> log.warn("duplicated id {} - {}", entry.getKey(), entry.getValue()));
-
-        if (counts.entrySet().stream().anyMatch(entry -> entry.getValue() > 1)) {
-            throw new RuntimeException("duplicated ids!");
-        }
-    }
 }

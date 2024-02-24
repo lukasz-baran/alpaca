@@ -74,6 +74,11 @@ public class PersonStatusChange implements Comparable<PersonStatusChange> {
         return new PersonStatusChange(EventType.REMOVED, null, originalValue);
     }
 
+    // archiving:
+    public static PersonStatusChange archived(LocalDate when) {
+        return new PersonStatusChange(EventType.ARCHIVED, when);
+    }
+
     @JsonIgnore
     public boolean isDeathDate() {
         return eventType == EventType.DIED;

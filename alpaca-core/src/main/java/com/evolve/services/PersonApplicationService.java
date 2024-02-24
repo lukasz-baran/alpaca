@@ -1,21 +1,26 @@
 package com.evolve.services;
 
+import com.evolve.ArchivePersonCommand;
 import com.evolve.EditPersonDataCommand;
+import com.evolve.alpaca.ddd.ApplicationService;
 import com.evolve.alpaca.ddd.CommandCollector;
 import com.evolve.alpaca.validation.ValidationException;
-import com.evolve.domain.Person;
-import com.evolve.domain.PersonGenderDeducer;
-import com.evolve.domain.RegistryNumber;
+import com.evolve.domain.*;
 import com.evolve.repo.jpa.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
-public class PersonEditService extends ApplicationService {
+public class PersonApplicationService extends ApplicationService {
     private final PersonRepository personRepository;
 
-    public PersonEditService(PersonRepository personRepository, CommandCollector commandCollector) {
+    public PersonApplicationService(PersonRepository personRepository, CommandCollector commandCollector) {
         super(commandCollector);
         this.personRepository = personRepository;
     }
@@ -54,5 +59,43 @@ public class PersonEditService extends ApplicationService {
         persistCommand(command);
 
         return result;
+    }
+
+
+    public Person archivePerson(ArchivePersonCommand command) {
+        final Person person = personRepository.findByPersonId(command.personId());
+        person.getStatusChanges().add(PersonStatusChange.archived(LocalDate.now()));
+        person.setStatus(PersonStatus.ARCHIVED);
+        final Person result = personRepository.save(person);
+
+        persistCommand(command);
+        return result;
+    }
+
+
+    public boolean insertPerson(Person person) {
+        log.info("Adding person {}", person);
+        final Person insertedPerson = personRepository.save(person);
+        return true;
+    }
+
+    public void insertPersons(List<Person> personList) {
+        validatePerson(personList);
+
+        personRepository.deleteAll();
+        personRepository.saveAll(personList);
+    }
+
+    void validatePerson(List<Person> personList) {
+        Map<String, Long> counts =
+                personList.stream().map(Person::getPersonId).collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+
+        counts.entrySet().stream()
+                .filter(entry -> entry.getValue() > 1)
+                .forEach(entry -> log.warn("duplicated id {} - {}", entry.getKey(), entry.getValue()));
+
+        if (counts.entrySet().stream().anyMatch(entry -> entry.getValue() > 1)) {
+            throw new RuntimeException("duplicated ids!");
+        }
     }
 }

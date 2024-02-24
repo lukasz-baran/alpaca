@@ -15,7 +15,7 @@
           GridPane.columnIndex="0" GridPane.rowIndex="0">
         <Button fx:id="btnNewPerson" onAction="#newPersonButtonClicked" text="Nowy" />
         <Button fx:id="btnEdit" text="Edytuj" onAction="#editButtonClicked"/>
-        <Button fx:id="btnDelete" text="Usuń" onAction="#notYetImplemented"/>
+        <Button fx:id="btnDelete" text="Usuń" onAction="#archivePersonButtonClicked"/>
         <Button fx:id="btnSearch" text="Szukaj" onAction="#searchButtonClicked"/>
         <Button fx:id="btnExport" text="Eksport" onAction="#exportButtonClicked"/>
         <padding>
