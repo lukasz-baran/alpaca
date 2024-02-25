@@ -1,10 +1,10 @@
 package com.evolve.gui.person.list.search;
 
+import com.evolve.FindPerson;
 import com.evolve.alpaca.account.Account;
+import com.evolve.alpaca.account.services.AccountsService;
 import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonLookupCriteria;
-import com.evolve.alpaca.account.services.AccountsService;
-import com.evolve.services.PersonsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Component
 public class PersonSearchService {
-    private final PersonsService personsService;
+    private final FindPerson findPerson;
     private final AccountsService accountsService;
 
 
@@ -24,7 +24,7 @@ public class PersonSearchService {
     }
 
     private List<PersonListView> search(String sortBy, boolean upDown, PersonSearchCriteria criteria) {
-        List<PersonListView> persons = personsService.fetchList(
+        List<PersonListView> persons = findPerson.fetchList(
                 PersonLookupCriteria.builder()
                         .sortBy(sortBy)
                         .upDown(upDown)

@@ -1,10 +1,10 @@
 package com.evolve.gui.person.originalDetails;
 
+import com.evolve.FindPerson;
 import com.evolve.alpaca.importing.importDbf.fixers.PersonFixer;
 import com.evolve.domain.Person;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
-import com.evolve.services.PersonsService;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,7 +35,7 @@ import java.util.Set;
 public class OriginalDetailsController implements Initializable {
     public static final Set<String> HIDDEN_DATA = Set.of("WWW", "NIP_UE");
 
-    private final PersonsService personsService;
+    private final FindPerson findPerson;
     private final PersonFixer personFixer;
     private final PersonListModel personListModel;
 
@@ -82,7 +82,7 @@ public class OriginalDetailsController implements Initializable {
             return;
         }
 
-        final Person person = personsService.findById(personModel.getId());
+        final Person person = findPerson.findById(personModel.getId());
         log.info("Original person details: {}", person);
 
         originalData.clear();

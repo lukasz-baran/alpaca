@@ -1,5 +1,6 @@
 package com.evolve.services;
 
+import com.evolve.FindPerson;
 import com.evolve.FindProblems;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonLookupCriteria;
@@ -16,11 +17,11 @@ import java.util.stream.IntStream;
 @Service
 @RequiredArgsConstructor
 public class ProblemsQueryService implements FindProblems {
-    private final PersonsService personsService;
+    private final FindPerson findPerson;
 
     @Override
     public List<String> findProblems() {
-        final List<Person> personList = personsService.fetch(PersonLookupCriteria.ALL);
+        final List<Person> personList = findPerson.fetch(PersonLookupCriteria.ALL);
 
 
         return checkRegistryNumbers(personList);

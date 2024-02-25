@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class PersonsService implements FindPerson {
+class PersonQueryService implements FindPerson {
     private final PersonRepository personRepository;
     private final FileRepository fileRepository;
 

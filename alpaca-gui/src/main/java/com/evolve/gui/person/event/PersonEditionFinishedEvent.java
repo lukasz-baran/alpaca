@@ -1,4 +1,4 @@
-package com.evolve.gui.events;
+package com.evolve.gui.person.event;
 
 import com.evolve.domain.Person;
 import org.springframework.context.ApplicationEvent;

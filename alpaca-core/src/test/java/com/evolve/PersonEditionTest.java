@@ -2,7 +2,6 @@ package com.evolve;
 
 import com.evolve.domain.*;
 import com.evolve.services.PersonApplicationService;
-import com.evolve.services.PersonsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,17 +23,16 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
     public static final String NEW_EMAIL = "patrick.swayze@none.com";
     public static final String NEW_REGISTRY_NUMBER = "1234";
 
-    @Autowired PersonsService personsService;
-    @Autowired
-    PersonApplicationService personApplicationService;
+    @Autowired FindPerson findPerson;
+    @Autowired PersonApplicationService personApplicationService;
 
     @Test
     void testApp() {
         // given  -- initially database is empty
-        assertThat(personsService.fetchList(PersonLookupCriteria.ALL)).isEmpty();
+        assertThat(findPerson.fetchList(PersonLookupCriteria.ALL)).isEmpty();
 
         // when
-        final Optional<String> nextId = personsService.findNextPersonId(TEST_LAST_NAME);
+        final Optional<String> nextId = findPerson.findNextPersonId(TEST_LAST_NAME);
 
         // then
         assertThat(nextId)
@@ -51,7 +49,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
         personApplicationService.insertPerson(newPerson);
 
         // then
-        assertThat(personsService.fetch(PersonLookupCriteria.ALL), PersonAssertion.class)
+        assertThat(findPerson.fetch(PersonLookupCriteria.ALL), PersonAssertion.class)
                 .hasSize(1)
                 .first()
                 .hasFirstName(TEST_FIRST_NAME)
@@ -59,7 +57,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
                 .hasUnitNumber(TEST_UNIT_NAME)
                 .hasPersonId(personId);
 
-        assertPerson(personsService.findById(personId))
+        assertPerson(findPerson.findById(personId))
                 .hasFirstName(TEST_FIRST_NAME)
                 .hasLastName(TEST_LAST_NAME)
                 .hasUnitNumber(TEST_UNIT_NAME)
@@ -73,7 +71,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
                 List.of(bankAccount), null, null, null, null));
 
         // then -- changes are persisted in db
-        assertPerson(personsService.findById(personId))
+        assertPerson(findPerson.findById(personId))
                 .hasFirstName(NEW_FIRST_NAME)
                 .hasLastName(NEW_LAST_NAME)
                 .hasUnitNumber(TEST_UNIT_NAME)
@@ -88,7 +86,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
     @Test
     void shouldUpdateStatusWhenDobAndJoinedDateAdded() {
         // given -- person that doesn't have any statuses
-        final String personId = personsService.findNextPersonId(TEST_LAST_NAME).orElseThrow();
+        final String personId = findPerson.findNextPersonId(TEST_LAST_NAME).orElseThrow();
         final Person newPerson = Person.builder()
                 .personId(personId)
                 .firstName(TEST_FIRST_NAME)
@@ -100,7 +98,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
                 .build();
         personApplicationService.insertPerson(newPerson);
 
-        assertPerson(personsService.findById(personId))
+        assertPerson(findPerson.findById(personId))
                 .hasStatus(PersonStatus.UNKNOWN)
                 .hasNoBirthDate();
 
@@ -113,7 +111,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
                 List.of(), null, null, null, null));
 
         // then -- person became active
-        assertPerson(personsService.findById(personId))
+        assertPerson(findPerson.findById(personId))
                 .hasFirstName(TEST_FIRST_NAME)
                 .hasLastName(TEST_LAST_NAME)
                 .hasUnitNumber(TEST_UNIT_NAME)
@@ -132,7 +130,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
 
 
         // then -- changes are reflected
-        assertPerson(personsService.findById(personId))
+        assertPerson(findPerson.findById(personId))
                 .wasBornOn(newDob)
                 .hasStatus(PersonStatus.ACTIVE)
                 .isRetired()
@@ -144,7 +142,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
     @Test
     void shouldKeepStatusWhenNewDateIsEarlier() {
         // given
-        final String personId = personsService.findNextPersonId(TEST_LAST_NAME).orElseThrow();
+        final String personId = findPerson.findNextPersonId(TEST_LAST_NAME).orElseThrow();
         final Person newPerson = Person.builder()
                 .personId(personId)
                 .firstName(TEST_FIRST_NAME)
@@ -163,7 +161,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
                 List.of(), null, null, null, null));
 
         // then
-        assertPerson(personsService.findById(personId))
+        assertPerson(findPerson.findById(personId))
                 .hasStatus(PersonStatus.DEAD)
                 .wasBornOn(dob)
                 .hasStatusHistory(bornAndDied);
@@ -176,7 +174,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
                 List.of(), null, null, null, null));
 
         // then
-        assertPerson(personsService.findById(personId))
+        assertPerson(findPerson.findById(personId))
                 .hasStatus(PersonStatus.DEAD)
                 .wasBornOn(dob)
                 .hasStatusHistory(PersonStatusChange.born(dob), PersonStatusChange.joined(joined), PersonStatusChange.died(death));

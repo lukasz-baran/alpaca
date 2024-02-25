@@ -1,6 +1,6 @@
 package com.evolve.alpaca.export;
 
-import com.evolve.services.PersonsService;
+import com.evolve.FindPerson;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -15,12 +15,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PersonExportServiceShould {
 
     @Mock
-    PersonsService personsService;
+    FindPerson findPerson;
 
     @Test
     void properlyOrderColumns() throws Exception {
         // given
-        var exportService = new PersonExportService(personsService);
+        var exportService = new PersonExportService(findPerson);
         final StringWriter writer = new StringWriter();
 
         var person = new PersonExportView("12312", "John", "Rambo", null, null, null, null, null, null, null);

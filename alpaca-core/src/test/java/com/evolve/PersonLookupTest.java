@@ -5,7 +5,6 @@ import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.domain.PersonStatus;
 import com.evolve.domain.RegistryNumber;
 import com.evolve.services.PersonApplicationService;
-import com.evolve.services.PersonsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,15 +14,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class PersonLookupTest extends AlpacaAbstractIntegrationTest {
 
-    @Autowired
-    PersonsService personsService;
-    @Autowired
-    PersonApplicationService personApplicationService;
+    @Autowired FindPerson findPerson;
+    @Autowired PersonApplicationService personApplicationService;
 
     @Test
     void shouldFilterPersons() {
         // given  -- initially database is empty
-        assertThat(personsService.fetchList(PersonLookupCriteria.ALL)).isEmpty();
+        assertThat(findPerson.fetchList(PersonLookupCriteria.ALL)).isEmpty();
 
         insertPerson("foo", "bar", "01", PersonStatus.ACTIVE, Person.Gender.FEMALE, true, true, 1);
         insertPerson("qwe", "rty", "02", PersonStatus.ACTIVE, Person.Gender.MALE, false, true, null);
@@ -31,7 +28,7 @@ public class PersonLookupTest extends AlpacaAbstractIntegrationTest {
         insertPerson("sop", "ter", "03", PersonStatus.RESIGNED, Person.Gender.FEMALE, true, null, 4);
 
         // when
-        assertThat(personsService.fetchList(PersonLookupCriteria.ALL)).hasSize(4);
+        assertThat(findPerson.fetchList(PersonLookupCriteria.ALL)).hasSize(4);
 
         fetchByUnitNumber();
 
@@ -49,17 +46,17 @@ public class PersonLookupTest extends AlpacaAbstractIntegrationTest {
     }
 
     private void fetchByStatus() {
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .status(PersonStatus.ACTIVE)
                 .build()))
                 .hasSize(3);
 
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .status(PersonStatus.RESIGNED)
                 .build()))
                 .hasSize(1);
 
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .status(PersonStatus.ARCHIVED)
                 .build()))
                 .isEmpty();
@@ -67,62 +64,62 @@ public class PersonLookupTest extends AlpacaAbstractIntegrationTest {
 
 
     private void fetchByGender() {
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .gender(Person.Gender.FEMALE)
                 .build()))
                 .hasSize(2);
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .gender(Person.Gender.MALE)
                 .build()))
                 .hasSize(2);
     }
 
     private void fetchByUnitNumber() {
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .unitNumber("02")
                 .build()))
                 .hasSize(2);
 
         // check non-existent unit number
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .unitNumber("00")
                 .build()))
                 .isEmpty();
     }
 
     private void fetchByRetired() {
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .retired(true)
                 .build()))
                 .hasSize(2);
 
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .retired(false)
                 .build()))
                 .hasSize(2);
     }
 
     private void fetchByExemptFromTaxes() {
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .exemptFromFees(true)
                 .build()))
                 .hasSize(2);
 
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .exemptFromFees(false)
                 .build()))
                 .hasSize(2);
     }
 
     private void fetchByRegistryNumber() {
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .registryNumber(3)
                 .build()))
                 .hasSize(1);
     }
 
     private void verifySorting() {
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .sortBy("unitNumber")
                 .upDown(false)
                 .build()))
@@ -130,7 +127,7 @@ public class PersonLookupTest extends AlpacaAbstractIntegrationTest {
                 .extracting(Person::getUnitNumber)
                 .containsSequence("03", "02", "02", "01");
 
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .sortBy("unitNumber")
                 .upDown(true)
                 .build()))
@@ -138,7 +135,7 @@ public class PersonLookupTest extends AlpacaAbstractIntegrationTest {
                 .extracting(Person::getUnitNumber)
                 .containsSequence("01", "02", "02", "03");
 
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .sortBy("registryNumber")
                 .upDown(true)
                 .build()))
@@ -146,7 +143,7 @@ public class PersonLookupTest extends AlpacaAbstractIntegrationTest {
                 .extracting(person -> Optional.ofNullable(person.getRegistryNumber()).map(RegistryNumber::getRegistryNum).orElse(null))
                 .containsSequence(null, 1, 3, 4);
 
-        assertThat(personsService.fetch(PersonLookupCriteria.builder()
+        assertThat(findPerson.fetch(PersonLookupCriteria.builder()
                 .sortBy("registryNumber")
                 .upDown(false)
                 .build()))
@@ -161,7 +158,7 @@ public class PersonLookupTest extends AlpacaAbstractIntegrationTest {
                               Boolean retired,
                               Boolean exemptFromFees,
                               Integer registryNumber) {
-        final Optional<String> nextId = personsService.findNextPersonId(lastName);
+        final Optional<String> nextId = findPerson.findNextPersonId(lastName);
         final String personId = nextId.orElseThrow();
         final Person newPerson = Person.builder()
                 .personId(personId)

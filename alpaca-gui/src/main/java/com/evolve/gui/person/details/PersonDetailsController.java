@@ -1,6 +1,7 @@
 package com.evolve.gui.person.details;
 
 import com.evolve.EditPersonDataCommand;
+import com.evolve.FindPerson;
 import com.evolve.alpaca.util.LocalDateStringConverter;
 import com.evolve.alpaca.validation.ValidationException;
 import com.evolve.domain.Person;
@@ -10,18 +11,17 @@ import com.evolve.domain.Unit;
 import com.evolve.gui.EditableGuiElement;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.components.GenderComboboxController;
-import com.evolve.gui.events.PersonEditionFinishedEvent;
 import com.evolve.gui.person.UnitNumberItem;
 import com.evolve.gui.person.address.PersonAddressesController;
 import com.evolve.gui.person.authorizedPerson.AuthorizedPersonsController;
 import com.evolve.gui.person.bankAccounts.PersonBankAccountsController;
 import com.evolve.gui.person.contactDetails.PersonContactDataController;
 import com.evolve.gui.person.event.PersonArchivedEvent;
+import com.evolve.gui.person.event.PersonEditionFinishedEvent;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
 import com.evolve.gui.person.status.PersonStatusController;
 import com.evolve.services.PersonApplicationService;
-import com.evolve.services.PersonsService;
 import com.evolve.services.UnitsService;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -56,7 +56,7 @@ import java.util.ResourceBundle;
 public class PersonDetailsController extends EditableGuiElement
         implements Initializable {
     private final ApplicationEventPublisher applicationEventPublisher;
-    private final PersonsService personsService;
+    private final FindPerson findPerson;
     private final PersonApplicationService personApplicationService;
     private final UnitsService unitsService;
     private final PersonListModel personListModel;
@@ -120,7 +120,7 @@ public class PersonDetailsController extends EditableGuiElement
             return;
         }
 
-        final Person person = personsService.findById(personModel.getId());
+        final Person person = findPerson.findById(personModel.getId());
         log.info("Person details: {}", person);
 
         originalPerson.setValue(person);

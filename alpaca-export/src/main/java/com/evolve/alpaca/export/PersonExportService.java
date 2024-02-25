@@ -1,9 +1,9 @@
 package com.evolve.alpaca.export;
 
+import com.evolve.FindPerson;
 import com.evolve.alpaca.utils.LogUtil;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonLookupCriteria;
-import com.evolve.services.PersonsService;
 import com.opencsv.bean.*;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
@@ -24,11 +24,11 @@ import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 @Slf4j
 @Service
 public class PersonExportService {
-    private final PersonsService personsService;
+    private final FindPerson findPerson;
     private final CustomMappingStrategy<PersonExportView> mappingStrategy = new CustomMappingStrategy<>();
 
-    PersonExportService(PersonsService personsService) {
-        this.personsService = personsService;
+    PersonExportService(FindPerson findPerson) {
+        this.findPerson = findPerson;
         this.mappingStrategy.setType(PersonExportView.class);
     }
 
@@ -67,7 +67,7 @@ public class PersonExportService {
     }
 
     List<Person> fetchPersonsForExport(PersonExportType exportType, List<String> orderedList) {
-        final List<Person> allPersons = personsService.fetch(PersonLookupCriteria.ALL)
+        final List<Person> allPersons = findPerson.fetch(PersonLookupCriteria.ALL)
                 .stream()
                 .toList();
         if (exportType == PersonExportType.ALL) {
@@ -86,7 +86,7 @@ public class PersonExportService {
     }
 
     List<PersonExportView> fetchRecordsToExport(PersonExportType exportType, List<String> orderedList) {
-        final List<PersonExportView> allPersons = personsService.fetch(PersonLookupCriteria.ALL)
+        final List<PersonExportView> allPersons = findPerson.fetch(PersonLookupCriteria.ALL)
                 .stream()
                 .map(PersonExportView::of)
                 .toList();

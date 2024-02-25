@@ -10,7 +10,7 @@ import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonStatus;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.components.NewPersonDialog;
-import com.evolve.gui.events.PersonEditionFinishedEvent;
+import com.evolve.gui.person.event.PersonEditionFinishedEvent;
 import com.evolve.gui.person.event.PersonArchivedEvent;
 import com.evolve.gui.person.event.PersonEditionRequestedEvent;
 import com.evolve.gui.person.list.search.PersonSearchCriteria;
