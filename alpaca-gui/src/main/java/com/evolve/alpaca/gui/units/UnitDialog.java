@@ -1,6 +1,6 @@
 package com.evolve.alpaca.gui.units;
 
-import com.evolve.domain.Unit;
+import com.evolve.alpaca.unit.Unit;
 import com.evolve.gui.DialogWindow;
 import javafx.application.Platform;
 import javafx.scene.Node;

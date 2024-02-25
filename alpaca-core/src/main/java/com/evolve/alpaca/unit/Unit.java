@@ -1,4 +1,4 @@
-package com.evolve.domain;
+package com.evolve.alpaca.unit;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

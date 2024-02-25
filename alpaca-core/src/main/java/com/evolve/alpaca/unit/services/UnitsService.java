@@ -1,7 +1,7 @@
-package com.evolve.services;
+package com.evolve.alpaca.unit.services;
 
-import com.evolve.domain.Unit;
-import com.evolve.repo.jpa.UnitRepository;
+import com.evolve.alpaca.unit.Unit;
+import com.evolve.alpaca.unit.repo.UnitRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

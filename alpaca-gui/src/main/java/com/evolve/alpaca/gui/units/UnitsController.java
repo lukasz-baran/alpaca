@@ -2,9 +2,9 @@ package com.evolve.alpaca.gui.units;
 
 import com.evolve.FindPerson;
 import com.evolve.domain.Person;
-import com.evolve.domain.Unit;
+import com.evolve.alpaca.unit.Unit;
 import com.evolve.gui.StageManager;
-import com.evolve.services.UnitsService;
+import com.evolve.alpaca.unit.services.UnitsService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

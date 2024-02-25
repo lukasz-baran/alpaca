@@ -17,7 +17,7 @@ import com.evolve.gui.person.list.search.PersonSearchCriteria;
 import com.evolve.gui.person.list.search.PersonSearchService;
 import com.evolve.gui.person.list.search.SearchPersonDialog;
 import com.evolve.services.PersonApplicationService;
-import com.evolve.services.UnitsService;
+import com.evolve.alpaca.unit.services.UnitsService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
