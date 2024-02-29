@@ -1,8 +1,11 @@
 package com.evolve.gui.documents;
 
+import com.evolve.alpaca.document.DocumentEntry;
+import com.evolve.alpaca.document.UpdateDocumentCommand;
+import com.evolve.alpaca.document.services.DocumentContentStorageService;
 import com.evolve.alpaca.gui.viewer.ImageViewWindowController;
-import com.evolve.content.ContentFile;
 import com.evolve.content.ContentStoreService;
+import com.evolve.alpaca.document.DocumentCategory;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
@@ -17,9 +20,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
+import javafx.util.Duration;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -55,60 +59,47 @@ public class DocumentsController implements Initializable {
     private final StageManager stageManager;
     private final PersonListModel personListModel;
     private final ContentStoreService contentStoreService;
+    private final DocumentContentStorageService documentContentStorageService;
 
     private final FxControllerAndView<ImageViewWindowController, BorderPane> mainWindowController;
 
-    @FXML TableView<DocumentEntry> documentsTable;
-    @FXML TableColumn<DocumentEntry, Long> idColumn;
-    @FXML TableColumn<DocumentEntry, String> fileNameColumn;
-    @FXML TableColumn<DocumentEntry, String> dateAddedColumn;
-    @FXML TableColumn<DocumentEntry, String> summaryColumn;
+    @FXML TreeTableView<DocumentEntry> documentsTable;
+    @FXML TreeTableColumn<DocumentEntry, String> tagColumn;
+    @FXML TreeTableColumn<DocumentEntry, String> fileNameColumn;
+    @FXML TreeTableColumn<DocumentEntry, String> dateAddedColumn;
+    @FXML TreeTableColumn<DocumentEntry, String> summaryColumn;
     @FXML Button btnAddDocument;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         documentsTable.setRowFactory(tv -> {
-            final TableRow<DocumentEntry> row = new DocumentsRow();
-
-            final ContextMenu contextMenu = new ContextMenu();
-
-            final MenuItem openDocumentMenuItem = new MenuItem("Otwórz");
-            openDocumentMenuItem.setOnAction(event -> openDocument(row.getItem()));
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                    openDocument(row.getItem());
-                }
-            });
-
-            final MenuItem saveDocumentMenuItem = new MenuItem("Zapisz");
-            saveDocumentMenuItem.setOnAction(event -> saveDocumentToFile(row.getItem()));
-
-            final MenuItem editDocumentMenuItem = new MenuItem("Edytuj");
-            editDocumentMenuItem.setOnAction(event -> editDocument(row));
-
-            final MenuItem removeDocumentMenuItem = new MenuItem("Usuń");
-            removeDocumentMenuItem.setOnAction(event -> removeDocument(row.getItem()));
-
-            contextMenu.getItems().addAll(openDocumentMenuItem,
-                    saveDocumentMenuItem,
-                    editDocumentMenuItem,
-                    removeDocumentMenuItem);
-            row.contextMenuProperty().bind(Bindings.when(row.emptyProperty()).then((ContextMenu) null)
-                    .otherwise(contextMenu));
+            final TreeTableRow<DocumentEntry> row = new DocumentsRow();
+            addContextMenu(row);
             return row ;
         });
 
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        fileNameColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));
+        tagColumn.setCellValueFactory(param -> {
+            final DocumentEntry documentEntry = param.getValue().getValue();
+            if (documentEntry.getEntryType() == DocumentEntry.EntryType.CATEGORY) {
+                return new SimpleStringProperty(Optional.ofNullable(documentEntry.getCategory())
+                        .map(DocumentCategory::getCategory).orElse(StringUtils.EMPTY));
+            }
+            return new SimpleStringProperty(StringUtils.EMPTY);
+        });
 
-        dateAddedColumn.setCellValueFactory(new PropertyValueFactory<>("dateAdded"));
-        dateAddedColumn.setCellValueFactory(foo -> new SimpleStringProperty(
-                Optional.ofNullable(foo.getValue().getDateAdded())
-                        .map(value -> value.format(DATE_TIME_FORMATTER))
-                        .orElse(StringUtils.EMPTY)));
+        fileNameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<>("fileName"));
+        dateAddedColumn.setCellValueFactory(new TreeItemPropertyValueFactory<>("dateAdded"));
+        dateAddedColumn.setCellValueFactory(param -> {
+            final TreeItem<DocumentEntry> treeItem = param.getValue();
+            final DocumentEntry emp = treeItem.getValue();
 
-        summaryColumn.setCellValueFactory(new PropertyValueFactory<>("summary"));
+            return new SimpleStringProperty(Optional.ofNullable(emp.getDateAdded())
+                    .map(value -> value.format(DATE_TIME_FORMATTER))
+                    .orElse(StringUtils.EMPTY));
+        });
+
+        summaryColumn.setCellValueFactory(new TreeItemPropertyValueFactory<>("summary"));
 
         personListModel.getCurrentPersonProperty().addListener(
                 (ObservableValue<? extends PersonModel> obs, PersonModel oldUser, PersonModel newUser) -> {
@@ -116,20 +107,61 @@ public class DocumentsController implements Initializable {
                 });
     }
 
-    private void editDocument(TableRow<DocumentEntry> row) {
+    private ContextMenu addContextMenu(TreeTableRow<DocumentEntry> row) {
+        final ContextMenu contextMenu = new ContextMenu();
+
+        final MenuItem newDocumentMenuItem = new MenuItem("Nowy");
+        newDocumentMenuItem.setOnAction(event -> addDocumentMenuItemClicked(row.getItem()));
+
+        final MenuItem openDocumentMenuItem = new MenuItem("Otwórz");
+        openDocumentMenuItem.setOnAction(event -> openDocument(row.getItem()));
+        row.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && !row.isEmpty() &&
+                    row.getItem() != null &&
+                    row.getItem().getEntryType() != DocumentEntry.EntryType.CATEGORY) {
+                openDocument(row.getItem());
+            }
+        });
+
+        final MenuItem saveDocumentMenuItem = new MenuItem("Zapisz");
+        saveDocumentMenuItem.setOnAction(event -> saveDocumentToFile(row.getItem()));
+
+        final MenuItem editDocumentMenuItem = new MenuItem("Edytuj");
+        editDocumentMenuItem.setOnAction(event -> editDocument(row));
+
+        final MenuItem removeDocumentMenuItem = new MenuItem("Usuń");
+        removeDocumentMenuItem.setOnAction(event -> removeDocument(row.getItem()));
+
+        contextMenu.getItems().addAll(newDocumentMenuItem, openDocumentMenuItem, saveDocumentMenuItem,
+                editDocumentMenuItem, removeDocumentMenuItem);
+        row.contextMenuProperty().bind(Bindings.when(row.emptyProperty()).then((ContextMenu) null)
+                .otherwise(contextMenu));
+        return contextMenu;
+    }
+
+
+    private void editDocument(TreeTableRow<DocumentEntry> row) {
+        if (isCategory(row.getItem())) {
+            return;
+        }
+
         new DocumentEditDialog(row.getItem()).showDialog(stageManager.getWindow())
                 .ifPresent(documentEntry -> {
                     log.info("edited details of document {}", documentEntry);
-                    contentStoreService.changeFileDetails(documentEntry.getId(), documentEntry.getFileName(),
-                            documentEntry.getSummary());
-                    row.getItem().setFileName(documentEntry.getFileName());
-                    row.getItem().setSummary(documentEntry.getSummary());
-                    documentsTable.refresh();
+
+                    documentContentStorageService.updateContent(
+                            new UpdateDocumentCommand(documentEntry.getId(), documentEntry.getFileName(),
+                                    documentEntry.getSummary(), documentEntry.getCategory()));
+
+                    loadDocuments(personListModel.getCurrentPersonProperty().get());
                 });
     }
 
     private void removeDocument(DocumentEntry item) {
         log.info("User wants to remove document: {}", item);
+        if (isCategory(item)) {
+            return;
+        }
 
         final boolean delete = stageManager.displayConfirmation("Czy na pewno chcesz usunąć dokument " +
                 item.getFileName() + "?\nOperacja jest nieodwracalna!");
@@ -145,6 +177,10 @@ public class DocumentsController implements Initializable {
     }
 
     private void saveDocumentToFile(DocumentEntry item) {
+        if (isCategory(item)) {
+            return;
+        }
+
         log.info("User wants to save file: {}", item);
         final Long imageFileId = item.getId();
         final InputStream inputStream = contentStoreService.getContent(imageFileId);
@@ -172,8 +208,23 @@ public class DocumentsController implements Initializable {
         log.info("File saved successfully: {}", fileToSave);
     }
 
+    /**
+     * Prevents from performing action on category items on the list.
+     */
+    private boolean isCategory(DocumentEntry documentEntry) {
+        if (documentEntry.getEntryType() == DocumentEntry.EntryType.CATEGORY) {
+            stageManager.displayInformation("Akcja niedozwolona w przypadku kategorii");
+            return true;
+        }
+        return false;
+    }
+
     @SneakyThrows
     private void openDocument(DocumentEntry documentEntry) {
+        if (isCategory(documentEntry)) {
+            return;
+        }
+
         if (documentEntry.isImageFile()) {
             mainWindowController.getController().openImage(documentEntry);
         } else  {
@@ -191,51 +242,80 @@ public class DocumentsController implements Initializable {
         }
     }
 
-    public void addDocumentButtonClicked(ActionEvent actionEvent) {
+    void addDocumentMenuItemClicked(DocumentEntry entry) {
+        if (entry.getEntryType() == DocumentEntry.EntryType.CATEGORY) {
+            addDocument(entry.getCategory());
+        } else {
+            addDocument(null);
+        }
+    }
+
+    @FXML
+    void addDocumentButtonClicked(ActionEvent actionEvent) {
         if (personListModel.getCurrentPersonProperty().getValue() == null) {
             stageManager.displayWarning("Nie wybrano osoby");
             return;
         }
 
-        final DocumentDetailsDialog documentDetailsDialog = new DocumentDetailsDialog(stageManager);
+        addDocument(null);
+    }
 
+    private void addDocument(DocumentCategory documentCategory) {
+        log.info("New document with category {}", documentCategory);
+
+        final DocumentDetailsDialog documentDetailsDialog = new DocumentDetailsDialog(stageManager, documentCategory);
         documentDetailsDialog.showDialog(stageManager.getWindow())
-            .ifPresent(filePathAndDescription -> {
-                final PersonModel currentPerson = personListModel.getCurrentPersonProperty().get();
-                final File file = filePathAndDescription.getFile();
-                final String description = filePathAndDescription.getDescription();
+                .ifPresent(filePathAndDescription -> {
+                    final PersonModel currentPerson = personListModel.getCurrentPersonProperty().get();
+                    documentContentStorageService.storeContent(
+                            currentPerson.getId(), filePathAndDescription);
 
-                final ContentFile contentFile = contentStoreService.setContent(file, currentPerson.getId(), description);
-                log.info("Content file added: {}", contentFile);
-
-                final DocumentEntry documentEntry = DocumentEntry.of(contentFile);
-                documentsList.add(documentEntry);
-        });
+                    loadDocuments(currentPerson);
+                });
     }
 
     void loadDocuments(PersonModel personModel) {
         if (personModel != null) {
-            String personId = personModel.getId();
-
             documentsList.clear();
-            documentsList.setAll(contentStoreService.findFiles(personId).stream().map(DocumentEntry::of).toList());
-            documentsTable.setItems(documentsList);
+            documentsList.setAll(documentContentStorageService.findPersonsDocuments(personModel.getId()));
+
+            final DocumentEntry rootEntry = DocumentEntry.category(null);
+            final TreeItem<DocumentEntry> hiddenRoot = new TreeItem<>(rootEntry);
+            hiddenRoot.setExpanded(true);
+            documentsTable.setRoot(hiddenRoot);
+            documentsTable.setShowRoot(false);
+
+            for (DocumentCategory category : DocumentCategory.values()) {
+                final TreeItem<DocumentEntry> newTreeItem = new TreeItem<>(DocumentEntry.category(category));
+                newTreeItem.setExpanded(true);
+
+                newTreeItem.getChildren().addAll(documentsList.stream()
+                        .filter(documentEntry -> documentEntry.matchesCategory(category))
+                        .map(TreeItem::new).toList());
+                hiddenRoot.getChildren().add(newTreeItem);
+            }
+
         }
     }
 
     /**
      * This extra class is needed to display tooltips on document entries
      */
-    public static class DocumentsRow extends TableRow<DocumentEntry> {
-        private final Tooltip tooltip = new Tooltip();
+    public static class DocumentsRow extends TreeTableRow<DocumentEntry> {
 
         @Override
         public void updateItem(DocumentEntry documentEntry, boolean empty) {
             super.updateItem(documentEntry, empty);
-            if (documentEntry == null) {
-                setTooltip(null);
-            } else {
-                tooltip.setText("mime type: " + documentEntry.getMimeType());
+            setTooltip(null);
+            if (documentEntry != null && documentEntry.getEntryType() == DocumentEntry.EntryType.DOCUMENT) {
+                final Tooltip tooltip = new Tooltip();
+                tooltip.setShowDelay(Duration.ZERO);
+
+                tooltip.setText("content ID: " + documentEntry.getId() +
+                        "\nmime type: " + documentEntry.getMimeType() +
+                        "\nlength: " + documentEntry.getLength() +
+                        "\ncategory: " + documentEntry.getCategory()
+                );
                 setTooltip(tooltip);
             }
         }

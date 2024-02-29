@@ -1,4 +1,4 @@
-package com.evolve.gui.documents;
+package com.evolve.alpaca.document;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,5 +14,6 @@ import java.io.File;
 public class FilePathAndDescription {
     private File file;
     private String description;
+    private DocumentCategory documentCategory;
 
 }

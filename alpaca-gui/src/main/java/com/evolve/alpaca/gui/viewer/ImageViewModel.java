@@ -1,6 +1,6 @@
 package com.evolve.alpaca.gui.viewer;
 
-import com.evolve.gui.documents.DocumentEntry;
+import com.evolve.alpaca.document.DocumentEntry;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;

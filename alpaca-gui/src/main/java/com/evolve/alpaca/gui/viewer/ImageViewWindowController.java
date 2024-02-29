@@ -2,7 +2,7 @@ package com.evolve.alpaca.gui.viewer;
 
 import com.evolve.content.ContentStoreService;
 import com.evolve.gui.StageManager;
-import com.evolve.gui.documents.DocumentEntry;
+import com.evolve.alpaca.document.DocumentEntry;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;

@@ -1,8 +1,12 @@
 package com.evolve.gui.documents;
 
+import com.evolve.alpaca.document.DocumentCategory;
+import com.evolve.alpaca.document.FilePathAndDescription;
 import com.evolve.gui.DialogWindow;
 import com.evolve.gui.StageManager;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -23,20 +27,26 @@ public class DocumentDetailsDialog extends DialogWindow<FilePathAndDescription> 
     public static final FileChooser.ExtensionFilter DOCUMENTS_EXTENSION_FILTER = new FileChooser.ExtensionFilter("documents",
             ACCEPTED_EXTENSION);
 
-    private final FilePathAndDescription filePathAndDescription;
     private final StageManager stageManager;
     private final TextField filePathTextField = new TextField();
     private final TextArea descriptionTextField = new TextArea();
+    private final ComboBox<DocumentCategory> documentCategoryComboBox;
+    private final ObjectProperty<DocumentCategory> documentCategoryObjectProperty = new SimpleObjectProperty<>();
 
-    public DocumentDetailsDialog(StageManager stageManager) {
-        super("Nowy document", "Wybierz plik - dozwolone formaty: " + String.join(", ", ACCEPTED_EXTENSION));
-        this.filePathAndDescription = new FilePathAndDescription();
+    public DocumentDetailsDialog(StageManager stageManager, DocumentCategory documentCategory) {
+        super("Nowy dokument", "Wybierz plik - dozwolone formaty: " + String.join(", ", ACCEPTED_EXTENSION));
         this.stageManager = stageManager;
+
+        this.documentCategoryComboBox = new ComboBox<>();
+        this.documentCategoryComboBox.getItems().addAll(DocumentCategory.values());
+        this.documentCategoryComboBox.valueProperty().bindBidirectional(documentCategoryObjectProperty);
+        this.documentCategoryComboBox.getSelectionModel().select(Optional.ofNullable(documentCategory).orElse(DocumentCategory.DEFAULT));
     }
 
     @Override
     public Optional<FilePathAndDescription> showDialog(Window window) {
         final Dialog<FilePathAndDescription> dialog = createDialog(window);
+        final FilePathAndDescription filePathAndDescription = new FilePathAndDescription();
 
         final GridPane grid = createGridPane();
 
@@ -56,19 +66,22 @@ public class DocumentDetailsDialog extends DialogWindow<FilePathAndDescription> 
         group.getChildren().add(filePathTextField);
         group.getChildren().add(chooseFileButton);
 
-
         grid.add(new Label("Plik:"), 0, 0);
         grid.add(group, 1, 0);
 
+        grid.add(new Label("Kategoria:"), 0, 1);
+        grid.add(documentCategoryComboBox, 1, 1);
+
         descriptionTextField.setPrefRowCount(5);
 
-        grid.add(new Label("Opis:"), 0, 1);
-        grid.add(descriptionTextField, 1, 1);
+        grid.add(new Label("Opis:"), 0, 2);
+        grid.add(descriptionTextField, 1, 2);
 
         final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
 
-        filePathTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+        filePathTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
+        documentCategoryObjectProperty.addListener(change ->  {
             validateSaveButton(saveButton);
         });
 
@@ -78,6 +91,7 @@ public class DocumentDetailsDialog extends DialogWindow<FilePathAndDescription> 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
                 filePathAndDescription.setDescription(descriptionTextField.getText());
+                filePathAndDescription.setDocumentCategory(documentCategoryObjectProperty.getValue());
                 return filePathAndDescription;
             }
             return null;
