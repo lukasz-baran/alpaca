@@ -3,22 +3,23 @@ package com.evolve.content;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
-@Service
 @RequiredArgsConstructor
 @Slf4j
 public class ContentStoreService {
     private final FileRepository fileRepository;
     private final FileContentStore fileContentStore;
+    private final Clock clock;
 
     @SneakyThrows
     public ContentFile setContent(File file, String personId, String summary) {
@@ -31,7 +32,7 @@ public class ContentStoreService {
                 .contentMimeType(mimeType)
                 .contentLength(file.length())
                 .personId(personId)
-                .created(LocalDateTime.now())
+                .created(getCurrentTime())
                 .summary(summary)
                 .build();
         log.info("saving file {}", contentFile);
@@ -61,5 +62,12 @@ public class ContentStoreService {
         contentFile.setName(newFileName);
         contentFile.setSummary(newSummary);
         fileRepository.save(contentFile);
+    }
+
+    /**
+     * Truncate nanoseconds because H2 by default only offers milliseconds precision
+     */
+    private LocalDateTime getCurrentTime() {
+        return LocalDateTime.now(clock).truncatedTo(ChronoUnit.MILLIS);
     }
 }

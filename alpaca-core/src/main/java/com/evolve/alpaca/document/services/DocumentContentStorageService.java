@@ -6,9 +6,15 @@ import com.evolve.content.ContentFile;
 import com.evolve.content.ContentStoreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -60,6 +66,30 @@ public class DocumentContentStorageService {
         } else {
             documentToCategoryRepository.save(new DocumentToCategory(command.id(), command.category()));
         }
+    }
+
+    public void removeContent(Long id) {
+        contentStoreService.deleteContent(id);
+        documentToCategoryRepository.deleteById(id);
+    }
+
+    public File saveToTempFile(DocumentEntry documentEntry) throws IOException {
+        final InputStream inputStream = contentStoreService.getContent(documentEntry.getId());
+
+        final String prefix = FilenameUtils.getBaseName(documentEntry.getFileName());
+        final String suffix = "." + FilenameUtils.getExtension(documentEntry.getFileName());
+        final File tempFile = File.createTempFile(prefix, suffix);
+        tempFile.deleteOnExit();
+        try (FileOutputStream out = new FileOutputStream(tempFile)) {
+            IOUtils.copy(inputStream, out);
+        }
+        return tempFile;
+    }
+
+    public void saveToFile(Long imageFileId, File targetFile) throws IOException {
+        final InputStream inputStream = contentStoreService.getContent(imageFileId);
+        log.info("saving to file: {}", targetFile);
+        FileUtils.copyInputStreamToFile(inputStream, targetFile);
     }
 
 }

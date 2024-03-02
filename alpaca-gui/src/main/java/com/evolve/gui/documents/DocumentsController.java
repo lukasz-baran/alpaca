@@ -1,11 +1,10 @@
 package com.evolve.gui.documents;
 
+import com.evolve.alpaca.document.DocumentCategory;
 import com.evolve.alpaca.document.DocumentEntry;
 import com.evolve.alpaca.document.UpdateDocumentCommand;
 import com.evolve.alpaca.document.services.DocumentContentStorageService;
 import com.evolve.alpaca.gui.viewer.ImageViewWindowController;
-import com.evolve.content.ContentStoreService;
-import com.evolve.alpaca.document.DocumentCategory;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
@@ -30,17 +29,12 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -58,7 +52,6 @@ public class DocumentsController implements Initializable {
 
     private final StageManager stageManager;
     private final PersonListModel personListModel;
-    private final ContentStoreService contentStoreService;
     private final DocumentContentStorageService documentContentStorageService;
 
     private final FxControllerAndView<ImageViewWindowController, BorderPane> mainWindowController;
@@ -167,7 +160,7 @@ public class DocumentsController implements Initializable {
                 item.getFileName() + "?\nOperacja jest nieodwracalna!");
 
         if (delete) {
-            contentStoreService.deleteContent(item.getId());
+            documentContentStorageService.removeContent(item.getId());
 
             loadDocuments(personListModel.getCurrentPersonProperty().getValue());
             log.info("File deleted: {}", item);
@@ -182,8 +175,6 @@ public class DocumentsController implements Initializable {
         }
 
         log.info("User wants to save file: {}", item);
-        final Long imageFileId = item.getId();
-        final InputStream inputStream = contentStoreService.getContent(imageFileId);
 
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Zapisz plik");
@@ -198,10 +189,10 @@ public class DocumentsController implements Initializable {
 
         log.info("Selected file: {}", fileToSave);
         try {
-            FileUtils.copyInputStreamToFile(inputStream, fileToSave);
+            documentContentStorageService.saveToFile(item.getId(), fileToSave);
         } catch (IOException e) {
             log.error("Error while saving file", e);
-            stageManager.displayError("Błąd podczas zapisywania pliku");
+            stageManager.displayError("Błąd podczas zapisywania pliku ID: " + item.getId());
             return;
         }
 
@@ -228,15 +219,7 @@ public class DocumentsController implements Initializable {
         if (documentEntry.isImageFile()) {
             mainWindowController.getController().openImage(documentEntry);
         } else  {
-            final InputStream inputStream = contentStoreService.getContent(documentEntry.getId());
-
-            final String prefix = FilenameUtils.getBaseName(documentEntry.getFileName());
-            final String suffix = "." + FilenameUtils.getExtension(documentEntry.getFileName());
-            final File tempFile = File.createTempFile(prefix, suffix);
-            tempFile.deleteOnExit();
-            try (FileOutputStream out = new FileOutputStream(tempFile)) {
-                IOUtils.copy(inputStream, out);
-            }
+            final File tempFile = documentContentStorageService.saveToTempFile(documentEntry);
 
             Desktop.getDesktop().open(tempFile);
         }
