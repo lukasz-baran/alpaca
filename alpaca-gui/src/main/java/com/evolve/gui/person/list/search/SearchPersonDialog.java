@@ -143,18 +143,24 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
         gridPersonCriteria.add(exemptFromFeesCheckBox, 1, 6);
 
 
-        final ChangeListener<Boolean> listener = (prop, old, val) -> {
+        final ChangeListener<Boolean> attachmentsListener = (prop, old, val) -> {
             updateLabelOnAttachments(hasDocumentsCheckBox);
+            validateSaveButton(saveButton);
+        };
+        hasDocumentsCheckBox.selectedProperty().addListener(attachmentsListener);
+        hasDocumentsCheckBox.indeterminateProperty().addListener(attachmentsListener);
+        final ChangeListener<Boolean> retiredListener = (prop, old, val) -> {
             updateLabelOnRetired(retiredCheckBox);
+            validateSaveButton(saveButton);
+        };
+        retiredCheckBox.selectedProperty().addListener(retiredListener);
+        retiredCheckBox.indeterminateProperty().addListener(retiredListener);
+        final ChangeListener<Boolean> exemptFromFeesListener = (prop, old, val) -> {
             updateLabelOnExemptFromFees(exemptFromFeesCheckBox);
             validateSaveButton(saveButton);
         };
-        hasDocumentsCheckBox.selectedProperty().addListener(listener);
-        hasDocumentsCheckBox.indeterminateProperty().addListener(listener);
-        retiredCheckBox.selectedProperty().addListener(listener);
-        retiredCheckBox.indeterminateProperty().addListener(listener);
-        exemptFromFeesCheckBox.selectedProperty().addListener(listener);
-        exemptFromFeesCheckBox.indeterminateProperty().addListener(listener);
+        exemptFromFeesCheckBox.selectedProperty().addListener(exemptFromFeesListener);
+        exemptFromFeesCheckBox.indeterminateProperty().addListener(exemptFromFeesListener);
 
         unitNumberCombo.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) ->
                 validateSaveButton(saveButton));
