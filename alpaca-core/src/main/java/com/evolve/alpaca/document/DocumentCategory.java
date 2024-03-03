@@ -9,7 +9,7 @@ public enum DocumentCategory {
 
     DEFAULT("(brak)"),
     FORM("Formularze"),
-    CORRESPONDENCE("Korepondencja"),
+    CORRESPONDENCE("Korespondencja"),
     OTHER("Inne");
 
     private final String category;

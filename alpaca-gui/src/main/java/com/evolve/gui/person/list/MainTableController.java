@@ -93,7 +93,7 @@ public class MainTableController implements Initializable {
     @FXML Text textSearchCriteria;
     @FXML Hyperlink resetSearchHyperlink;
 
-    // bottom quick-search bat
+    // bottom quick-search bar
     @FXML Text textNumberOfRecords;
     @FXML TextField filterField;
     @FXML AnchorPane autoCompletePane;
