@@ -1,24 +1,5 @@
 spring:
   config:
-    import: alpaca-common.properties
+    import: alpaca-core.yml
   main:
     web-application-type: none
-  datasource:
-    url: jdbc:h2:file:c:/alpaca/h2/alpaca
-  jpa:
-    hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.H2Dialect
-    properties:
-      hibernate:
-        # WARN: this is anti-pattern - we should use Transactional, or manually handle session
-        enable_lazy_load_no_trans: true
-
-  content:
-    fs:
-      filesystemRoot: c:/alpaca/content/
-
-alpaca:
-  nbp:
-    url: https://ewib.nbp.pl/api/v1/zapytanie1/?nrRozliczeniowy=%s&format=json
-
