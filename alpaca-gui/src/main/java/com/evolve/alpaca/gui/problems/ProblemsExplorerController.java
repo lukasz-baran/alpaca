@@ -1,4 +1,4 @@
-package com.evolve.gui.person.problemsExplorer;
+package com.evolve.alpaca.gui.problems;
 
 import com.evolve.FindProblems;
 import com.evolve.gui.StageManager;
@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,8 +41,9 @@ public class ProblemsExplorerController implements Initializable {
         this.stage = new Stage();
         stage.initOwner(stageManager.getPrimaryStage());
         stage.setScene(new Scene(problemsExplorerVBox));
-        stage.setTitle("problems explorer");
-        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setTitle("Szukaj błędów");
+        // experimentally we don't display window as modal:
+        //stage.initModality(Modality.WINDOW_MODAL);
         stage.getIcons().add(APPLICATION_ICON);
         stage.setResizable(true);
     }
@@ -53,8 +53,10 @@ public class ProblemsExplorerController implements Initializable {
     }
 
 
-    public void runProblemsExplorer(ActionEvent actionEvent) {
-        findProblems.findProblems()
+    @FXML
+    void registryNumbersIssues(ActionEvent actionEvent) {
+        textAreaProblems.clear();
+        findProblems.findRegistryNumbersIssues()
                         .forEach(problem ->  {
                             textAreaProblems.appendText(problem);
                             textAreaProblems.appendText(Strings.LINE_SEPARATOR);

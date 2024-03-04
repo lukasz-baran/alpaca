@@ -17,7 +17,7 @@ import com.evolve.gui.person.accounts.PersonAccountsController;
 import com.evolve.gui.person.event.PersonEditionRequestedEvent;
 import com.evolve.gui.person.list.MainTableController;
 import com.evolve.gui.person.list.PersonListModel;
-import com.evolve.gui.person.problemsExplorer.ProblemsExplorerController;
+import com.evolve.alpaca.gui.problems.ProblemsExplorerController;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;

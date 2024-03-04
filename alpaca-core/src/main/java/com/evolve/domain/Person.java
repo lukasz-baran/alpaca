@@ -10,10 +10,7 @@ import javax.validation.Valid;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeSet;
+import java.util.*;
 
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 
@@ -89,6 +86,20 @@ public class Person implements Serializable {
     @MapKeyColumn(name="raw_data_key")
     @Column(name="raw_data_value")
     private Map<String, String> rawData;
+
+    public boolean hasRegistryNumber(@NonNull Integer expected) {
+         if (Objects.nonNull(this.registryNumber)) {
+             return expected.equals(this.registryNumber.getRegistryNum());
+         }
+        return false;
+    }
+
+    public boolean hasOldRegistryNumber(@NonNull Integer expected) {
+        if (Objects.nonNull(this.oldRegistryNumber)) {
+            return expected.equals(this.oldRegistryNumber.getRegistryNum());
+        }
+        return false;
+    }
 
     /**
      * Updates statusChanges with enforced sorting, dob that and person's status

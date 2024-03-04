@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface FindProblems {
 
-    List<String> findProblems();
+    List<String> findRegistryNumbersIssues();
 
 }
