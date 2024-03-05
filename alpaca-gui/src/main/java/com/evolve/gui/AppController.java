@@ -3,6 +3,7 @@ package com.evolve.gui;
 import com.evolve.alpaca.conf.LocalUserConfiguration;
 import com.evolve.alpaca.gui.accounts.AccountsController;
 import com.evolve.alpaca.gui.help.AboutDialogWindow;
+import com.evolve.alpaca.gui.stats.StatsController;
 import com.evolve.alpaca.gui.units.UnitsController;
 import com.evolve.alpaca.importing.importDbf.ImportDbfService;
 import com.evolve.alpaca.importing.importDoc.ImportAlphanumeric;
@@ -67,6 +68,7 @@ public class AppController implements Initializable {
     private final FxControllerAndView<PersonAccountsController, VBox> personAccountsController;
     private final FxControllerAndView<DocumentsController, VBox> documentsController;
     private final FxControllerAndView<ProblemsExplorerController, VBox> problemsExplorerController;
+    private final FxControllerAndView<StatsController, VBox> statsController;
 
     @FXML TabPane tabsPane;
     @FXML Tab tabPersonDetails;
@@ -83,6 +85,7 @@ public class AppController implements Initializable {
     @FXML MenuItem importPeopleMenuItem;
     @FXML MenuItem aboutMenuItem;
     @FXML MenuItem accountsMenuItem;
+    @FXML MenuItem statsMenuItem;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -157,4 +160,8 @@ public class AppController implements Initializable {
         personDetailsController.setEditable(true);
     }
 
+    @FXML
+    void showStatsClicked(ActionEvent actionEvent) {
+        statsController.getController().show();
+    }
 }
