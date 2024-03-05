@@ -13,6 +13,8 @@ import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 public class PersonIdDeducer implements SmartDeducer<PersonId> {
     private static final int PERSON_ID_LENGTH = 5;
 
+    private static final String INVALID_PERSON_NUMBER = "07 15";
+
     private final String symbolOdb; // 01001
 
     public PersonIdDeducer(DbfPerson dbfPerson) {
@@ -25,6 +27,12 @@ public class PersonIdDeducer implements SmartDeducer<PersonId> {
             log.info("Skipping incorrect SYM_ODB: {}", symbolOdb);
             return Optional.empty();
         }
+
+        // Ugly hack for one person whose person id is incorrectly written in the original DB:
+        if (INVALID_PERSON_NUMBER.equals(symbolOdb)) {
+            return Optional.of(PersonId.of("07150"));
+        }
+
         return Optional.of(PersonId.of(symbolOdb));
     }
 
