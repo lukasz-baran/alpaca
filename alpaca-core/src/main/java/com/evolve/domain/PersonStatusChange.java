@@ -94,6 +94,9 @@ public class PersonStatusChange implements Comparable<PersonStatusChange> {
             return 1;
         }
 
+        if (this.when != null && o.when != null) {
+            return this.when.compareTo(o.when);
+        }
         return this.eventType.compareTo(o.eventType);
     }
 

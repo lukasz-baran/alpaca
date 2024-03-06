@@ -27,7 +27,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
     @Autowired PersonApplicationService personApplicationService;
 
     @Test
-    void testApp() {
+    void verifySimpleCreation() {
         // given  -- initially database is empty
         assertThat(findPerson.fetchList(PersonLookupCriteria.ALL)).isEmpty();
 
@@ -136,7 +136,34 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
                 .isRetired()
                 .isExemptFromFees();
 
+        // when -- user resigned
+        var resignedDate = LocalDate.of(2021, 2, 2);
+        var withResignedDate = List.of(PersonStatusChange.born(newDob),
+                PersonStatusChange.joined(joined),
+                PersonStatusChange.resigned(resignedDate));
+        personApplicationService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
+                null, List.of(), List.of(), List.of(), withResignedDate, TEST_UNIT_NAME, null, null,
+                List.of(), null, null, null, null));
+        // then
+        assertPerson(findPerson.findById(personId))
+                .wasBornOn(newDob)
+                .hasStatus(PersonStatus.RESIGNED)
+                .hasStatusHistory(withResignedDate);
 
+        // when -- user joins again
+        var newJoinedDate = LocalDate.of(2022, 3, 20);
+        var joinedAgainDate = List.of(PersonStatusChange.born(newDob),
+                PersonStatusChange.joined(joined),
+                PersonStatusChange.resigned(resignedDate),
+                PersonStatusChange.joined(newJoinedDate));
+        personApplicationService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
+                null, List.of(), List.of(), List.of(), joinedAgainDate, TEST_UNIT_NAME, null, null,
+                List.of(), null, null, null, null));
+        // then
+        assertPerson(findPerson.findById(personId))
+                .wasBornOn(newDob)
+                .hasStatusHistory(joinedAgainDate)
+                .hasStatus(PersonStatus.ACTIVE);
     }
 
     @Test

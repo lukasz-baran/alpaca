@@ -3,6 +3,7 @@ package com.evolve.domain;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.evolve.domain.PersonAssertion.assertPerson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,6 +13,7 @@ class PersonShould {
     final LocalDate dob = LocalDate.of(1990, 10, 10);
     final LocalDate death = LocalDate.of(2020, 4, 10);
     final LocalDate joined = LocalDate.of(2001, 7, 1);
+    final LocalDate resignedDate = LocalDate.of(2021, 12, 2);
 
     @Test
     void alwaysPutDeathDateAsTheLastStatus() {
@@ -28,6 +30,27 @@ class PersonShould {
                 .hasStatusHistory(PersonStatusChange.born(dob),
                         PersonStatusChange.joined(joined),
                         PersonStatusChange.died(death));
+    }
+
+    @Test
+    void allowToResignAndJoinAgain() {
+        // given
+        Person person = new Person();
+
+        // when
+        var newJoinedDate = LocalDate.of(2022, 3, 20);
+        var joinedAgainDate = List.of(PersonStatusChange.born(dob),
+                PersonStatusChange.joined(joined),
+                PersonStatusChange.resigned(resignedDate),
+                PersonStatusChange.joined(newJoinedDate));
+        person.updateStatusChanges(joinedAgainDate);
+
+        // then
+        assertPerson(person)
+                .hasStatusHistory(PersonStatusChange.born(dob),
+                        PersonStatusChange.joined(joined),
+                        PersonStatusChange.resigned(resignedDate),
+                        PersonStatusChange.joined(newJoinedDate));
     }
 
     @Test
