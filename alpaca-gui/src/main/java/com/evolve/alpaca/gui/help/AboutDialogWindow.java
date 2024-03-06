@@ -50,6 +50,9 @@ public class AboutDialogWindow implements Initializable {
     final Text textName = new Text("Stowarzyszenie Wzajemnej Pomocy Lekarskiej Regionu Rzeszowskiego\n");
     final Text textAddress = new Text("ul. Dekerta 2\n35-030 Rzeszów");
 
+    final ContextMenu cm = new ContextMenu();
+    final MenuItem copyMenuItem = new MenuItem("Kopiuj");
+
     AboutDialogWindow(StageManager stageManager, AlpacaCommonConfiguration alpacaCommonConfiguration) {
         this.stageManager = stageManager;
         this.propertyEntries.addAll(
@@ -80,6 +83,14 @@ public class AboutDialogWindow implements Initializable {
         propertyValueColumn.setCellValueFactory(new PropertyValueFactory<>("propertyValue"));
         propertiesTable.setItems(propertyEntries);
         propertiesTable.getStyleClass().add("noheader");
+
+        copyMenuItem.setOnAction(e -> {
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            ClipboardContent content = new ClipboardContent();
+            content.putString(textName.getText() + textAddress.getText());
+            clipboard.setContent(content);
+        });
+        cm.getItems().add(copyMenuItem);
 
         stage.initOwner(stageManager.getPrimaryStage());
         stage.setScene(new Scene(aboutDialog));
@@ -117,18 +128,11 @@ public class AboutDialogWindow implements Initializable {
     @FXML
     void addressMouseClicked(MouseEvent mouseEvent) {
         if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-            final ContextMenu cm = new ContextMenu();
-            final MenuItem copyMenuItem = new MenuItem("Kopiuj");
-            copyMenuItem.setOnAction(e -> {
-                Clipboard clipboard = Clipboard.getSystemClipboard();
-                ClipboardContent content = new ClipboardContent();
-                content.putString(textName.getText() + textAddress.getText());
-                clipboard.setContent(content);
-            });
-
-            cm.getItems().add(copyMenuItem);
+            cm.hide();
             cm.show(aboutTextFlow, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+            return;
         }
+        cm.hide();
     }
 
     private void closeWindow() {
