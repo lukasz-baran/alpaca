@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @RequiredArgsConstructor
@@ -21,6 +22,15 @@ public enum PersonStatus {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    public static Optional<PersonStatus> fromName(String name) {
+        for (PersonStatus status : PersonStatus.values()) {
+            if (status.name.equals(name)) {
+                return Optional.of(status);
+            }
+        }
+        return Optional.empty();
     }
 
     public static PersonStatus basedOnStatusChange(List<PersonStatusChange> statusChanges) {
