@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox fx:id="lastNamesHBox" alignment="CENTER" fillHeight="false" focusTraversable="true" prefWidth="255.0"
+      styleClass="combined-class" stylesheets="@last-names-styles.css" GridPane.columnIndex="1" GridPane.rowIndex="4"
+      xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.evolve.gui.person.lastNames.LastNamesController">
+
+    <TextField fx:id="lastNameTextField" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" HBox.hgrow="ALWAYS" />
+    <Button fx:id="showPreviousButton" text="&#8801;" />
+
+</HBox>

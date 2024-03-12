@@ -19,7 +19,7 @@ public class PersonDetailsChange {
         return new EditPersonDataCommand(
                 controller.idTextField.getText(),
                 controller.firstNameTextField.getText(),
-                controller.lastNameTextField.getText(),
+                controller.personLastNamesController.getController().getLastName(),
                 controller.secondNameTextField.getText(),
                 controller.phoneNumbersController.getController().getNumbers(),
                 controller.personAddresses.getController().getPersonAddresses(),

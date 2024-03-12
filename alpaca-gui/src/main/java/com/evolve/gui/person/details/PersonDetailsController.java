@@ -18,6 +18,7 @@ import com.evolve.gui.person.bankAccounts.PersonBankAccountsController;
 import com.evolve.gui.person.contactDetails.PersonContactDataController;
 import com.evolve.gui.person.event.PersonArchivedEvent;
 import com.evolve.gui.person.event.PersonEditionFinishedEvent;
+import com.evolve.gui.person.lastNames.LastNamesController;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
 import com.evolve.gui.person.status.PersonStatusController;
@@ -68,6 +69,7 @@ public class PersonDetailsController extends EditableGuiElement
     @FXML final FxControllerAndView<PersonAddressesController, AnchorPane> personAddresses;
     @FXML final FxControllerAndView<PersonStatusController, VBox> personStatusController;
     @FXML final FxControllerAndView<PersonBankAccountsController, VBox> personBankAccountsController;
+    @FXML final FxControllerAndView<LastNamesController, HBox> personLastNamesController;
 
     private final ObjectProperty<Person> originalPerson = new SimpleObjectProperty<>();
 
@@ -79,7 +81,6 @@ public class PersonDetailsController extends EditableGuiElement
     @FXML TextField idTextField;
     @FXML TextField firstNameTextField;
     @FXML TextField secondNameTextField;
-    @FXML TextField lastNameTextField;
     @FXML TextField dobTextField;
 
     @FXML TextField registryNumberTextField;
@@ -129,7 +130,7 @@ public class PersonDetailsController extends EditableGuiElement
         idTextField.setText(person.getPersonId());
         firstNameTextField.setText(person.getFirstName());
         secondNameTextField.setText(person.getSecondName());
-        lastNameTextField.setText(person.getLastName());
+        personLastNamesController.getController().setPerson(person);
 
         phoneNumbersController.getController().setPersonContactData(person.getContactData());
 
@@ -180,7 +181,8 @@ public class PersonDetailsController extends EditableGuiElement
         btnCancel.setDisable(!editable);
 
         firstNameTextField.setEditable(editable);
-        lastNameTextField.setEditable(editable);
+        personLastNamesController.getController().setEditable(editable);
+
         secondNameTextField.setEditable(editable);
 
         // FIXME person gender cannot be edited!

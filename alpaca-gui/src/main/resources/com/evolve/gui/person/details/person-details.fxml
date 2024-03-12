@@ -4,7 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<VBox stylesheets="@../../../../../styles/style.css" VBox.vgrow="NEVER" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.details.PersonDetailsController">
+<VBox stylesheets="@../../../../../styles/style.css" VBox.vgrow="NEVER" xmlns="http://javafx.com/javafx/19"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.details.PersonDetailsController">
 
     <HBox id="personMenu" alignment="BASELINE_LEFT" prefHeight="18.0" spacing="5.0">
         <Button fx:id="btnSave" disable="true" onAction="#saveButtonClicked" text="Zapisz" />
@@ -54,7 +55,7 @@
 
         <!-- 3 row -->
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwisko" GridPane.rowIndex="2" />
-        <TextField fx:id="lastNameTextField" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+        <fx:include fx:id="personLastNamesController" source="../lastNames/last-names.fxml" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2"  />
 
         <!-- 4 row -->
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Drugie imię" wrappingWidth="102.625" GridPane.columnIndex="0" GridPane.rowIndex="3" />
