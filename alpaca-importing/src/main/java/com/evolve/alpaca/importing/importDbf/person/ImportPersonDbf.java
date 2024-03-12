@@ -16,6 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ImportPersonDbf extends DbfImportBase<DbfPerson> {
 
+    @Deprecated // used only by integration tests
     public static List<Person> importPeople(URL url) {
         final List<DbfPerson> osobyDbf = new ImportPersonDbf()
                 .performImport(url.getPath())

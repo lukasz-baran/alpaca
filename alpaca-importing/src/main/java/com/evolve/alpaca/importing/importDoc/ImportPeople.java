@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 @Slf4j
 public class ImportPeople {
@@ -38,7 +35,13 @@ public class ImportPeople {
                     continue;
                 }
 
-                Optional<PersonFromDoc> maybePerson = PersonReader.fromLine(line);
+                Optional<PersonFromDoc> maybePerson;
+                try {
+                    maybePerson = PersonReader.fromLine(line);
+                } catch (NoSuchElementException nseEx) {
+                    log.error("Failed on parsing line: " + line);
+                    throw nseEx;
+                }
 
                 if (maybePerson.isPresent()) {
                     PersonFromDoc person = maybePerson.get();

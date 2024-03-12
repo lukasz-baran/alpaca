@@ -63,10 +63,19 @@ public class ImportAndFixDataTest {
     }
 
     @Test
-    @Disabled
-    public void importPeople() throws IOException {
-        final List<PersonFromDoc> people = new ImportPeople(true).processFile();
+    void importTextFile() {
+        final Resource resourceTextFile = new DefaultResourceLoader().getResource(FILENAME_BY_NUMBERS);
+        assumeThat(resourceTextFile.exists()).isTrue();
 
+        final List<PersonFromDoc> people = new ImportPeople(true).processFile();
+        assertThat(people)
+                .hasSize(2368);
+        log.info("Wczytano " + people.size() + " z indeksu " + FILENAME_BY_NUMBERS);
+    }
+
+    @Test
+    @Disabled
+    void importPeople() throws IOException {
         final GrupyAlfabetyczne grupyAlfabetyczne = new ImportAlphanumeric()
                 .processFile();
 
@@ -74,7 +83,6 @@ public class ImportAndFixDataTest {
 
         final List<com.evolve.domain.Person> persons = ImportPersonDbf.importPeople(accountsFile);
 
-        log.info("Wczytano " + people.size() + " z indeksu " + FILENAME_BY_NUMBERS);
         log.info("Wczytano " + grupyAlfabetyczne.getSize() + " z grup alfabetycznych " + FILENAME_BY_ALPHA);
         log.info("Wczytano " + persons.size());
     }
