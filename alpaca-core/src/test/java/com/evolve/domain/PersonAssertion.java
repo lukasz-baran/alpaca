@@ -138,4 +138,9 @@ public class PersonAssertion extends AbstractAssert<PersonAssertion, Person> {
         assertThat(actual.getSecondName()).isNull();
         return this;
     }
+
+    public PersonAssertion hasPreviousNames(String...previousNames) {
+        assertThat(actual.getPreviousLastNames()).containsExactly(previousNames);
+        return this;
+    }
 }

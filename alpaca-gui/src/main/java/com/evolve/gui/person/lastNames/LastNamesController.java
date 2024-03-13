@@ -11,12 +11,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.converter.DefaultStringConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
@@ -25,6 +24,7 @@ import org.controlsfx.control.PopOver;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 @Component
@@ -71,6 +71,10 @@ public class LastNamesController extends EditableGuiElement implements Initializ
         return lastNameProperty.getValue();
     }
 
+    public List<String> getPreviousNames() {
+        return previousLastNames;
+    }
+
     void showLastNames(Node parentNode) {
         if (lastNamesPopover.isShowing()) {
             lastNamesPopover.hide();
@@ -85,7 +89,46 @@ public class LastNamesController extends EditableGuiElement implements Initializ
         content.setPadding(new Insets(10));
 
         final ListView<String> listView = new ListView<>(previousLastNames);
-        listView.setTooltip(StageManager.newTooltip("UWAGA! Edycja listy poprzednich nazwisk nie została jeszcze zaimplementowana!"));
+        listView.editableProperty().bind(disabledProperty.not());
+
+        listView.setCellFactory(lv -> {
+            final TextFieldListCell<String> cell = new TextFieldListCell<>(new DefaultStringConverter());
+            cell.editableProperty().bind(disabledProperty.not());
+
+            final ContextMenu contextMenu = new ContextMenu();
+
+            final MenuItem editItem = new MenuItem("Edytuj");
+            editItem.disableProperty().bind(disabledProperty);
+            editItem.setOnAction(event -> {
+                listView.edit(cell.getIndex());
+            });
+
+            final MenuItem deleteItem = new MenuItem("Usuń");
+            deleteItem.disableProperty().bind(disabledProperty);
+            deleteItem.setOnAction(event -> listView.getItems().remove(cell.getItem()));
+            contextMenu.getItems().addAll(editItem, deleteItem);
+
+            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                if (isNowEmpty) {
+                    cell.setContextMenu(null);
+                } else {
+                    cell.setContextMenu(contextMenu);
+                }
+            });
+            return cell ;
+        });
+        listView.setOnEditCommit(e -> listView.getItems().set(e.getIndex(), e.getNewValue()));
+
+        final ContextMenu newItemContextMenu = new ContextMenu();
+        final MenuItem newItem = new MenuItem("Dodaj");
+        newItem.disableProperty().bind(disabledProperty);
+        newItem.setOnAction(event -> {
+            final int index = listView.getItems().size();
+            listView.getItems().add(index, "nazwisko");
+            listView.edit(index);
+        });
+        newItemContextMenu.getItems().add(newItem);
+        listView.setContextMenu(newItemContextMenu);
 
         content.getChildren().addAll(new Label("Poprzednie nazwiska:"), listView);
         final PopOver popOver = new PopOver(content);

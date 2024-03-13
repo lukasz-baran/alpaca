@@ -32,7 +32,9 @@ public class PersonDetailsChange {
                 controller.retiredCheckBox.isSelected(),
                 controller.exemptFromFeesCheckBox.isSelected(),
                 newPesel(controller.peselTextField.getText()),
-                newIdNumber(controller.idNumberTextField.getText()));
+                newIdNumber(controller.idNumberTextField.getText()),
+                controller.personLastNamesController.getController().getPreviousNames()
+        );
     }
 
     /**

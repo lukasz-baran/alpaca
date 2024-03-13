@@ -28,6 +28,7 @@ public record EditPersonDataCommand(String id,
                                     Boolean retired,
                                     Boolean exemptFromFees,
                                     String pesel,
-                                    String idNumber) implements Command {
+                                    String idNumber,
+                                    List<String> previousNames) implements Command {
 
 }

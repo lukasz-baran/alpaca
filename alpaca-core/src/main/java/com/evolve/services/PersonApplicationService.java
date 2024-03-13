@@ -50,6 +50,7 @@ public class PersonApplicationService extends ApplicationService {
         person.updateExemptionFromFees(command.exemptFromFees());
         person.updatePesel(command.pesel());
         person.updateIdNumber(command.idNumber());
+        person.setPreviousLastNames(command.previousNames());
 
         final Person.Gender gender = PersonGenderDeducer.getGender(command.firstName());
         person.setGender(gender);

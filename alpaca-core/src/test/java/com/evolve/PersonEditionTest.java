@@ -17,6 +17,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
     public static final String TEST_FIRST_NAME = "Jan";
     public static final String TEST_LAST_NAME = "Barabasz";
     public static final String TEST_UNIT_NAME = "02";
+    public static final String TEST_PREVIOUS_NAME = "Sinatra";
 
     public static final String NEW_FIRST_NAME = "Patrick";
     public static final String NEW_LAST_NAME = "Swayze";
@@ -68,7 +69,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
 
         personApplicationService.editPerson(new EditPersonDataCommand(personId, NEW_FIRST_NAME, NEW_LAST_NAME,
                 null, List.of(PersonContactData.email(NEW_EMAIL)), List.of(), List.of(), List.of(), TEST_UNIT_NAME, NEW_REGISTRY_NUMBER, null,
-                List.of(bankAccount), null, null, null, null));
+                List.of(bankAccount), null, null, null, null, List.of(TEST_PREVIOUS_NAME)));
 
         // then -- changes are persisted in db
         assertPerson(findPerson.findById(personId))
@@ -78,7 +79,8 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
                 .hasEmail(NEW_EMAIL)
                 .hasPersonId(personId)
                 .hasRegistryNumber(RegistryNumber.of(NEW_REGISTRY_NUMBER))
-                .hasBankAccount(bankAccount);
+                .hasBankAccount(bankAccount)
+                .hasPreviousNames(TEST_PREVIOUS_NAME);
 
         // then --
     }
@@ -108,7 +110,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
 
         personApplicationService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
                 null, List.of(), List.of(), List.of(), statusChanges(dob, joined), TEST_UNIT_NAME, null, null,
-                List.of(), null, null, null, null));
+                List.of(), null, null, null, null, null));
 
         // then -- person became active
         assertPerson(findPerson.findById(personId))
@@ -126,7 +128,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
         final LocalDate newDob = LocalDate.of(1970, 2, 11);
         personApplicationService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
                 null, List.of(), List.of(), List.of(), statusChanges(newDob, joined), TEST_UNIT_NAME, null, null,
-                List.of(), null, null, null, null));
+                List.of(), null, null, null, null, null));
 
 
         // then -- changes are reflected
@@ -143,7 +145,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
                 PersonStatusChange.resigned(resignedDate));
         personApplicationService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
                 null, List.of(), List.of(), List.of(), withResignedDate, TEST_UNIT_NAME, null, null,
-                List.of(), null, null, null, null));
+                List.of(), null, null, null, null, null));
         // then
         assertPerson(findPerson.findById(personId))
                 .wasBornOn(newDob)
@@ -158,7 +160,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
                 PersonStatusChange.joined(newJoinedDate));
         personApplicationService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
                 null, List.of(), List.of(), List.of(), joinedAgainDate, TEST_UNIT_NAME, null, null,
-                List.of(), null, null, null, null));
+                List.of(), null, null, null, null, null));
         // then
         assertPerson(findPerson.findById(personId))
                 .wasBornOn(newDob)
@@ -185,7 +187,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
         var bornAndDied = List.of(PersonStatusChange.born(dob), PersonStatusChange.died(death));
         personApplicationService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
                 null, List.of(), List.of(), List.of(), bornAndDied, TEST_UNIT_NAME, null, null,
-                List.of(), null, null, null, null));
+                List.of(), null, null, null, null, null));
 
         // then
         assertPerson(findPerson.findById(personId))
@@ -198,7 +200,7 @@ public class PersonEditionTest extends AlpacaAbstractIntegrationTest{
         var bornJoinedAndDied = List.of(PersonStatusChange.born(dob), PersonStatusChange.died(death), PersonStatusChange.joined(joined));
         personApplicationService.editPerson(new EditPersonDataCommand(personId, TEST_FIRST_NAME, TEST_LAST_NAME,
                 null, List.of(), List.of(), List.of(), bornJoinedAndDied, TEST_UNIT_NAME, null, null,
-                List.of(), null, null, null, null));
+                List.of(), null, null, null, null, null));
 
         // then
         assertPerson(findPerson.findById(personId))

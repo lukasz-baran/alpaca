@@ -9,7 +9,10 @@
 }
 
 /* invalid row in table row */
-.table-row-cell:invalid {
+/*.table-row-cell:invalid {
+   -fx-border-color: red;
+}*/
+.invalid {
    -fx-border-color: red;
 }
 
