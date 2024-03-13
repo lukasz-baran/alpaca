@@ -133,4 +133,9 @@ public class PersonAssertion extends AbstractAssert<PersonAssertion, Person> {
         assertThat(actual.getIdNumber()).isNull();
         return this;
     }
+
+    public PersonAssertion hasNoSecondName() {
+        assertThat(actual.getSecondName()).isNull();
+        return this;
+    }
 }

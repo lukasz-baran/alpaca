@@ -95,10 +95,10 @@ public class PersonDataDeducer {
 
         final Person personData = Person.builder()
                 .personId(personId.map(PersonId::toString).orElse(null))
-                .firstName(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getFirstName).orElse(null))
-                .secondName(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getSecondName).orElse(null))
+                .firstName(credentials.map(PersonCredentialsDeducer.DeducedCredentials::firstName).orElse(null))
+                .secondName(credentials.map(PersonCredentialsDeducer.DeducedCredentials::secondName).orElse(null))
                 .gender(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getGender).orElse(null))
-                .lastName(credentials.map(PersonCredentialsDeducer.DeducedCredentials::getLastName).orElse(null))
+                .lastName(credentials.map(PersonCredentialsDeducer.DeducedCredentials::lastName).orElse(null))
                 .dob(maybeDob.map(PersonStatusChange::getWhen).orElse(null))
                 .registryNumber(registryNumber.orElse(null))
                 .oldRegistryNumber(oldRegistryNumber.orElse(null))

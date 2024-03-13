@@ -123,6 +123,9 @@ public class ImportAndFixDataTest {
         assertPerson(getPersonById(importedPersons, "20015"))
                 .hasStatus(PersonStatus.RESIGNED);
 
+        assertPerson(getPersonById(importedPersons, "16150"))
+                .hasNoSecondName();
+
     }
 
     Person getPersonById(List<Person> importedPersons, String personId) {

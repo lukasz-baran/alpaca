@@ -4,10 +4,6 @@ import com.evolve.alpaca.importing.importDbf.person.DbfPerson;
 import com.evolve.alpaca.utils.StringFix;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonGenderDeducer;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -84,21 +80,28 @@ public class PersonCredentialsDeducer extends
                 StringUtils.equalsAnyIgnoreCase(first[1], second[1])) {
 
             // check double names
-            final String firstName;
-            final String secondName;
             if (StringUtils.contains(first[1], SEPARATOR)) {
-                String[] firstAndSecond = first[1].split(SEPARATOR);
-                firstName = firstAndSecond[0];
-                secondName = firstAndSecond[1];
+                final String[] firstAndSecond = first[1].split(SEPARATOR);
+                String firstName = firstAndSecond[0];
+                String secondName = firstAndSecond[1];
+
+                if (isPreviousName(firstName)) {
+                    firstName = secondName;
+                    secondName = null; // TODO we should extract previous name from the brackets
+                }
+
+                return Optional.of(new DeducedCredentials(
+                        fixTruncatedFirstName(StringFix.capitalize(firstName)),
+                        StringFix.capitalize(secondName),
+                        StringFix.capitalizeLastName(first[0])));
             } else {
-                firstName = first[1];
-                secondName = null;
+                final String firstName = first[1];
+
+                return Optional.of(DeducedCredentials.onlyFirstAndLastName(
+                        fixTruncatedFirstName(StringFix.capitalize(firstName)),
+                        StringFix.capitalizeLastName(first[0])));
             }
 
-            return Optional.of(new DeducedCredentials(
-                    fixTruncatedFirstName(StringFix.capitalize(firstName)),
-                    StringFix.capitalize(secondName),
-                    StringFix.capitalizeLastName(first[0])));
         }
 
         final String logLine = String.format("Unable to get consistent first name and last name for %s and %s", nazwa1, nazwa2);
@@ -112,6 +115,10 @@ public class PersonCredentialsDeducer extends
         return guesses;
     }
 
+    private static boolean isPreviousName(String maybePreviousName) {
+        return StringUtils.startsWith(maybePreviousName, "(") && StringUtils.endsWith(maybePreviousName, ")");
+    }
+
     private static String fixTruncatedFirstName(String firstName) {
         if (NAMES_FIX.containsKey(firstName)) {
             return NAMES_FIX.get(firstName);
@@ -119,14 +126,11 @@ public class PersonCredentialsDeducer extends
         return firstName;
     }
 
-    @Getter
-    @AllArgsConstructor
-    @EqualsAndHashCode
-    @ToString
-    public static class DeducedCredentials {
-        private final String firstName;
-        private final String secondName;
-        private final String lastName;
+    public record DeducedCredentials(String firstName, String secondName, String lastName) {
+
+        static DeducedCredentials onlyFirstAndLastName(String firstName, String lastName) {
+            return new DeducedCredentials(firstName, null, lastName);
+        }
 
         public Person.Gender getGender() {
             return PersonGenderDeducer.getGender(firstName);

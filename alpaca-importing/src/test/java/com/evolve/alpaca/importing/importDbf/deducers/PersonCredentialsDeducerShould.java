@@ -13,15 +13,18 @@ class PersonCredentialsDeducerShould {
 
     @Test
     void deduceSecondName() {
-        DbfPerson dbfPerson = DbfPerson.builder()
+        // given
+        final DbfPerson dbfPerson = DbfPerson.builder()
                 .NAZ_ODB1("KOWALSKA ZOFIA GRAŻYNA")
                 .NAZ_ODB2("KOWALSKA ZOFIA GRAŻYNA")
                 .build();
 
-        PersonCredentialsDeducer namePersonDeducer = new PersonCredentialsDeducer(dbfPerson, mock(IssuesLogger.ImportIssues.class));
+        final PersonCredentialsDeducer namePersonDeducer = new PersonCredentialsDeducer(dbfPerson, mock(IssuesLogger.ImportIssues.class));
 
-        var result = namePersonDeducer.deduceFrom(List.of()); // result is ignored
+        // when
+        var result = namePersonDeducer.deduceFrom(List.of());
 
+        // then
         assertThat(result)
                 .hasValue(new PersonCredentialsDeducer.DeducedCredentials(
                         "Zofia",
@@ -29,6 +32,27 @@ class PersonCredentialsDeducerShould {
                         "Kowalska"));
         assertThat(result.get().getGender())
                 .isEqualTo(Person.Gender.FEMALE);
+
+    }
+
+    @Test
+    void dontTreatPreviousNameAsSecondName() {
+        DbfPerson dbfPerson = DbfPerson.builder()
+                .NAZ_ODB1("ALFA (BETA) GAMMA")
+                .NAZ_ODB2("ALFA (BETA) GAMMA")
+                .build();
+
+        final PersonCredentialsDeducer namePersonDeducer = new PersonCredentialsDeducer(dbfPerson, mock(IssuesLogger.ImportIssues.class));
+
+        // when
+        var result = namePersonDeducer.deduceFrom(List.of());
+
+        // then
+        assertThat(result)
+                .hasValue(new PersonCredentialsDeducer.DeducedCredentials(
+                        "Gamma",
+                        null,
+                        "Alfa"));
 
     }
 
