@@ -26,6 +26,7 @@
         <Menu mnemonicParsing="false" text="Pomoc">
             <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" text="O programie"/>
             <MenuItem fx:id="statsMenuItem" mnemonicParsing="false" text="Statystyki" onAction="#showStatsClicked"/>
+            <MenuItem fx:id="puzzleMenuItem" mnemonicParsing="false" text="Czasoumilacz" onAction="#openPuzzleGame"/>
         </Menu>
     </MenuBar>
 

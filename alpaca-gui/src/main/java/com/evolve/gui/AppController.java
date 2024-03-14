@@ -2,6 +2,7 @@ package com.evolve.gui;
 
 import com.evolve.alpaca.conf.LocalUserConfiguration;
 import com.evolve.alpaca.gui.accounts.AccountsController;
+import com.evolve.alpaca.gui.games.FifteenPuzzleDialog;
 import com.evolve.alpaca.gui.help.AboutDialogWindow;
 import com.evolve.alpaca.gui.stats.StatsController;
 import com.evolve.alpaca.gui.units.UnitsController;
@@ -69,6 +70,7 @@ public class AppController implements Initializable {
     private final FxControllerAndView<DocumentsController, VBox> documentsController;
     private final FxControllerAndView<ProblemsExplorerController, VBox> problemsExplorerController;
     private final FxControllerAndView<StatsController, VBox> statsController;
+    private final FxControllerAndView<FifteenPuzzleDialog, VBox> fifteenPuzzleController;
 
     @FXML TabPane tabsPane;
     @FXML Tab tabPersonDetails;
@@ -86,6 +88,7 @@ public class AppController implements Initializable {
     @FXML MenuItem aboutMenuItem;
     @FXML MenuItem accountsMenuItem;
     @FXML MenuItem statsMenuItem;
+    @FXML MenuItem puzzleMenuItem;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -163,5 +166,10 @@ public class AppController implements Initializable {
     @FXML
     void showStatsClicked(ActionEvent actionEvent) {
         statsController.getController().show();
+    }
+
+    @FXML
+    void openPuzzleGame(ActionEvent actionEvent) {
+        fifteenPuzzleController.getController().show();
     }
 }
