@@ -1,5 +1,6 @@
 package com.evolve.alpaca.importing.importDbf;
 
+import com.evolve.alpaca.importing.importDoc.person.PersonsWrapper;
 import com.evolve.domain.Person;
 import com.evolve.domain.RegistryNumber;
 import org.junit.jupiter.api.Test;
@@ -56,5 +57,18 @@ class RegistryNumberFixerShould {
         assertPerson(jadwiga)
                 .hasRegistryNumber(RegistryNumber.of(1069))
                 .hasOldRegistryNumber(RegistryNumber.of(100));
+    }
+
+    @Test
+    void handleMissingRegistryNumber() {
+        Person person = Person.builder()
+                .personId("17087")
+                .registryNumber(RegistryNumber.of(83))
+                .build();
+
+        RegistryNumberFixer.fixPersonRegistryNumbers(person, PersonsWrapper.MISSING_REGISTRY_NUMBER);
+
+
+
     }
 }
