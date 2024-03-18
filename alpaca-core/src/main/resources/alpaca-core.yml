@@ -1,6 +1,6 @@
 spring:
   config:
-    import: classpath:alpaca-common.properties
+    import: classpath:alpaca-common.yml
   datasource:
     url: jdbc:h2:file:c:/alpaca/h2/alpaca
   jpa:
