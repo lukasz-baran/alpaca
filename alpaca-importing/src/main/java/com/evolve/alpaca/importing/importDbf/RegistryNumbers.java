@@ -13,10 +13,7 @@ import org.springframework.core.io.Resource;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @AllArgsConstructor
 @Slf4j
@@ -64,15 +61,16 @@ public class RegistryNumbers {
             return Numbers.ofTwelve(number);
         }
 
-        if (number.length() == 6 || number.length() == 5 || number.length() == 4 || number.length() == 7) {
+        if (number.length() >= 3 && number.length() <= 7) {
             return Numbers.single(number);
         }
 
-        if (number.length() == 9) {
-            return Numbers.single(number);
+        if (number.length() == 8 || number.length() == 9) {
+            return Numbers.bySplitting(number);
         }
 
-        throw new AssertionError("failed: " + number.length());
+        final String error = String.format("failed on: %s length: %d", number, number.length());
+        throw new AssertionError(error);
     }
 
     public record Numbers(Integer number, Integer oldNumber) {
@@ -89,6 +87,21 @@ public class RegistryNumbers {
 
         public static Numbers single(String number) {
             return new Numbers(Integer.parseInt(StringUtils.deleteWhitespace(number)), null);
+        }
+
+        public static Numbers bySplitting(String number) {
+            var tokenizer = new StringTokenizer(number);
+            var list = Collections.list(tokenizer)
+                    .stream()
+                    .map(o -> (String) o)
+                    .map(Integer::parseInt)
+                    .toList();
+            if (list.size() == 2) {
+                return new Numbers(list.get(1), list.get(0));
+            } else if (list.size() == 1) {
+                return new Numbers(list.get(0), null);
+            }
+            return empty();
         }
 
         private static Integer skipDots(String number) {

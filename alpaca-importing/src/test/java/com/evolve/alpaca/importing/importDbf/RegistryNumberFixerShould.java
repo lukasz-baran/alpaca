@@ -57,4 +57,5 @@ class RegistryNumberFixerShould {
                 .hasRegistryNumber(RegistryNumber.of(1069))
                 .hasOldRegistryNumber(RegistryNumber.of(100));
     }
+
 }

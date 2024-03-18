@@ -41,5 +41,18 @@ public class RegistryNumbersShould {
         // then
         assertThat(jadwiga.getNumber()).hasValue(100);
         assertThat(jadwiga.getOldNumber()).hasValue(1069);
+
+        // when
+        final RegistryNumbers.Numbers stanislaw = registryNumbers.parseLine("953 1189"); // old numer - new number
+
+        // then
+        assertThat(stanislaw.getNumber()).hasValue(1189);
+        assertThat(stanislaw.getOldNumber()).hasValue(953);
+
+        final RegistryNumbers.Numbers witold = registryNumbers.parseLine("705  1538"); // old numer - new number
+
+        // then
+        assertThat(witold.getNumber()).hasValue(1538);
+        assertThat(witold.getOldNumber()).hasValue(705);
     }
 }
