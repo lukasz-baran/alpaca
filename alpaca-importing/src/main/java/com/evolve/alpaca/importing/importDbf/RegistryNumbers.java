@@ -65,11 +65,7 @@ public class RegistryNumbers {
             return Numbers.single(number);
         }
 
-        if (number.length() == 9) {
-            return Numbers.single(number);
-        }
-
-        if (number.length() == 8) {
+        if (number.length() == 8 || number.length() == 9) {
             return Numbers.bySplitting(number);
         }
 
