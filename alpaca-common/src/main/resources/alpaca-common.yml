@@ -1,6 +1,7 @@
 alpaca:
+  basedir: c:/alpaca
   commands:
-    store: c:/alpaca/commands/
+    store: ${alpaca.basedir}/commands/
 
 git:
   commit:

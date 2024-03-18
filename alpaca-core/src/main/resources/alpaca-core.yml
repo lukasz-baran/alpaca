@@ -2,7 +2,7 @@ spring:
   config:
     import: classpath:alpaca-common.yml
   datasource:
-    url: jdbc:h2:file:c:/alpaca/h2/alpaca
+    url: jdbc:h2:file:${alpaca.basedir}/h2/alpaca
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,7 +13,7 @@ spring:
         enable_lazy_load_no_trans: true
   content:
     fs:
-      filesystemRoot: c:/alpaca/content/
+      filesystemRoot: ${alpaca.basedir}/content/
 
 alpaca:
   nbp:
