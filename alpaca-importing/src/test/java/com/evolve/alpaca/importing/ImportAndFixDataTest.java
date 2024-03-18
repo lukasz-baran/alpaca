@@ -68,8 +68,8 @@ public class ImportAndFixDataTest {
         assumeThat(resourceTextFile.exists()).isTrue();
 
         final List<PersonFromDoc> people = new ImportPeople(true).processFile();
-        assertThat(people)
-                .hasSize(2368);
+        assertThat(people.size())
+                .isEqualTo(2369);
         log.info("Wczytano " + people.size() + " z indeksu " + FILENAME_BY_NUMBERS);
     }
 
