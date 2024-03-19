@@ -60,6 +60,8 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
         grid.add(new Label("Plik kont DOC:"), 0, 2);
         grid.add(groupDocFile, 1, 2);
 
+        validateSaveButton(saveButton);
+
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(dialogButton -> {
@@ -77,9 +79,6 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
     }
 
     private HBox createMainFileChooser(DbfFiles dbfFiles, Button saveButton) {
-        final HBox group = new HBox();
-        group.setSpacing(10);
-
         mainFilePathTextField.setPromptText("Z_B_KO.DBF");
 
         final Button chooseFileButton = new Button("Wybierz plik");
@@ -93,8 +92,6 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
 
             mainFilePathTextField.setText(file.getAbsolutePath());
         });
-        group.getChildren().add(mainFilePathTextField);
-        group.getChildren().add(chooseFileButton);
 
         localUserConfiguration.loadProperty(LocalUserConfiguration.Z_B_KO_DBF_LOCATION)
                 .ifPresent(filePath -> {
@@ -102,16 +99,10 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
                     dbfFiles.setMainFile(new File(filePath));
                 });
 
-        validateSaveButton(saveButton);
-        mainFilePathTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
-
-        return group;
+        return newHBox(mainFilePathTextField, chooseFileButton, saveButton);
     }
 
     private HBox createAccountsFileChooser(DbfFiles dbfFiles, Button saveButton) {
-        final HBox group = new HBox();
-        group.setSpacing(10);
-
         accountsFilePathTextField.setPromptText("PLAN.DBF");
 
         final Button chooseFileButton = new Button("Wybierz plik");
@@ -125,8 +116,6 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
 
             accountsFilePathTextField.setText(file.getAbsolutePath());
         });
-        group.getChildren().add(accountsFilePathTextField);
-        group.getChildren().add(chooseFileButton);
 
         localUserConfiguration.loadProperty(LocalUserConfiguration.PLAN_DBF_LOCATION)
                 .ifPresent(filePath -> {
@@ -134,16 +123,10 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
                     dbfFiles.setPlanAccountsFile(new File(filePath));
                 });
 
-        validateSaveButton(saveButton);
-        accountsFilePathTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
-
-        return group;
+        return newHBox(accountsFilePathTextField, chooseFileButton, saveButton);
     }
 
     private HBox createAccountsPlanFileChooser(DbfFiles dbfFiles, Button saveButton) {
-        final HBox group = new HBox();
-        group.setSpacing(10);
-
         docFilePathTextField.setPromptText("PLAN KONT.doc");
 
         final Button chooseFileButton = new Button("Wybierz plik");
@@ -157,8 +140,6 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
 
             docFilePathTextField.setText(file.getAbsolutePath());
         });
-        group.getChildren().add(docFilePathTextField);
-        group.getChildren().add(chooseFileButton);
 
         localUserConfiguration.loadProperty(LocalUserConfiguration.PLAN_DOC_LOCATION)
                 .ifPresent(filePath -> {
@@ -166,9 +147,15 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
                     dbfFiles.setDocFile(new File(filePath));
                 });
 
-        validateSaveButton(saveButton);
-        docFilePathTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
+        return newHBox(docFilePathTextField, chooseFileButton, saveButton);
+    }
 
+    private HBox newHBox(TextField textField, Button chooseFileButton, Button saveButton) {
+        final HBox group = new HBox();
+        group.setSpacing(10);
+        group.getChildren().add(textField);
+        group.getChildren().add(chooseFileButton);
+        textField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
         return group;
     }
 
