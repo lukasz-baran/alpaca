@@ -2,20 +2,19 @@ package com.evolve.alpaca.importing.importDoc;
 
 import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
 import com.evolve.alpaca.importing.importDoc.person.PersonReader;
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.extractor.WordExtractor;
 
-import java.net.URL;
+import java.io.FileInputStream;
 import java.util.*;
 
 @Slf4j
 public class ImportPeople {
-    public static final String FILENAME_BY_NUMBERS = "ludzie-numerami.txt";
-
     private static final String INCORRECT_SEPARATOR = "–";
+    private static final String CHUNK_SEPARATOR = "ALFABETYCZNIE";
 
     private final boolean logging;
 
@@ -24,10 +23,19 @@ public class ImportPeople {
     }
 
     @SneakyThrows
-    public List<PersonFromDoc> processFile() {
+    public List<PersonFromDoc> processDocFile(String filePath) {
+        try (HWPFDocument hwpf = new HWPFDocument(new FileInputStream(filePath));
+            WordExtractor wordExtractor = new WordExtractor(hwpf)) {
+            final String rawContent = wordExtractor.getText();
+            int index = StringUtils.indexOf(rawContent, CHUNK_SEPARATOR);
+
+            final String content = StringUtils.truncate(rawContent, index);
+            return processFile(content);
+        }
+    }
+
+    private List<PersonFromDoc> processFile(String content) {
         final List<PersonFromDoc> personList = new ArrayList<>();
-        final URL url = Resources.getResource(FILENAME_BY_NUMBERS);
-        final String content = Resources.toString(url, Charsets.UTF_8);
         try (final Scanner scanner = new Scanner(content)) {
             while (scanner.hasNextLine()) {
                 final String line = scanner.nextLine().replaceAll(INCORRECT_SEPARATOR, "-");

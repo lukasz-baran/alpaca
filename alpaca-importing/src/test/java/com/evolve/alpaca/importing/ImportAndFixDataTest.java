@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.List;
 
 import static com.evolve.alpaca.importing.importDoc.ImportAlphanumeric.FILENAME_BY_ALPHA;
-import static com.evolve.alpaca.importing.importDoc.ImportPeople.FILENAME_BY_NUMBERS;
 import static com.evolve.domain.PersonAssertion.assertPerson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
@@ -63,14 +62,14 @@ public class ImportAndFixDataTest {
     }
 
     @Test
-    void importTextFile() {
-        final Resource resourceTextFile = new DefaultResourceLoader().getResource(FILENAME_BY_NUMBERS);
-        assumeThat(resourceTextFile.exists()).isTrue();
+    void importTextFile() throws IOException {
+        final Resource oldDoc = new DefaultResourceLoader().getResource("PLAN KONT.doc");
+        assumeThat(oldDoc.exists())
+                .isTrue();
 
-        final List<PersonFromDoc> people = new ImportPeople(true).processFile();
+        final List<PersonFromDoc> people = new ImportPeople(true).processDocFile(oldDoc.getFile().getPath());
         assertThat(people.size())
                 .isEqualTo(2369);
-        log.info("Wczytano " + people.size() + " z indeksu " + FILENAME_BY_NUMBERS);
     }
 
     @Test
@@ -92,12 +91,17 @@ public class ImportAndFixDataTest {
         // given
         final Resource resourcePersons = new DefaultResourceLoader().getResource("Z_B_KO.DBF");
         final Resource resourceAccounts = new DefaultResourceLoader().getResource("PLAN.DBF");
+        final Resource oldDoc = new DefaultResourceLoader().getResource("PLAN KONT.doc");
+
         // we don't want this test to fail when there is no DBF files:
-        assumeThat(resourcePersons.exists() && resourceAccounts.exists())
+        assumeThat(resourcePersons.exists() && resourceAccounts.exists() && oldDoc.exists())
                 .isTrue();
 
         // when
-        importDbfService.startImport(resourcePersons.getFile().getPath(), resourceAccounts.getFile().getPath());
+        importDbfService.startImport(
+                new ImportDataCommand(resourcePersons.getFile().getPath(),
+                        resourceAccounts.getFile().getPath(),
+                        oldDoc.getFile().getPath()));
 
         // then
         sanityChecks(personRepository.findAll());

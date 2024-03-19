@@ -1,25 +1,22 @@
 package com.evolve.gui;
 
 import com.evolve.alpaca.conf.LocalUserConfiguration;
+import com.evolve.alpaca.document.DocumentEntry;
 import com.evolve.alpaca.gui.accounts.AccountsController;
 import com.evolve.alpaca.gui.games.FifteenPuzzleDialog;
 import com.evolve.alpaca.gui.help.AboutDialogWindow;
+import com.evolve.alpaca.gui.problems.ProblemsExplorerController;
 import com.evolve.alpaca.gui.stats.StatsController;
 import com.evolve.alpaca.gui.units.UnitsController;
+import com.evolve.alpaca.importing.ImportDataCommand;
 import com.evolve.alpaca.importing.importDbf.ImportDbfService;
-import com.evolve.alpaca.importing.importDoc.ImportAlphanumeric;
-import com.evolve.alpaca.importing.importDoc.ImportPeople;
-import com.evolve.alpaca.importing.importDoc.group.GrupyAlfabetyczne;
-import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
 import com.evolve.gui.admin.importDbf.ImportDbfDialog;
-import com.evolve.alpaca.document.DocumentEntry;
 import com.evolve.gui.documents.DocumentsController;
-import com.evolve.gui.person.details.PersonDetailsController;
 import com.evolve.gui.person.accounts.PersonAccountsController;
+import com.evolve.gui.person.details.PersonDetailsController;
 import com.evolve.gui.person.event.PersonEditionRequestedEvent;
 import com.evolve.gui.person.list.MainTableController;
 import com.evolve.gui.person.list.PersonListModel;
-import com.evolve.alpaca.gui.problems.ProblemsExplorerController;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
@@ -42,7 +39,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -84,7 +80,6 @@ public class AppController implements Initializable {
     @FXML MenuItem deletePersonDataMenuItem;
     @FXML MenuItem importDbfMenuItem;
     @FXML MenuItem unitsMenuItem;
-    @FXML MenuItem importPeopleMenuItem;
     @FXML MenuItem aboutMenuItem;
     @FXML MenuItem accountsMenuItem;
     @FXML MenuItem statsMenuItem;
@@ -133,19 +128,14 @@ public class AppController implements Initializable {
                 .showDialog(stageManager.getWindow())
                 .ifPresent(dbFiles -> {
                     log.info("Opened dbf file {}", dbFiles);
-                    if (dbFiles.getMainFile() != null) {
-                        importDbfService.startImport(dbFiles.getMainFile().getPath(),
-                                dbFiles.getPlanAccountsFile().getPath());
+                    if (dbFiles.getMainFile() != null && dbFiles.getDocFile() != null) {
+                        importDbfService.startImport(
+                                new ImportDataCommand(
+                                        dbFiles.getMainFile().getPath(),
+                                        dbFiles.getPlanAccountsFile().getPath(),
+                                        dbFiles.getDocFile().getPath()));
                     }
                 });
-    }
-
-    @FXML
-    void importPeopleClicked(ActionEvent actionEvent) {
-        final List<PersonFromDoc> people = new ImportPeople(false).processFile();
-
-        final GrupyAlfabetyczne grupyAlfabetyczne = new ImportAlphanumeric()
-                .processFile();
     }
 
     @FXML

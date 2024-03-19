@@ -19,13 +19,17 @@ import java.util.Optional;
 
 @Slf4j
 public class ImportDbfDialog extends DialogWindow<DbfFiles> {
-    public static final FileChooser.ExtensionFilter DOCUMENTS_EXTENSION_FILTER =
+    public static final FileChooser.ExtensionFilter DBF_DOCUMENTS_EXTENSION_FILTER =
             new FileChooser.ExtensionFilter("documents", "*.dbf");
+
+    public static final FileChooser.ExtensionFilter DOC_DOCUMENTS_EXTENSION_FILTER =
+            new FileChooser.ExtensionFilter("documents", "*.doc");
 
     private final StageManager stageManager;
     private final LocalUserConfiguration localUserConfiguration;
     private final TextField mainFilePathTextField = new TextField();
     private final TextField accountsFilePathTextField = new TextField();
+    private final TextField docFilePathTextField = new TextField();
 
     public ImportDbfDialog(StageManager stageManager, LocalUserConfiguration localUserConfiguration) {
         super("Import plików ze starej aplikacji", "Wybierz pliki DBF ze starej aplikacji");
@@ -45,6 +49,7 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
 
         final HBox groupMain = createMainFileChooser(dbfFiles, saveButton);
         final HBox groupAccounts = createAccountsFileChooser(dbfFiles, saveButton);
+        final HBox groupDocFile = createAccountsPlanFileChooser(dbfFiles, saveButton);
 
         grid.add(new Label("Główny plik DBF:"), 0, 0);
         grid.add(groupMain, 1, 0);
@@ -52,12 +57,16 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
         grid.add(new Label("Plik kont DBF:"), 0, 1);
         grid.add(groupAccounts, 1, 1);
 
+        grid.add(new Label("Plik kont DOC:"), 0, 2);
+        grid.add(groupDocFile, 1, 2);
+
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType && dbfFiles.isReady()) {
                 localUserConfiguration.setConfigurationProperty(LocalUserConfiguration.Z_B_KO_DBF_LOCATION, dbfFiles.getMainFile().getPath());
                 localUserConfiguration.setConfigurationProperty(LocalUserConfiguration.PLAN_DBF_LOCATION, dbfFiles.getPlanAccountsFile().getPath());
+                localUserConfiguration.setConfigurationProperty(LocalUserConfiguration.PLAN_DOC_LOCATION, dbfFiles.getDocFile().getPath());
 
                 return dbfFiles;
             }
@@ -75,7 +84,7 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
 
         final Button chooseFileButton = new Button("Wybierz plik");
         chooseFileButton.onActionProperty().setValue(event -> {
-            final File file = stageManager.getFileChooser(DOCUMENTS_EXTENSION_FILTER);
+            final File file = stageManager.getFileChooser(DBF_DOCUMENTS_EXTENSION_FILTER);
             if (file == null) {
                 log.info("No file selected - user must have canceled file selection");
                 return;
@@ -107,7 +116,7 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
 
         final Button chooseFileButton = new Button("Wybierz plik");
         chooseFileButton.onActionProperty().setValue(event -> {
-            final File file = stageManager.getFileChooser(DOCUMENTS_EXTENSION_FILTER);
+            final File file = stageManager.getFileChooser(DBF_DOCUMENTS_EXTENSION_FILTER);
             if (file == null) {
                 log.info("No file selected - user must have canceled file selection");
                 return;
@@ -131,10 +140,43 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
         return group;
     }
 
+    private HBox createAccountsPlanFileChooser(DbfFiles dbfFiles, Button saveButton) {
+        final HBox group = new HBox();
+        group.setSpacing(10);
+
+        docFilePathTextField.setPromptText("PLAN KONT.doc");
+
+        final Button chooseFileButton = new Button("Wybierz plik");
+        chooseFileButton.onActionProperty().setValue(event -> {
+            final File file = stageManager.getFileChooser(DOC_DOCUMENTS_EXTENSION_FILTER);
+            if (file == null) {
+                log.info("No file selected - user must have canceled file selection");
+                return;
+            }
+            dbfFiles.setDocFile(file);
+
+            docFilePathTextField.setText(file.getAbsolutePath());
+        });
+        group.getChildren().add(docFilePathTextField);
+        group.getChildren().add(chooseFileButton);
+
+        localUserConfiguration.loadProperty(LocalUserConfiguration.PLAN_DOC_LOCATION)
+                .ifPresent(filePath -> {
+                    docFilePathTextField.setText(filePath);
+                    dbfFiles.setDocFile(new File(filePath));
+                });
+
+        validateSaveButton(saveButton);
+        docFilePathTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
+
+        return group;
+    }
+
     @Override
     protected void validateSaveButton(Node saveButton) {
         final boolean notEmpty = accountsFilePathTextField.getText().trim().isEmpty() ||
-                mainFilePathTextField.getText().trim().isEmpty();
+                mainFilePathTextField.getText().trim().isEmpty() ||
+                docFilePathTextField.getText().trim().isEmpty();
 
         saveButton.setDisable(notEmpty);
     }

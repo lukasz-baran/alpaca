@@ -14,8 +14,6 @@
         <Menu mnemonicParsing="false" text="Admin">
             <MenuItem fx:id="importDbfMenuItem" mnemonicParsing="false" text="Import DBF"
                       onAction="#importDbfClicked"/>
-            <MenuItem fx:id="importPeopleMenuItem" mnemonicParsing="false" text="Import People"
-                      onAction="#importPeopleClicked"/>
             <SeparatorMenuItem />
             <MenuItem mnemonicParsing="false" text="Szukaj błędów" onAction="#lookForErrorsClicked"/>
         </Menu>

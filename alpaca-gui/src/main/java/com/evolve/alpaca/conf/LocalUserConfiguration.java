@@ -21,6 +21,7 @@ public class LocalUserConfiguration implements InitializingBean {
 
     public static final String Z_B_KO_DBF_LOCATION = "Z_B_KO_DBF_LOCATION";
     public static final String PLAN_DBF_LOCATION = "PLAN_DBF_LOCATION";
+    public static final String PLAN_DOC_LOCATION = "PLAN_DOC_LOCATION";
 
     public static final String PROPERTIES_FILE = System.getProperty("user.home") + File.separator + ".alpaca" +
             File.separator + "alpaca.properties";

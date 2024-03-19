@@ -6,6 +6,7 @@ import com.evolve.alpaca.account.services.AccountsService;
 import com.evolve.alpaca.ddd.CommandCollector;
 import com.evolve.alpaca.ddd.CommandsApplier;
 import com.evolve.alpaca.ddd.PersistedCommand;
+import com.evolve.alpaca.importing.ImportDataCommand;
 import com.evolve.alpaca.importing.event.DbfImportCompletedEvent;
 import com.evolve.alpaca.importing.importDbf.account.AccountsFactory;
 import com.evolve.alpaca.importing.importDbf.account.DbfAccount;
@@ -48,9 +49,9 @@ public class ImportDbfService {
 
     private final PostImportStepService postImportStepService;
 
-    public List<Person> startImport(String personsFilePath, String accountsFilePath) {
+    public List<Person> startImport(ImportDataCommand importDataCommand) {
         final List<DbfPerson> osobyDbf = new ImportPersonDbf()
-                .performImport(personsFilePath)
+                .performImport(importDataCommand.personsFilePath())
                 .getItems();
 
         final List<Person> persons = new PersonsFactory().from(osobyDbf)
@@ -58,7 +59,8 @@ public class ImportDbfService {
                 .map(personFixer::fixData)
                 .collect(Collectors.toList());
 
-        final PersonsWrapper wrapper = new PersonsWrapper(new ImportPeople(false).processFile());
+        final PersonsWrapper wrapper = new PersonsWrapper(new ImportPeople(false)
+                .processDocFile(importDataCommand.docFilePath()));
 
         persons.forEach(person -> {
                 final RegistryNumber kartotekaId = wrapper.findByPersonId(person.getPersonId());
@@ -68,7 +70,7 @@ public class ImportDbfService {
 
         personApplicationService.insertPersons(persons);
 
-        final List<Account> importedAccounts = importAccounts(accountsFilePath);
+        final List<Account> importedAccounts = importAccounts(importDataCommand.accountsFilePath());
 
         // post import handles re-setting person status
         postImportStep(importedAccounts);
