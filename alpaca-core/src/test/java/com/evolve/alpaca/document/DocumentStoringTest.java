@@ -32,7 +32,7 @@ public class DocumentStoringTest extends AlpacaAbstractIntegrationTest {
 
     @SneakyThrows
     @Test
-    void storeFileWithoutCategory() {
+    void storeAndRemoveFileWithoutCategory() {
         // given
         final File originalFile = new File(CONTENT_FILE.getFile());
 
@@ -68,6 +68,13 @@ public class DocumentStoringTest extends AlpacaAbstractIntegrationTest {
         // then
         assertFileExistAndHasSameContent(outputFile, originalFile);
 
+        // when -- remove content
+        documentToCategoryRepository.deleteById(documentEntry.getId()); // we need to remove it manually beforehand
+        documentContentStorageService.removeContent(documentEntry.getId());
+
+        // then
+        assertThat(documentToCategoryRepository.findAll())
+                .isEmpty();
     }
 
     @Test

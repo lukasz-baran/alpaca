@@ -70,7 +70,8 @@ public class DocumentContentStorageService {
 
     public void removeContent(Long id) {
         contentStoreService.deleteContent(id);
-        documentToCategoryRepository.deleteById(id);
+        documentToCategoryRepository.findById(id)
+                .ifPresent(documentToCategoryRepository::delete);
     }
 
     public File saveToTempFile(DocumentEntry documentEntry) throws IOException {
