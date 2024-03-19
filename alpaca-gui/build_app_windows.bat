@@ -22,8 +22,9 @@ rem echo %detected_modules%
 rem echo %detected_modules%%manual_modules%
 
 set all_modules=%detected_modules%%manual_modules%
-set all_modules=java.base,java.compiler,java.instrument,java.management.rmi,java.desktop,java.prefs,java.scripting,java.security.jgss,java.sql.rowset,jdk.crypto.cryptoki,jdk.net,javafx.graphics,javafx.fxml,javafx.controls
+set all_modules=java.base,java.compiler,java.instrument,java.management.rmi,java.desktop,java.prefs,java.scripting,java.security.jgss,java.sql.rowset,jdk.crypto.cryptoki,jdk.net,javafx.graphics,javafx.fxml,javafx.controls,jdk.charsets
 rem removed: jdk.httpserver,jdk.jfr,jdk.attach,jdk.jdi,jdk.unsupported
+rem 'jdk.charsets' is needed because of Apache POI
 
 echo executing "jlink"
 
