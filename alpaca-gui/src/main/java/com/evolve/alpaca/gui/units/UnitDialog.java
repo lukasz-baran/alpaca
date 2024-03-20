@@ -73,13 +73,8 @@ public class UnitDialog extends DialogWindow<Unit> {
 
         Platform.runLater(unitIdComboBox::requestFocus);
 
-        unitIdComboBox.selectionModelProperty().addListener((observable, oldValue, newValue) -> {
-            validateSaveButton(saveButton);
-        });
-        unitNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            validateSaveButton(saveButton);
-        });
-
+        unitIdComboBox.selectionModelProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
+        unitNameTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {

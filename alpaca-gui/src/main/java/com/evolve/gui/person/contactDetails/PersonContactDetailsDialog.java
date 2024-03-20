@@ -72,9 +72,9 @@ public class PersonContactDetailsDialog extends DialogWindow<PersonContactData> 
         Platform.runLater(dataTextField::requestFocus);
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == saveButtonType) {
-                return new PersonContactData(dataTextField.getText().trim(),
+                return new PersonContactData(StringUtils.trimToNull(StringUtils.trimToNull(dataTextField.getText())),
                         this.contactTypeObjectProperty.get(),
-                        this.descriptionTextField.getText().trim());
+                        StringUtils.trimToNull(this.descriptionTextField.getText()));
             }
             return null;
         });
@@ -97,7 +97,7 @@ public class PersonContactDetailsDialog extends DialogWindow<PersonContactData> 
 
     @Override
     protected void validateSaveButton(Node saveButton) {
-        final String newDataText = this.dataTextField.getText().trim();
+        final String newDataText = StringUtils.trimToNull(this.dataTextField.getText());
 
         // data is required
         if (StringUtils.isEmpty(newDataText)) {
@@ -110,7 +110,7 @@ public class PersonContactDetailsDialog extends DialogWindow<PersonContactData> 
             return;
         }
 
-        final String newComment = this.descriptionTextField.getText().trim();
+        final String newComment = StringUtils.trimToNull(this.descriptionTextField.getText());
 
         saveButton.setDisable(new PersonContactData(newDataText, newType, newComment)
                 .equals(this.contactDetails));
