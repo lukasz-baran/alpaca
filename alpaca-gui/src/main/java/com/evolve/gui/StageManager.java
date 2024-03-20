@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
@@ -142,26 +143,26 @@ public class StageManager {
     }
 
     public static Alert showCustomErrorDialog(String header, String content, Window owner, Throwable e) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        final Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.initOwner(owner);
         alert.setTitle("Error");
 
         if (e != null) {
-            StringWriter stringWriter = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(stringWriter);
+            final StringWriter stringWriter = new StringWriter();
+            final PrintWriter printWriter = new PrintWriter(stringWriter);
             e.printStackTrace(printWriter);
-            String stackTrace = stringWriter.toString(); // stack trace as a string
+            final String stackTrace = stringWriter.toString(); // stack trace as a string
 
-            javafx.scene.control.TextArea textArea = new javafx.scene.control.TextArea(stackTrace);
+            final TextArea textArea = new TextArea(stackTrace);
             textArea.setEditable(false);
             textArea.setWrapText(false);
             textArea.setMaxWidth(Double.MAX_VALUE);
             textArea.setMaxHeight(Double.MAX_VALUE);
             GridPane.setVgrow(textArea, Priority.ALWAYS);
             GridPane.setHgrow(textArea, Priority.ALWAYS);
-            GridPane expContent = new GridPane();
+            final GridPane expContent = new GridPane();
             expContent.setMaxWidth(Double.MAX_VALUE);
             expContent.add(textArea, 0, 0);
 
