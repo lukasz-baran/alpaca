@@ -88,8 +88,6 @@ public class OriginalDetailsController implements Initializable {
         originalData.clear();
 
         if (!MapUtils.isEmpty(person.getRawData())) {
-            log.info("No raw data for person {}. This is fine because the person could be added manually",
-                    personModel.getId());
             person.getRawData()
                     .entrySet()
                     .stream()
@@ -100,6 +98,9 @@ public class OriginalDetailsController implements Initializable {
                         final Object value = entry.getValue();
                         originalData.add(new DetailsEntry(key, value != null ? value.toString() : "null"));
                     });
+        } else {
+            log.info("No raw data for person {}. This is fine because the person could be added manually",
+                    personModel.getId());
         }
 
         fixerData.clear();

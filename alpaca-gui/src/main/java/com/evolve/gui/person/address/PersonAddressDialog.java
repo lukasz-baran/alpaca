@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
+import net.synedra.validatorfx.Validator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
@@ -26,6 +27,8 @@ public class PersonAddressDialog extends DialogWindow<Person.PersonAddress> {
     private final TextField commentTextField = new TextField();
 
     private final ObjectProperty<Person.AddressType> addressTypeObjectProperty = new SimpleObjectProperty<>();
+
+    private final Validator validator = new Validator();
 
     public PersonAddressDialog(Person.PersonAddress personAddress) {
         super("Adres", "Wprowadź adres");
@@ -47,13 +50,13 @@ public class PersonAddressDialog extends DialogWindow<Person.PersonAddress> {
         cityTextField.setPromptText("Miasto");
         commentTextField.setPromptText("Komentarz");
 
-        Optional.ofNullable(personAddress).ifPresent(address -> {
+        Optional.ofNullable(personAddress).ifPresentOrElse(address -> {
             streetTextField.setText(address.getStreet());
             postalCodeTextField.setText(address.getPostalCode());
             cityTextField.setText(address.getCity());
-            addressTypeObjectProperty.setValue(Optional.ofNullable(personAddress.getType()).orElse(Person.AddressType.HOME));
-            commentTextField.setText(personAddress.getComment());
-        });
+            addressTypeObjectProperty.setValue(Optional.ofNullable(address.getType()).orElse(Person.AddressType.HOME));
+            commentTextField.setText(address.getComment());
+        }, () -> addressTypeObjectProperty.setValue(Person.AddressType.HOME));
 
         grid.add(new Label("Ulica:"), 0, 0);
         grid.add(streetTextField, 1, 0);
@@ -66,15 +69,7 @@ public class PersonAddressDialog extends DialogWindow<Person.PersonAddress> {
         grid.add(new Label("Komentarz:"), 0, 4);
         grid.add(commentTextField, 1, 4);
 
-        final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
-        saveButton.setDisable(true);
-
-        // Do some validation (using the Java 8 lambda syntax).
-        streetTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
-        postalCodeTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
-        cityTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
-        addressTypeObjectProperty.addListener(change -> validateSaveButton(saveButton));
-        commentTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
+        attachValidators(dialog);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -92,9 +87,51 @@ public class PersonAddressDialog extends DialogWindow<Person.PersonAddress> {
         return dialog.showAndWait();
     }
 
+    private void attachValidators(final Dialog<Person.PersonAddress> dialog) {
+        final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
+        saveButton.setDisable(true);
+
+        // Do some validation (using the Java 8 lambda syntax).
+        validator.createCheck()
+                .dependsOn("street", streetTextField.textProperty())
+                .withMethod(c -> {
+                    if (StringUtils.isBlank(c.get("street"))) {
+                        c.error("Ulica jest wymagana");
+                    }
+                })
+                .decorates(streetTextField)
+                .immediate();
+        validator.createCheck()
+                .dependsOn("postalCode", postalCodeTextField.textProperty())
+                .withMethod(c -> {
+                    if (StringUtils.isBlank(c.get("postalCode"))) {
+                        c.error("Kod pocztowy jest wymagany");
+                    }
+                })
+                .decorates(postalCodeTextField)
+                .immediate();
+        validator.createCheck()
+                .dependsOn("city", cityTextField.textProperty())
+                .withMethod(c -> {
+                    if (StringUtils.isBlank(c.get("city"))) {
+                        c.error("Miasto jest wymagane");
+                    }
+                })
+                .decorates(cityTextField)
+                .immediate();
+
+        streetTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
+        postalCodeTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
+        cityTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
+        addressTypeObjectProperty.addListener(change -> validateSaveButton(saveButton));
+        commentTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
+    }
+
     @Override
     protected void validateSaveButton(Node saveButton) {
-        saveButton.setDisable(getPersonAddress().equals(this.personAddress));
+        final boolean canBeSaved = validator.validate() && !getPersonAddress().equals(this.personAddress);
+
+        saveButton.setDisable(!canBeSaved);
     }
 
     private Person.PersonAddress getPersonAddress() {
