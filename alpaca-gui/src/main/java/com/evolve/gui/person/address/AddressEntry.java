@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Optional;
+
 @Getter
 @AllArgsConstructor
 @Setter
@@ -37,7 +39,9 @@ public class AddressEntry {
 
     @SuppressWarnings("unused")
     public Image getImageType() {
-        return switch (personAddress.getType()) {
+        final Person.AddressType addressType = Optional.ofNullable(personAddress.getType()).orElse(Person.AddressType.HOME);
+
+        return switch (addressType) {
             case HOME -> HOME_ADDRESS_ICON;
             case MAILING -> MAILING_ADDRESS_ICON;
             case WORK -> WORK_ADDRESS_ICON;

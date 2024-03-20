@@ -51,7 +51,7 @@ public class PersonAddressDialog extends DialogWindow<Person.PersonAddress> {
             streetTextField.setText(address.getStreet());
             postalCodeTextField.setText(address.getPostalCode());
             cityTextField.setText(address.getCity());
-            addressTypeObjectProperty.setValue(personAddress.getType());
+            addressTypeObjectProperty.setValue(Optional.ofNullable(personAddress.getType()).orElse(Person.AddressType.HOME));
             commentTextField.setText(personAddress.getComment());
         });
 
