@@ -4,11 +4,14 @@ import com.evolve.FindPerson;
 import com.evolve.FindProblems;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonLookupCriteria;
+import com.evolve.domain.PersonStatusChange;
 import com.evolve.domain.RegistryNumber;
+import com.google.common.collect.Comparators;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -34,9 +37,16 @@ class ProblemsQueryService implements FindProblems {
         findPerson.fetch(PersonLookupCriteria.ALL).forEach(person -> {
             person.getStatusChanges().forEach(personStatusChange -> {
                 if (personStatusChange.getWhen() == null) {
-                    problems.add(getFullName(person) + " brakuje daty w statusie " + personStatusChange.getEventType().getName());
+                    problems.add(getFullName(person) + ": brakuje daty w statusie " + personStatusChange.getEventType().getName());
                 }
             });
+
+            final List<LocalDate> dates = person.getStatusChanges().stream().map(PersonStatusChange::getWhen)
+                    .filter(Objects::nonNull).toList();
+            if (!Comparators.isInOrder(dates, Comparator.naturalOrder())) {
+                problems.add(getFullName(person) + ": statusy są w złej kolejności " + dates);
+            }
+
         });
 
         return problems;
