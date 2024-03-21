@@ -13,7 +13,7 @@ public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
     //NOTE: the order in the following lists is important:
     public static final List<String> DECEASED = List.of("ZMARŁA", "ZMARŁ", "ZM.", "ZM ");
     public static final List<String> RESIGNED = List.of("rez zw skł", "rez zwr skł",
-            "rezygnacja", "REZ.", "Rezyg.", "rezy.", "rezy", "REZ");
+            "rezygnacja", "REZ.", "Rezyg.", "rezy.", "REZYG", "rezy", "REZ");
 
     public static final List<String> REMOVED = List.of("Skreślenie",
             "skreślony",
@@ -24,7 +24,7 @@ public class StatusPersonDeducer implements SmartDeducer<PersonStatusDetails> {
             "skr. zwr skł",
             "skr zw skł",
             "sker zw skł",
-            "skre", "SKR", "sk.", "sk-");
+            "skre", "skr.", "SKR", "sk.", "sk-");
 
     @Override
     public Optional<PersonStatusDetails> deduceFrom(List<String> guesses) {
