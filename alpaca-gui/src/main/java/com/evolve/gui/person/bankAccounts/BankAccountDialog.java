@@ -60,15 +60,23 @@ public class BankAccountDialog extends DialogWindow<BankAccount>  {
         final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
 
-        // Do some validation (using the Java 8 lambda syntax).
-        bankAccountNumberTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            validateSaveButton(saveButton);
-            //saveButton.setDisable(newValue.trim().isEmpty());
-        });
-        textAreaNotes.textProperty().addListener((observableValue, s, t1) -> {
-            validateSaveButton(saveButton);
-        });
+        validator.createCheck()
+                .dependsOn("bankAccount", bankAccountNumberTextField.textProperty())
+                .withMethod(c -> {
+                    final String bankAccount = c.get("bankAccount");
+                    if (StringUtils.isBlank(bankAccount)) {
+                        c.error("Nie wprowadzono wartości");
+                        return;
+                    }
+                    if (!BankAccount.isValid(bankAccount)) {
+                        c.error("Podany numer konta jest niepoprawny (zły numer IBAN)");
+                    }
 
+                })
+                .decorates(bankAccountNumberTextField)
+                .immediate();
+        bankAccountNumberTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
+        textAreaNotes.textProperty().addListener((observableValue, s, t1) -> validateSaveButton(saveButton));
 
         dialog.getDialogPane().setContent(grid);
 
@@ -89,15 +97,11 @@ public class BankAccountDialog extends DialogWindow<BankAccount>  {
 
     @Override
     protected void validateSaveButton(Node saveButton) {
-        final String newBankNumber = this.bankAccountNumberTextField.getText().trim();
-        if (StringUtils.isEmpty(newBankNumber)) {
-            saveButton.setDisable(true);
-            return;
-        }
-
+        final String newBankNumber = StringUtils.trimToNull(this.bankAccountNumberTextField.getText());
         final String newNotes = Strings.emptyToNull(this.textAreaNotes.getText());
 
-        saveButton.setDisable(BankAccount.of(newBankNumber, newNotes).equals(this.bankAccountEntry));
+        final boolean canBeSaved = validator.validate() && !BankAccount.of(newBankNumber, newNotes).equals(this.bankAccountEntry);
+        saveButton.setDisable(!canBeSaved);
     }
 
 }

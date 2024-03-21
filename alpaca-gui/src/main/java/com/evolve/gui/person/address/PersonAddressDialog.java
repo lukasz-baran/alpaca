@@ -12,7 +12,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
-import net.synedra.validatorfx.Validator;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
@@ -27,8 +26,6 @@ public class PersonAddressDialog extends DialogWindow<Person.PersonAddress> {
     private final TextField commentTextField = new TextField();
 
     private final ObjectProperty<Person.AddressType> addressTypeObjectProperty = new SimpleObjectProperty<>();
-
-    private final Validator validator = new Validator();
 
     public PersonAddressDialog(Person.PersonAddress personAddress) {
         super("Adres", "Wprowadź adres");

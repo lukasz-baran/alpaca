@@ -11,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.synedra.validatorfx.Validator;
 
 import java.util.Optional;
 
@@ -26,6 +27,8 @@ public abstract class DialogWindow<ENTITY> {
      * When true dialog is shown using {@link Dialog#show()} instead of {@link Dialog#showAndWait()}.
      */
     protected final boolean isTestMode;
+
+    protected final Validator validator = new Validator();
 
     public DialogWindow(String title, String headerText) {
         this(title, headerText, false);

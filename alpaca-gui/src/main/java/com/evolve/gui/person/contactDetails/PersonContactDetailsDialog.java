@@ -59,13 +59,7 @@ public class PersonContactDetailsDialog extends DialogWindow<PersonContactData> 
         grid.add(new Label("Komentarz:"), 0, 2);
         grid.add(descriptionTextField, 1, 2);
 
-        final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
-        saveButton.setDisable(true);
-
-        // set up validators:
-        dataTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
-        descriptionTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
-        contactTypeObjectProperty.addListener(change -> validateSaveButton(saveButton));
+        attachValidators(dialog);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -82,38 +76,51 @@ public class PersonContactDetailsDialog extends DialogWindow<PersonContactData> 
         return dialog.showAndWait();
     }
 
-    private boolean validateContactData() {
-        dataTextField.setStyle("");
-        final String maybeEmail = dataTextField.getText();
+    private void attachValidators(final Dialog<PersonContactData> dialog) {
+        final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
+        saveButton.setDisable(true);
 
-        if (!maybeEmail.isEmpty() &&
-                typeComboBox.getValue() == PersonContactData.ContactType.EMAIL &&
-                !EmailValidator.getInstance().isValid(maybeEmail)) {
-            dataTextField.setStyle("-fx-border-color: red");
-            return false;
-        }
-        return true;
+        validator.createCheck()
+                .dependsOn("phoneOrEmail", dataTextField.textProperty())
+                .withMethod(c -> {
+                    final String phoneOrEmail = c.get("phoneOrEmail");
+                    if (StringUtils.isBlank(phoneOrEmail)) {
+                        c.error("Nie wprowadzono wartości");
+                        return;
+                    }
+
+                    if (typeComboBox.getValue() == PersonContactData.ContactType.EMAIL && !EmailValidator.getInstance().isValid(phoneOrEmail)) {
+                        c.error("Podany adres email jest niepoprawny");
+                    }
+                })
+                .decorates(dataTextField)
+                .immediate();
+        validator.createCheck()
+                .dependsOn("type", contactTypeObjectProperty)
+                .withMethod(c -> {
+                    final PersonContactData.ContactType type = c.get("type");
+                    if (type == null) {
+                        c.error("Typ nie został wybrany");
+                    }
+                })
+                .decorates(typeComboBox)
+                .immediate();
+
+        dataTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
+        descriptionTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
+        contactTypeObjectProperty.addListener(change -> validateSaveButton(saveButton));
     }
 
     @Override
     protected void validateSaveButton(Node saveButton) {
         final String newDataText = StringUtils.trimToNull(this.dataTextField.getText());
-
-        // data is required
-        if (StringUtils.isEmpty(newDataText)) {
-            saveButton.setDisable(true);
-            return;
-        }
         final PersonContactData.ContactType newType = this.contactTypeObjectProperty.get();
-        if (newType == null || !validateContactData()) {
-            saveButton.setDisable(true);
-            return;
-        }
-
         final String newComment = StringUtils.trimToNull(this.descriptionTextField.getText());
 
-        saveButton.setDisable(new PersonContactData(newDataText, newType, newComment)
-                .equals(this.contactDetails));
+        final boolean canBeSaved = validator.validate() && !new PersonContactData(newDataText, newType, newComment)
+                .equals(this.contactDetails);
+
+        saveButton.setDisable(!canBeSaved);
 
     }
 
