@@ -1,12 +1,12 @@
 package com.evolve.gui.person.list.search;
 
 import com.evolve.alpaca.account.Account;
+import com.evolve.alpaca.unit.Unit;
+import com.evolve.alpaca.unit.services.UnitsService;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatus;
-import com.evolve.alpaca.unit.Unit;
 import com.evolve.gui.DialogWindow;
 import com.evolve.gui.person.UnitNumberItem;
-import com.evolve.alpaca.unit.services.UnitsService;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

@@ -1,7 +1,7 @@
 package com.evolve.alpaca.gui.viewer;
 
-import com.evolve.alpaca.utils.FileNameUtils;
 import com.evolve.alpaca.document.DocumentEntry;
+import com.evolve.alpaca.utils.FileNameUtils;
 import javafx.scene.image.Image;
 import lombok.Getter;
 import lombok.Setter;

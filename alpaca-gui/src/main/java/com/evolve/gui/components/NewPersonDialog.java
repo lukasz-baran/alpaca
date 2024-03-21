@@ -1,6 +1,7 @@
 package com.evolve.gui.components;
 
 import com.evolve.FindPerson;
+import com.evolve.alpaca.unit.services.UnitsService;
 import com.evolve.alpaca.util.DatePickerKeyEventHandler;
 import com.evolve.alpaca.util.LocalDateStringConverter;
 import com.evolve.domain.Person;
@@ -9,7 +10,6 @@ import com.evolve.domain.PersonStatusChange;
 import com.evolve.domain.RegistryNumber;
 import com.evolve.gui.DialogWindow;
 import com.evolve.gui.person.UnitNumberItem;
-import com.evolve.alpaca.unit.services.UnitsService;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

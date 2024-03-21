@@ -1,9 +1,9 @@
 package com.evolve.gui.person.list.search;
 
 import com.evolve.alpaca.account.Account;
+import com.evolve.alpaca.unit.Unit;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatus;
-import com.evolve.alpaca.unit.Unit;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
