@@ -3,7 +3,6 @@ package com.evolve.gui.documents;
 import com.evolve.alpaca.document.DocumentCategory;
 import com.evolve.alpaca.document.DocumentEntry;
 import com.evolve.gui.DialogWindow;
-import com.evolve.gui.StageManager;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -62,6 +61,18 @@ public class DocumentEditDialog extends DialogWindow<DocumentEntry> {
         final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
 
+        validator.createCheck()
+                .dependsOn("fileName", fileNameTextField.textProperty())
+                .withMethod(c -> {
+                    final String input = c.get("fileName");
+                    var result = fileExtensionValidator.validate(input);
+                    if (!result.isValid()) {
+                        result.getErrors().forEach(c::error);
+                    }
+                })
+                .decorates(fileNameTextField)
+                .immediate();
+
         fileNameTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
         descriptionTextArea.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
         documentCategoryObjectProperty.addListener(change -> validateSaveButton(saveButton));
@@ -82,11 +93,9 @@ public class DocumentEditDialog extends DialogWindow<DocumentEntry> {
         return dialog.showAndWait();
     }
 
-
-
     @Override
     protected void validateSaveButton(Node saveButton) {
-        final boolean fileNameValid = validateFileNameTextField();
+        final boolean fileNameValid = validator.validate();
 
         final boolean disable =
                 !fileNameValid ||
@@ -96,19 +105,5 @@ public class DocumentEditDialog extends DialogWindow<DocumentEntry> {
 
         saveButton.setDisable(disable);
     }
-
-    private boolean validateFileNameTextField() {
-        fileNameTextField.setStyle("");
-        fileNameTextField.setTooltip(null);
-        final String input = fileNameTextField.getText();
-        var result = fileExtensionValidator.validate(input);
-
-        if (!result.isValid()) {
-            fileNameTextField.setStyle("-fx-border-color: red");
-            fileNameTextField.setTooltip(StageManager.buildTooltip(result));
-        }
-        return result.isValid();
-    }
-
 
 }

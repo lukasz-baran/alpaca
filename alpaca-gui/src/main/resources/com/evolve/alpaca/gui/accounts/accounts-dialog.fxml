@@ -5,7 +5,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox fx:id="accountsDialog" alignment="CENTER" prefHeight="585.0" prefWidth="539.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.alpaca.gui.accounts.AccountsController">
+<HBox fx:id="accountsDialog" alignment="CENTER" prefHeight="585.0" prefWidth="539.0" xmlns="http://javafx.com/javafx/19"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.alpaca.gui.accounts.AccountsController">
     <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" HBox.hgrow="ALWAYS">
         <padding>
             <Insets bottom="10.0" top="10.0" />

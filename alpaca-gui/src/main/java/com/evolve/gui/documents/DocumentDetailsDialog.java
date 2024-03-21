@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.List;
@@ -80,10 +81,21 @@ public class DocumentDetailsDialog extends DialogWindow<FilePathAndDescription> 
         final Node saveButton = dialog.getDialogPane().lookupButton(saveButtonType);
         saveButton.setDisable(true);
 
+        validator.createCheck()
+                .dependsOn("filePath", filePathTextField.textProperty())
+                .withMethod(c -> {
+                    final String filePath = c.get("filePath");
+
+                    if (StringUtils.isBlank(filePath)) {
+                        c.error("Nie wprowadzono pliku");
+                    }
+
+                })
+                .decorates(filePathTextField)
+                .immediate();
+
         filePathTextField.textProperty().addListener((observable, oldValue, newValue) -> validateSaveButton(saveButton));
-        documentCategoryObjectProperty.addListener(change ->  {
-            validateSaveButton(saveButton);
-        });
+        documentCategoryObjectProperty.addListener(change -> validateSaveButton(saveButton));
 
         dialog.getDialogPane().setContent(grid);
 
@@ -102,7 +114,7 @@ public class DocumentDetailsDialog extends DialogWindow<FilePathAndDescription> 
 
     @Override
     protected void validateSaveButton(Node saveButton) {
-        saveButton.setDisable(filePathTextField.getText().trim().isEmpty());
+        saveButton.setDisable(!validator.validate());
     }
 
 }

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <AnchorPane fx:id="statsAnchorPane" minHeight="300.0" prefHeight="352.0" prefWidth="500.0"
             stylesheets="@../../../../../styles/style.css"
-            xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.evolve.alpaca.gui.stats.StatsController">
     <PieChart fx:id="pieChart" layoutX="14.0" layoutY="14.0" minHeight="267.0" minWidth="325.0" title="Statusy"
               AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="161.0"

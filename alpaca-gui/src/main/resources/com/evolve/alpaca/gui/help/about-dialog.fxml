@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.TextFlow?>
-<VBox fx:id="aboutDialog" prefHeight="305.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal"
+<VBox fx:id="aboutDialog" prefHeight="305.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19"
       stylesheets="@about-dialog-style.css"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.alpaca.gui.help.AboutDialogWindow">
     <padding>

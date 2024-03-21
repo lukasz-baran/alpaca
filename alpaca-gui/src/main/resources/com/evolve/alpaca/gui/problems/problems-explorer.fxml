@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <VBox fx:id="problemsExplorerVBox" prefHeight="496.0" prefWidth="428.0" spacing="5.0"
       stylesheets="@../../../../../styles/style.css" GridPane.columnIndex="1" GridPane.rowIndex="4"
-      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.alpaca.gui.problems.ProblemsExplorerController">
+      xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.alpaca.gui.problems.ProblemsExplorerController">
 
     <HBox id="personMenu" centerShape="false" prefHeight="18.0" spacing="5.0">
         <Button fx:id="btnRunExplorer" onAction="#registryNumbersIssues" text="Numery kartotek" />
