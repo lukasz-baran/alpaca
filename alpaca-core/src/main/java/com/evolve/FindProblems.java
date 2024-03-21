@@ -6,4 +6,7 @@ public interface FindProblems {
 
     List<String> findRegistryNumbersIssues();
 
+    List<String> findMissingDates();
+
+    List<String> findInvalidAddresses();
 }

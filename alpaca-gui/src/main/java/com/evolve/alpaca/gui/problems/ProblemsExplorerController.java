@@ -31,7 +31,9 @@ public class ProblemsExplorerController implements Initializable {
     private final FindProblems findProblems;
 
     private Stage stage;
-    public Button btnRunExplorer;
+    @FXML Button btnRunExplorer;
+    @FXML Button btnMissingDates;
+    @FXML Button btnInvalidAddresses;
 
     @FXML VBox problemsExplorerVBox;
     @FXML TextArea textAreaProblems;
@@ -46,6 +48,7 @@ public class ProblemsExplorerController implements Initializable {
         //stage.initModality(Modality.WINDOW_MODAL);
         stage.getIcons().add(APPLICATION_ICON);
         stage.setResizable(true);
+        textAreaProblems.setEditable(false);
     }
 
     public void show() {
@@ -61,5 +64,25 @@ public class ProblemsExplorerController implements Initializable {
                             textAreaProblems.appendText(problem);
                             textAreaProblems.appendText(Strings.LINE_SEPARATOR);
                         });
+    }
+
+    @FXML
+    void missingStatuses(ActionEvent actionEvent) {
+        textAreaProblems.clear();
+        findProblems.findMissingDates()
+                .forEach(problem ->  {
+                    textAreaProblems.appendText(problem);
+                    textAreaProblems.appendText(Strings.LINE_SEPARATOR);
+                });
+    }
+
+    @FXML
+    void invalidAddresses(ActionEvent actionEvent) {
+        textAreaProblems.clear();
+        findProblems.findInvalidAddresses()
+                .forEach(problem ->  {
+                    textAreaProblems.appendText(problem);
+                    textAreaProblems.appendText(Strings.LINE_SEPARATOR);
+                });
     }
 }

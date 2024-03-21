@@ -6,6 +6,7 @@ import com.evolve.domain.Person;
 import com.evolve.domain.PersonLookupCriteria;
 import com.evolve.domain.RegistryNumber;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -24,6 +25,42 @@ class ProblemsQueryService implements FindProblems {
         final List<String> results = checkDuplicatedRegistryNumbers(personList);
         results.addAll(checkMissingRegistryNumbers(personList));
         return results;
+    }
+
+    @Override
+    public List<String> findMissingDates() {
+        final List<String> problems = new ArrayList<>();
+
+        findPerson.fetch(PersonLookupCriteria.ALL).forEach(person -> {
+            person.getStatusChanges().forEach(personStatusChange -> {
+                if (personStatusChange.getWhen() == null) {
+                    problems.add(getFullName(person) + " brakuje daty w statusie " + personStatusChange.getEventType().getName());
+                }
+            });
+        });
+
+        return problems;
+    }
+
+    @Override
+    public List<String> findInvalidAddresses() {
+        final List<String> problems = new ArrayList<>();
+
+        findPerson.fetch(PersonLookupCriteria.ALL).forEach(person -> {
+            person.getAddresses().forEach(address -> {
+                if (StringUtils.isBlank(address.getStreet())) {
+                    problems.add(getFullName(person) + ": brakuje ulicy");
+                }
+                if (StringUtils.isBlank(address.getPostalCode())) {
+                    problems.add(getFullName(person) + ": brakuje kodu pocztowego");
+                }
+                if (StringUtils.isBlank(address.getCity())) {
+                    problems.add(getFullName(person) + ": brakuje miasta");
+                }
+            });
+        });
+
+        return problems;
     }
 
     private List<String> checkDuplicatedRegistryNumbers(List<Person> personList) {
@@ -70,7 +107,7 @@ class ProblemsQueryService implements FindProblems {
                         if (!candidates.isEmpty()) {
                             message.append(" - może jest przypisany do: ")
                                 .append(candidates.stream()
-                                    .map(person -> person.getFirstName() + " " + person.getLastName())
+                                    .map(ProblemsQueryService::getFullName)
                                     .collect(Collectors.joining(", ")));
                         }
 
@@ -93,5 +130,9 @@ class ProblemsQueryService implements FindProblems {
                 .map(Person::getRegistryNumber)
                 .map(RegistryNumber::getRegistryNum)
                 .orElse(0);
+    }
+
+    private static String getFullName(Person person) {
+        return person.getFirstName() + " " + person.getLastName();
     }
 }
