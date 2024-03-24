@@ -7,6 +7,7 @@ import com.linuxense.javadbf.DBFReader;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,11 @@ import java.util.stream.Collectors;
 public abstract class DbfImportBase<T> {
 
     public static final Charset DBF_CHARSET = Charset.forName("Cp1250");
+
+    public List<T> performImport(URL fileUrl) {
+        return performImport(fileUrl.getPath())
+                .getItems();
+    }
 
     public final DbfData<T> performImport(String filePath) {
         try (final FileInputStream fileInputStream = new FileInputStream(filePath);

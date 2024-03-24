@@ -23,37 +23,52 @@ public class PersonGroupReader {
 
     public static Optional<PersonFromDoc> fromLine(String line) {
         try {
+            final PersonStatusDetails personStatusDetails = decodeStatus(line);
+            final StringTokenizer tokenizer = new StringTokenizer(line);
 
-        final PersonStatusDetails personStatusDetails = decodeStatus(line);
-        final StringTokenizer tokenizer = new StringTokenizer(line);
+            //final String numerKartoteki = line.startsWith("\t") ? null : tokenizer.nextToken();
+            final String numerKartoteki = getRegistryNumber(line, tokenizer);
+            System.out.println(numerKartoteki);
 
-        final String numerKartoteki = line.startsWith("\t") ? null : tokenizer.nextToken();
-        final RegistryNumber registryNumber = RegistryNumber.of(numerKartoteki);
+            final RegistryNumber registryNumber = RegistryNumber.of(numerKartoteki);
 
-        if (!tokenizer.hasMoreTokens()) {
-            log.info("Line is not finished on: {}", numerKartoteki);
-            return Optional.empty();
-        }
+            if (!tokenizer.hasMoreTokens()) {
+                log.info("Line is not finished on: {}", numerKartoteki);
+                return Optional.empty();
+            }
 
-        final String numerJednostki = tokenizer.nextToken();
-        final String numberGrupy = tokenizer.nextToken();
-        final String index = tokenizer.nextToken();
-        final String lastName = tokenizer.nextToken();
-        final String firstName = tokenizer.nextToken();
+            final String numerJednostki = tokenizer.nextToken();
+            final String numberGrupy = tokenizer.nextToken();
+            final String index = tokenizer.nextToken();
+            final String lastName = tokenizer.nextToken();
+            final String firstName = tokenizer.nextToken();
 
-        return Optional.of(PersonFromDoc.builder()
-                .numerKartoteki(registryNumber)
-                .numerJednostki(numerJednostki)
-                .numerGrupy(numberGrupy)
-                .index(index)
-                .lastName(lastName)
-                .firstName(firstName)
-                .statusDetails(personStatusDetails)
-                .build());
+            return Optional.of(PersonFromDoc.builder()
+                    .numerKartoteki(registryNumber)
+                    .numerJednostki(numerJednostki)
+                    .numerGrupy(numberGrupy)
+                    .index(index)
+                    .lastName(lastName)
+                    .firstName(firstName)
+                    .statusDetails(personStatusDetails)
+                    .build());
         } catch(Exception exception) {
             log.warn("FAILED to read {}", line);
             throw exception;
         }
+    }
+
+    private static String getRegistryNumber(String line, StringTokenizer tokenizer) {
+        if (!line.startsWith("\t")) {
+            System.out.println(tokenizer.countTokens());
+            if (tokenizer.countTokens() == 5) {
+
+                return null;
+            }
+
+            return tokenizer.nextToken();
+        }
+        return null;
     }
 
     public static PersonStatusDetails decodeStatus(String line) {

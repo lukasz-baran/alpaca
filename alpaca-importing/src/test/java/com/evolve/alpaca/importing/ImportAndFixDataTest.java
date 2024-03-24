@@ -1,18 +1,10 @@
 package com.evolve.alpaca.importing;
 
 import com.evolve.alpaca.importing.importDbf.ImportDbfService;
-import com.evolve.alpaca.importing.importDbf.account.ImportAccountDbf;
-import com.evolve.alpaca.importing.importDbf.person.ImportPersonDbf;
-import com.evolve.alpaca.importing.importDbf.turnover.ImportTurnoverDbf;
-import com.evolve.alpaca.importing.importDoc.ImportAlphanumeric;
-import com.evolve.alpaca.importing.importDoc.ImportPeople;
-import com.evolve.alpaca.importing.importDoc.group.GrupyAlfabetyczne;
-import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
 import com.evolve.domain.Person;
 import com.evolve.domain.PersonStatus;
 import com.evolve.repo.jpa.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +15,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
-import static com.evolve.alpaca.importing.importDoc.ImportAlphanumeric.FILENAME_BY_ALPHA;
 import static com.evolve.domain.PersonAssertion.assertPerson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
@@ -42,49 +32,6 @@ public class ImportAndFixDataTest {
 
     @Autowired
     PersonRepository personRepository;
-
-    @Test
-    @Disabled
-    void importTurnovers() throws IOException {
-        var turnoversFile = new DefaultResourceLoader().getResource("OBROTY.DBF").getURL();
-
-        var turnovers = ImportTurnoverDbf.performImport(turnoversFile);
-
-        turnovers.forEach(System.out::println);
-    }
-
-    @Test
-    @Disabled
-    void importAccounts() throws IOException {
-        var accountsFile = new DefaultResourceLoader().getResource("PLAN.DBF").getURL();
-
-        ImportAccountDbf.importAccounts(accountsFile);
-    }
-
-    @Test
-    void importTextFile() throws IOException {
-        final Resource oldDoc = new DefaultResourceLoader().getResource("PLAN KONT.doc");
-        assumeThat(oldDoc.exists())
-                .isTrue();
-
-        final List<PersonFromDoc> people = new ImportPeople(true).processDocFile(oldDoc.getFile().getPath());
-        assertThat(people.size())
-                .isEqualTo(2369);
-    }
-
-    @Test
-    @Disabled
-    void importPeople() throws IOException {
-        final GrupyAlfabetyczne grupyAlfabetyczne = new ImportAlphanumeric()
-                .processFile();
-
-        final URL accountsFile = new DefaultResourceLoader().getResource("Z_B_KO.DBF").getURL();
-
-        final List<com.evolve.domain.Person> persons = ImportPersonDbf.importPeople(accountsFile);
-
-        log.info("Wczytano " + grupyAlfabetyczne.getSize() + " z grup alfabetycznych " + FILENAME_BY_ALPHA);
-        log.info("Wczytano " + persons.size());
-    }
 
     @Test
     void importAndFix() throws IOException {

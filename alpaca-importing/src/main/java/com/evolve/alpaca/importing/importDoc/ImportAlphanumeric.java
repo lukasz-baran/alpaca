@@ -4,13 +4,14 @@ import com.evolve.alpaca.importing.importDoc.group.GrupyAlfabetyczne;
 import com.evolve.alpaca.importing.importDoc.group.PersonGroupReader;
 import com.evolve.alpaca.importing.importDoc.person.PersonFromDoc;
 import com.evolve.domain.Group;
-import com.google.common.io.Resources;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.extractor.WordExtractor;
 
-import java.io.File;
-import java.net.URL;
+import java.io.FileInputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -38,31 +39,41 @@ import java.util.Scanner;
 
  */
 @Slf4j
+@RequiredArgsConstructor
 public class ImportAlphanumeric {
-    public static final String FILENAME_BY_ALPHA = "ludzie-alfabetycznie.txt";
-    public static final URL FILE_BY_ALPHA = Resources.getResource(FILENAME_BY_ALPHA);
-
-    private final File fileAlphanumeric;
+    private static final String CHUNK_SEPARATOR = "ALFABETYCZNIE";
 
     public static final List<String> START_SECTIONS = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
             "K", "L", "Ł", "M", "N", "O", "P", "R", "S", "Ś", "T", "U", "W", "Z", "Ż");
 
-    public ImportAlphanumeric() {
-        this.fileAlphanumeric = new File(FILE_BY_ALPHA.getFile());
+    private final boolean logging;
+
+    @SneakyThrows
+    public GrupyAlfabetyczne processDocFile(String filePath) {
+        try (HWPFDocument hwpf = new HWPFDocument(new FileInputStream(filePath));
+             WordExtractor wordExtractor = new WordExtractor(hwpf)) {
+            final String rawContent = wordExtractor.getText();
+            int index = StringUtils.indexOf(rawContent, CHUNK_SEPARATOR);
+
+            final String content = StringUtils.substring(rawContent, index + CHUNK_SEPARATOR.length(), rawContent.length());
+            return processFile(content);
+        }
     }
 
     @SneakyThrows
-    public GrupyAlfabetyczne processFile() {
+    public GrupyAlfabetyczne processFile(String content) {
         final GrupyAlfabetyczne grupy = new GrupyAlfabetyczne();
 
         Group currentGroup = null;
 
-        try (final Scanner scanner = new Scanner(fileAlphanumeric)) {
+        try (final Scanner scanner = new Scanner(content)) {
             while (scanner.hasNextLine()) {
-                final String line = curateLine(scanner.nextLine());
+                String line = curateLine(scanner.nextLine());
                 if (skipLine(line)) {
                     continue;
                 }
+
+                System.out.println("line " +  line);
 
                 if (groupStarter(line)) {
                     currentGroup = Group.groupFor(line.charAt(0))
@@ -81,7 +92,7 @@ public class ImportAlphanumeric {
             }
         }
         log.info(grupy.toString());
-        grupy.validateContinuity();
+        grupy.validateContinuity(logging);
         return grupy;
     }
 

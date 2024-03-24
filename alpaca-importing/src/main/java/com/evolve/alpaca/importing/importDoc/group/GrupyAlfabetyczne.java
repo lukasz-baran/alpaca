@@ -56,24 +56,26 @@ public class GrupyAlfabetyczne {
                 .sum();
     }
 
-    public void validateContinuity() {
+    public void validateContinuity(boolean logging) {
         log.info("VALIDATE continuity - start");
-        grupyLudzie.forEach(this::validateContinuity);
+        grupyLudzie.forEach((key, value) -> validateContinuity(logging, key, value));
         log.info("VALIDATE continuity - end");
     }
 
-    private void validateContinuity(Group grupa, List<PersonFromDoc> personList) {
+    private void validateContinuity(boolean logging, Group grupa, List<PersonFromDoc> personList) {
         final Optional<PersonFromDoc> firstPerson = personList.stream().findFirst();
         firstPerson.ifPresent(person -> {
             String index = "000";
-            final Iterator<PersonFromDoc> iterator = personList.iterator();
 
-            while (iterator.hasNext()) {
-                final PersonFromDoc personToCheck = iterator.next();
+            for (PersonFromDoc personToCheck : personList) {
                 int previous = Integer.parseInt(index);
                 int next = Integer.parseInt(personToCheck.getIndex());
                 if (previous + 1 != next) {
-                    throw new RuntimeException("No continuity for " + personToCheck);
+                    if (logging) {
+                        System.out.println("No continuity for " + personToCheck);
+                    } else {
+                        throw new RuntimeException("No continuity for " + personToCheck);
+                    }
                 }
 
                 index = personToCheck.getIndex();
