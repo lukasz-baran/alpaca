@@ -2,10 +2,7 @@ package com.evolve.services;
 
 import com.evolve.FindPerson;
 import com.evolve.FindProblems;
-import com.evolve.domain.Person;
-import com.evolve.domain.PersonLookupCriteria;
-import com.evolve.domain.PersonStatusChange;
-import com.evolve.domain.RegistryNumber;
+import com.evolve.domain.*;
 import com.google.common.collect.Comparators;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +44,11 @@ class ProblemsQueryService implements FindProblems {
                 problems.add(getFullName(person) + ": statusy są w złej kolejności " + dates);
             }
 
+            if (person.getStatus() == PersonStatus.ACTIVE &&
+                    person.getStatusChanges().stream().noneMatch(personStatusChange -> personStatusChange.getEventType() == PersonStatusChange.EventType.JOINED)) {
+                problems.add(getFullName(person) + ": jest Aktywny, ale brakuje daty wstąpienia.");
+            }
+
         });
 
         return problems;
@@ -72,6 +74,7 @@ class ProblemsQueryService implements FindProblems {
 
         return problems;
     }
+
 
     private List<String> checkDuplicatedRegistryNumbers(List<Person> personList) {
         final List<String> problems = new ArrayList<>();

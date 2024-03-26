@@ -11,7 +11,7 @@
 
     <HBox id="personMenu" centerShape="false" prefHeight="18.0" spacing="5.0">
         <Button fx:id="btnRunExplorer" onAction="#registryNumbersIssues" text="Numery kartotek" />
-        <Button fx:id="btnMissingDates" onAction="#missingStatuses" text="Brakujące daty" />
+        <Button fx:id="btnMissingDates" onAction="#missingStatuses" text="Braki w statusach" />
         <Button fx:id="btnInvalidAddresses" onAction="#invalidAddresses" text="Niepoprawne adresy" />
     </HBox>
 
