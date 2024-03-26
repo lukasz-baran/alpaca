@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,25 +21,31 @@ class JoiningDateDeducerShould {
 
     @Test
     void notDeduceJoinedDateFromDeceasedDate() {
-        final List<String> guesses = List.of("ALEKSANDRA 10.05.33 V / 7",
-                "c.Magdalena WesołowskaKie",
+        // given
+        final List<String> guesses = List.of("FOO 10.05.33 V / 7",
+                "c.Foo Bar",
                  "Al.Niepodległości 11/7",
                  "39-300 Mielec",
                  "zm. 19.07.2023",
                 "");
 
+        // when
         var result = deducer.deduceFrom(guesses);
 
+        // then
         assertThat(result)
                 .isEmpty();
     }
 
     @Test
     void adjustJoinedDateToCurrentCentury() {
+        // given
         final List<String> guesses = List.of("19.10.70 17.02.04");
 
+        // when
         var result = deducer.deduceFrom(guesses);
 
+        // then
         assertThat(result)
                 .hasValue(PersonStatusChange.joined(LocalDate.of(2004, 2, 17), "17.02.04"));
     }
@@ -53,8 +60,15 @@ class JoiningDateDeducerShould {
 
         assertThat(deducer.deduceFrom(List.of("14.08.87  iii/ 2013")))
                 .hasValue(PersonStatusChange.joined(LocalDate.of(2013, Month.MARCH, 1), "iii/ 2013"));
-
     }
 
+
+    @Test
+    void ignoreInvalidDate() {
+        final Optional<PersonStatusChange> maybeJoiningDate = deducer.deduceJoiningDate("WHATEVER  10-06-1932");
+
+        assertThat(maybeJoiningDate)
+                .isEmpty();
+    }
 
 }

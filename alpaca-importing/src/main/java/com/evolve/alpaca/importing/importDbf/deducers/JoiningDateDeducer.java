@@ -58,12 +58,18 @@ public class JoiningDateDeducer extends AbstractSmartDeducer<PersonStatusChange>
         try {
             final String originalValue = split[index];
 
-            final Optional<LocalDate> maybeJoinedDate = DateParser.parse(originalValue);
-            return maybeJoinedDate.map(DateUtils::adjustDateToCurrentCentury)
+            return DateParser.parse(originalValue)
+                    .map(DateUtils::adjustDateToCurrentCentury)
+                    .filter(this::filterOutInvalidDates)
                     .map(joinedDate -> PersonStatusChange.joined(joinedDate, originalValue));
         } catch (DateTimeException dateTimeException) {
             issues.store(String.format("Unable to create LocalDate for %s", input));
         }
         return Optional.empty();
+    }
+
+    boolean filterOutInvalidDates(LocalDate joiningDate) {
+        final int currentYear = LocalDate.now().getYear();
+        return joiningDate.getYear() > 1960 && joiningDate.getYear() < currentYear + 1;
     }
 }
