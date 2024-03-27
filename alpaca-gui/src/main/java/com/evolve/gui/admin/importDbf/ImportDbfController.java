@@ -1,7 +1,6 @@
 package com.evolve.gui.admin.importDbf;
 
 import com.evolve.alpaca.importing.ImportDataCommand;
-import com.evolve.alpaca.importing.event.DbfImportCompletedEvent;
 import com.evolve.alpaca.importing.importDbf.ImportDbfService;
 import com.evolve.gui.StageManager;
 import javafx.concurrent.Task;
@@ -62,7 +61,7 @@ public class ImportDbfController implements Initializable {
         stage.show();
         clearProgress();
 
-        final Task<DbfImportCompletedEvent> task = createImportTask(dbFiles);
+        final Task<Integer> task = createImportTask(dbFiles);
 
         progressBar.progressProperty().bind(task.progressProperty());
         task.messageProperty().addListener((observable, oldValue, newValue) ->  {
@@ -73,10 +72,10 @@ public class ImportDbfController implements Initializable {
         new Thread(task).start();
     }
 
-    private Task<DbfImportCompletedEvent> createImportTask(DbfFiles dbFiles) {
-        final Task<DbfImportCompletedEvent> task = new Task<>() {
+    private Task<Integer> createImportTask(DbfFiles dbFiles) {
+        final Task<Integer> task = new Task<>() {
             @Override
-            protected DbfImportCompletedEvent call() {
+            protected Integer call() {
 
                 return importDbfService.startImport(
                         new ImportDataCommand(
@@ -91,16 +90,21 @@ public class ImportDbfController implements Initializable {
             }
         };
 
-        task.setOnFailed(wse -> StageManager.showCustomErrorDialog(
-                        "Błąd importu!",
-                        "Coś poszło nie tak podczas importu danych.",
-                        stage.getScene().getWindow(),
-                        wse.getSource().getException())
-                .show());
+        task.setOnFailed(wse -> {
+            progressBar.progressProperty().unbind();
+            StageManager.showCustomErrorDialog(
+                    "Błąd importu!",
+                    "Coś poszło nie tak podczas importu danych.",
+                    stage.getScene().getWindow(),
+                    wse.getSource().getException())
+            .show();
+        });
 
         task.setOnSucceeded(wse -> {
+            progressBar.progressProperty().unbind();
             stage.close();
-            applicationEventPublisher.publishEvent(task.getValue());
+
+            applicationEventPublisher.publishEvent(new DbfImportCompletedEvent(this, task.getValue()));
         });
         return task;
     }

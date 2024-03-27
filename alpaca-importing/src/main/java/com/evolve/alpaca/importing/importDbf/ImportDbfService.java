@@ -7,7 +7,6 @@ import com.evolve.alpaca.ddd.CommandCollector;
 import com.evolve.alpaca.ddd.CommandsApplier;
 import com.evolve.alpaca.ddd.PersistedCommand;
 import com.evolve.alpaca.importing.ImportDataCommand;
-import com.evolve.alpaca.importing.event.DbfImportCompletedEvent;
 import com.evolve.alpaca.importing.importDbf.account.AccountsFactory;
 import com.evolve.alpaca.importing.importDbf.account.DbfAccount;
 import com.evolve.alpaca.importing.importDbf.account.ImportAccountDbf;
@@ -47,7 +46,7 @@ public class ImportDbfService {
 
     private final PostImportStepService postImportStepService;
 
-    public DbfImportCompletedEvent startImport(ImportDataCommand importDataCommand) {
+    public int startImport(ImportDataCommand importDataCommand) {
 
         var listener = importDataCommand.listener();
         listener.step(0, "Wczytuję " + importDataCommand.personsFilePath());
@@ -56,7 +55,7 @@ public class ImportDbfService {
                 .performImport(importDataCommand.personsFilePath())
                 .getItems();
 
-        listener.step(0.2, "Aplikuję dane daprawcze");
+        listener.step(0.2, "Aplikuję dane naprawcze");
 
         final List<Person> persons = new PersonsFactory().from(osobyDbf)
                 .stream()
@@ -84,18 +83,17 @@ public class ImportDbfService {
 
         final List<Account> importedAccounts = importAccounts(importDataCommand.accountsFilePath());
 
-        listener.step(0.8, "Post-import - poprawian statusy");
+        listener.step(0.8, "Post-import - poprawiam statusy");
 
         // post import handles re-setting person status
         postImportStep(importedAccounts);
 
-        listener.step(0.9, "Aplikuję edycje");
+        listener.step(0.9, "Aplikuję komendy edycji");
 
         processCommands();
 
         listener.step(1, "Koniec importu");
-        return new DbfImportCompletedEvent(this,
-                "import completed for " + osobyDbf.size() + " entries");
+        return persons.size();
     }
 
     private void postImportStep(List<Account> importedAccounts) {

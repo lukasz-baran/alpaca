@@ -3,7 +3,7 @@ package com.evolve.gui.person.list;
 import com.evolve.ArchivePersonCommand;
 import com.evolve.FindPerson;
 import com.evolve.alpaca.gui.export.PersonExportHandler;
-import com.evolve.alpaca.importing.event.DbfImportCompletedEvent;
+import com.evolve.gui.admin.importDbf.DbfImportCompletedEvent;
 import com.evolve.alpaca.unit.services.UnitsService;
 import com.evolve.alpaca.utils.LogUtil;
 import com.evolve.domain.Person;
@@ -241,8 +241,10 @@ public class MainTableController implements Initializable {
 
     @EventListener
     public void onPersonImportCompleted(DbfImportCompletedEvent importCompleted) {
-        log.info("import: " + importCompleted.getMessage());
-        stageManager.displayInformation(importCompleted.getMessage());
+        log.info("import completed: {} persons imported", importCompleted.getImportedCount());
+
+        stageManager.displayInformation(
+                "Import zakończony - zaimportowano " + importCompleted.getImportedCount() + " osób");
 
         populateTable(PersonSearchCriteria.empty());
     }

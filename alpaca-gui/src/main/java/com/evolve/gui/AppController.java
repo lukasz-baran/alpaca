@@ -8,7 +8,6 @@ import com.evolve.alpaca.gui.help.AboutDialogWindow;
 import com.evolve.alpaca.gui.problems.ProblemsExplorerController;
 import com.evolve.alpaca.gui.stats.StatsController;
 import com.evolve.alpaca.gui.units.UnitsController;
-import com.evolve.alpaca.importing.importDbf.ImportDbfService;
 import com.evolve.gui.admin.importDbf.DbfFiles;
 import com.evolve.gui.admin.importDbf.ImportDbfController;
 import com.evolve.gui.admin.importDbf.ImportDbfDialog;
@@ -36,7 +35,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -54,10 +52,8 @@ public class AppController implements Initializable {
 
     private final PersonListModel personListModel;
 
-    private final ImportDbfService importDbfService;
     private final StageManager stageManager;
     private final LocalUserConfiguration localUserConfiguration;
-    private final ApplicationEventPublisher applicationEventPublisher;
 
     private final FxControllerAndView<AboutDialogWindow, AnchorPane> aboutDialogController;
     private final FxControllerAndView<UnitsController, VBox> unitsDialogController;
