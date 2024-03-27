@@ -77,11 +77,6 @@ public class Person implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<AuthorizedPerson> authorizedPersons; // if null nobody is authorized
 
-    @ElementCollection(targetClass = Comment.class) //, fetch = FetchType.EAGER)
-    @CollectionTable(name = "person_comments", joinColumns = @JoinColumn(name = "person_id"))
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Comment> comments; // notatki
-
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name="raw_data_key")
     @Column(name="raw_data_value")

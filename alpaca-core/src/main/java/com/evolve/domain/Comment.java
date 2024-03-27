@@ -6,6 +6,11 @@ import javax.persistence.Embeddable;
 import java.time.LocalDateTime;
 
 
+/**
+ *
+ * TODO Comments about persons should be implemented as a separate entity
+ *
+ */
 @Getter
 @Setter
 @AllArgsConstructor
