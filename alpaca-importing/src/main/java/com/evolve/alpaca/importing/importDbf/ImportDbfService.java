@@ -25,7 +25,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -40,7 +39,6 @@ import java.util.stream.Collectors;
 public class ImportDbfService {
     private final ObjectMapper objectMapper = LogUtil.OBJECT_MAPPER;
 
-    private final ApplicationEventPublisher applicationEventPublisher;
     private final PersonFixer personFixer;
     private final AccountsService accountsService;
     private final CommandsApplier commandsApplier;
@@ -49,18 +47,28 @@ public class ImportDbfService {
 
     private final PostImportStepService postImportStepService;
 
-    public List<Person> startImport(ImportDataCommand importDataCommand) {
+    public DbfImportCompletedEvent startImport(ImportDataCommand importDataCommand) {
+
+        var listener = importDataCommand.listener();
+        listener.step(0, "Wczytuję " + importDataCommand.personsFilePath());
+
         final List<DbfPerson> osobyDbf = new ImportPersonDbf()
                 .performImport(importDataCommand.personsFilePath())
                 .getItems();
+
+        listener.step(0.2, "Aplikuję dane daprawcze");
 
         final List<Person> persons = new PersonsFactory().from(osobyDbf)
                 .stream()
                 .map(personFixer::fixData)
                 .collect(Collectors.toList());
 
+        listener.step(0.3, "Wczytuję " + importDataCommand.docFilePath());
+
         final PersonsWrapper wrapper = new PersonsWrapper(new ImportPeople(false)
                 .processDocFile(importDataCommand.docFilePath()));
+
+        listener.step(0.4, "Poprawiam numery kartotek");
 
         persons.forEach(person -> {
                 final RegistryNumber kartotekaId = wrapper.findByPersonId(person.getPersonId());
@@ -68,20 +76,26 @@ public class ImportDbfService {
                 RegistryNumberFixer.fixPersonRegistryNumbers(person, kartotekaId);
         });
 
+        listener.step(0.5, "Zapisuję osoby w bazie danych");
+
         personApplicationService.insertPersons(persons);
 
+        listener.step(0.6, "Wczytuję dane z " + importDataCommand.accountsFilePath());
+
         final List<Account> importedAccounts = importAccounts(importDataCommand.accountsFilePath());
+
+        listener.step(0.8, "Post-import - poprawian statusy");
 
         // post import handles re-setting person status
         postImportStep(importedAccounts);
 
+        listener.step(0.9, "Aplikuję edycje");
+
         processCommands();
 
-        final DbfImportCompletedEvent customSpringEvent = new DbfImportCompletedEvent(this,
+        listener.step(1, "Koniec importu");
+        return new DbfImportCompletedEvent(this,
                 "import completed for " + osobyDbf.size() + " entries");
-        applicationEventPublisher.publishEvent(customSpringEvent);
-
-        return persons;
     }
 
     private void postImportStep(List<Account> importedAccounts) {

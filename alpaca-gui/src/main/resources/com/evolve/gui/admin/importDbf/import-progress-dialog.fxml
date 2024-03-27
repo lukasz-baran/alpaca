@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox fx:id="importProgressVBox" prefHeight="496.0" prefWidth="428.0" spacing="5.0" stylesheets="@../../../../../styles/style.css" GridPane.columnIndex="1" GridPane.rowIndex="4" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.admin.importDbf.ImportDbfController">
+
+    <Text fx:id="textNumberStep" text="Importowanie danych" textAlignment="CENTER" textOrigin="CENTER">
+      <font>
+         <Font name="System Italic" size="14.0" />
+      </font></Text>
+
+    <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" prefHeight="33.0" prefWidth="418.0" />
+
+    <TextArea fx:id="textAreaMessages" focusTraversable="false" minHeight="200" minWidth="200"
+              prefHeight="361.0" prefWidth="317.0" promptText="..." wrapText="true" GridPane.columnIndex="0" GridPane.columnSpan="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+    </padding>
+
+</VBox>

@@ -20,6 +20,7 @@ import java.util.List;
 import static com.evolve.domain.PersonAssertion.assertPerson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -48,7 +49,8 @@ public class ImportAndFixDataTest {
         importDbfService.startImport(
                 new ImportDataCommand(resourcePersons.getFile().getPath(),
                         resourceAccounts.getFile().getPath(),
-                        oldDoc.getFile().getPath()));
+                        oldDoc.getFile().getPath(),
+                        mock(ImportDataCommand.ImportProgressListener.class)));
 
         // then
         sanityChecks(personRepository.findAll());

@@ -20,10 +20,10 @@ import java.util.Optional;
 @Slf4j
 public class ImportDbfDialog extends DialogWindow<DbfFiles> {
     public static final FileChooser.ExtensionFilter DBF_DOCUMENTS_EXTENSION_FILTER =
-            new FileChooser.ExtensionFilter("documents", "*.dbf");
+            new FileChooser.ExtensionFilter("pliki DBF (*.dbf)", "*.dbf");
 
     public static final FileChooser.ExtensionFilter DOC_DOCUMENTS_EXTENSION_FILTER =
-            new FileChooser.ExtensionFilter("documents", "*.doc");
+            new FileChooser.ExtensionFilter("pliki Word (*.doc)", "*.doc");
 
     private final StageManager stageManager;
     private final LocalUserConfiguration localUserConfiguration;
@@ -32,7 +32,7 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
     private final TextField docFilePathTextField = new TextField();
 
     public ImportDbfDialog(StageManager stageManager, LocalUserConfiguration localUserConfiguration) {
-        super("Import plików ze starej aplikacji", "Wybierz pliki DBF ze starej aplikacji");
+        super("Import plików ze systemu FK", "Wybierz pliki DBF ze starej aplikacji oraz PLAN KONT.doc");
         this.stageManager = stageManager;
         this.localUserConfiguration = localUserConfiguration;
     }
@@ -40,6 +40,7 @@ public class ImportDbfDialog extends DialogWindow<DbfFiles> {
     @Override
     public Optional<DbfFiles> showDialog(Window window) {
         final Dialog<DbfFiles> dialog = createDialog(window);
+        findSubmitButton(dialog).setText("Importuj");
 
         final GridPane grid = createGridPane();
 

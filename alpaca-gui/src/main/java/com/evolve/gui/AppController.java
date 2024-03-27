@@ -8,8 +8,9 @@ import com.evolve.alpaca.gui.help.AboutDialogWindow;
 import com.evolve.alpaca.gui.problems.ProblemsExplorerController;
 import com.evolve.alpaca.gui.stats.StatsController;
 import com.evolve.alpaca.gui.units.UnitsController;
-import com.evolve.alpaca.importing.ImportDataCommand;
 import com.evolve.alpaca.importing.importDbf.ImportDbfService;
+import com.evolve.gui.admin.importDbf.DbfFiles;
+import com.evolve.gui.admin.importDbf.ImportDbfController;
 import com.evolve.gui.admin.importDbf.ImportDbfDialog;
 import com.evolve.gui.documents.DocumentsController;
 import com.evolve.gui.person.accounts.PersonAccountsController;
@@ -35,11 +36,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Getter
@@ -54,6 +57,7 @@ public class AppController implements Initializable {
     private final ImportDbfService importDbfService;
     private final StageManager stageManager;
     private final LocalUserConfiguration localUserConfiguration;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     private final FxControllerAndView<AboutDialogWindow, AnchorPane> aboutDialogController;
     private final FxControllerAndView<UnitsController, VBox> unitsDialogController;
@@ -67,6 +71,7 @@ public class AppController implements Initializable {
     private final FxControllerAndView<ProblemsExplorerController, VBox> problemsExplorerController;
     private final FxControllerAndView<StatsController, VBox> statsController;
     private final FxControllerAndView<FifteenPuzzleDialog, VBox> fifteenPuzzleController;
+    private final FxControllerAndView<ImportDbfController, VBox> importProgressController;
 
     @FXML TabPane tabsPane;
     @FXML Tab tabPersonDetails;
@@ -124,19 +129,17 @@ public class AppController implements Initializable {
 
     @FXML
     void importDbfClicked(ActionEvent actionEvent) {
-        new ImportDbfDialog(stageManager, localUserConfiguration)
-                .showDialog(stageManager.getWindow())
-                .ifPresent(dbFiles -> {
-                    log.info("Opened dbf file {}", dbFiles);
-                    if (dbFiles.getMainFile() != null && dbFiles.getDocFile() != null) {
-                        importDbfService.startImport(
-                                new ImportDataCommand(
-                                        dbFiles.getMainFile().getPath(),
-                                        dbFiles.getPlanAccountsFile().getPath(),
-                                        dbFiles.getDocFile().getPath()));
-                    }
-                });
-    }
+        final Optional<DbfFiles> importData = new ImportDbfDialog(stageManager, localUserConfiguration)
+                .showDialog(stageManager.getWindow());
+
+        importData.ifPresent(dbFiles -> {
+            log.info("Opened dbf file {}", dbFiles);
+            if (dbFiles.getMainFile() != null && dbFiles.getDocFile() != null) {
+
+                importProgressController.getController().showAndImport(dbFiles);
+            }
+        });
+}
 
     @FXML
     void lookForErrorsClicked(ActionEvent actionEvent) {
