@@ -1,4 +1,4 @@
-package com.evolve.alpaca.importing.importDbf.deducers;
+package com.evolve.alpaca.importing.importDbf.deducers.status;
 
 import com.evolve.alpaca.importing.PersonStatusDetails;
 import org.junit.jupiter.api.Test;

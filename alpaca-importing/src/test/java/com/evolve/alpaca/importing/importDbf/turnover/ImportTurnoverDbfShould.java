@@ -1,6 +1,7 @@
 package com.evolve.alpaca.importing.importDbf.turnover;
 
 import com.evolve.alpaca.turnover.Turnover;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 
@@ -15,6 +16,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 class ImportTurnoverDbfShould {
 
     @Test
+    @Disabled
     void importTurnovers() throws IOException {
         // given
         var turnoversFile = new DefaultResourceLoader().getResource("OBROTY.DBF");

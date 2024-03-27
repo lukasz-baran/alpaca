@@ -1,17 +1,17 @@
 package com.evolve.alpaca.importing.importDbf.deducers;
 
-import com.evolve.alpaca.importing.DateParser;
 import com.evolve.alpaca.importing.PersonStatusDetails;
 import com.evolve.alpaca.importing.importDbf.RegistryNumbers;
+import com.evolve.alpaca.importing.importDbf.deducers.status.JoiningDateDeducer;
+import com.evolve.alpaca.importing.importDbf.deducers.status.PersonDateOfBirthDeducer;
+import com.evolve.alpaca.importing.importDbf.deducers.status.StatusChangesHistoryBuilder;
+import com.evolve.alpaca.importing.importDbf.deducers.status.StatusPersonDeducer;
 import com.evolve.alpaca.importing.importDbf.person.DbfPerson;
-import com.evolve.alpaca.utils.DateUtils;
 import com.evolve.domain.*;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.time.DateTimeException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -88,7 +88,8 @@ public class PersonDataDeducer {
         // konto bankowe
         final List<BankAccount> bankAccounts = deduceBankAccount(issues);
 
-        final List<PersonStatusChange> statusChanges = deduceStatusChanges(maybeDob, maybeJoiningDate, personStatusDetails);
+        final List<PersonStatusChange> statusChanges =
+                StatusChangesHistoryBuilder.deduceStatusChanges(maybeDob, maybeJoiningDate, personStatusDetails);
 
         final PersonStatus personStatus = personStatusDetails.map(PersonStatusDetails::getStatus)
                 .orElse(null);
@@ -157,49 +158,4 @@ public class PersonDataDeducer {
         return bankAccount.stream().toList();
     }
 
-    List<PersonStatusChange> deduceStatusChanges(Optional<PersonStatusChange> maybeDob,
-            Optional<PersonStatusChange> maybeJoinedDate, Optional<PersonStatusDetails> personStatusDetails) {
-        final List<PersonStatusChange> statusChanges = new ArrayList<>();
-
-        maybeDob.ifPresent(statusChanges::add);
-        maybeJoinedDate.ifPresent(statusChanges::add);
-
-        personStatusDetails.ifPresent(statusDetails -> {
-            switch (statusDetails.getStatus()) {
-                case DEAD:
-                    statusChanges.add(PersonStatusChange.builder()
-                            .eventType(PersonStatusChange.EventType.DIED)
-                            .when(tryParseDate(statusDetails.getDeathDate()).orElse(null))
-                            .originalValue(statusDetails.getDeathDate())
-                            .build());
-                    break;
-                case RESIGNED:
-                    statusChanges.add(PersonStatusChange.builder()
-                            .eventType(PersonStatusChange.EventType.RESIGNED)
-                            .when(tryParseDate(statusDetails.getResignationDate()).orElse(null))
-                            .originalValue(statusDetails.getResignationDate())
-                            .build());
-                    break;
-                case REMOVED:
-                    statusChanges.add(PersonStatusChange.builder()
-                            .eventType(PersonStatusChange.EventType.REMOVED)
-                            .when(tryParseDate(statusDetails.getRemovedDate()).orElse(null))
-                            .originalValue(statusDetails.getRemovedDate())
-                            .build());
-                    break;
-                case UNKNOWN:
-                    break;
-            }
-        });
-        return statusChanges;
-    }
-
-    private static Optional<LocalDate> tryParseDate(String date) {
-        try {
-            return DateParser.parse(date)
-                    .map(DateUtils::adjustDateToCurrentCentury);
-        } catch (DateTimeException dateTimeException) {
-            return Optional.empty();
-        }
-    }
 }

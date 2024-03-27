@@ -1,6 +1,8 @@
-package com.evolve.alpaca.importing.importDbf.deducers;
+package com.evolve.alpaca.importing.importDbf.deducers.status;
 
 import com.evolve.alpaca.importing.DateParser;
+import com.evolve.alpaca.importing.importDbf.deducers.AbstractSmartDeducer;
+import com.evolve.alpaca.importing.importDbf.deducers.IssuesLogger;
 import com.evolve.alpaca.utils.DateUtils;
 import com.evolve.domain.PersonStatusChange;
 import org.apache.commons.lang.StringUtils;
@@ -14,9 +16,9 @@ import java.util.regex.Pattern;
 import static com.evolve.alpaca.importing.DateParser.DATE_PATTERN;
 
 public class JoiningDateDeducer extends AbstractSmartDeducer<PersonStatusChange> {
-    public static final String DATE_JOINED = ".*" + DATE_PATTERN.pattern() + "$";
+    private static final String DATE_JOINED = ".*" + DATE_PATTERN.pattern() + "$";
 
-    public static final Pattern SHORT_DATE_JOINED = Pattern.compile(".*" + DateParser.SHORT_DATE_ROMAN_LITERALS_PATTERN.pattern() + "$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern SHORT_DATE_JOINED = Pattern.compile(".*" + DateParser.SHORT_DATE_ROMAN_LITERALS_PATTERN.pattern() + "$", Pattern.CASE_INSENSITIVE);
 
     public JoiningDateDeducer(IssuesLogger.ImportIssues issues) {
         super(issues);

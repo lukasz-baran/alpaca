@@ -1,7 +1,8 @@
-package com.evolve.alpaca.importing.importDbf.deducers;
+package com.evolve.alpaca.importing.importDbf.deducers.status;
 
 import com.evolve.alpaca.importing.DateParser;
 import com.evolve.alpaca.importing.PersonStatusDetails;
+import com.evolve.alpaca.importing.importDbf.deducers.SmartDeducer;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;

@@ -1,6 +1,8 @@
-package com.evolve.alpaca.importing.importDbf.deducers;
+package com.evolve.alpaca.importing.importDbf.deducers.status;
 
 import com.evolve.alpaca.importing.DateParser;
+import com.evolve.alpaca.importing.importDbf.deducers.AbstractSmartDeducer;
+import com.evolve.alpaca.importing.importDbf.deducers.IssuesLogger;
 import com.evolve.domain.PersonStatusChange;
 import lombok.extern.slf4j.Slf4j;
 
