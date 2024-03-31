@@ -1,8 +1,9 @@
-package com.evolve.domain;
+package com.evolve.alpaca.comment;
 
 import lombok.*;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 
@@ -16,9 +17,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@Embeddable
+@Entity
 public class Comment {
+    @Id
+    private Long commentId;
+
+    private String personId;
+
     private String comment;
+
     private LocalDateTime added;
 
 }

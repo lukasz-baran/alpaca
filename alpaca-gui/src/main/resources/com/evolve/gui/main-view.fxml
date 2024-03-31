@@ -46,6 +46,9 @@
                         </Tab>
                         <Tab text="Konta (0)" fx:id="tabPersonAdditionalData"/>
                         <Tab text="Dokumenty (0)" fx:id="tabDocuments"/>
+                        <Tab text="Notatki (0)" fx:id="tabComments">
+                            <fx:include source="../alpaca/gui/comments/person-comments.fxml"/>
+                        </Tab>
                     </TabPane>
                 </items>
             </SplitPane>

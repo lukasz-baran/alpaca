@@ -3,6 +3,8 @@ package com.evolve.gui;
 import com.evolve.alpaca.conf.LocalUserConfiguration;
 import com.evolve.alpaca.document.DocumentEntry;
 import com.evolve.alpaca.gui.accounts.AccountsController;
+import com.evolve.alpaca.gui.comments.PersonCommentEntry;
+import com.evolve.alpaca.gui.comments.PersonCommentsController;
 import com.evolve.alpaca.gui.games.FifteenPuzzleDialog;
 import com.evolve.alpaca.gui.help.AboutDialogWindow;
 import com.evolve.alpaca.gui.problems.ProblemsExplorerController;
@@ -69,11 +71,14 @@ public class AppController implements Initializable {
     private final FxControllerAndView<FifteenPuzzleDialog, VBox> fifteenPuzzleController;
     private final FxControllerAndView<ImportDbfController, VBox> importProgressController;
 
+    private final PersonCommentsController personCommentsController;
+
     @FXML TabPane tabsPane;
     @FXML Tab tabPersonDetails;
     @FXML Tab tabOriginalDetails;
     @FXML Tab tabPersonAdditionalData;
     @FXML Tab tabDocuments;
+    @FXML Tab tabComments;
 
     @FXML MenuItem newMenuItem;
     @FXML MenuItem quitMenuItem;
@@ -111,6 +116,11 @@ public class AppController implements Initializable {
                 .getDocumentsList()
                     .addListener((ListChangeListener<? super DocumentEntry>) change -> tabDocuments.textProperty()
                             .setValue("Dokumenty (" + change.getList().size() + ")"));
+
+        personCommentsController.getCommentsList()
+                .addListener((ListChangeListener<? super PersonCommentEntry>) change -> tabComments.textProperty()
+                        .setValue("Notatki (" + change.getList().size() + ")"));
+
     }
 
     public void quitClicked(ActionEvent actionEvent) {
