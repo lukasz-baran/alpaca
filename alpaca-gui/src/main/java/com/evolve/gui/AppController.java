@@ -64,14 +64,14 @@ public class AppController implements Initializable {
     private final PersonDetailsController personDetailsController;
     private final MainTableController mainTableController;
 
-    private final FxControllerAndView<PersonAccountsController, VBox> personAccountsController;
-    private final FxControllerAndView<DocumentsController, VBox> documentsController;
     private final FxControllerAndView<ProblemsExplorerController, VBox> problemsExplorerController;
     private final FxControllerAndView<StatsController, VBox> statsController;
     private final FxControllerAndView<FifteenPuzzleDialog, VBox> fifteenPuzzleController;
     private final FxControllerAndView<ImportDbfController, VBox> importProgressController;
 
+    private final DocumentsController documentsController;
     private final PersonCommentsController personCommentsController;
+    private final PersonAccountsController personAccountsController;
 
     @FXML TabPane tabsPane;
     @FXML Tab tabPersonDetails;
@@ -95,11 +95,6 @@ public class AppController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Locale.setDefault(new Locale("pl"));
 
-        personAccountsController.getView()
-                        .ifPresent(vBox -> tabPersonAdditionalData.setContent(vBox));
-        documentsController.getView()
-                        .ifPresent(vBox -> tabDocuments.setContent(vBox));
-
         quitMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.SHORTCUT_DOWN));
         newMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.SHORTCUT_DOWN));
 
@@ -108,19 +103,15 @@ public class AppController implements Initializable {
 
         aboutMenuItem.setOnAction(event -> aboutDialogController.getController().show());
 
-        personAccountsController.getController()
-                .getAccountsList()
+        personAccountsController.getAccountsList()
                         .addListener((ListChangeListener<? super PersonAccountsController.AccountEntry>) change ->
                                 tabPersonAdditionalData.textProperty().setValue("Konta (" + change.getList().size() + ")"));
-        documentsController.getController()
-                .getDocumentsList()
+        documentsController.getDocumentsList()
                     .addListener((ListChangeListener<? super DocumentEntry>) change -> tabDocuments.textProperty()
                             .setValue("Dokumenty (" + change.getList().size() + ")"));
-
         personCommentsController.getCommentsList()
                 .addListener((ListChangeListener<? super PersonCommentEntry>) change -> tabComments.textProperty()
                         .setValue("Notatki (" + change.getList().size() + ")"));
-
     }
 
     public void quitClicked(ActionEvent actionEvent) {

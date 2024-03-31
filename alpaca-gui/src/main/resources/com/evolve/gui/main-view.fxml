@@ -44,8 +44,12 @@
                         <Tab text="Oryginalne dane" fx:id="tabOriginalDetails">
                             <fx:include source="person/originalDetails/original-details.fxml"/>
                         </Tab>
-                        <Tab text="Konta (0)" fx:id="tabPersonAdditionalData"/>
-                        <Tab text="Dokumenty (0)" fx:id="tabDocuments"/>
+                        <Tab text="Konta (0)" fx:id="tabPersonAdditionalData">
+                            <fx:include source="person/accounts/person-accounts.fxml"/>
+                        </Tab>
+                        <Tab text="Dokumenty (0)" fx:id="tabDocuments">
+                            <fx:include source="documents/documents.fxml"/>
+                        </Tab>
                         <Tab text="Notatki (0)" fx:id="tabComments">
                             <fx:include source="../alpaca/gui/comments/person-comments.fxml"/>
                         </Tab>

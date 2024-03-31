@@ -2,7 +2,6 @@ package com.evolve.gui.person.accounts;
 
 import com.evolve.alpaca.account.Account;
 import com.evolve.alpaca.account.FindAccount;
-import com.evolve.alpaca.unit.services.UnitsService;
 import com.evolve.gui.StageManager;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
@@ -15,10 +14,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.stereotype.Component;
@@ -30,6 +26,7 @@ import java.util.ResourceBundle;
 @Component
 @FxmlView("person-accounts.fxml")
 @Slf4j
+@RequiredArgsConstructor
 public class PersonAccountsController implements Initializable {
     private final PersonListModel personListModel;
     private final FindAccount findAccount;
@@ -43,12 +40,6 @@ public class PersonAccountsController implements Initializable {
     @FXML TableColumn<AccountEntry, String> unitNumberColumn;
     @FXML TableColumn<AccountEntry, String> accountNameColumn;
     @FXML TableView<AccountEntry> accountsTable;
-
-    public PersonAccountsController(PersonListModel personListModel, FindAccount findAccount, UnitsService unitsService) {
-        this.personListModel = personListModel;
-        this.findAccount = findAccount;
-        this.accountTooltipService = new AccountTooltipService(unitsService);
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

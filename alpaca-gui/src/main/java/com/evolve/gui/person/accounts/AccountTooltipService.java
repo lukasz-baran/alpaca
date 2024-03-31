@@ -6,10 +6,12 @@ import com.evolve.alpaca.unit.services.UnitsService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
+@Component
 public class AccountTooltipService {
 
     private final UnitsService unitsService;
