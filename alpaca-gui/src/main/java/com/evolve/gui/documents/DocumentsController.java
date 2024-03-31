@@ -82,7 +82,6 @@ public class DocumentsController implements Initializable {
         });
 
         fileNameColumn.setCellValueFactory(new TreeItemPropertyValueFactory<>("fileName"));
-        dateAddedColumn.setCellValueFactory(new TreeItemPropertyValueFactory<>("dateAdded"));
         dateAddedColumn.setCellValueFactory(param -> {
             final TreeItem<DocumentEntry> treeItem = param.getValue();
             final DocumentEntry emp = treeItem.getValue();
