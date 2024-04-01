@@ -5,7 +5,9 @@ import com.evolve.alpaca.comment.repo.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -18,4 +20,19 @@ public class PersonCommentService {
         return commentRepository.findByPersonId(personId);
     }
 
+    public Comment addNewComment(String personId, String content) {
+        return commentRepository.save(new Comment(personId, content, LocalDateTime.now()));
+    }
+
+    public Optional<Comment> editComment(Long id, String content) {
+        return commentRepository.findById(id)
+                .flatMap(entry -> {
+                    entry.setComment(content);
+                    return Optional.of(commentRepository.save(entry));
+                });
+    }
+
+    public void removeComment(Long id) {
+        commentRepository.deleteById(id);
+    }
 }

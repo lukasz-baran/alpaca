@@ -19,8 +19,8 @@ import java.util.stream.IntStream;
 public class UnitDialog extends DialogWindow<Unit> {
     private final List<UnitEntry> units;
     private final UnitEntry unitEntry;
-    private final ComboBox<String> unitIdComboBox;
-    private final TextField unitNameTextField;
+    private final ComboBox<String> unitIdComboBox = new ComboBox<>();
+    private final TextField unitNameTextField = new TextField();
 
     /**
      *
@@ -33,8 +33,6 @@ public class UnitDialog extends DialogWindow<Unit> {
                 "Dodaj nową jednostkę. Numer ID zostanie wygenerowany automatycznie");
         this.units = units;
         this.unitEntry = unitEntry;
-        this.unitIdComboBox = new ComboBox<>();
-        this.unitNameTextField = new TextField();
     }
 
     @Override

@@ -18,14 +18,12 @@ import java.util.Optional;
 public class BankAccountDialog extends DialogWindow<BankAccount>  {
 
     private final BankAccount bankAccountEntry;
-    private final TextField bankAccountNumberTextField;
-    private final TextArea textAreaNotes;
+    private final TextField bankAccountNumberTextField = new TextField();
+    private final TextArea textAreaNotes = new TextArea();
 
     public BankAccountDialog(BankAccount bankAccount) {
         super("Konto bankowe", "Wprowadź numer konta bankowego");
         this.bankAccountEntry = bankAccount;
-        this.bankAccountNumberTextField = new TextField();
-        this.textAreaNotes = new TextArea();
     }
 
     @Override
