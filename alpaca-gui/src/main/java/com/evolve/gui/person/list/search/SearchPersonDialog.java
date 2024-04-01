@@ -1,6 +1,7 @@
 package com.evolve.gui.person.list.search;
 
 import com.evolve.alpaca.account.Account;
+import com.evolve.alpaca.search.PersonSearchCriteria;
 import com.evolve.alpaca.unit.Unit;
 import com.evolve.alpaca.unit.services.UnitsService;
 import com.evolve.domain.Person;
@@ -217,16 +218,18 @@ public class SearchPersonDialog extends DialogWindow<PersonSearchCriteria> {
 
     @Override
     protected void validateSaveButton(Node saveButton) {
-        final boolean enableSaveButton =
-            Objects.nonNull(unitNumberCombo.getValue()) ||
-            !hasDocumentsCheckBox.isIndeterminate() ||
-            Objects.nonNull(personStatusCombo.getValue()) ||
-            Objects.nonNull(personGenderCombo.getValue()) ||
-            isAnyAccountSelected() ||
-            !retiredCheckBox.isIndeterminate() ||
-            !exemptFromFeesCheckBox.isIndeterminate();
+        final boolean enableSaveButton = isAnyPersonFilterChanged() || isAnyAccountSelected();
 
         saveButton.setDisable(!enableSaveButton);
+    }
+
+    private boolean isAnyPersonFilterChanged() {
+        return Objects.nonNull(unitNumberCombo.getValue()) ||
+                !hasDocumentsCheckBox.isIndeterminate() ||
+                Objects.nonNull(personStatusCombo.getValue()) ||
+                Objects.nonNull(personGenderCombo.getValue()) ||
+                !retiredCheckBox.isIndeterminate() ||
+                !exemptFromFeesCheckBox.isIndeterminate();
     }
 
     private boolean isAnyAccountSelected() {

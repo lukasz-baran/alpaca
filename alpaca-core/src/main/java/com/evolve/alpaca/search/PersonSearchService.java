@@ -1,4 +1,4 @@
-package com.evolve.gui.person.list.search;
+package com.evolve.alpaca.search;
 
 import com.evolve.FindPerson;
 import com.evolve.alpaca.account.Account;
