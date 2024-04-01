@@ -7,7 +7,8 @@ import com.evolve.domain.RegistryNumber;
 import javafx.beans.property.*;
 import lombok.Getter;
 import lombok.ToString;
-import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -120,7 +121,7 @@ public class PersonModel {
     }
 
     public boolean matches(String filteredText) {
-        if (filteredText == null || filteredText.isEmpty()) {
+        if (StringUtils.isEmpty(filteredText)) {
             return true;
         }
 
@@ -133,7 +134,12 @@ public class PersonModel {
             return true;
         }
 
-        return trimToEmpty(getId()).toLowerCase().contains(lowerCaseFilter);
+        if (trimToEmpty(getId()).toLowerCase().contains(lowerCaseFilter)) {
+            return true;
+        }
+
+        final String registryNumber = Optional.ofNullable(getRegistryNumber()).map(Object::toString).orElse(StringUtils.EMPTY);
+        return registryNumber.contains(lowerCaseFilter);
     }
 
 }
