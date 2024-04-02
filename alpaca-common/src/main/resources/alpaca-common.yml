@@ -1,11 +1,24 @@
-alpaca:
-  basedir: c:/alpaca
-  commands:
-    store: ${alpaca.basedir}/commands/
-
 git:
   commit:
     number: ${git.commit.id.abbrev}
 
 application:
   version: ${project.version}
+
+---
+
+spring:
+  profile: win
+alpaca:
+  basedir: c:/alpaca
+  commands:
+    store: ${alpaca.basedir}/commands/
+
+---
+
+spring:
+  profile: mac
+alpaca:
+  basedir: ${user.home}/Library/Application Support/alpaca
+  commands:
+    store: ${alpaca.basedir}/commands/
