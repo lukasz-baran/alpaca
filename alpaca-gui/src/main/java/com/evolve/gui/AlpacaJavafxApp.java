@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.application.Preloader;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.SystemUtils;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
@@ -19,9 +20,12 @@ public class AlpacaJavafxApp extends Application {
 
     @Override
     public void init() {
-        String[] args = getParameters().getRaw().toArray(new String[0]);
+        final String[] args = getParameters().getRaw().toArray(new String[0]);
+        final String profile = SystemUtils.IS_OS_MAC ? "mac" : "win";
+
         this.applicationContext = new SpringApplicationBuilder()
                 .sources(AlpacaSpringApp.class)
+                .profiles(profile)
                 .headless(false) // needed because of Toolkit.getDefaultToolkit().getScreenSize()
                 .run(args);
     }
