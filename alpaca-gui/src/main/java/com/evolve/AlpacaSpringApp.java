@@ -2,6 +2,7 @@ package com.evolve;
 
 import com.evolve.gui.AlpacaJavafxApp;
 import com.evolve.gui.SplashScreenLoader;
+import com.google.common.io.Resources;
 import javafx.application.Application;
 import javafx.scene.Node;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.spring.InjectionPointLazyFxControllerAndViewResolver;
 import net.rgielen.fxweaver.spring.SpringFxWeaver;
+import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.InjectionPoint;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,9 +19,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.util.Arrays;
@@ -37,6 +41,7 @@ public class AlpacaSpringApp {
             JOptionPane.showMessageDialog(null, "Alpaca application is already running!");
             return;
         }
+        setIconOnMac();
         loadSplashScreen(args);
         Application.launch(AlpacaJavafxApp.class, args);
     }
@@ -89,6 +94,19 @@ public class AlpacaSpringApp {
          */
         LOCK_FILE.deleteOnExit();
         return false;
+    }
+
+    private static void setIconOnMac() {
+        if (SystemUtils.IS_OS_MAC) {
+            try {
+                final URL imageResource = Resources.getResource("alpaca.png");
+                final Image image = Toolkit.getDefaultToolkit().getImage(imageResource);
+
+                Taskbar.getTaskbar().setIconImage(image);
+            } catch (Exception ex) {
+                log.warn("failed to set ");
+            }
+        }
     }
 
 }
