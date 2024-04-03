@@ -96,15 +96,19 @@ public class AlpacaSpringApp {
         return false;
     }
 
+    /**
+     * Mac's dock behaves a little different than Windows taskbar.<br>
+     * This is a special feature that is why we also check {@link Taskbar.Feature#ICON_IMAGE}
+     */
     private static void setIconOnMac() {
-        if (SystemUtils.IS_OS_MAC) {
+        if (SystemUtils.IS_OS_MAC && Taskbar.getTaskbar().isSupported(Taskbar.Feature.ICON_IMAGE)) {
             try {
                 final URL imageResource = Resources.getResource("alpaca.png");
                 final Image image = Toolkit.getDefaultToolkit().getImage(imageResource);
 
                 Taskbar.getTaskbar().setIconImage(image);
             } catch (Exception ex) {
-                log.warn("failed to set ");
+                log.warn("failed to set icon", ex);
             }
         }
     }
