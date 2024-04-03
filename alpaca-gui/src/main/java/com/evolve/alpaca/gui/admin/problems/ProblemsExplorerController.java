@@ -1,4 +1,4 @@
-package com.evolve.alpaca.gui.problems;
+package com.evolve.alpaca.gui.admin.problems;
 
 import com.evolve.FindProblems;
 import com.evolve.gui.StageManager;
