@@ -1,4 +1,4 @@
-package com.evolve.gui.admin.importDbf;
+package com.evolve.alpaca.gui.admin.importDbf;
 
 import com.evolve.alpaca.conf.LocalUserConfiguration;
 import com.evolve.gui.DialogWindow;

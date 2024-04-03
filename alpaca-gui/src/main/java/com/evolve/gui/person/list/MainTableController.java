@@ -11,7 +11,7 @@ import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonStatus;
 import com.evolve.gui.StageManager;
-import com.evolve.gui.admin.importDbf.DbfImportCompletedEvent;
+import com.evolve.alpaca.gui.admin.importDbf.DbfImportCompletedEvent;
 import com.evolve.gui.components.NewPersonDialog;
 import com.evolve.gui.person.event.PersonArchivedEvent;
 import com.evolve.gui.person.event.PersonEditionFinishedEvent;
