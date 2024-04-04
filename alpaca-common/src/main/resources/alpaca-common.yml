@@ -6,6 +6,9 @@ application:
 alpaca:
   commands:
     store: ${alpaca.basedir}/commands/
+spring:
+  profiles:
+    default: win
 
 ---
 

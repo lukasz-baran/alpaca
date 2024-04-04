@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/api", produces = "application/json")
+@RequestMapping(value = "/api/person", produces = "application/json")
 @Slf4j
 @RequiredArgsConstructor
 public class PersonController {
@@ -19,7 +19,7 @@ public class PersonController {
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody Person getPerson(@PathVariable String id) {
         log.info("getPerson id={}", id);
-        var person = findPerson.findById(id);
+        final Person person = findPerson.findById(id);
 
         log.info("got: {}", person);
         return person;
