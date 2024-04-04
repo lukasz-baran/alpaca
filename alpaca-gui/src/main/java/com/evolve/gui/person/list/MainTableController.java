@@ -2,7 +2,9 @@ package com.evolve.gui.person.list;
 
 import com.evolve.ArchivePersonCommand;
 import com.evolve.FindPerson;
+import com.evolve.alpaca.gui.admin.importDbf.DbfImportCompletedEvent;
 import com.evolve.alpaca.gui.export.PersonExportHandler;
+import com.evolve.alpaca.gui.stats.StatsController;
 import com.evolve.alpaca.search.PersonSearchCriteria;
 import com.evolve.alpaca.search.PersonSearchService;
 import com.evolve.alpaca.unit.services.UnitsService;
@@ -11,7 +13,6 @@ import com.evolve.domain.Person;
 import com.evolve.domain.PersonListView;
 import com.evolve.domain.PersonStatus;
 import com.evolve.gui.StageManager;
-import com.evolve.alpaca.gui.admin.importDbf.DbfImportCompletedEvent;
 import com.evolve.gui.components.NewPersonDialog;
 import com.evolve.gui.person.event.PersonArchivedEvent;
 import com.evolve.gui.person.event.PersonEditionFinishedEvent;
@@ -31,12 +32,15 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
@@ -68,6 +72,8 @@ public class MainTableController implements Initializable {
     private final ApplicationEventPublisher publisher;
     private final PersonExportHandler personExportHandler;
 
+    private final FxControllerAndView<StatsController, VBox> statsController;
+
     @FXML Button btnNewPerson;
     @FXML Button btnEdit;
     @FXML Button btnDelete;
@@ -94,9 +100,9 @@ public class MainTableController implements Initializable {
     @FXML Hyperlink resetSearchHyperlink;
 
     // bottom quick-search bar
-    @FXML Text textNumberOfRecords;
     @FXML TextField filterField;
     @FXML AnchorPane autoCompletePane;
+    @FXML Label labelStats;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -107,11 +113,9 @@ public class MainTableController implements Initializable {
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         dobColumn.setCellValueFactory(new PropertyValueFactory<>("dob"));
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("age"));
-        retiredColumn.setCellValueFactory(new PropertyValueFactory<>("retired"));
         retiredColumn.setCellValueFactory(cd -> cd.getValue().getRetired());
         retiredColumn.setCellFactory(CheckBoxTableCell.forTableColumn(retiredColumn));
 
-        exemptFromFeesColumn.setCellValueFactory(new PropertyValueFactory<>("exemptFromFees"));
         exemptFromFeesColumn.setCellValueFactory(cd -> cd.getValue().getExemptFromFees());
         exemptFromFeesColumn.setCellFactory(CheckBoxTableCell.forTableColumn(exemptFromFeesColumn));
 
@@ -289,7 +293,30 @@ public class MainTableController implements Initializable {
     }
 
     private void refreshNumberOfItems() {
-        textNumberOfRecords.setText("Liczba: " + personTable.getItems().size());
+        final int all = personTable.getItems().size();
+        final long active = personTable.getItems().stream()
+                .filter(item -> item.getPersonStatus() == PersonStatus.ACTIVE)
+                .count();
+        final long died = personTable.getItems().stream()
+                .filter(item -> item.getPersonStatus() == PersonStatus.DEAD)
+                .count();
+        final long removed = personTable.getItems().stream()
+                .filter(item -> item.getPersonStatus() == PersonStatus.REMOVED)
+                .count();
+        final long resigned = personTable.getItems().stream()
+                .filter(item -> item.getPersonStatus() == PersonStatus.RESIGNED)
+                .count();
+        final String text = String.format("%d·%d·%d·%d", all, active, died, removed);
+        final String tooltip = String.format("Wszyscy: %d\nAktywni: %d\nNie żyją: %s\nSkreśleni: %d\nRezygnacja: %d",
+                all, active, died, removed, resigned);
+
+        labelStats.setText(text);
+        labelStats.setTooltip(StageManager.newTooltip(tooltip));
+    }
+
+    @FXML
+    void showFullStats(MouseEvent mouseEvent) {
+        statsController.getController().show();
     }
 
     @FXML

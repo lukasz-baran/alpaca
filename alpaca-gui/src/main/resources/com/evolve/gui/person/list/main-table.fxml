@@ -59,11 +59,10 @@
            </columnResizePolicy>
        </TableView>
 
-       <HBox id="HBox" alignment="TOP_CENTER" prefHeight="18.0" prefWidth="640.0" spacing="5.0"
-             AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
-           <TextFlow maxWidth="70" minWidth="70" style="--fx-background-color: red;">
-               <Text fx:id="textNumberOfRecords" text="Liczba: 0" />
-           </TextFlow>
+       <HBox id="HBox" alignment="CENTER" prefHeight="18.0" prefWidth="640.0" spacing="5.0"
+             AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" >
+
+           <Label maxWidth="110" minWidth="110" fx:id="labelStats" onMouseClicked="#showFullStats" style="-fx-cursor: hand;"/>
 
            <AnchorPane fx:id="autoCompletePane" maxHeight="15.0" prefHeight="15.0" prefWidth="444.0" HBox.hgrow="ALWAYS">
                <MyTextField fx:id="filterField" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" HBox.hgrow="ALWAYS" fx:factory="create" />
