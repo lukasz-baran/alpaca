@@ -16,6 +16,16 @@ Note: the development is still in progress. We want to add support for https://e
 * exporting to CSV
 * validation of bank accounts based NBP (Polish National Bank)
 
+## Cross-platform compatibility
+
+Currently, you can run Alpaca on Windows and/or MacOS. With some limitations: installer is only available for Windows platform:
+
+| platform | runtime | installer |
+|:--------:|:-------:|:---------:|
+| Windows  |   Yes   |    Yes    |
+|  MacOS   |   Yes   |    No     |
+|  Linux   |   No    |    No     |
+
 ## JavaFX topics
 * Sorting and pagination: http://incepttechnologies.blogspot.com/p/javafx-tableview-with-pagination-and.html
 * Sorting and filtering: https://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
