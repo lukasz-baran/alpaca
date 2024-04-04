@@ -14,7 +14,7 @@ Note: the development is still in progress. We want to add support for https://e
 * attaching and storing of related docs (PDF, DOC, graphic images)
 * importing from a legacy DBF database
 * exporting to CSV
-* validation of bank accounts based NBP (Polish National Bank)
+* validation of bank accounts based on NBP (Polish National Bank) data
 
 ## Cross-platform compatibility
 
