@@ -32,11 +32,13 @@ class ProblemsQueryService implements FindProblems {
         final List<String> problems = new ArrayList<>();
 
         findPerson.fetch(PersonLookupCriteria.ALL).forEach(person -> {
-            person.getStatusChanges().forEach(personStatusChange -> {
-                if (personStatusChange.getWhen() == null) {
-                    problems.add(getFullName(person) + ": brakuje daty w statusie " + personStatusChange.getEventType().getName());
-                }
-            });
+            if (person.getStatus() == PersonStatus.ACTIVE) {
+                person.getStatusChanges().forEach(personStatusChange -> {
+                    if (personStatusChange.getWhen() == null) {
+                        problems.add(getFullName(person) + ": brakuje daty w statusie " + personStatusChange.getEventType().getName());
+                    }
+                });
+            }
 
             final List<LocalDate> dates = person.getStatusChanges().stream().map(PersonStatusChange::getWhen)
                     .filter(Objects::nonNull).toList();
