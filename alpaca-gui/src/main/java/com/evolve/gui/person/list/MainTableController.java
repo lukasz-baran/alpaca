@@ -306,7 +306,7 @@ public class MainTableController implements Initializable {
         final long resigned = personTable.getItems().stream()
                 .filter(item -> item.getPersonStatus() == PersonStatus.RESIGNED)
                 .count();
-        final String text = String.format("%d·%d·%d·%d", all, active, died, removed);
+        final String text = String.format("Liczba: %d", all);
         final String tooltip = String.format("Wszyscy: %d\nAktywni: %d\nNie żyją: %s\nSkreśleni: %d\nRezygnacja: %d",
                 all, active, died, removed, resigned);
 
