@@ -16,13 +16,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
-import javafx.util.Duration;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -290,15 +289,11 @@ public class DocumentsController implements Initializable {
             super.updateItem(documentEntry, empty);
             setTooltip(null);
             if (documentEntry != null && documentEntry.getEntryType() == DocumentEntry.EntryType.DOCUMENT) {
-                final Tooltip tooltip = new Tooltip();
-                tooltip.setShowDelay(Duration.ZERO);
-
-                tooltip.setText("content ID: " + documentEntry.getId() +
-                        "\nmime type: " + documentEntry.getMimeType() +
-                        "\nlength: " + documentEntry.getLength() +
-                        "\ncategory: " + documentEntry.getCategory()
-                );
-                setTooltip(tooltip);
+                final String tooltipText = String.format(
+                        "content ID: %d\nmime type: %s\nlength: %d\ncategory: %s",
+                        documentEntry.getId(), documentEntry.getMimeType(), documentEntry.getLength(),
+                        documentEntry.getCategory());
+                setTooltip(StageManager.newTooltip(tooltipText));
             }
         }
     }
