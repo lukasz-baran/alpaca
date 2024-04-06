@@ -14,10 +14,17 @@ import java.util.List;
 public class AccountController {
     private final FindAccount findAccount;
 
-    @GetMapping(value = "/{id}", produces="application/json")
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody List<Account> getAllAccounts() {
+        log.info("get all accounts");
+        return findAccount.fetch(AccountLookupCriteria.ALL);
+    }
+
+    @GetMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody List<Account> getPersonAccounts(@PathVariable String id) {
-        log.info("getPerson id={}", id);
+        log.info("get account by person id={}", id);
         final List<Account> accounts = findAccount.findByPersonId(id);
 
         log.info("got: {}", accounts);
