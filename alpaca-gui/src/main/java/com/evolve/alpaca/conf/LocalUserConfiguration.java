@@ -14,10 +14,16 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.prefs.Preferences;
 
+/**
+ *  The properties are stored in:  HKEY_CURRENT_USER\Software\JavaSoft\Prefs
+ */
 @Component
 @Slf4j
 public class LocalUserConfiguration implements InitializingBean {
+    public static final String ALPACA_PREF_KEY = "/evolve/alpaca";
+
 
     public static final String Z_B_KO_DBF_LOCATION = "Z_B_KO_DBF_LOCATION";
     public static final String PLAN_DBF_LOCATION = "PLAN_DBF_LOCATION";
@@ -32,11 +38,19 @@ public class LocalUserConfiguration implements InitializingBean {
         final Properties properties = getOrCreate();
         properties.setProperty(key, value);
         properties.store(new FileOutputStream(PROPERTIES_FILE), null);
+
+        final Preferences userPreferences = Preferences.userRoot().node(ALPACA_PREF_KEY);
+        userPreferences.put(key, value);
     }
 
     public Optional<String> loadProperty(String key) {
-        final Properties properties = getOrCreate();
-        return Optional.ofNullable(properties.getProperty(key));
+        final Preferences userPreferences = Preferences.userRoot().node(ALPACA_PREF_KEY);
+        final Optional<String> maybeValue = Optional.ofNullable(userPreferences.get(key, null));
+        if (maybeValue.isPresent()) {
+            log.info("FOUND PROPERTY IN JAVA PREFS " + key);
+            return maybeValue;
+        }
+        return Optional.ofNullable(getOrCreate().getProperty(key));
     }
 
     @SneakyThrows
@@ -51,7 +65,14 @@ public class LocalUserConfiguration implements InitializingBean {
     @Override
     public void afterPropertiesSet() {
         FileUtils.createFileWithDirectories(PROPERTIES_FILE);
-    }
 
+        final Preferences userPreferences = Preferences.userRoot().node(ALPACA_PREF_KEY);
+        final Properties properties = getOrCreate();
+        properties.keySet()
+                .forEach(key -> {
+                    log.info("PROPERTY " + key);
+                    userPreferences.put((String) key, (String) properties.get(key));
+                });
+    }
 
 }
