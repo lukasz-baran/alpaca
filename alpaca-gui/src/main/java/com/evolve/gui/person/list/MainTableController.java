@@ -18,6 +18,7 @@ import com.evolve.gui.person.event.PersonArchivedEvent;
 import com.evolve.gui.person.event.PersonEditionFinishedEvent;
 import com.evolve.gui.person.event.PersonEditionRequestedEvent;
 import com.evolve.gui.person.list.search.SearchPersonDialog;
+import com.evolve.gui.person.preview.PersonPreviewDialog;
 import com.evolve.services.PersonApplicationService;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -73,6 +74,7 @@ public class MainTableController implements Initializable {
     private final PersonExportHandler personExportHandler;
 
     private final FxControllerAndView<StatsController, VBox> statsController;
+    private final FxControllerAndView<PersonPreviewDialog, HBox> previewDialog;
 
     @FXML Button btnNewPerson;
     @FXML Button btnEdit;
@@ -217,7 +219,16 @@ public class MainTableController implements Initializable {
             clipboardContent.putString(personJson);
             Clipboard.getSystemClipboard().setContent(clipboardContent);
         });
-        contextMenu.getItems().addAll(editPerson, exportJson);
+        final MenuItem preview = new MenuItem("Podgląd");
+        preview.setOnAction(event -> {
+            // TODO
+            final String personId = row.getItem().getId();
+            final Person person = personsService.findById(personId);
+
+            final Person anotherPerson = personsService.findById("01016");
+            previewDialog.getController().open(person, anotherPerson);
+        });
+        contextMenu.getItems().addAll(editPerson, exportJson, preview);
         return contextMenu;
     }
 

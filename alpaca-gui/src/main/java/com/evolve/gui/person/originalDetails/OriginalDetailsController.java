@@ -1,6 +1,9 @@
 package com.evolve.gui.person.originalDetails;
 
+import com.evolve.EditPersonDataCommand;
 import com.evolve.FindPerson;
+import com.evolve.alpaca.auditlog.AuditEntry;
+import com.evolve.alpaca.auditlog.FindAuditLog;
 import com.evolve.alpaca.importing.importDbf.fixers.PersonFixer;
 import com.evolve.domain.Person;
 import com.evolve.gui.person.list.PersonListModel;
@@ -23,6 +26,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -38,9 +42,11 @@ public class OriginalDetailsController implements Initializable {
     private final FindPerson findPerson;
     private final PersonFixer personFixer;
     private final PersonListModel personListModel;
+    private final FindAuditLog findAuditLog;
 
     private final ObservableList<DetailsEntry> originalData = FXCollections.observableArrayList();
     private final ObservableList<FixerEntry> fixerData = FXCollections.observableArrayList();
+    private final ObservableList<EditHistoryEntry> editionHistoryData = FXCollections.observableArrayList();
 
     @FXML MenuItem copyValue;
     @FXML TableColumn<DetailsEntry, String> keyColumn;
@@ -51,6 +57,11 @@ public class OriginalDetailsController implements Initializable {
     @FXML TableColumn<FixerEntry, String> fieldColumn;
     @FXML TableColumn<FixerEntry, String> newValueColumn;
 
+    @FXML TableView<EditHistoryEntry> editHistoryTable;
+    @FXML TableColumn<EditHistoryEntry, LocalDateTime> editWhenColumn;
+    @FXML TableColumn<EditHistoryEntry, String> editInfoColumn;
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         keyColumn.setCellValueFactory(new PropertyValueFactory<>("key"));
@@ -60,6 +71,10 @@ public class OriginalDetailsController implements Initializable {
         fieldColumn.setCellValueFactory(new PropertyValueFactory<>("field"));
         newValueColumn.setCellValueFactory(new PropertyValueFactory<>("newValue"));
         fixersDataTable.setItems(fixerData);
+
+        editWhenColumn.setCellValueFactory(new PropertyValueFactory<>("when"));
+        editInfoColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
+        editHistoryTable.setItems(editionHistoryData);
 
         personListModel.getCurrentPersonProperty().addListener(
                 (ObservableValue<? extends PersonModel> obs, PersonModel oldUser, PersonModel newUser) -> {
@@ -82,7 +97,13 @@ public class OriginalDetailsController implements Initializable {
             return;
         }
 
-        final Person person = findPerson.findById(personModel.getId());
+        setUpOriginalData(personModel.getId());
+        setUpFixerData(personModel.getId());
+        setUpEditionHistory(personModel.getId());
+    }
+
+    private void setUpOriginalData(final String personId) {
+        final Person person = findPerson.findById(personId);
         log.info("Original person details: {}", person);
 
         originalData.clear();
@@ -100,16 +121,23 @@ public class OriginalDetailsController implements Initializable {
                     });
         } else {
             log.info("No raw data for person {}. This is fine because the person could be added manually",
-                    personModel.getId());
+                    personId);
         }
+    }
 
+    private void setUpFixerData(final String personId) {
         fixerData.clear();
-        personFixer.getRecords(personModel.getId())
+        personFixer.getRecords(personId)
                 .entrySet()
                 .stream()
                 .map(FixerEntry::of)
                 .forEach(fixerData::add);
+    }
 
+    private void setUpEditionHistory(final String personId) {
+        editionHistoryData.clear();
+        findAuditLog.findById(EditPersonDataCommand.class, personId)
+                .forEach(auditEntry -> editionHistoryData.add(EditHistoryEntry.of(auditEntry)));
     }
 
     @Getter
@@ -138,6 +166,19 @@ public class OriginalDetailsController implements Initializable {
         public static FixerEntry of(Map.Entry<String, String> entry) {
             final String field = PersonFixer.FIXER_TAGS_TO_TEXT.getOrDefault(entry.getKey(), entry.getKey());
             return new FixerEntry(field, entry.getValue());
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    public static class EditHistoryEntry {
+        private LocalDateTime when;
+        private String comment;
+
+        public static EditHistoryEntry of(AuditEntry entry) {
+            return new EditHistoryEntry(entry.getWhen(), "edycja");
         }
     }
 }

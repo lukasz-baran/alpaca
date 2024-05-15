@@ -3,6 +3,7 @@ package com.evolve.alpaca.importing.importDbf;
 import com.evolve.EditPersonDataCommand;
 import com.evolve.alpaca.account.Account;
 import com.evolve.alpaca.account.services.AccountsService;
+import com.evolve.alpaca.auditlog.repo.AuditLogRepository;
 import com.evolve.alpaca.ddd.CommandCollector;
 import com.evolve.alpaca.ddd.CommandsApplier;
 import com.evolve.alpaca.ddd.PersistedCommand;
@@ -45,6 +46,8 @@ public class ImportDbfService {
     private final PersonApplicationService personApplicationService;
 
     private final PostImportStepService postImportStepService;
+
+    private final AuditLogRepository auditLogRepository;
 
     public int startImport(ImportDataCommand importDataCommand) {
 
@@ -102,6 +105,10 @@ public class ImportDbfService {
 
     void processCommands() {
         final List<PersistedCommand> commands = commandsApplier.loadCommands();
+
+        // clear editions in the audit log
+        auditLogRepository.deleteAll();
+
         commands.forEach(command -> {
             log.info("processing command: " + command);
             try {
@@ -113,7 +120,7 @@ public class ImportDbfService {
 
                     log.info("applying command: {}", LogUtil.printJson(editPersonDataCommand));
 
-                    personApplicationService.editPerson(editPersonDataCommand);
+                    personApplicationService.editPerson(editPersonDataCommand, command.when());
                 }
             } catch (ClassNotFoundException e) {
                 log.error("Cannot find class - ", e);

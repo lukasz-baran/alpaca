@@ -4,6 +4,7 @@ import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 import java.util.Optional;
 
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
@@ -12,7 +13,7 @@ import java.util.Optional;
 @Getter
 @ToString
 @Embeddable
-public class RegistryNumber {
+public class RegistryNumber implements Serializable {
     private Integer registryNum;
 
     public static RegistryNumber of(String input) {

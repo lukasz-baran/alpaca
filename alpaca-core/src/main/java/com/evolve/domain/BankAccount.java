@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.IBANValidator;
 
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -13,7 +14,7 @@ import java.util.Optional;
 @EqualsAndHashCode
 @Embeddable
 @ToString
-public class BankAccount {
+public class BankAccount implements Serializable {
     public static final IBANValidator IBAN_VALIDATOR = new IBANValidator(
             new IBANValidator.Validator[]{IBANValidator.getInstance().getValidator("PL")});
 

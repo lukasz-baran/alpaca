@@ -4,3 +4,35 @@ spring:
 
 swagger:
   show: true
+
+# enable/disable https
+#server:
+#  ssl:
+#    enabled: true
+#  # keystore format
+#    key-store-type: PKCS12
+#  # keystore location
+#    key-store: classpath:keystore/keystore.p12
+#  # keystore password
+#    key-store-password: alpacaPass123
+## SSL protocol to use
+#    protocol: TLS
+#  # Enabled SSL protocols
+#    enabled-protocols: TLSv1.2
+#    client-auth: need
+##trust store location
+#    trust-store: classpath:keystore/truststore.p12
+#  #trust store password
+#    trust-store-password: alpacaPass123
+
+server:
+  port: 443
+  servlet:
+    context-path: /
+  ssl:
+    enabled: true
+    key-alias: alpaca
+    key-store: classpath:keystore/keystore.p12
+    key-store-type: PKCS12
+    key-password: alpacaPass123
+    key-store-password: alpacaPass123

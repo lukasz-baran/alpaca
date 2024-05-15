@@ -1,5 +1,6 @@
 package com.evolve.domain;
 
+import com.evolve.alpaca.auditlog.AuditableEntity;
 import lombok.*;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.LazyCollection;
@@ -19,7 +20,7 @@ import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-public class Person implements Serializable {
+public class Person implements Serializable, AuditableEntity {
 
     @javax.persistence.Id
     private String personId;
@@ -137,6 +138,16 @@ public class Person implements Serializable {
         return this;
     }
 
+    @Override
+    public String getEntityId() {
+        return personId;
+    }
+
+    @Override
+    public Class<?> getAuditableClass() {
+        return Person.class;
+    }
+
     @Getter
     @RequiredArgsConstructor
     public enum Gender {
@@ -197,7 +208,7 @@ public class Person implements Serializable {
     @Builder
     @NoArgsConstructor
     @Embeddable
-    public static class AuthorizedPerson {
+    public static class AuthorizedPerson implements Serializable {
         private String firstName;
         private String lastName;
         private String relation; // żona, mąż, syn, matka, córka, synowie
