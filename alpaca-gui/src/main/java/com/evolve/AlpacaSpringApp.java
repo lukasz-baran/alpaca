@@ -10,6 +10,7 @@ import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.spring.InjectionPointLazyFxControllerAndViewResolver;
 import net.rgielen.fxweaver.spring.SpringFxWeaver;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.InjectionPoint;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -23,10 +24,14 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Optional;
 
 import static com.evolve.alpaca.conf.LocalUserConfiguration.ALPACA_CONF_DIR;
 
@@ -70,18 +75,24 @@ public class AlpacaSpringApp {
     }
 
     private static boolean appIsReadyRunning() {
-        if (LOCK_FILE.exists()) {
-            System.out.println("Alpaca application is already running!");
+        if (lockExistsAndProcessIsRunning()) {
+            log.warn("Alpaca application is already running!");
             return true;
         }
 
         final boolean dirsCreated = LOCK_FILE.getParentFile().mkdirs();
         log.info("Directories created: {}", dirsCreated);
 
+        long pid = ProcessHandle.current().pid();
+        log.info("current pid {}", pid);
+
         try (FileOutputStream fileOutputStream = new FileOutputStream(LOCK_FILE);
              FileChannel channel = fileOutputStream.getChannel();
-             FileLock lock = channel.lock()
+             PrintWriter printWriter = new PrintWriter(Channels.newOutputStream(channel));
+             FileLock lock = channel.lock();
         ) {
+            printWriter.print(pid);
+            printWriter.flush();
             log.info("Lock file created: {}", lock);
         } catch (IOException e) {
             log.error("Problem with lock");
@@ -94,6 +105,33 @@ public class AlpacaSpringApp {
          */
         LOCK_FILE.deleteOnExit();
         return false;
+    }
+
+    private static boolean lockExistsAndProcessIsRunning() {
+        if (LOCK_FILE.exists()) {
+            // if the lock file exists it doesn't mean the process is still there - let's check the process
+            try {
+                final long otherPid = Long.parseLong(Files.readString(LOCK_FILE.toPath()));
+                final Optional<String> info = fetchProcessInfo(otherPid)
+                        .flatMap(ProcessHandle.Info::command);
+                final boolean isOtherProcessRunning = info.isPresent() && StringUtils.containsIgnoreCase(info.get(), "java");
+                if (isOtherProcessRunning) {
+                    log.warn("It looks like there is another java process running with pid {}", otherPid);
+                }
+                return isOtherProcessRunning;
+            } catch (Exception e) {
+                log.error("Unable to get pid from the lock file - assuming another instance of Alpaca is running", e);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static Optional<ProcessHandle.Info> fetchProcessInfo(long pid) {
+        return ProcessHandle.allProcesses().filter(
+                        handle -> handle.pid() == pid)
+                .findAny()
+                .map(ProcessHandle::info);
     }
 
     /**
