@@ -47,6 +47,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -238,7 +239,7 @@ public class PersonDetailsController extends EditableGuiElement
 
         final Person savedPerson;
         try {
-            savedPerson = personApplicationService.editPerson(command);
+            savedPerson = personApplicationService.editPerson(command, LocalDateTime.now());
         } catch (ValidationException e) {
             log.error("Error while updating person data", e);
             stageManager.displayWarning("Błąd walidacji: " +e.getErrorMessages());

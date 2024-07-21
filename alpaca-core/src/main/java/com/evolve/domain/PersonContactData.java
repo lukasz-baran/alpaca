@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +17,7 @@ import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 @EqualsAndHashCode
 @Embeddable
 @ToString
-public class PersonContactData {
+public class PersonContactData implements Serializable {
 
     @NotBlank
     private String data;

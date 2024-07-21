@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox fx:id="personPreviewDialog" alignment="CENTER" prefHeight="597.0" prefWidth="751.0" stylesheets="@../../../../../styles/style.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.preview.PersonPreviewDialog">
+    <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="578.0" prefWidth="725.0" HBox.hgrow="ALWAYS">
+        <padding>
+            <Insets bottom="10.0" top="10.0" />
+        </padding>
+        <GridPane alignment="TOP_CENTER" hgap="10.0" vgap="10.0" VBox.vgrow="ALWAYS">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <padding>
+                <Insets left="10.0" right="10.0"/>
+            </padding>
+
+            <TreeView fx:id="previewTreeView" maxWidth="1.7976931348623157E308" prefHeight="520.0">
+                <padding>
+                    <Insets left="10.0" right="5.0"/>
+                </padding>
+                <opaqueInsets>
+                    <Insets right="5.0"/>
+                </opaqueInsets>
+            </TreeView>
+
+            <TreeView fx:id="previewTreeView1" maxWidth="1.7976931348623157E308" prefHeight="520.0"
+                      GridPane.columnIndex="1">
+                <padding>
+                    <Insets left="5.0"/>
+                </padding>
+                <opaqueInsets>
+                    <Insets left="5.0"/>
+                </opaqueInsets>
+                <GridPane.margin>
+                    <Insets/>
+                </GridPane.margin>
+            </TreeView>
+        </GridPane>
+        <HBox alignment="TOP_RIGHT">
+            <Button fx:id="btnClose" onAction="#onClose" text="Zamknij" />
+            <padding>
+                <Insets left="15.0" right="15.0" top="10.0" />
+            </padding>
+        </HBox>
+    </VBox>
+</HBox>

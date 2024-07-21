@@ -1,6 +1,7 @@
 package com.evolve.gui.person.address;
 
 import com.evolve.alpaca.util.TableViewResizer;
+import com.evolve.domain.Address;
 import com.evolve.domain.Person;
 import com.evolve.gui.EditableGuiElement;
 import com.evolve.gui.StageManager;
@@ -29,7 +30,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
-import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 @Component
 @FxmlView("person-addresses-list.fxml")
@@ -148,10 +148,7 @@ public class PersonAddressesController extends EditableGuiElement implements Ini
 
     private static String concatenatedAddressString(AddressEntry addressEntry) {
         final Person.PersonAddress address = addressEntry.getPersonAddress();
-        return String.join(" ",
-                        trimToEmpty(address.getStreet()),
-                        trimToEmpty(address.getPostalCode()),
-                        trimToEmpty(address.getCity()));
+        return Address.toConcatenatedAddress(address);
     }
 
     public static class PersonAddressRow extends TableRow<AddressEntry> {

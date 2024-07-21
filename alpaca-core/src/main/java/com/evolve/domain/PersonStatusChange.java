@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @AllArgsConstructor
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @Builder
 @Embeddable
-public class PersonStatusChange implements Comparable<PersonStatusChange> {
+public class PersonStatusChange implements Serializable, Comparable<PersonStatusChange> {
 
     private EventType eventType;
     @Column(name = "whenAdded")

@@ -6,6 +6,8 @@ import javax.persistence.Embeddable;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
+
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
@@ -21,6 +23,13 @@ public class Address implements Serializable {
 
     public static Address of(String street, String postalCode, String city) {
         return new Address(street, postalCode, city);
+    }
+
+    public static String toConcatenatedAddress(Address address) {
+        return String.join(" ",
+                trimToEmpty(address.getStreet()),
+                trimToEmpty(address.getPostalCode()),
+                trimToEmpty(address.getCity()));
     }
 
 }
