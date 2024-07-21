@@ -14,6 +14,7 @@ import java.time.Period;
 import java.util.*;
 
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 @Builder
 @Data
@@ -213,6 +214,13 @@ public class Person implements Serializable, AuditableEntity {
         private String lastName;
         private String relation; // żona, mąż, syn, matka, córka, synowie
         private String comment;
+
+        public static String toConcatenated(AuthorizedPerson authorizedPerson) {
+            return String.join(" ",
+                    trimToEmpty(authorizedPerson.firstName),
+                    trimToEmpty(authorizedPerson.lastName));
+        }
+
     }
 
 

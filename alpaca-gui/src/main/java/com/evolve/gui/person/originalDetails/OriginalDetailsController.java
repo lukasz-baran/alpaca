@@ -4,33 +4,43 @@ import com.evolve.EditPersonDataCommand;
 import com.evolve.FindPerson;
 import com.evolve.alpaca.auditlog.AuditEntry;
 import com.evolve.alpaca.auditlog.FindAuditLog;
+import com.evolve.alpaca.document.DocumentEntry;
 import com.evolve.alpaca.importing.importDbf.fixers.PersonFixer;
+import com.evolve.alpaca.utils.LogUtil;
 import com.evolve.domain.Person;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
+import com.evolve.gui.person.preview.PersonPreviewDialog;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.layout.HBox;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import net.rgielen.fxweaver.core.FxControllerAndView;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Component
 @FxmlView("original-details.fxml")
@@ -38,6 +48,8 @@ import java.util.Set;
 @Slf4j
 public class OriginalDetailsController implements Initializable {
     public static final Set<String> HIDDEN_DATA = Set.of("WWW", "NIP_UE");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+    private final ObjectMapper objectMapper = LogUtil.OBJECT_MAPPER;
 
     private final FindPerson findPerson;
     private final PersonFixer personFixer;
@@ -47,6 +59,8 @@ public class OriginalDetailsController implements Initializable {
     private final ObservableList<DetailsEntry> originalData = FXCollections.observableArrayList();
     private final ObservableList<FixerEntry> fixerData = FXCollections.observableArrayList();
     private final ObservableList<EditHistoryEntry> editionHistoryData = FXCollections.observableArrayList();
+
+    private final FxControllerAndView<PersonPreviewDialog, HBox> previewDialog;
 
     @FXML MenuItem copyValue;
     @FXML TableColumn<DetailsEntry, String> keyColumn;
@@ -58,7 +72,7 @@ public class OriginalDetailsController implements Initializable {
     @FXML TableColumn<FixerEntry, String> newValueColumn;
 
     @FXML TableView<EditHistoryEntry> editHistoryTable;
-    @FXML TableColumn<EditHistoryEntry, LocalDateTime> editWhenColumn;
+    @FXML TableColumn<EditHistoryEntry, String> editWhenColumn;
     @FXML TableColumn<EditHistoryEntry, String> editInfoColumn;
 
 
@@ -73,6 +87,12 @@ public class OriginalDetailsController implements Initializable {
         fixersDataTable.setItems(fixerData);
 
         editWhenColumn.setCellValueFactory(new PropertyValueFactory<>("when"));
+        editWhenColumn.setCellValueFactory(param -> {
+            final EditHistoryEntry entry = param.getValue();
+
+            return new SimpleStringProperty(entry.formatDate());
+        });
+
         editInfoColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
         editHistoryTable.setItems(editionHistoryData);
 
@@ -140,6 +160,20 @@ public class OriginalDetailsController implements Initializable {
                 .forEach(auditEntry -> editionHistoryData.add(EditHistoryEntry.of(auditEntry)));
     }
 
+    @FXML
+    public void showChange(ActionEvent actionEvent) throws JsonProcessingException {
+        EditHistoryEntry editHistoryEntry = editHistoryTable.getSelectionModel().getSelectedItem();
+        AuditEntry auditEntry = editHistoryEntry.auditEntry;
+
+        final Person personBefore = objectMapper.readValue(auditEntry.getBefore(), Person.class);
+        final Person personAfter = objectMapper.readValue(auditEntry.getAfter(), Person.class);
+
+        final String title = editHistoryEntry.formatDate();
+
+        previewDialog.getController().open(title, personBefore, personAfter);
+
+    }
+
     @Getter
     @Setter
     @AllArgsConstructor
@@ -176,9 +210,16 @@ public class OriginalDetailsController implements Initializable {
     public static class EditHistoryEntry {
         private LocalDateTime when;
         private String comment;
+        private AuditEntry auditEntry;
 
         public static EditHistoryEntry of(AuditEntry entry) {
-            return new EditHistoryEntry(entry.getWhen(), "edycja");
+            return new EditHistoryEntry(entry.getWhen(), "edycja", entry);
+        }
+
+        String formatDate() {
+            return Optional.ofNullable(when)
+                    .map(value -> value.format(DATE_TIME_FORMATTER))
+                    .orElse(StringUtils.EMPTY);
         }
     }
 }

@@ -1,55 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.evolve.gui.person.list.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox fx:id="personPreviewDialog" alignment="CENTER" prefHeight="585.0" prefWidth="539.0" xmlns="http://javafx.com/javafx/19"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.preview.PersonPreviewDialog"
-        stylesheets="@../../../../../styles/style.css">
-    <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" HBox.hgrow="ALWAYS">
+<HBox fx:id="personPreviewDialog" alignment="CENTER" prefHeight="597.0" prefWidth="751.0" stylesheets="@../../../../../styles/style.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.evolve.gui.person.preview.PersonPreviewDialog">
+    <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="578.0" prefWidth="725.0" HBox.hgrow="ALWAYS">
         <padding>
             <Insets bottom="10.0" top="10.0" />
         </padding>
-        <HBox maxWidth="1.7976931348623157E308" minHeight="0.0">
+        <GridPane alignment="TOP_CENTER" hgap="10.0" vgap="10.0" VBox.vgrow="ALWAYS">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
             <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                <Insets left="10.0" right="10.0"/>
             </padding>
 
-            <TreeView fx:id="previewTreeView" layoutX="5.0" layoutY="10.0" prefHeight="520.0" prefWidth="300.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
+            <TreeView fx:id="previewTreeView" maxWidth="1.7976931348623157E308" prefHeight="520.0">
+                <padding>
+                    <Insets left="10.0" right="5.0"/>
+                </padding>
+                <opaqueInsets>
+                    <Insets right="5.0"/>
+                </opaqueInsets>
             </TreeView>
 
-            <TreeView fx:id="previewTreeView1" layoutX="5.0" layoutY="10.0" prefHeight="520.0" prefWidth="300.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
+            <TreeView fx:id="previewTreeView1" maxWidth="1.7976931348623157E308" prefHeight="520.0"
+                      GridPane.columnIndex="1">
+                <padding>
+                    <Insets left="5.0"/>
+                </padding>
+                <opaqueInsets>
+                    <Insets left="5.0"/>
+                </opaqueInsets>
+                <GridPane.margin>
+                    <Insets/>
+                </GridPane.margin>
             </TreeView>
-
-<!--
-            <TableView fx:id="accountsTable" layoutX="5.0" layoutY="10.0" prefHeight="520.0" prefWidth="300.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
-                <columns>
-                    <TableColumn fx:id="accountIdColumn" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Konto" />
-                    <TableColumn fx:id="accountNameColumn" prefWidth="220.0" text="Nazwa" />
-
-                    <TableColumn fx:id="unitNumberColumn" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Jednostka" />
-                    <TableColumn fx:id="personIdColumn" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="ID osoby" />
-                </columns>
-                <columnResizePolicy>
-                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                </columnResizePolicy>
-            </TableView>
--->
-
-<!--
-            <HBox id="HBox" alignment="TOP_CENTER" prefHeight="18.0" prefWidth="640.0" spacing="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
-                <AnchorPane fx:id="autoCompletePane" maxHeight="15.0" prefHeight="15.0" prefWidth="444.0" HBox.hgrow="ALWAYS">
-                    <MyTextField fx:id="filterField" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" HBox.hgrow="ALWAYS" fx:factory="create" />
-                </AnchorPane>
-            </HBox>
--->
-        </HBox>
+        </GridPane>
         <HBox alignment="TOP_RIGHT">
             <Button fx:id="btnClose" onAction="#onClose" text="Zamknij" />
             <padding>
-                <Insets left="15.0" right="15.0" />
+                <Insets left="15.0" right="15.0" top="10.0" />
             </padding>
         </HBox>
     </VBox>

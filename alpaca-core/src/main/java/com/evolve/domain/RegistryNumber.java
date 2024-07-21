@@ -1,5 +1,6 @@
 package com.evolve.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -40,6 +41,7 @@ public class RegistryNumber implements Serializable {
         return new RegistryNumber(integer);
     }
 
+    @JsonIgnore
     public Optional<Integer> getNumber() {
         return Optional.ofNullable(registryNum);
     }

@@ -1,0 +1,92 @@
+{
+  "personId": "24011",
+  "unitNumber": "47",
+  "registryNumber": {
+    "registryNum": 1103,
+    "number": 1103
+  },
+  "oldRegistryNumber": {
+    "registryNum": 1733,
+    "number": 1733
+  },
+  "firstName": "Janina",
+  "lastName": "Kowalska",
+  "gender": "FEMALE",
+  "dob": "1958-03-05",
+  "retired": true,
+  "addresses": [
+    {
+      "street": "Adresowa 7",
+      "postalCode": "01-123",
+      "city": "Miasto",
+      "type": "HOME",
+      "comment": ""
+    }
+  ],
+  "contactData": [
+    {
+      "data": "012345678",
+      "type": "PHONE"
+    }
+  ],
+  "bankAccounts": [
+    {
+      "number": "01234567890123456789012345",
+      "notes": "BANK SPOLDZIELCZY"
+    }
+  ],
+  "status": "ACTIVE",
+  "statusChanges": [
+    {
+      "eventType": "BORN",
+      "when": "1958-03-05"
+    },
+    {
+      "eventType": "JOINED",
+      "when": "1986-03-14"
+    }
+  ],
+  "authorizedPersons": [
+    {
+      "firstName": "Jan",
+      "lastName": "Kowalski",
+      "relation": "mąż"
+    }
+  ],
+  "rawData": {
+    "NAZ_ODB5": "Adresowa 7",
+    "NAZ_ODB6": "37-700 Przeworsk",
+    "NAZ_ODB7": "",
+    "VAT": "false",
+    "DATA_AKT": "Thu Feb 01 00:00:00 CET 2024",
+    "INFO": "",
+    "EMAIL": "",
+    "NR_IDENT": " 1 103  1733",
+    "SYM_ODB": "24011",
+    "CZAS_R": "0",
+    "NIP_UE": "",
+    "UZ": "*",
+    "SYM_KRAJ": "",
+    "ZRODLO": "",
+    "DATA_ZAL": "Mon Mar 06 00:00:00 CET 2000",
+    "TEL1": "",
+    "TEL0": "012345678",
+    "KONTO_WNP": "2004724011",
+    "KONTO_WNI": "",
+    "BANK0": "03",
+    "BANK1": "W.B.C. SA LUBLIN",
+    "WWW": "",
+    "BANK2": "O PRZEWORSK",
+    "BANK3": "01234567890123456789012345",
+    "BANK4": "",
+    "NAZ_ODB1": "Kowalska Janina",
+    "NAZ_ODB2": "Kowalska Janina",
+    "GRU_ODB": "",
+    "NAZ_ODB3": "5.03.58 14.03.86",
+    "NAZ_ODB4": "m.Jan Kowalski",
+    "RO": "P",
+    "PLATNIK": ""
+  },
+  "entityId": "24011",
+  "auditableClass": "com.evolve.domain.Person"
+}

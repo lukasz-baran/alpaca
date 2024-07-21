@@ -1,32 +1,29 @@
 package com.evolve.gui.person.preview;
 
-import com.evolve.alpaca.utils.LogUtil;
 import com.evolve.domain.Person;
 import com.evolve.gui.StageManager;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.Map;
+import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import static com.evolve.gui.StageManager.APPLICATION_ICON;
 
@@ -36,6 +33,8 @@ import static com.evolve.gui.StageManager.APPLICATION_ICON;
 @RequiredArgsConstructor
 @Slf4j
 public class PersonPreviewDialog implements Initializable {
+    public static final String TITLE = "Podgląd";
+
 
     private final StageManager stageManager;
     private Stage stage;
@@ -47,6 +46,8 @@ public class PersonPreviewDialog implements Initializable {
     @FXML HBox personPreviewDialog;
     @FXML Button btnClose;
 
+    private final PseudoClass childPseudoClass = PseudoClass.getPseudoClass("child");
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.stage = new Stage();
@@ -57,24 +58,48 @@ public class PersonPreviewDialog implements Initializable {
         stage.getIcons().add(APPLICATION_ICON);
     }
 
-    @SneakyThrows
-    public void open(Person person, Person anotherPerson) {
-        final JSONParser parser = new JSONParser();
+    void attachCellFactory(TreeView<PersonTreeItem> previewTreeView) {
+        previewTreeView.setCellFactory(new Callback<>() {
+            @Override
+            public TreeCell<PersonTreeItem> call(TreeView<PersonTreeItem> param) {
+                return new TreeCell<>() {
+                    @Override
+                    protected void updateItem(PersonTreeItem item, boolean empty) {
+                        super.updateItem(item, empty);
 
-        final String personJson = LogUtil.prettyPrintJson(person);
-        log.info("Opening " + personJson);
-        JSONObject root = (JSONObject) parser.parse(personJson);
+                        if (empty) {
+                            setText("");
+                            setStyle(null);
+                        } else {
+                            setText(item.toString());
+
+                            final PersonTreeItemDifference difference = item.getDifference();
+                            if (Objects.requireNonNull(difference) == PersonTreeItemDifference.CHANGED) {
+                                setStyle("-fx-background-color: yellow;");
+                            }
+                        }
+                    }
+                };
+            }
+        });
+    }
+
+    @SneakyThrows
+    public void open(String title, Person person, Person anotherPerson) {
+        stage.setTitle(TITLE + ": " + title);
         stage.show();
 
+        final PersonPreview personPreview = new PersonPreviewTreeBuilder(true, person).of();
+        final PersonPreview otherPersonPreview = new PersonPreviewTreeBuilder(true, anotherPerson).of();
 
-        previewTreeView.setRoot(new PersonPreviewTreeBuilder(true)
-                .of(person));
+        personPreview.compareWith(otherPersonPreview);
+        otherPersonPreview.compareWith(personPreview);
 
-        previewTreeView1.setRoot(new PersonPreviewTreeBuilder(true)
-                .of(anotherPerson));
+        previewTreeView.setRoot(personPreview.root());
+        previewTreeView1.setRoot(otherPersonPreview.root());
 
-//        final String rootNode = person.getFirstName() + " " + person.getLastName() + " (" + person.getPersonId() + ")";
-//        previewTreeView.setRoot(parseJSON(rootNode, root));
+        attachCellFactory(previewTreeView);
+        attachCellFactory(previewTreeView1);
     }
 
     @FXML
@@ -82,30 +107,4 @@ public class PersonPreviewDialog implements Initializable {
         stage.close();
     }
 
-    @SuppressWarnings("unchecked")
-    private static TreeItem<String> parseJSON(String name, Object json) {
-        TreeItem<String> item = new TreeItem<>();
-        if (json instanceof JSONObject) {
-            item.setValue(name);
-            JSONObject object = (JSONObject) json;
-            ((Set<Map.Entry>) object.entrySet()).forEach(entry -> {
-                String childName = (String) entry.getKey();
-                Object childJson = entry.getValue();
-                TreeItem<String> child = parseJSON(childName, childJson);
-                item.getChildren().add(child);
-            });
-        } else if (json instanceof JSONArray) {
-            item.setValue(name);
-            JSONArray array = (JSONArray) json;
-            for (int i = 0; i < array.size(); i++) {
-                String childName = String.valueOf(i);
-                Object childJson = array.get(i);
-                TreeItem<String> child = parseJSON(childName, childJson);
-                item.getChildren().add(child);
-            }
-        } else {
-            item.setValue(name + " : " + json);
-        }
-        return item;
-    }
 }

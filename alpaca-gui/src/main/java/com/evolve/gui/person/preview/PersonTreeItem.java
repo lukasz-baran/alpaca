@@ -1,25 +1,34 @@
 package com.evolve.gui.person.preview;
 
-import com.evolve.domain.Person;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.util.Optional;
-import java.util.function.Function;
 
+@Getter
 @RequiredArgsConstructor
 public class PersonTreeItem {
-    public static final String MISSING = "<brak>";
-
     private final String tag;
-    private final Function<Person, Optional<String>> toText;
-    private final Person person;
 
-    public static PersonTreeItem withoutTag(Function<Person, Optional<String>> toText, Person person) {
-        return new PersonTreeItem(null, toText, person);
+    private final Optional<Object> value;
+    private final String displayText;
+
+    @Setter
+    private PersonTreeItemDifference difference = PersonTreeItemDifference.SAME;
+
+    public static PersonTreeItem withTag(String tag, Optional<Object> value, String displayText) {
+
+        return new PersonTreeItem(tag, value, displayText);
+
     }
 
     @Override
     public String toString() {
-        return tag + ": " + toText.apply(person).orElse(MISSING);
+        if (tag == null) {
+            return displayText;
+        }
+
+        return tag + ": " + displayText;
     }
 }
