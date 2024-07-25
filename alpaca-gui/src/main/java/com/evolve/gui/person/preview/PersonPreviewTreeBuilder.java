@@ -34,6 +34,8 @@ public class PersonPreviewTreeBuilder {
         addContacts(root);
         addStatusChanges(root);
         addBankAccounts(root);
+        addPesel(root);
+        addIdNumber(root);
 
         return new PersonPreview(expand, person, root, getMapByTags(root));
     }
@@ -246,9 +248,19 @@ public class PersonPreviewTreeBuilder {
             addSubNode(treeItem, "Komentarz",
                     p -> Optional.ofNullable(bankAccount.getNotes()));
         }
-
     }
 
+    void addPesel(TreeItem<PersonTreeItem> rootNode) {
+        if (StringUtils.isNotEmpty(person.getPesel()) || expand) {
+            addSubNode(rootNode, "Pesel", p -> Optional.ofNullable(trimToNull(p.getPesel())));
+        }
+    }
+
+    void addIdNumber(TreeItem<PersonTreeItem> rootNode) {
+        if (StringUtils.isNotEmpty(person.getIdNumber()) || expand) {
+            addSubNode(rootNode, "Numer dowodu", p -> Optional.ofNullable(trimToNull(p.getIdNumber())));
+        }
+    }
 
 
 }
