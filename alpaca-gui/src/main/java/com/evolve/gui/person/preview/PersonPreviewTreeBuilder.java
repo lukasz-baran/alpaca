@@ -3,6 +3,7 @@ package com.evolve.gui.person.preview;
 import com.evolve.domain.*;
 import javafx.scene.control.TreeItem;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
@@ -30,6 +31,8 @@ public class PersonPreviewTreeBuilder {
         addGender(root);
         addRegistryNumber(root);
         addOldRegistryNumber(root);
+        addRetired(root);
+        addExemptFromFees(root);
         addPersonAddresses(root);
         addAuthorizedPersons(root);
         addContacts(root);
@@ -153,6 +156,18 @@ public class PersonPreviewTreeBuilder {
                     p -> Optional.ofNullable(p.getOldRegistryNumber()).flatMap(RegistryNumber::getNumber)
                             .map(Object::toString));
         }
+    }
+
+    void addRetired(TreeItem<PersonTreeItem> root) {
+        addSubNode(root, "Emeryt",
+                p -> Optional.ofNullable(person.getRetired())
+                        .map(retired -> BooleanUtils.toString(retired, "Tak", "Nie")));
+    }
+
+    void addExemptFromFees(TreeItem<PersonTreeItem> root) {
+        addSubNode(root, "Zwolniony",
+                p -> Optional.ofNullable(person.getExemptFromFees())
+                        .map(exempt -> BooleanUtils.toString(exempt, "Tak", "Nie")));
     }
 
     void addPreviousNames(TreeItem<PersonTreeItem> rootNode) {
