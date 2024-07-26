@@ -26,6 +26,7 @@ public class PersonPreviewTreeBuilder {
         addFirstName(root);
         addSecondName(root);
         addLastName(root);
+        addPreviousNames(root);
         addGender(root);
         addRegistryNumber(root);
         addOldRegistryNumber(root);
@@ -151,6 +152,18 @@ public class PersonPreviewTreeBuilder {
             addSubNode(root, "Stara Kartoteka",
                     p -> Optional.ofNullable(p.getOldRegistryNumber()).flatMap(RegistryNumber::getNumber)
                             .map(Object::toString));
+        }
+    }
+
+    void addPreviousNames(TreeItem<PersonTreeItem> rootNode) {
+        final List<String> listOfNames = emptyIfNull(person.getPreviousLastNames());
+        final TreeItem<PersonTreeItem> previousNamesTreeItem =
+                addSubNode(rootNode, "Poprzednie nazwiska",
+                        p -> Optional.ofNullable(listOfNames).map(list -> "(" + list.size() + ")"));
+        previousNamesTreeItem.setExpanded(true);
+
+        for (final String lastName : listOfNames) {
+            addSubNode(previousNamesTreeItem, "Nazwisko",  p -> Optional.of(lastName));
         }
     }
 

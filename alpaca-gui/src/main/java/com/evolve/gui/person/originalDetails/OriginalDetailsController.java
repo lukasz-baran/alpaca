@@ -4,15 +4,12 @@ import com.evolve.EditPersonDataCommand;
 import com.evolve.FindPerson;
 import com.evolve.alpaca.auditlog.AuditEntry;
 import com.evolve.alpaca.auditlog.FindAuditLog;
-import com.evolve.alpaca.document.DocumentEntry;
 import com.evolve.alpaca.importing.importDbf.fixers.PersonFixer;
 import com.evolve.alpaca.utils.LogUtil;
 import com.evolve.domain.Person;
 import com.evolve.gui.person.list.PersonListModel;
 import com.evolve.gui.person.list.PersonModel;
 import com.evolve.gui.person.preview.PersonPreviewDialog;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -23,8 +20,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -95,6 +92,18 @@ public class OriginalDetailsController implements Initializable {
 
         editInfoColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
         editHistoryTable.setItems(editionHistoryData);
+        editHistoryTable.setRowFactory(tableView -> {
+            final TableRow<EditHistoryEntry> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) {
+                    if (!row.isEmpty()) {
+                        showChange(row.getItem());
+                    }
+                }
+            });
+            return row;
+        });
+
 
         personListModel.getCurrentPersonProperty().addListener(
                 (ObservableValue<? extends PersonModel> obs, PersonModel oldUser, PersonModel newUser) -> {
@@ -161,8 +170,13 @@ public class OriginalDetailsController implements Initializable {
     }
 
     @FXML
-    public void showChange(ActionEvent actionEvent) throws JsonProcessingException {
-        EditHistoryEntry editHistoryEntry = editHistoryTable.getSelectionModel().getSelectedItem();
+    public void showChange(ActionEvent actionEvent) {
+        final EditHistoryEntry editHistoryEntry = editHistoryTable.getSelectionModel().getSelectedItem();
+        showChange(editHistoryEntry);
+    }
+
+    @SneakyThrows
+    private void showChange(EditHistoryEntry editHistoryEntry) {
         AuditEntry auditEntry = editHistoryEntry.auditEntry;
 
         final Person personBefore = objectMapper.readValue(auditEntry.getBefore(), Person.class);
@@ -171,7 +185,6 @@ public class OriginalDetailsController implements Initializable {
         final String title = editHistoryEntry.formatDate();
 
         previewDialog.getController().open(title, personBefore, personAfter);
-
     }
 
     @Getter
