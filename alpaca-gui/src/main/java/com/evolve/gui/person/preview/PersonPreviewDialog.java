@@ -2,12 +2,14 @@ package com.evolve.gui.person.preview;
 
 import com.evolve.domain.Person;
 import com.evolve.gui.StageManager;
-import javafx.css.PseudoClass;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
@@ -42,20 +44,24 @@ public class PersonPreviewDialog implements Initializable {
     @FXML TreeView<PersonTreeItem> previewTreeView;
     @FXML TreeView<PersonTreeItem> previewTreeView1;
 
-
     @FXML HBox personPreviewDialog;
+    @FXML CheckBox hideEmptyCheckBox;
     @FXML Button btnClose;
 
-    private final PseudoClass childPseudoClass = PseudoClass.getPseudoClass("child");
+    private final ObjectProperty<Person> personBeforeObjectProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Person> personAfterObjectProperty = new SimpleObjectProperty<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.stage = new Stage();
         stage.initOwner(stageManager.getPrimaryStage());
         stage.setScene(new Scene(personPreviewDialog));
-        stage.setTitle("Podgląd");
+        stage.setTitle(TITLE);
         stage.initModality(Modality.WINDOW_MODAL);
         stage.getIcons().add(APPLICATION_ICON);
+
+        attachCellFactory(previewTreeView);
+        attachCellFactory(previewTreeView1);
     }
 
     void attachCellFactory(TreeView<PersonTreeItem> previewTreeView) {
@@ -89,17 +95,21 @@ public class PersonPreviewDialog implements Initializable {
         stage.setTitle(TITLE + ": " + title);
         stage.show();
 
-        final PersonPreview personPreview = new PersonPreviewTreeBuilder(true, person).of();
-        final PersonPreview otherPersonPreview = new PersonPreviewTreeBuilder(true, anotherPerson).of();
+        personBeforeObjectProperty.setValue(person);
+        personAfterObjectProperty.setValue(anotherPerson);
+
+        showTrees(false);
+    }
+
+    void showTrees(boolean hideEmpty) {
+        final PersonPreview personPreview = new PersonPreviewTreeBuilder(!hideEmpty, personBeforeObjectProperty.get()).of();
+        final PersonPreview otherPersonPreview = new PersonPreviewTreeBuilder(!hideEmpty, personAfterObjectProperty.get()).of();
 
         personPreview.compareWith(otherPersonPreview);
         otherPersonPreview.compareWith(personPreview);
 
         previewTreeView.setRoot(personPreview.root());
         previewTreeView1.setRoot(otherPersonPreview.root());
-
-        attachCellFactory(previewTreeView);
-        attachCellFactory(previewTreeView1);
     }
 
     @FXML
@@ -107,4 +117,8 @@ public class PersonPreviewDialog implements Initializable {
         stage.close();
     }
 
+    @FXML
+    void hideEmptyToggle(ActionEvent actionEvent) {
+        showTrees(hideEmptyCheckBox.isSelected());
+    }
 }

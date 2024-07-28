@@ -17,7 +17,7 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
 public class PersonPreviewTreeBuilder {
     public static final String MISSING = "<brak>";
 
-    private final boolean expand;
+    private final boolean showEmptyOrMissing;
     private final Person person;
 
     public PersonPreview of() {
@@ -41,7 +41,7 @@ public class PersonPreviewTreeBuilder {
         addPesel(root);
         addIdNumber(root);
 
-        return new PersonPreview(expand, person, root, getMapByTags(root));
+        return new PersonPreview(showEmptyOrMissing, person, root, getMapByTags(root));
     }
 
     Map<String, List<Object>> getMapByTags(TreeItem<PersonTreeItem> root) {
@@ -50,7 +50,7 @@ public class PersonPreviewTreeBuilder {
         return byTags;
     }
 
-    void addNextLevel(Map<String, List<Object>> result,  List<String> breadcrumb, TreeItem<PersonTreeItem> node) {
+    void addNextLevel(Map<String, List<Object>> result, List<String> breadcrumb, TreeItem<PersonTreeItem> node) {
         final List<String> newBreadcrumb = new ArrayList<>(breadcrumb);
         final PersonTreeItem treeItem = node.getValue();
         newBreadcrumb.add(treeItem.getTag());
@@ -112,25 +112,25 @@ public class PersonPreviewTreeBuilder {
     }
 
     void addFirstName(TreeItem<PersonTreeItem> rootNode) {
-        if (StringUtils.isNotEmpty(person.getFirstName()) || expand) {
+        if (StringUtils.isNotEmpty(person.getFirstName()) || showEmptyOrMissing) {
             addSubNode(rootNode, "Imię", p -> Optional.ofNullable(trimToNull(p.getFirstName())));
         }
     }
 
     void addSecondName(TreeItem<PersonTreeItem> rootNode) {
-        if (StringUtils.isNotEmpty(person.getSecondName()) || expand) {
+        if (StringUtils.isNotEmpty(person.getSecondName()) || showEmptyOrMissing) {
             addSubNode(rootNode, "Drugie imię", p -> Optional.ofNullable(trimToNull(p.getSecondName())));
         }
     }
 
     void addLastName(TreeItem<PersonTreeItem> rootNode) {
-        if (StringUtils.isNotEmpty(person.getLastName()) || expand) {
+        if (StringUtils.isNotEmpty(person.getLastName()) || showEmptyOrMissing) {
             addSubNode(rootNode, "Nazwisko", p -> Optional.ofNullable(trimToNull(p.getLastName())));
         }
     }
 
     void addGender(TreeItem<PersonTreeItem> rootNode) {
-        if (person.getGender() != null || expand) {
+        if (person.getGender() != null || showEmptyOrMissing) {
             addSubNode(rootNode, "Płeć",
                     p -> Optional.ofNullable(p.getGender()).map(Person.Gender::getName));
         }
@@ -140,7 +140,7 @@ public class PersonPreviewTreeBuilder {
         final Optional<Integer> registryNumber = Optional.ofNullable(person.getRegistryNumber())
                 .map(RegistryNumber::getRegistryNum);
 
-        if (registryNumber.isPresent() || expand) {
+        if (registryNumber.isPresent() || showEmptyOrMissing) {
             addSubNode(rootNode, "Kartoteka",
                     p -> Optional.ofNullable(p.getRegistryNumber()).flatMap(RegistryNumber::getNumber)
                             .map(Object::toString));
@@ -151,7 +151,7 @@ public class PersonPreviewTreeBuilder {
         final Optional<Integer> oldRegistryNumber = Optional.ofNullable(person.getOldRegistryNumber())
                 .map(RegistryNumber::getRegistryNum);
 
-        if (oldRegistryNumber.isPresent() || expand) {
+        if (oldRegistryNumber.isPresent() || showEmptyOrMissing) {
             addSubNode(root, "Stara Kartoteka",
                     p -> Optional.ofNullable(p.getOldRegistryNumber()).flatMap(RegistryNumber::getNumber)
                             .map(Object::toString));
@@ -159,19 +159,27 @@ public class PersonPreviewTreeBuilder {
     }
 
     void addRetired(TreeItem<PersonTreeItem> root) {
-        addSubNode(root, "Emeryt",
-                p -> Optional.ofNullable(person.getRetired())
-                        .map(retired -> BooleanUtils.toString(retired, "Tak", "Nie")));
+        if (BooleanUtils.isNotFalse(person.getRetired()) || showEmptyOrMissing) {
+            addSubNode(root, "Emeryt",
+                    p -> Optional.ofNullable(person.getRetired())
+                            .map(retired -> BooleanUtils.toString(retired, "Tak", "Nie")));
+        }
     }
 
     void addExemptFromFees(TreeItem<PersonTreeItem> root) {
-        addSubNode(root, "Zwolniony",
-                p -> Optional.ofNullable(person.getExemptFromFees())
-                        .map(exempt -> BooleanUtils.toString(exempt, "Tak", "Nie")));
+        if (BooleanUtils.isNotFalse(person.getExemptFromFees()) || showEmptyOrMissing) {
+            addSubNode(root, "Zwolniony",
+                    p -> Optional.ofNullable(person.getExemptFromFees())
+                            .map(exempt -> BooleanUtils.toString(exempt, "Tak", "Nie")));
+        }
     }
 
     void addPreviousNames(TreeItem<PersonTreeItem> rootNode) {
         final List<String> listOfNames = emptyIfNull(person.getPreviousLastNames());
+        if (listOfNames.isEmpty() && !showEmptyOrMissing) {
+            return;
+        }
+
         final TreeItem<PersonTreeItem> previousNamesTreeItem =
                 addSubNode(rootNode, "Poprzednie nazwiska",
                         p -> Optional.ofNullable(listOfNames).map(list -> "(" + list.size() + ")"));
@@ -183,11 +191,15 @@ public class PersonPreviewTreeBuilder {
     }
 
     void addPersonAddresses(TreeItem<PersonTreeItem> rootNode) {
+        final List<Person.PersonAddress> addressList = emptyIfNull(person.getAddresses());
+        if (addressList.isEmpty() && !showEmptyOrMissing) {
+            return;
+        }
+
         final TreeItem<PersonTreeItem> addressesTreeItem =
                 addSubNode(rootNode, "Adresy", p -> Optional.ofNullable(p.getAddresses()).map(addresses -> "(" + addresses.size() + ")"));
         addressesTreeItem.setExpanded(true);
 
-        final List<Person.PersonAddress> addressList = emptyIfNull(person.getAddresses());
         for (final Person.PersonAddress personAddress : addressList) {
             final TreeItem<PersonTreeItem> newItem = addSubNode(addressesTreeItem,
                     "Adres", Optional.of(personAddress), p -> Optional.of(Address.toConcatenatedAddress(personAddress)));
@@ -199,13 +211,16 @@ public class PersonPreviewTreeBuilder {
     }
 
     void addAuthorizedPersons(TreeItem<PersonTreeItem> root) {
+        final List<Person.AuthorizedPerson> authorizedPersonList = emptyIfNull(person.getAuthorizedPersons());
+        if (authorizedPersonList.isEmpty() && !showEmptyOrMissing) {
+            return;
+        }
+
         final TreeItem<PersonTreeItem> authorizedPersonsTreeItem =
             addSubNode(root, "Osoby upoważnione",
-                    p -> Optional.ofNullable(p.getAuthorizedPersons()).map(authorizedPeople -> "(" + authorizedPeople.size() + ")"));
-
+                    p -> Optional.ofNullable(p.getAuthorizedPersons()).map(authorizedPeople -> "(" + authorizedPersonList.size() + ")"));
         authorizedPersonsTreeItem.setExpanded(true);
 
-        final List<Person.AuthorizedPerson> authorizedPersonList = emptyIfNull(person.getAuthorizedPersons());
         for (final Person.AuthorizedPerson authorizedPerson : authorizedPersonList) {
 
             final TreeItem<PersonTreeItem> newItem = addSubNode(authorizedPersonsTreeItem,
@@ -219,12 +234,16 @@ public class PersonPreviewTreeBuilder {
     }
 
     void addContacts(TreeItem<PersonTreeItem> root) {
+        final List<PersonContactData> contactList = emptyIfNull(person.getContactData());
+        if (contactList.isEmpty() && !showEmptyOrMissing) {
+            return;
+        }
+
         final TreeItem<PersonTreeItem> contactDataTreeItem =
                 addSubNode(root, "Dane kontaktowe", p -> Optional.ofNullable(p.getContactData()).map(contactData ->
                                 "(" + contactData.size() + ")"));
         contactDataTreeItem.setExpanded(true);
 
-        final List<PersonContactData> contactList = emptyIfNull(person.getContactData());
         for (final PersonContactData contactData : contactList) {
             final String tag = contactData.getType().toString();
 
@@ -238,13 +257,16 @@ public class PersonPreviewTreeBuilder {
     }
 
     void addStatusChanges(TreeItem<PersonTreeItem> root) {
+        final List<PersonStatusChange> statusChanges = emptyIfNull(person.getStatusChanges());
+        if (statusChanges.isEmpty() && !showEmptyOrMissing) {
+            return;
+        }
+
         final TreeItem<PersonTreeItem> statusesTreeItem =
                 addSubNode(root, "Historia statusów",
-                        p -> Optional.ofNullable(p.getStatusChanges()).map(statusChanges ->
-                                "(" + statusChanges.size() + ")"));
+                        p -> Optional.ofNullable(p.getStatusChanges()).map(changes ->
+                                "(" + changes.size() + ")"));
         statusesTreeItem.setExpanded(true);
-
-        final List<PersonStatusChange> statusChanges = emptyIfNull(person.getStatusChanges());
 
         for (final PersonStatusChange statusChange : statusChanges) {
             final String tag = statusChange.getEventType().getName();
@@ -262,6 +284,9 @@ public class PersonPreviewTreeBuilder {
 
     void addBankAccounts(TreeItem<PersonTreeItem> root) {
         final List<BankAccount> bankAccounts = emptyIfNull(person.getBankAccounts());
+        if (bankAccounts.isEmpty() && !showEmptyOrMissing) {
+            return;
+        }
 
         final TreeItem<PersonTreeItem> bankAccountsTreeItem =
                 addSubNode(root, "Konta bankowe",
@@ -279,13 +304,13 @@ public class PersonPreviewTreeBuilder {
     }
 
     void addPesel(TreeItem<PersonTreeItem> rootNode) {
-        if (StringUtils.isNotEmpty(person.getPesel()) || expand) {
+        if (StringUtils.isNotEmpty(person.getPesel()) || showEmptyOrMissing) {
             addSubNode(rootNode, "Pesel", p -> Optional.ofNullable(trimToNull(p.getPesel())));
         }
     }
 
     void addIdNumber(TreeItem<PersonTreeItem> rootNode) {
-        if (StringUtils.isNotEmpty(person.getIdNumber()) || expand) {
+        if (StringUtils.isNotEmpty(person.getIdNumber()) || showEmptyOrMissing) {
             addSubNode(rootNode, "Numer dowodu", p -> Optional.ofNullable(trimToNull(p.getIdNumber())));
         }
     }
